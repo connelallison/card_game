@@ -6,6 +6,7 @@ const { create } = require("./CardLib");
 class GamePlayer {
   constructor(deck) {
     this.name = deck.playerName;
+    this.attack = 0;
     this.health = 30;
     this.maxMana = 2;
     this.currentMana = 2;
@@ -68,15 +69,25 @@ class GamePlayer {
   }
 
   playableCards(){
-    return this.hand.filter(this.canPlay.bind(this));
+    // console.log("this.hand is: " + this.hand);
+    // console.log("this.playableCards() is: " + this.hand.filter(card => this.canPlay(card)));
+    return this.hand.filter(card => this.canPlay(card));
     // console.log(this.hand.filter(this.canPlay.bind(this)));
   }
 
   canPlay(card){
-    return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && card.isLegalMove();
+    // console.log(card);
+    if (card.type === "minion") {
+      return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && this.board.length < this.maxBoard && card.isLegalMove();
+    } else if(card.type === "spell") {
+      return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && card.isLegalMove();
+    } else {
+      throw new Error(`Card (${card.name}) has ${card.type} for its type.`)
+    }
   }
 
   play(card){
+    console.log(this.currentMana);
     if (this.canPlay(card)) {
       if (card.type === "minion") {
         this.board.push(this.hand.splice(this.hand.indexOf(card), 1)[0]);
@@ -92,13 +103,14 @@ class GamePlayer {
     }
   }
 
-  summon(cardName){
+  summon(cardID){
     if (this.board.length < this.maxBoard) {
-      const card = create(cardName);
+      const card = create(cardID);
+      card.owner = this;
       this.board.push(card);
       this.summoned.push(card);
       card.zone = "board";
-      card.owner = this;
+      card.afterThisSummoned();
     }
   }
 
@@ -108,6 +120,12 @@ class GamePlayer {
 
   isAttackable(){
     return true;
+  }
+
+  refillMana(){
+    if (this.currentMana < this.maxMana) {
+      this.currentMana = this.maxMana;
+    }
   }
 
   gainMaxMana(number){

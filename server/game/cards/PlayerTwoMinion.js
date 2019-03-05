@@ -2,7 +2,8 @@ const Minion = require("../Minion.js");
 
 class PlayerTwoMinion extends Minion {
   constructor() {
-    super("Player 2 Minion", 3, 3, 4);
+    super("PlayerTwoMinion", 3, 3, 4);
+    this.name = "Player 2 Minion";
   }
 }
 

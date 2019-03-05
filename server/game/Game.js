@@ -17,6 +17,8 @@ class Game {
     this.activePlayer = null;
     this.nextActivePlayer = this.player1;
     this.nextNextActivePlayer = this.player2;
+    this.gameOver = false;
+    this.turnTimer;
     this.initPlayers();
     this.mulliganPhase();
     this.start();
@@ -99,9 +101,11 @@ class Game {
   }
 
   start(){
-    this.player1.board.push(create("Player 1 Minion"));
+    this.player1.board.push(create("PlayerOneMinion"));
+    this.player1.board[0].zone = "board";
     this.player1.board[0].owner = this.player1;
-    this.player2.board.push(create("Player 2 Minion"));
+    this.player2.board.push(create("PlayerTwoMinion"));
+    this.player2.board[0].zone = "board";
     this.player2.board[0].owner = this.player2;
     // console.log(this);
     this.startTurn();
@@ -121,12 +125,26 @@ class Game {
     this.nextActivePlayer.allActive().forEach((card) => {
       card.onMyTurnStart();
     })
+    // console.log("\nBefore gaining mana: ");
+    // console.log(`Max mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.maxMana}`);
+    // console.log(`Current mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.currentMana}`);
     this.nextActivePlayer.gainMaxMana(1);
+    this.nextActivePlayer.refillMana();
+    // console.log("\nAfter gaining mana: ");
+    // console.log(`Max mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.maxMana}`);
+    // console.log(`Current mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.currentMana}`);
+    this.nextActivePlayer.board.forEach((minion) => {
+      minion.readyMinion();
+    })
     this.activePlayer = this.nextActivePlayer;
     this.nextActivePlayer = this.nextNextActivePlayer;
     this.nextNextActivePlayer = this.activePlayer;
+    this.activePlayer.play(this.activePlayer.playableCards()[0]);
+    // console.log("\nAfter becoming active: ");
+    // console.log(`Max mana of ${this.activePlayer.name}: ${this.activePlayer.maxMana}`);
+    // console.log(`Current mana of ${this.activePlayer.name}: ${this.activePlayer.currentMana}`);
     if (this.debug) { console.log(this.activePlayer.name + " is the active player."); }
-    setTimeout(this.endTurn.bind(this), 5000);
+    this.turnTimer = setTimeout(this.endTurn.bind(this), 5000);
   }
 
   endTurn(){
@@ -136,6 +154,7 @@ class Game {
     //   console.log(this.nextActivePlayer);
     //   console.log(this.nextNextActivePlayer);
     // }
+    this.turnTimer = null;
     this.activePlayer = null;
     this.nextNextActivePlayer.draw();
     this.nextNextActivePlayer.allActive().forEach((card) => {
@@ -149,6 +168,31 @@ class Game {
       }
     }
     this.startTurn();
+  }
+
+  resolveCombat(){
+    this.board.forEach((minion) => {
+      if (minion.health <= 0) {
+        this.graveyard.push(this.board.splice(this.board.indexOf(minion), 1)[0]);
+        minion.zone = "graveyard";
+        minion.onDeath();
+      }
+    })
+    if (!this.activePlayer) {
+      throw new Error("active player is " + this.activePlayer)
+    }
+    if (!this.activePlayer.alive() || !this.nextActivePlayer.alive()) {
+      this.endGame();
+    }
+  }
+
+  endGame(){
+    if (this.turnTimer) {
+      clearTimeout(this.turnTimer);
+    }
+    this.activePlayer = null;
+    this.nextActivePlayer = null;
+    this.nextNextActivePlayer = null;
   }
 
 }

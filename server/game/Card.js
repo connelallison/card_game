@@ -58,8 +58,9 @@
 
 
 class Card {
-  constructor(name, cost, owner=null) {
-    this.name = name;
+  constructor(id, cost, owner=null) {
+    this.name;
+    this.id = id;
     this.cost = cost;
     this.type;
     this.zone;

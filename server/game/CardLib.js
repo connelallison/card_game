@@ -1,16 +1,16 @@
 const Cards = {
-  "Player 1 Minion": require('./cards/PlayerOneMinion.js'),
-  "Player 2 Minion": require('./cards/PlayerTwoMinion.js'),
+  "PlayerOneMinion": require('./cards/PlayerOneMinion.js'),
+  "PlayerTwoMinion": require('./cards/PlayerTwoMinion.js'),
   "Footman": require('./cards/Footman.js'),
-  "Junior Orc": require('./cards/JuniorOrc.js'),
+  "JuniorOrc": require('./cards/JuniorOrc.js'),
   "Fireburst": require('./cards/Fireburst.js')
 }
 
-const create = function (cardName) {
-  if (Cards[cardName]) {
-    return new Cards[cardName]();
+const create = function (cardID) {
+  if (Cards[cardID]) {
+    return new Cards[cardID]();
   } else {
-    throw "Card not found in Cards.";
+    throw new Error(`Card "${cardID}" not found in Cards.`)
   }
 }
 

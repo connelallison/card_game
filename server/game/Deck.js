@@ -35,7 +35,7 @@ for (let i = 1; i < 7; i++) {
 const deck2 = new Deck("player2");
 
 for (let i = 1; i < 16; i++) {
-  const card = create("Junior Orc");
+  const card = create("JuniorOrc");
   deck2.cards.push(card);
   card.zone = "deck";
 }

@@ -23,6 +23,20 @@
   color: #61dafb;
 }
 
+#mainCanvas {
+  background: beige;
+  padding:0;
+  margin:auto;
+  display: block;
+}
+
+#cardID {
+  background: black;
+  padding: 0;
+  margin: auto;
+  display: block;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

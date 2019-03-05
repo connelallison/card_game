@@ -140,15 +140,21 @@ class Game {
     this.activePlayer = this.nextActivePlayer;
     this.nextActivePlayer = this.nextNextActivePlayer;
     this.nextNextActivePlayer = this.activePlayer;
+    // console.log(`\n${this.activePlayer.name}'s playable cards: `);
+    // console.log(this.activePlayer.playableCards().map((card) => { return card.name; }));
     this.activePlayer.play(this.activePlayer.playableCards()[0]);
     // console.log(`\n${this.activePlayer.name}'s minions ready to attack: `);
-    // console.log(this.activePlayer.minionsReadyToAttack());
+    // console.log(this.activePlayer.minionsReadyToAttack().map((card) => { return [card.name, card.health]; }));
     this.activePlayer.minionsReadyToAttack().forEach((minion) => {
       // console.log("Ready minion: ");
       // console.log(minion);
       // console.log("This: ");
       // console.log(this);
-      minion.makeAttack(minion.owner.opponent);
+      if (minion.owner.opponent.board[0]) {
+        minion.makeAttack(minion.owner.opponent.board[0]);
+      } else {
+        minion.makeAttack(minion.owner.opponent);
+      }
     })
     // console.log("\nAfter becoming active: ");
     // console.log(`Max mana of ${this.activePlayer.name}: ${this.activePlayer.maxMana}`);
@@ -169,6 +175,7 @@ class Game {
     this.turnTimer = null;
     this.activePlayer = null;
     this.nextNextActivePlayer.draw();
+    console.log(`${this.nextNextActivePlayer.name} draws a card`);
     this.nextNextActivePlayer.allActive().forEach((card) => {
       card.onMyTurnEnd();
     });
@@ -185,14 +192,12 @@ class Game {
   }
 
   resolveCombat(){
-    if (!this.gameOver) {
-
-    }
     this.board().forEach((minion) => {
       if (minion.health <= 0) {
-        this.graveyard.push(this.board.splice(this.board.indexOf(minion), 1)[0]);
+        minion.owner.graveyard.push(minion.owner.board.splice(minion.owner.board.indexOf(minion), 1)[0]);
         minion.zone = "graveyard";
         minion.onDeath();
+        console.log(`${minion.name} has died and been sent to the graveyard`);
       }
     })
     if (!this.activePlayer) {

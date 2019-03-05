@@ -19,6 +19,7 @@ class Game {
     this.nextNextActivePlayer = this.player2;
     this.gameOver = false;
     this.turnTimer;
+    this.winner;
     this.initPlayers();
     this.mulliganPhase();
     this.start();
@@ -140,11 +141,22 @@ class Game {
     this.nextActivePlayer = this.nextNextActivePlayer;
     this.nextNextActivePlayer = this.activePlayer;
     this.activePlayer.play(this.activePlayer.playableCards()[0]);
+    // console.log(`\n${this.activePlayer.name}'s minions ready to attack: `);
+    // console.log(this.activePlayer.minionsReadyToAttack());
+    this.activePlayer.minionsReadyToAttack().forEach((minion) => {
+      // console.log("Ready minion: ");
+      // console.log(minion);
+      // console.log("This: ");
+      // console.log(this);
+      minion.makeAttack(minion.owner.opponent);
+    })
     // console.log("\nAfter becoming active: ");
     // console.log(`Max mana of ${this.activePlayer.name}: ${this.activePlayer.maxMana}`);
     // console.log(`Current mana of ${this.activePlayer.name}: ${this.activePlayer.currentMana}`);
-    if (this.debug) { console.log(this.activePlayer.name + " is the active player."); }
-    this.turnTimer = setTimeout(this.endTurn.bind(this), 5000);
+    if (!this.gameOver) {
+      if (this.debug) { console.log(this.activePlayer.name + " is the active player."); }
+      this.turnTimer = setTimeout(this.endTurn.bind(this), 5000);
+    }
   }
 
   endTurn(){
@@ -167,11 +179,16 @@ class Game {
         console.log("End of turn " + this.player2turn + " for " + this.player2.name);
       }
     }
-    this.startTurn();
+    if (!this.gameOver) {
+      this.startTurn();
+    }
   }
 
   resolveCombat(){
-    this.board.forEach((minion) => {
+    if (!this.gameOver) {
+
+    }
+    this.board().forEach((minion) => {
       if (minion.health <= 0) {
         this.graveyard.push(this.board.splice(this.board.indexOf(minion), 1)[0]);
         minion.zone = "graveyard";
@@ -189,10 +206,22 @@ class Game {
   endGame(){
     if (this.turnTimer) {
       clearTimeout(this.turnTimer);
+      this.turnTimer = null;
     }
     this.activePlayer = null;
     this.nextActivePlayer = null;
     this.nextNextActivePlayer = null;
+    this.gameOver = true;
+    if (this.player1.alive() && !this.player2.alive()) {
+      this.winner = "player1 wins";
+    } else if (!this.player1.alive() && this.player2.alive()) {
+      this.winner = "player2 wins";
+    } else if (!this.player1.alive() && !this.player2.alive()){
+      this.winner = "draw";
+    } else {
+      throw new Error("endGame() has been called but neither player is dead")
+    }
+    console.log("The game is over. The result is: " + this.winner);
   }
 
 }

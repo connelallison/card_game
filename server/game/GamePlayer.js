@@ -7,7 +7,7 @@ class GamePlayer {
   constructor(deck) {
     this.name = deck.playerName;
     this.attack = 0;
-    this.health = 30;
+    this.health = 20;
     this.maxMana = 2;
     this.currentMana = 2;
     this.hand = [];
@@ -30,6 +30,15 @@ class GamePlayer {
     let allActive = this.hand.concat(this.board)
     allActive = allActive.concat(this.deck);
     return allActive;
+  }
+
+  takeDamage(damage){
+    if (damage > 0) {
+      this.health -= damage;
+      console.log(`${this.name} takes ${damage} damage`);
+      console.log(`${this.name} now has ${this.health} health`);
+      // this.afterTakingDamage();
+    }
   }
 
   draw(){
@@ -87,7 +96,7 @@ class GamePlayer {
   }
 
   play(card){
-    console.log(this.currentMana);
+    // console.log(this.currentMana);
     if (this.canPlay(card)) {
       if (card.type === "minion") {
         this.board.push(this.hand.splice(this.hand.indexOf(card), 1)[0]);
@@ -148,6 +157,10 @@ class GamePlayer {
     }
     let newMaxMana = this.maxMana;
     return oldMaxMana - newMaxMana;
+  }
+
+  minionsReadyToAttack(){
+    return this.board.filter(minion => minion.canAttack());
   }
 
 }

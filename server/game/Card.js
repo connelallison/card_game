@@ -65,6 +65,7 @@ class Card {
     this.type;
     this.zone;
     this.owner = owner;
+    this.objectId = `${this.id}:${Math.random()}`;
   }
 
   isLegalMove(){

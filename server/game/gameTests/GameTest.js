@@ -50,3 +50,5 @@ const testGame = new Game(deck1, deck2, true);
 // setTimeout(console.log, 13200, testGame.player1.board)
 // setTimeout(console.log, 23000, "Player 1 board: ")
 // setTimeout(console.log, 23200, testGame.player1.board)
+
+console.log(testGame.player1.board[0].objectId);

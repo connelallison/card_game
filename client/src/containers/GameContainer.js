@@ -12,23 +12,22 @@ class GameContainer extends Component {
     super(props);
     this.state = {
       gameState: {
+        winner: null,
         myTurn: false,
         my: {
-          hero: {
-            attack: 0,
-            health: 0,
-            mana: 0
-          },
+          attack: 0,
+          health: 0,
+          currentMana: 0,
+          maxMana: 0,
           board: [],
           hand: [],
           deck: 0
         },
         opponent: {
-          hero: {
-            attack: 0,
-            health: 0,
-            mana: 0
-          },
+          attack: 0,
+          health: 0,
+          currentMana: 0,
+          maxMana: 0,
           board: [],
           hand: 0,
           deck: 0
@@ -41,41 +40,52 @@ class GameContainer extends Component {
     };
     const gameContainer = this;
     socket.on("gameStateUpdate", function (data) {
-      console.log(data);
-      console.log(gameContainer);
+      // console.log(data);
+      // console.log(gameContainer);
       gameContainer.setState(data)
     })
   }
 
-  handleTestButtonClicked(){
-    console.log("testButtonClicked");
-    socket.emit("updateDisplayName", {
-      displayName: "TestName"
-    });
-  }
 
   render(){
-    // const testButton = <button>Test PubSub</button>;
-    // testButton.addEventListener('click', (event) => {
-    //   PubSub.publish("GameContainer:TestButtonClicked");
-    // })
+    let gameStatus;
+    if (!this.state.gameState.winner) {
+      if (this.state.gameState.myTurn) {
+        gameStatus = <p className="gameStatus">It is currently my turn.</p>
+      } else {
+        gameStatus = <p className="gameStatus">It is currently not my turn.</p>
+      }
+    } else {
+      gameStatus = <p className="gameStatus">The game is over: {this.state.gameState.winner}.</p>
+    }
+
     return (
       <Fragment>
-      <button onClick={this.handleTestButtonClicked}>Test PubSub</button>
-      <Hero attack={this.state.gameState.opponent.hero.attack}
-            health={this.state.gameState.opponent.hero.health}
-            mana={this.state.gameState.opponent.hero.mana}
-            mine={false}/>
+      <Hero attack={this.state.gameState.opponent.attack}
+      health={this.state.gameState.opponent.health}
+      currentMana={this.state.gameState.opponent.currentMana}
+      maxMana={this.state.gameState.opponent.maxMana}
+      mine={false}/>
+      <br/>
       <OpponentHand cardNumber={this.state.gameState.opponent.hand}/>
+      <br/>
       <Deck mine={false} cardNumber={this.state.gameState.opponent.deck}/>
+      <br/>
       <BoardHalf mine={false} minions={this.state.gameState.opponent.board}/>
+      <br/>
       <BoardHalf mine={true} minions={this.state.gameState.my.board}/>
-      <Deck mine={false} cardNumber={this.state.gameState.opponent.deck}/>
+      <br/>
+      <Deck mine={true} cardNumber={this.state.gameState.my.deck}/>
+      <br/>
       <PlayerHand cards={this.state.gameState.my.hand}/>
-      <Hero attack={this.state.gameState.my.hero.attack}
-            health={this.state.gameState.my.hero.health}
-            mana={this.state.gameState.my.hero.mana}
-            mine={true}/>
+      <br/>
+      <Hero attack={this.state.gameState.my.attack}
+      health={this.state.gameState.my.health}
+      currentMana={this.state.gameState.my.currentMana}
+      maxMana={this.state.gameState.my.maxMana}
+      mine={true}/>
+      <br/>
+      {gameStatus}
       </Fragment>
     );
   }

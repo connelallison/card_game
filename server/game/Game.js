@@ -5,11 +5,14 @@ const Minion = require("./Minion.js");
 const Spell = require("./Spell.js");
 // const { Deck, deck1, deck2 } = require("./Deck.js");
 const EventEmitter = require("events");
+const gameEvent = require("../GameEvent.js")
 
 class Game {
-  constructor(player1deck, player2deck, debug=false) {
-    Game.games.push(this);
+  constructor(player1deck, player2deck, debug=false, online=false, parentPort=null) {
+    // Game.games.push(this);
     this.debug = debug;
+    this.online = online;
+    this.parentPort = parentPort;
     this.player1turn = 0;
     this.player2turn = 0;
     this.player1 = new GamePlayer(player1deck);
@@ -25,6 +28,42 @@ class Game {
     this.start();
     // this.startTurn = this.startTurn.bind(this);
     // this.endTurn = this.endTurn.bind(this);
+  }
+
+  announceGameState(){
+    if (this.online) {
+      // console.log(gameEvent);
+      const gameState = {
+        gameState: {
+          winner: this.winner,
+          myTurn: this.player1.myTurn(),
+          my: {
+            attack: this.player1.attack,
+            health: this.player1.health,
+            currentMana: this.player1.currentMana,
+            maxMana: this.player1.maxMana,
+            board: this.player1.boardReport(),
+            hand: this.player1.handReport(),
+            deck: this.player1.deck.length
+          },
+          opponent: {
+            attack: this.player2.attack,
+            health: this.player2.health,
+            currentMana: this.player2.currentMana,
+            maxMana: this.player2.maxMana,
+            board: this.player2.boardReport(),
+            hand: this.player2.hand.length,
+            deck: this.player2.deck.length
+          }
+        },
+        legalMoves: {
+          canAttackWith: this.player1.reportMinionsReadyToAttack(),
+          canPlay: this.player1.reportPlayableCards()
+        }
+      };
+      // console.log(gameState);
+      gameEvent.emit("newGameStatus", gameState);
+    }
   }
 
   allActive(){
@@ -81,7 +120,14 @@ class Game {
     }
   }
 
-
+  delay(n) {
+    n = n || 1000;
+    return new Promise(done => {
+      setTimeout(() => {
+        done();
+      }, n);
+    });
+  }
 
   initPlayers(){
     this.player1.opponent = this.player2;
@@ -109,6 +155,7 @@ class Game {
     this.player2.board[0].zone = "board";
     this.player2.board[0].owner = this.player2;
     // console.log(this);
+    this.announceGameState();
     this.startTurn();
   }
 
@@ -142,19 +189,18 @@ class Game {
     this.nextNextActivePlayer = this.activePlayer;
     // console.log(`\n${this.activePlayer.name}'s playable cards: `);
     // console.log(this.activePlayer.playableCards().map((card) => { return card.name; }));
+    this.delay();
     this.activePlayer.play(this.activePlayer.playableCards()[0]);
+    this.delay();
     // console.log(`\n${this.activePlayer.name}'s minions ready to attack: `);
     // console.log(this.activePlayer.minionsReadyToAttack().map((card) => { return [card.name, card.health]; }));
     this.activePlayer.minionsReadyToAttack().forEach((minion) => {
-      // console.log("Ready minion: ");
-      // console.log(minion);
-      // console.log("This: ");
-      // console.log(this);
       if (minion.owner.opponent.board[0]) {
         minion.makeAttack(minion.owner.opponent.board[0]);
       } else {
         minion.makeAttack(minion.owner.opponent);
       }
+      this.delay(2000);
     })
     // console.log("\nAfter becoming active: ");
     // console.log(`Max mana of ${this.activePlayer.name}: ${this.activePlayer.maxMana}`);
@@ -186,12 +232,13 @@ class Game {
         console.log("End of turn " + this.player2turn + " for " + this.player2.name);
       }
     }
+    this.announceGameState();
     if (!this.gameOver) {
       this.startTurn();
     }
   }
 
-  resolveCombat(){
+  resolveDamage(){
     this.board().forEach((minion) => {
       if (minion.health <= 0) {
         minion.owner.graveyard.push(minion.owner.board.splice(minion.owner.board.indexOf(minion), 1)[0]);
@@ -206,6 +253,8 @@ class Game {
     if (!this.activePlayer.alive() || !this.nextActivePlayer.alive()) {
       this.endGame();
     }
+    this.announceGameState();
+
   }
 
   endGame(){
@@ -227,10 +276,11 @@ class Game {
       throw new Error("endGame() has been called but neither player is dead")
     }
     console.log("The game is over. The result is: " + this.winner);
+    this.announceGameState();
   }
 
 }
 
-Game.games = [];
+// Game.games = [];
 
 module.exports = Game;

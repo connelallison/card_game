@@ -1,3 +1,7 @@
+*{
+  background: beige;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -6,10 +10,42 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* text-align: center; */
 }
 
 p {
-  margin: 0px;
+  margin: 5px;
+}
+
+.deck {
+  text-align: right;
+  /* display: inline-block; */
+}
+
+.hero {
+  /* background-image: url("./images/dogecropped.jpg"); */
+  text-align: center;
+
+}
+
+.opponent-hand{
+  text-align: left;
+}
+
+.player-hand{
+  text-align: center;
+}
+
+.gameStatus{
+  text-align: center;
+}
+
+.boardhalf{
+  text-align: center;
+}
+
+.cardList{
+  display: inline-block;
 }
 
 code {

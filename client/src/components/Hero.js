@@ -9,12 +9,12 @@ const Hero = (props) => {
   }
 
   return(
-    <div>
+    <div className="hero">
       <p>{isMyHero}</p>
-      <p>Hero will go here</p>
       <p>Hero's attack: {props.attack}</p>
       <p>Hero's health: {props.health}</p>
-      <p>Hero's mana: {props.mana}</p>
+      <p>Hero's current mana: {props.currentMana}</p>
+      <p>Hero's max mana: {props.maxMana}</p>
     </div>
   )
 }

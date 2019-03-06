@@ -22,6 +22,21 @@ class GamePlayer {
     this.opponent;
   }
 
+
+
+  boardReport(){
+    return this.board.map((minion) => {
+      return minion.provideReport();
+    });
+  }
+
+  handReport(){
+    return this.hand.map((card) => {
+      return card.provideReport();
+    });
+  }
+
+
   myTurn(){
     return this.game.activePlayer === this;
   }
@@ -53,6 +68,7 @@ class GamePlayer {
       }
     } else {
       this.health = 0;
+      // throw "overdrew and died"
     }
   }
 
@@ -67,6 +83,8 @@ class GamePlayer {
       }
     } else {
       this.health = 0;
+      // throw "overdrew and died"
+
     }
   }
 
@@ -98,16 +116,19 @@ class GamePlayer {
   play(card){
     // console.log(this.currentMana);
     if (this.canPlay(card)) {
+      this.spendMana(card.cost);
       if (card.type === "minion") {
         this.board.push(this.hand.splice(this.hand.indexOf(card), 1)[0]);
         this.played.push(card);
         this.summoned.push(card);
         card.zone = "board";
         card.onPlay();
+        this.game.announceGameState();
       } else if (card.type === "spell") {
         this.played.push(this.hand.splice(this.hand.indexOf(card), 1)[0]);
         card.zone = "graveyard";
         card.onPlay();
+        this.game.announceGameState();
       }
     }
   }
@@ -129,6 +150,10 @@ class GamePlayer {
 
   isAttackable(){
     return true;
+  }
+
+  spendMana(amount){
+    this.currentMana -= amount;
   }
 
   refillMana(){
@@ -161,6 +186,18 @@ class GamePlayer {
 
   minionsReadyToAttack(){
     return this.board.filter(minion => minion.canAttack());
+  }
+
+  reportMinionsReadyToAttack(){
+    return this.minionsReadyToAttack().map((minion) => {
+      return minion.provideReport();
+    })
+  }
+
+  reportPlayableCards(){
+    return this.playableCards().map((card) => {
+      return card.provideReport();
+    })
   }
 
 }

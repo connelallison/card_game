@@ -68,6 +68,18 @@ class Card {
     this.objectId = `${this.id}:${Math.random()}`;
   }
 
+  provideReport(){
+    return {
+      name: this.name,
+      id: this.id,
+      objectId: this.objectId,
+      cost: this.cost,
+      type: this.type,
+      zone: this.zone,
+      ownerName: this.owner.name
+    }
+  }
+
   isLegalMove(){
     // return this.zone = "hand";
     return true;

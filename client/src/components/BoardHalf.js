@@ -22,10 +22,11 @@ const BoardHalf = (props) => {
   }
 
   return(
-    <div>
-      <p>{owner} half of the board will go here</p>
+    <div className="boardhalf">
       <p>{owner} current minions:</p>
-      {minionList}
+      <div className="cardList">
+        {minionList}
+      </div>
     </div>
   )
 }

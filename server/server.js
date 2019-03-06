@@ -3,13 +3,17 @@ const socket = require('socket.io');
 const path = require('path');
 const EventEmitter = require("events");
 const ServerPlayer = require("./ServerPlayer.js");
+const gameEvent = require("./GameEvent.js")
+const { Deck, deck1, deck2 } = require("./game/Deck.js");
+const Game = require("./game/Game.js");
+const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 
 const app = express();
 app.use(express.static(path.join(__dirname, '../client/public')));
 
 app.get('*', (req,res) =>{
-    res.sendFile(path.join(__dirname+'/../client/public/index.html'));
+  res.sendFile(path.join(__dirname+'/../client/public/index.html'));
 });
 
 const port = process.env.PORT || 4000;
@@ -40,33 +44,57 @@ io.on('connection', function (socket) {
     connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
     console.log('disconnected: ', socketID);
   });
-  socket.emit("gameStateUpdate", {
-      gameState: {
-        myTurn: true,
-        my: {
-          hero: {
-            attack: 0,
-            health: 30,
-            mana: 3
-          },
-          board: [],
-          hand: [],
-          deck: 30
-        },
-        opponent: {
-          hero: {
-            attack: 0,
-            health: 30,
-            mana: 0
-          },
-          board: [],
-          hand: 3,
-          deck: 25
-        }
-      },
-      legalMoves: {
-        canAttackWith: {},
-        canPlay: {}
-      }
-  })
+  // class GameEvent extends EventEmitter {}
+  // const gameEvent = new GameEvent();
 })
+
+gameEvent.on("newGameStatus", function (gameState) {
+  // console.log(gameState);
+  io.emit("gameStateUpdate", gameState);
+});
+
+function testGame() {
+  const testGame = new Game(deck1, deck2, true, true);
+  // const gameThread = new Worker('./worker.js');
+  // gameThread.on('message', (message) => {
+  //   console.log(message)
+  //   console.log('Message received from worker');
+  // });
+  //
+  // const message = () => {
+  //   gameThread.postMessage("echo!");
+  // }
+  // setTimeout(message, 250);
+  // console.log('Message posted to worker');
+}
+
+setTimeout(testGame, 5000);
+
+// io.emit("gameStateUpdate", {
+//   gameState: {
+//     winner: null,
+//     myTurn: true,
+//     my: {
+//       attack: 0,
+//       health: 30,
+//       currentMana: 3,
+//       maxMana: 3,
+//       board: [],
+//       hand: [],
+//       deck: 30
+//     },
+//     opponent: {
+//       attack: 0,
+//       health: 30,
+//       currentMana: 0,
+//       maxMana: 0,
+//       board: [],
+//       hand: 3,
+//       deck: 25
+//     }
+//   },
+//   legalMoves: {
+//     canAttackWith: {},
+//     canPlay: {}
+//   }
+// })

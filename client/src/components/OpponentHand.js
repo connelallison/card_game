@@ -2,8 +2,7 @@ import React from "react";
 
 const OpponentHand = (props) => {
   return(
-    <div>
-      <p>Opponent Hand will go here</p>
+    <div className="opponent-hand">
       <p>Opponent's current cards: {props.cardNumber}</p>
     </div>
   )

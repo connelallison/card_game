@@ -9,6 +9,21 @@ class Minion extends Card {
     this.ready = false;
   }
 
+  provideReport(){
+    return {
+      name: this.name,
+      id: this.id,
+      objectId: this.objectId,
+      cost: this.cost,
+      attack: this.attack,
+      health: this.health,
+      type: this.type,
+      zone: this.zone,
+      ownerName: this.owner.name,
+      canAttack: this.canAttack()
+    }
+  }
+
   onPlay(){
     this.afterThisSummoned();
   }
@@ -41,7 +56,7 @@ class Minion extends Card {
   takeDamage(damage){
     if (damage > 0) {
       this.health -= damage;
-      console.log(`${this.name} takes ${damage} damage`);
+      // console.log(`${this.name} takes ${damage} damage`);
       this.afterTakingDamage();
     }
   }
@@ -67,13 +82,13 @@ class Minion extends Card {
   makeAttack(target){
     if (!this.owner.game.gameOver && target.isAttackable() && this.canAttack()) {
       // this.owner.game.
-      console.log(`${this.name} is attacking ${target.name}`);
-      console.log(`${this.name}'s attack is ${this.attack}`);
-      console.log(`${target.name}'s attack is ${target.attack}`);
+      // console.log(`${this.name} is attacking ${target.name}`);
+      // console.log(`${this.name}'s attack is ${this.attack}`);
+      // console.log(`${target.name}'s attack is ${target.attack}`);
       target.takeDamage(this.attack);
       this.takeDamage(target.attack);
       this.ready = false;
-      this.owner.game.resolveCombat()
+      this.owner.game.resolveDamage();
     }
   }
 }

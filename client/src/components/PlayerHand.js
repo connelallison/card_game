@@ -21,10 +21,11 @@ const PlayerHand = (props) => {
   }
 
   return(
-    <div>
-    <p>My Hand will go here</p>
+    <div className="player-hand">
     <p>My current cards:</p>
-    {cardList}
+    <div className="cardList">
+      {cardList}
+    </div>
     </div>
   )
 }

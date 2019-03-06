@@ -8,8 +8,7 @@ const Deck = (props) => {
     owner = "Opponent's";
   }
   return(
-    <div>
-      <p>{owner} Deck will go here</p>
+    <div className="deck">
       <p>{owner} deck contains: {props.cardNumber} cards</p>
     </div>
   )

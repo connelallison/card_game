@@ -8,8 +8,8 @@ const { Deck, deck1, deck2 } = require("./game/Deck.js");
 const Game = require("./game/Game.js");
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
-function testGame() {
-  const testGame = new Game(deck1, deck2, true, true);
+function testGame(socketID=null) {
+  const testGame = new Game(deck1, deck2, true, true, socketID);
   // const gameThread = new Worker('./worker.js');
   // gameThread.on('message', (message) => {
   //   console.log(message)
@@ -54,7 +54,20 @@ io.on('connection', function (socket) {
       message: `${oldName} is now: ${serverPlayer.displayName}`
     })
   })
-  socket.on('disconnect', (socket) => {
+  socket.on("requestTestGame", function () {
+    // console.log(`server: newGameStatus:${socketID}`);
+    gameEvent.on(`newGameStatus:${socketID}`, function (gameState) {
+      // console.log(gameState);
+      console.log(`server: newGameStatus:${socketID}`);
+      socket.emit("gameStateUpdate", gameState);
+    });
+
+    gameEvent.on(`newTurnTimer:${socketID}`, function (turnTimer) {
+      socket.emit("turnTimerUpdate", turnTimer);
+    })
+    setTimeout(testGame, 3000, socketID);
+  })
+  socket.on('disconnect', () => {
     connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
     console.log('disconnected: ', socketID);
   });
@@ -72,7 +85,7 @@ gameEvent.on("newTurnTimer", function (turnTimer) {
 })
 
 
-setTimeout(testGame, 5000);
+// setTimeout(testGame, 5000);
 
 // io.emit("gameStateUpdate", {
 //     started: false,

@@ -8,11 +8,11 @@ const EventEmitter = require("events");
 const gameEvent = require("../GameEvent.js")
 
 class Game {
-  constructor(player1deck, player2deck, debug=false, online=false, parentPort=null) {
+  constructor(player1deck, player2deck, debug=false, online=false, socketID=null) {
     // Game.games.push(this);
     this.debug = debug;
     this.online = online;
-    this.parentPort = parentPort;
+    this.socketID = socketID;
     this.player1turn = 0;
     this.player2turn = 0;
     this.player1 = new GamePlayer(player1deck);
@@ -61,12 +61,21 @@ class Game {
           }
       };
       // console.log(gameState);
-      gameEvent.emit("newGameStatus", gameState);
+      // console.log(`game: newGameStatus:${this.socketID}`);
+      if (this.socketID) {
+        gameEvent.emit(`newGameStatus:${this.socketID}`, gameState);
+      } else {
+        gameEvent.emit("newGameStatus", gameState);
+      }
     }
   }
 
   announceNewTurn(){
-    gameEvent.emit("newTurnTimer", 5000);
+    if (this.socketID) {
+      gameEvent.emit(`newTurnTimer:${this.socketID}`, 5000);
+    } else {
+      gameEvent.emit("newTurnTimer", 5000);
+    }
   }
 
   allActive(){
@@ -159,7 +168,9 @@ class Game {
     this.player2.board[0].owner = this.player2;
     // console.log(this);
     // this.announceGameState();
-    this.startTurn();
+    console.log("starting game");
+    setTimeout(this.startTurn.bind(this), 1000);
+    // this.startTurn();
   }
 
   startTurn(){
@@ -195,7 +206,12 @@ class Game {
     // console.log(`\n${this.activePlayer.name}'s playable cards: `);
     // console.log(this.activePlayer.playableCards().map((card) => { return card.name; }));
     this.delay();
-    this.activePlayer.play(this.activePlayer.playableCards()[0]);
+    if (this.activePlayer.playableCards().length > 0) {
+      this.activePlayer.play(this.activePlayer.playableCards()[0]);
+    } else {
+      console.log("no playable cards");
+      console.log(this.activePlayer);
+    }
     this.delay();
     // console.log(`\n${this.activePlayer.name}'s minions ready to attack: `);
     // console.log(this.activePlayer.minionsReadyToAttack().map((card) => { return [card.name, card.health]; }));

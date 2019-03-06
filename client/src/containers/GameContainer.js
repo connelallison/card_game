@@ -5,6 +5,7 @@ import PlayerHand from "../components/PlayerHand.js";
 import Deck from "../components/Deck.js";
 import BoardHalf from "../components/BoardHalf.js";
 import TurnTimer from "../components/TurnTimer.js";
+import TestGameButton from "../components/TestGameButton.js";
 // import PubSub from "../helpers/PubSub.js";
 import socket from "../helpers/websocket.js";
 
@@ -39,22 +40,38 @@ class GameContainer extends Component {
           canPlay: {}
         }
       },
-      turnTimer: 0
+      turnTimer: 0,
+      requestTestGameButtonEnabled: true
     };
     this.timerID = setInterval(
       () => this.tick(),
       10
     );
+    this.handleRequestTestGame = this.handleRequestTestGame.bind(this);
 
     const gameContainer = this;
     socket.on("gameStateUpdate", function (gameState) {
       // console.log(gameState);
       // console.log(gameContainer);
       gameContainer.setState({gameState: gameState});
+      if (gameContainer.state.gameState.started && !gameContainer.state.gameState.winner) {
+        gameContainer.setState({requestTestGameButtonEnabled: false})
+      } else {
+        gameContainer.setState({requestTestGameButtonEnabled: true})
+      }
     });
     socket.on("turnTimerUpdate", function (turnTimer) {
       gameContainer.setState({turnTimer: turnTimer});
     })
+  }
+
+  handleRequestTestGame(){
+    if (this.state.requestTestGameButtonEnabled) {
+      console.log("requesting test game");
+      socket.emit("requestTestGame");
+    } else {
+      console.log("test game button disabled");
+    }
   }
 
   tick() {
@@ -84,6 +101,7 @@ class GameContainer extends Component {
 
     return (
       <Fragment>
+      <TestGameButton onRequested={this.handleRequestTestGame}/>
       <Hero attack={this.state.gameState.opponent.attack}
       health={this.state.gameState.opponent.health}
       currentMana={this.state.gameState.opponent.currentMana}

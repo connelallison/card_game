@@ -1,4 +1,6 @@
 import React from "react";
+import Minion from "./Minion.js"
+import Spell from "./Spell.js"
 
 const PlayerHand = (props) => {
   let cardList;
@@ -6,11 +8,11 @@ const PlayerHand = (props) => {
     cardList = props.cards.map((card) => {
       if (card.type === "minion") {
         return (
-          <p>{card.name}: {card.cost} mana, {card.attack} attack, {card.health} health minion</p>
+          <Minion name={card.name} cost={card.cost} attack={card.attack} health={card.health}/>
         )
       } else if (card.type === "spell") {
         return (
-          <p>{card.name}: {card.cost} mana spell</p>
+          <Spell name={card.name} cost={card.cost}/>
         )
       }
     });
@@ -22,7 +24,7 @@ const PlayerHand = (props) => {
 
   return(
     <div className="player-hand">
-    <p>My current cards:</p>
+    <p className="lowerMargin">My current cards:</p>
     <div className="cardList">
       {cardList}
     </div>

@@ -85,16 +85,16 @@ class GameContainer extends Component {
     let turnTimer;
     if (!this.state.gameState.winner && this.state.gameState.started) {
       if (this.state.gameState.myTurn) {
-        gameStatus = <p className="gameStatus">It is currently my turn.</p>
+        gameStatus = <p className="lowerMargin">It is currently my turn.</p>
       } else {
-        gameStatus = <p className="gameStatus">It is currently my opponent's turn.</p>
+        gameStatus = <p className="lowerMargin">It is currently my opponent's turn.</p>
       }
       turnTimer = <TurnTimer mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer}/>
     } else if (this.state.gameState.winner) {
-      gameStatus = <p className="gameStatus">The game is over: {this.state.gameState.winner}.</p>
+      gameStatus = <p className="lowerMargin">The game is over: {this.state.gameState.winner}.</p>
       turnTimer = null;
     } else {
-      gameStatus = <p className="gameStatus">The game has not started yet.</p>
+      gameStatus = <p className="lowerMargin">The game has not started yet.</p>
       turnTimer = null;
     }
 
@@ -102,11 +102,13 @@ class GameContainer extends Component {
     return (
       <Fragment>
       <TestGameButton onRequested={this.handleRequestTestGame}/>
+      <div className="heroDiv">
       <Hero attack={this.state.gameState.opponent.attack}
       health={this.state.gameState.opponent.health}
       currentMana={this.state.gameState.opponent.currentMana}
       maxMana={this.state.gameState.opponent.maxMana}
       mine={false}/>
+      </div>
       <br/>
       <OpponentHand cardNumber={this.state.gameState.opponent.hand}/>
       <br/>
@@ -120,11 +122,13 @@ class GameContainer extends Component {
       <br/>
       <PlayerHand cards={this.state.gameState.my.hand}/>
       <br/>
+      <div className="heroDiv">
       <Hero attack={this.state.gameState.my.attack}
       health={this.state.gameState.my.health}
       currentMana={this.state.gameState.my.currentMana}
       maxMana={this.state.gameState.my.maxMana}
       mine={true}/>
+      </div>
       <br/>
       {gameStatus}
       {turnTimer}

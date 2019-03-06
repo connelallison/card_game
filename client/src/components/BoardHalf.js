@@ -1,11 +1,12 @@
 import React from "react";
+import Minion from "./Minion.js"
 
 const BoardHalf = (props) => {
   let minionList;
   if (props.minions.length > 0) {
     minionList = props.minions.map((minion) => {
         return (
-          <p>{minion.name}: {minion.cost} mana, {minion.attack} attack, {minion.health} health minion</p>
+          <Minion name={minion.name} cost={minion.cost} attack={minion.attack} health={minion.health}/>
         );
     });
   } else {
@@ -23,7 +24,7 @@ const BoardHalf = (props) => {
 
   return(
     <div className="boardhalf">
-      <p>{owner} current minions:</p>
+      <p className="lowerMargin">{owner} current minions:</p>
       <div className="cardList">
         {minionList}
       </div>

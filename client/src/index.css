@@ -14,18 +14,35 @@ body {
 }
 
 p {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 5px;
+  margin-right: 5px;
+  /* text-align: center; */
+}
+
+p.lowerMargin {
   margin: 5px;
+  text-align: center;
 }
 
 .deck {
   text-align: right;
+  margin: 0px;
   /* display: inline-block; */
 }
 
 .hero {
   /* background-image: url("./images/dogecropped.jpg"); */
   text-align: center;
+  border: 1px solid black;
+  border-radius: 3px;
+}
 
+.heroDiv {
+  display: flex;
+  justify-content: center;
+  text-align: center;
 }
 
 .opponent-hand{
@@ -33,23 +50,36 @@ p {
 }
 
 .player-hand{
+  /* display: flex;
+  justify-content: center; */
   text-align: center;
 }
 
 .gameStatus{
-  text-align: center;
+  /* text-align: center; */
 }
 
 .boardhalf{
+  /* display: flex;
+  justify-content: center; */
   text-align: center;
 }
 
 .cardList{
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  text-align: center;
 }
 
 .turn-timer{
   text-align: center;
+}
+
+.card{
+  border: 1px solid black;
+  border-radius: 3px;
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 code {

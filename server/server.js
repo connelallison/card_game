@@ -66,7 +66,8 @@ io.on('connection', function (socket) {
     gameEvent.on(`newTurnTimer:${socketID}`, function (turnTimer) {
       socket.emit("turnTimerUpdate", turnTimer);
     })
-    setTimeout(testGame, 3000, socketID);
+    // setTimeout(testGame, 1000, socketID);
+    testGame(socketID);
   })
   socket.on('disconnect', () => {
     connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);

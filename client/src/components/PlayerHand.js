@@ -14,6 +14,8 @@ const PlayerHand = (props) => {
         return (
           <Spell name={card.name} cost={card.cost}/>
         )
+      } else {
+        return new Error("card is neither a minion nor a spell");
       }
     });
   } else {

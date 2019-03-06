@@ -4,12 +4,13 @@ const path = require('path');
 const EventEmitter = require("events");
 const ServerPlayer = require("./ServerPlayer.js");
 const gameEvent = require("./GameEvent.js")
-const { Deck, deck1, deck2 } = require("./game/Deck.js");
+// const { Deck, deck1, deck2 } = require("./game/Deck.js");
 const Game = require("./game/Game.js");
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+// const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 function testGame(socketID=null) {
-  const testGame = new Game(deck1, deck2, true, true, socketID);
+  const testGame = new Game("player 1", "player 2", "TestDeckOne", "TestDeckTwo", true, true, socketID);
+
   // const gameThread = new Worker('./worker.js');
   // gameThread.on('message', (message) => {
   //   console.log(message)

@@ -1,22 +1,25 @@
 const GamePlayer = require("./GamePlayer.js");
 const { create } = require("./CardLib");
-const Card = require("./Card.js");
-const Minion = require("./Minion.js");
-const Spell = require("./Spell.js");
+const { deck } = require("./DeckLib");
+// const Card = require("./Card.js");
+// const Minion = require("./Minion.js");
+// const Spell = require("./Spell.js");
 // const { Deck, deck1, deck2 } = require("./Deck.js");
 const EventEmitter = require("events");
 const gameEvent = require("../GameEvent.js")
 
 class Game {
-  constructor(player1deck, player2deck, debug=false, online=false, socketID=null) {
+  constructor(player1name, player2name, player1deckID, player2deckID, debug=false, online=false, socketID=null) {
     // Game.games.push(this);
     this.debug = debug;
     this.online = online;
     this.socketID = socketID;
     this.player1turn = 0;
     this.player2turn = 0;
-    this.player1 = new GamePlayer(player1deck);
-    this.player2 = new GamePlayer(player2deck);
+    this.player1 = new GamePlayer(player1name);
+    this.player2 = new GamePlayer(player2name);
+    this.player1deckID = player1deckID;
+    this.player2deckID = player2deckID;
     this.activePlayer = null;
     this.nextActivePlayer = this.player1;
     this.nextNextActivePlayer = this.player2;
@@ -146,6 +149,8 @@ class Game {
     this.player2.opponent = this.player1;
     this.player1.game = this;
     this.player2.game = this;
+    this.player1.deck = deck(this.player1deckID, this.player1).cards;
+    this.player2.deck = deck(this.player2deckID, this.player2).cards;
     this.player1.allActive().forEach((card) => { card.owner = this.player1; })
     this.player2.allActive().forEach((card) => { card.owner = this.player2; })
   }

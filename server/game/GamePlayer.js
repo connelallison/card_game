@@ -1,18 +1,18 @@
-const Card = require("./Card.js");
-const Minion = require("./Minion.js");
-const Spell = require("./Spell.js");
+// const Card = require("./Card.js");
+// const Minion = require("./Minion.js");
+// const Spell = require("./Spell.js");
 const { create } = require("./CardLib");
 
 class GamePlayer {
-  constructor(deck) {
-    this.name = deck.playerName;
+  constructor(name) {
+    this.name = name;
     this.attack = 0;
     this.health = 20;
     this.maxMana = 2;
     this.currentMana = 2;
     this.hand = [];
     this.maxHand = 7;
-    this.deck = deck.shuffle();
+    this.deck= [];
     this.board = [];
     this.maxBoard = 5;
     this.graveyard = [];

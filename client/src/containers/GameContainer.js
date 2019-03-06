@@ -6,6 +6,7 @@ import Deck from "../components/Deck.js";
 import BoardHalf from "../components/BoardHalf.js";
 import TurnTimer from "../components/TurnTimer.js";
 import TestGameButton from "../components/TestGameButton.js";
+import DisplayName from "../components/DisplayName.js";
 // import PubSub from "../helpers/PubSub.js";
 import socket from "../helpers/websocket.js";
 
@@ -65,6 +66,13 @@ class GameContainer extends Component {
     })
   }
 
+  handleUpdateDisplayName(displayName){
+    socket.emit("updateDisplayName", {
+      displayName: displayName
+    });
+    localStorage.setItem("displayName", displayName);
+  }
+
   handleRequestTestGame(){
     if (this.state.requestTestGameButtonEnabled) {
       console.log("requesting test game");
@@ -73,6 +81,7 @@ class GameContainer extends Component {
       console.log("test game button disabled");
     }
   }
+
 
   tick() {
     this.setState({
@@ -83,6 +92,7 @@ class GameContainer extends Component {
   render(){
     let gameStatus;
     let turnTimer;
+    let currentName;
     if (!this.state.gameState.winner && this.state.gameState.started) {
       if (this.state.gameState.myTurn) {
         gameStatus = <p className="lowerMargin">It is currently my turn.</p>
@@ -97,11 +107,19 @@ class GameContainer extends Component {
       gameStatus = <p className="lowerMargin">The game has not started yet.</p>
       turnTimer = null;
     }
-
+    if (localStorage.getItem("displayName")) {
+      currentName = localStorage.getItem("displayName");
+    } else {
+      currentName = "Anonymous";
+    }
+    // console.log(currentName);
 
     return (
       <Fragment>
+      <div className="topBar">
+      <DisplayName currentName={currentName} handleSubmit={this.handleUpdateDisplayName}/>
       <TestGameButton onRequested={this.handleRequestTestGame}/>
+      </div>
       <div className="heroDiv">
       <Hero attack={this.state.gameState.opponent.attack}
       health={this.state.gameState.opponent.health}

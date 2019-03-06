@@ -293,9 +293,9 @@ class Game {
     this.nextNextActivePlayer = null;
     this.gameOver = true;
     if (this.player1.alive() && !this.player2.alive()) {
-      this.winner = "player1 wins";
+      this.winner = this.player1.name + " wins";
     } else if (!this.player1.alive() && this.player2.alive()) {
-      this.winner = "player2 wins";
+      this.winner = this.player2.name + " wins";
     } else if (!this.player1.alive() && !this.player2.alive()){
       this.winner = "draw";
     } else {

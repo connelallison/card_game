@@ -9,7 +9,7 @@ const Game = require("./game/Game.js");
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 function testGame(socketID=null) {
-  const testGame = new Game("player 1", "player 2", "TestDeckOne", "TestDeckTwo", true, true, socketID);
+  const testGame = new Game(connectedPlayers[socketID].displayName, "TestBot", "TestDeckOne", "TestDeckTwo", true, true, socketID);
 
   // const gameThread = new Worker('./worker.js');
   // gameThread.on('message', (message) => {
@@ -38,20 +38,20 @@ const server = app.listen(port, function () {
 
 const io = socket(server);
 
-const connectedPlayers = [];
+const connectedPlayers = {};
 
 io.on('connection', function (socket) {
   console.log('made websocket connection: ', socket.id);
   const socketID = socket.id;
   const serverPlayer = new ServerPlayer(socketID);
-  connectedPlayers.push(serverPlayer);
+  connectedPlayers[socketID] = serverPlayer;
   console.log(connectedPlayers);
   socket.on("updateDisplayName", function (data) {
     console.log("updateDisplayName request received");
     const oldName = serverPlayer.displayName;
     serverPlayer.displayName = data.displayName;
     console.log(serverPlayer.displayName);
-    io.emit("displayNameAnnouncement", {
+    socket.broadcast.emit("displayNameAnnouncement", {
       message: `${oldName} is now: ${serverPlayer.displayName}`
     })
   })
@@ -70,7 +70,8 @@ io.on('connection', function (socket) {
     testGame(socketID);
   })
   socket.on('disconnect', () => {
-    connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
+    // connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
+    delete connectedPlayers[socketID];
     console.log('disconnected: ', socketID);
   });
   // class GameEvent extends EventEmitter {}

@@ -1,5 +1,9 @@
 *{
   background: beige;
+  outline: none;
+}
+input {
+
 }
 
 body {
@@ -80,6 +84,14 @@ p.lowerMargin {
   border-radius: 3px;
   margin-left: 3px;
   margin-right: 3px;
+}
+
+.topBar{
+  display: flex;
+}
+
+#request-test-game{
+  background: lightgrey;
 }
 
 code {

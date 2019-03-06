@@ -8,6 +8,20 @@ const { Deck, deck1, deck2 } = require("./game/Deck.js");
 const Game = require("./game/Game.js");
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
+function testGame() {
+  const testGame = new Game(deck1, deck2, true, true);
+  // const gameThread = new Worker('./worker.js');
+  // gameThread.on('message', (message) => {
+  //   console.log(message)
+  //   console.log('Message received from worker');
+  // });
+  //
+  // const message = () => {
+  //   gameThread.postMessage("echo!");
+  // }
+  // setTimeout(message, 250);
+  // console.log('Message posted to worker');
+}
 
 const app = express();
 app.use(express.static(path.join(__dirname, '../client/public')));
@@ -53,25 +67,15 @@ gameEvent.on("newGameStatus", function (gameState) {
   io.emit("gameStateUpdate", gameState);
 });
 
-function testGame() {
-  const testGame = new Game(deck1, deck2, true, true);
-  // const gameThread = new Worker('./worker.js');
-  // gameThread.on('message', (message) => {
-  //   console.log(message)
-  //   console.log('Message received from worker');
-  // });
-  //
-  // const message = () => {
-  //   gameThread.postMessage("echo!");
-  // }
-  // setTimeout(message, 250);
-  // console.log('Message posted to worker');
-}
+gameEvent.on("newTurnTimer", function (turnTimer) {
+  io.emit("turnTimerUpdate", turnTimer);
+})
+
 
 setTimeout(testGame, 5000);
 
 // io.emit("gameStateUpdate", {
-//   gameState: {
+//     started: false,
 //     winner: null,
 //     myTurn: true,
 //     my: {
@@ -91,10 +95,9 @@ setTimeout(testGame, 5000);
 //       board: [],
 //       hand: 3,
 //       deck: 25
-//     }
-//   },
-//   legalMoves: {
-//     canAttackWith: {},
-//     canPlay: {}
+//     },
+//     legalMoves: {
+//       canAttackWith: {},
+//       canPlay: {}
 //   }
 // })

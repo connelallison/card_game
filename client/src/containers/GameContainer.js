@@ -4,6 +4,7 @@ import OpponentHand from "../components/OpponentHand.js";
 import PlayerHand from "../components/PlayerHand.js";
 import Deck from "../components/Deck.js";
 import BoardHalf from "../components/BoardHalf.js";
+import TurnTimer from "../components/TurnTimer.js";
 // import PubSub from "../helpers/PubSub.js";
 import socket from "../helpers/websocket.js";
 
@@ -12,6 +13,7 @@ class GameContainer extends Component {
     super(props);
     this.state = {
       gameState: {
+        started: null,
         winner: null,
         myTurn: false,
         my: {
@@ -31,33 +33,54 @@ class GameContainer extends Component {
           board: [],
           hand: 0,
           deck: 0
+        },
+        legalMoves: {
+          canAttackWith: {},
+          canPlay: {}
         }
       },
-      legalMoves: {
-        canAttackWith: {},
-        canPlay: {}
-      }
+      turnTimer: 0
     };
+    this.timerID = setInterval(
+      () => this.tick(),
+      10
+    );
+
     const gameContainer = this;
-    socket.on("gameStateUpdate", function (data) {
-      // console.log(data);
+    socket.on("gameStateUpdate", function (gameState) {
+      // console.log(gameState);
       // console.log(gameContainer);
-      gameContainer.setState(data)
+      gameContainer.setState({gameState: gameState});
+    });
+    socket.on("turnTimerUpdate", function (turnTimer) {
+      gameContainer.setState({turnTimer: turnTimer});
     })
   }
 
+  tick() {
+    this.setState({
+      turnTimer: (this.state.turnTimer - 10)
+    });
+  }
 
   render(){
     let gameStatus;
-    if (!this.state.gameState.winner) {
+    let turnTimer;
+    if (!this.state.gameState.winner && this.state.gameState.started) {
       if (this.state.gameState.myTurn) {
         gameStatus = <p className="gameStatus">It is currently my turn.</p>
       } else {
-        gameStatus = <p className="gameStatus">It is currently not my turn.</p>
+        gameStatus = <p className="gameStatus">It is currently my opponent's turn.</p>
       }
-    } else {
+      turnTimer = <TurnTimer mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer}/>
+    } else if (this.state.gameState.winner) {
       gameStatus = <p className="gameStatus">The game is over: {this.state.gameState.winner}.</p>
+      turnTimer = null;
+    } else {
+      gameStatus = <p className="gameStatus">The game has not started yet.</p>
+      turnTimer = null;
     }
+
 
     return (
       <Fragment>
@@ -86,6 +109,7 @@ class GameContainer extends Component {
       mine={true}/>
       <br/>
       {gameStatus}
+      {turnTimer}
       </Fragment>
     );
   }

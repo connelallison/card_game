@@ -34,7 +34,7 @@ class Game {
     if (this.online) {
       // console.log(gameEvent);
       const gameState = {
-        gameState: {
+          started: true,
           winner: this.winner,
           myTurn: this.player1.myTurn(),
           my: {
@@ -54,16 +54,19 @@ class Game {
             board: this.player2.boardReport(),
             hand: this.player2.hand.length,
             deck: this.player2.deck.length
+          },
+          legalMoves: {
+            canAttackWith: this.player1.reportMinionsReadyToAttack(),
+            canPlay: this.player1.reportPlayableCards()
           }
-        },
-        legalMoves: {
-          canAttackWith: this.player1.reportMinionsReadyToAttack(),
-          canPlay: this.player1.reportPlayableCards()
-        }
       };
       // console.log(gameState);
       gameEvent.emit("newGameStatus", gameState);
     }
+  }
+
+  announceNewTurn(){
+    gameEvent.emit("newTurnTimer", 5000);
   }
 
   allActive(){
@@ -155,7 +158,7 @@ class Game {
     this.player2.board[0].zone = "board";
     this.player2.board[0].owner = this.player2;
     // console.log(this);
-    this.announceGameState();
+    // this.announceGameState();
     this.startTurn();
   }
 
@@ -187,6 +190,8 @@ class Game {
     this.activePlayer = this.nextActivePlayer;
     this.nextActivePlayer = this.nextNextActivePlayer;
     this.nextNextActivePlayer = this.activePlayer;
+    this.announceNewTurn();
+    this.announceGameState();
     // console.log(`\n${this.activePlayer.name}'s playable cards: `);
     // console.log(this.activePlayer.playableCards().map((card) => { return card.name; }));
     this.delay();

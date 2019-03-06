@@ -48,6 +48,10 @@ p {
   display: inline-block;
 }
 
+.turn-timer{
+  text-align: center;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

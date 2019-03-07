@@ -9,7 +9,11 @@ const Game = require("./game/Game.js");
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 function testGame(socketID=null) {
-  const testGame = new Game(connectedPlayers[socketID].displayName, "TestBot", "TestDeckOne", "TestDeckTwo", true, true, socketID);
+  if (Math.floor(Math.random()*2)) {
+    const testGame = new Game(connectedPlayers[socketID].displayName, "TestBot", "TestDeckOne", "TestDeckTwo", true, true, socketID);
+  } else {
+    const testGame = new Game(connectedPlayers[socketID].displayName, "TestBot", "TestDeckTwo", "TestDeckOne", true, true, socketID);
+  }
 
   // const gameThread = new Worker('./worker.js');
   // gameThread.on('message', (message) => {

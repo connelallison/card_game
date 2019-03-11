@@ -1,3 +1,7 @@
+This is a very simple implementation of an online card game, roughly along the lines of Hearthstone. It was created as my final project at the end of CodeClan, a 16 week coding course. It is written in JavaScript and makes use of (most notably) React, Express, and Socket.io.
+
+The game logic is located entirely on the server, which provides the client with only the information it needs to display the game state to the player and acknowledge only valid instructions. This version does not yet have a way implemented for the client to communicate the instructions to the server, however, so instead the client can request a test game from the server - the server will start a game between two very simple bots, and the user can watch the game in the client.
+
 To set up and view the game:
 
 1. Open 2 terminal tabs.

@@ -11,7 +11,11 @@ const BoardHalf = (props) => {
     });
   } else {
     minionList = [
-      <p>No minions on board.</p>
+      <p>No minions on board.</p>,
+      <br/>,
+      <br/>,
+      <br/>,
+      <br/>
     ]
   }
 

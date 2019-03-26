@@ -4,8 +4,9 @@
 const { create } = require("./CardLib");
 
 class GamePlayer {
-  constructor(name) {
+  constructor(name, socketID=null) {
     this.name = name;
+    this.socketID = socketID;
     this.attack = 0;
     this.health = 20;
     this.maxMana = 2;

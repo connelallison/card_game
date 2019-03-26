@@ -33,7 +33,7 @@ class GameContainer extends Component {
           currentMana: 0,
           maxMana: 0,
           board: [],
-          hand: 0,
+          hand: [],
           deck: 0
         },
         legalMoves: {
@@ -128,7 +128,7 @@ class GameContainer extends Component {
       mine={false}/>
       </div>
       <br/>
-      <OpponentHand cardNumber={this.state.gameState.opponent.hand}/>
+      <OpponentHand cards={this.state.gameState.opponent.hand}/>
       <br/>
       <Deck mine={false} cardNumber={this.state.gameState.opponent.deck}/>
       <br/>

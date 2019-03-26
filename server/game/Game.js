@@ -47,7 +47,7 @@ class Game {
       // console.log(`game: newGameStatus:${this.socketID}`);
       if (this.player1.socketID) {
         gameEvent.emit(`newGameStatus:${this.player1.socketID}`, player1gameState);
-      } 
+      }
       if (this.player2.socketID) {
         gameEvent.emit(`newGameStatus:${this.player2.socketID}`, player2gameState);
       }
@@ -93,11 +93,15 @@ class Game {
   }
 
   announceNewTurn(){
-    if (this.socketID) {
-      gameEvent.emit(`newTurnTimer:${this.socketID}`, 5000);
-    } else {
-      gameEvent.emit("newTurnTimer", 5000);
+    if (this.player1.socketID) {
+      gameEvent.emit(`newTurnTimer:${this.player1.socketID}`, 5000);
     }
+    if (this.player2.socketID) {
+      gameEvent.emit(`newTurnTimer:${this.player2.socketID}`, 5000);
+    }
+    //  else {
+    //   gameEvent.emit("newTurnTimer", 5000);
+    // }
   }
 
   allActive(){

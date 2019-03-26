@@ -84,9 +84,9 @@ class GameContainer extends Component {
 
 
   tick() {
-    this.setState({
-      turnTimer: (this.state.turnTimer - 10)
-    });
+      this.setState({
+        turnTimer: (this.state.turnTimer - 10)
+      });
   }
 
   render(){

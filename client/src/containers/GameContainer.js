@@ -44,10 +44,10 @@ class GameContainer extends Component {
       turnTimer: 0,
       requestTestGameButtonEnabled: true
     };
-    this.timerID = setInterval(
-      () => this.tick(),
-      10
-    );
+    // this.timerID = setInterval(
+    //   () => this.tick(),
+    //   10
+    // );
     this.handleRequestTestGame = this.handleRequestTestGame.bind(this);
 
     const gameContainer = this;

@@ -23,6 +23,7 @@ class Game {
     this.nextActivePlayer = this.player1;
     this.nextNextActivePlayer = this.player2;
     this.gameOver = false;
+    this.turnLength = 50000;
     this.turnTimer;
     this.winner;
     this.initPlayers();
@@ -94,13 +95,13 @@ class Game {
 
   announceNewTurn(){
     if (this.player1.socketID) {
-      gameEvent.emit(`newTurnTimer:${this.player1.socketID}`, 5000);
+      gameEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.turnLength);
     }
     if (this.player2.socketID) {
-      gameEvent.emit(`newTurnTimer:${this.player2.socketID}`, 5000);
+      gameEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.turnLength);
     }
     //  else {
-    //   gameEvent.emit("newTurnTimer", 5000);
+    //   gameEvent.emit("newTurnTimer", this.turnLength);
     // }
   }
 
@@ -256,7 +257,7 @@ class Game {
     // console.log(`Current mana of ${this.activePlayer.name}: ${this.activePlayer.currentMana}`);
     if (!this.gameOver) {
       if (this.debug) { console.log(this.activePlayer.name + " is the active player."); }
-      this.turnTimer = setTimeout(this.endTurn.bind(this), 5000);
+      this.turnTimer = setTimeout(this.endTurn.bind(this), this.turnLength);
     }
   }
 

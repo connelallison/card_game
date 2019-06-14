@@ -5,5 +5,11 @@ class Fireburst extends Spell {
     super("Fireburst", 2);
     this.name = "Fireburst";
   }
+
+  onPlay() {
+    console.log(`${this.owner.name} casts ${this.name}.`);
+    this.owner.opponent.takeDamage(3);
+    this.owner.game.resolveDamage();
+  }
 }
 module.exports = Fireburst;

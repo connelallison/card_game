@@ -20,11 +20,11 @@ class TestDeckTwo extends Deck {
       create("JuniorOrc"),
       create("JuniorOrc"),
       create("JuniorOrc"),
-      create("Fireburst"),
-      create("Fireburst"),
-      create("Fireburst"),
-      create("Fireburst"),
-      create("Fireburst")
+      create("Consume"),
+      create("Consume"),
+      create("Consume"),
+      create("Consume"),
+      create("Consume")
     ];
     super("TestDeckTwo", "Test Deck 2", player, cards);
   }

@@ -4,11 +4,19 @@ import Minion from "./Minion.js"
 const BoardHalf = (props) => {
   let minionList;
   if (props.minions.length > 0) {
-    minionList = props.minions.map((minion) => {
-        return (
-          <Minion name={minion.name} cost={minion.cost} attack={minion.attack} health={minion.health}/>
-        );
-    });
+    if (props.mine) {
+      minionList = props.minions.map((minion) => {
+          return (
+            <Minion name={minion.name} cost={minion.cost} attack={minion.attack} health={minion.health} canAttack={minion.canAttack}/>
+          );
+      });
+    } else {
+      minionList = props.minions.map((minion) => {
+          return (
+            <Minion name={minion.name} cost={minion.cost} attack={minion.attack} health={minion.health}/>
+          );
+      });
+    }
   } else {
     minionList = [
       <p>No minions on board.</p>,

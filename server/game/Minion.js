@@ -20,8 +20,13 @@ class Minion extends Card {
       type: this.type,
       zone: this.zone,
       ownerName: this.owner.name,
-      canAttack: this.canAttack()
+      canAttack: this.canAttack(),
+      canBePlayed: this.canBePlayed()
     }
+  }
+
+  canBePlayed(){
+    return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.owner.board.length < this.owner.maxBoard && this.isLegalMove();
   }
 
   onPlay(){
@@ -76,7 +81,7 @@ class Minion extends Card {
     // console.log(this.ready);
     // console.log(this.attackTargets().length > 0);
     // console.log(this.ready && this.attackTargets().length > 0);
-    return this.ready && this.attackTargets().length > 0;
+    return this.owner.myTurn() && this.ready && this.attackTargets().length > 0;
   }
 
   makeAttack(target){

@@ -23,7 +23,7 @@ class Game {
     this.nextActivePlayer = this.player1;
     this.nextNextActivePlayer = this.player2;
     this.gameOver = false;
-    this.turnLength = 50000;
+    this.turnLength = 5000;
     this.turnTimer;
     this.winner;
     this.initPlayers();
@@ -234,14 +234,14 @@ class Game {
     this.announceGameState();
     // console.log(`\n${this.activePlayer.name}'s playable cards: `);
     // console.log(this.activePlayer.playableCards().map((card) => { return card.name; }));
-    this.delay();
+    // this.delay();
     if (this.activePlayer.playableCards().length > 0) {
       this.activePlayer.play(this.activePlayer.playableCards()[0]);
     } else {
       console.log("no playable cards");
       console.log(this.activePlayer);
     }
-    this.delay();
+    // this.delay();
     // console.log(`\n${this.activePlayer.name}'s minions ready to attack: `);
     // console.log(this.activePlayer.minionsReadyToAttack().map((card) => { return [card.name, card.health]; }));
     this.activePlayer.minionsReadyToAttack().forEach((minion) => {
@@ -250,7 +250,7 @@ class Game {
       } else {
         minion.makeAttack(minion.owner.opponent);
       }
-      this.delay(2000);
+      // this.delay(2000);
     })
     // console.log("\nAfter becoming active: ");
     // console.log(`Max mana of ${this.activePlayer.name}: ${this.activePlayer.maxMana}`);

@@ -86,6 +86,14 @@ p.lowerMargin {
   margin-right: 3px;
 }
 
+.canBePlayed{
+  outline: solid blue 1px;
+}
+
+.canAttack{
+  outline: solid red 1px;
+}
+
 .topBar{
   display: flex;
 }

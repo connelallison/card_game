@@ -11,11 +11,11 @@ const PlayerHand = (props) => {
         return ( <Unknown/>);
       } else if (card.type === "minion") {
         return (
-          <Minion name={card.name} cost={card.cost} attack={card.attack} health={card.health}/>
+          <Minion name={card.name} cost={card.cost} attack={card.attack} health={card.health} canBePlayed={card.canBePlayed}/>
         );
       } else if (card.type === "spell") {
         return (
-          <Spell name={card.name} cost={card.cost}/>
+          <Spell name={card.name} cost={card.cost} canBePlayed={card.canBePlayed}/>
         );
       } else {
         return new Error("card is neither a minion nor a spell");

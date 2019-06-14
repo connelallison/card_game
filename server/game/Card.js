@@ -85,6 +85,10 @@ class Card {
     return true;
   }
 
+  canBePlayed(){
+    return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.isLegalMove();
+  }
+
   onDraw(){
 
   }

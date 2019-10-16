@@ -9,8 +9,9 @@ const EventEmitter = require("events");
 const gameEvent = require("../GameEvent.js")
 
 class Game {
-  constructor(player1name, player2name, player1deckID, player2deckID, debug=false, online=false, player1socketID=null, player2socketID=null) {
+  constructor(player1name, player2name, player1deckID, player2deckID, botPlayer=false, debug=false, online=false, player1socketID=null, player2socketID=null) {
     // Game.games.push(this);
+    this.botPlayer = botPlayer;
     this.debug = debug;
     this.online = online;
     this.player1turn = 0;
@@ -106,8 +107,7 @@ class Game {
   }
 
   allActive(){
-    let allActive = this.board().concat(this.hands())
-    allActive = allActive.concat(this.decks());
+    let allActive = this.board().concat(this.hands()).concat(this.decks());
     return allActive;
   }
 
@@ -169,14 +169,20 @@ class Game {
   }
 
   initPlayers(){
+    if (this.botPlayer) {
+      this.player1.bot = true;
+    } else {
+      this.player1.bot = false;
+    }
+    this.player2.bot = true;
     this.player1.opponent = this.player2;
     this.player2.opponent = this.player1;
     this.player1.game = this;
     this.player2.game = this;
     this.player1.deck = deck(this.player1deckID, this.player1).cards;
     this.player2.deck = deck(this.player2deckID, this.player2).cards;
-    this.player1.allActive().forEach((card) => { card.owner = this.player1; })
-    this.player2.allActive().forEach((card) => { card.owner = this.player2; })
+    this.player1.allActive().forEach((card) => { card.owner = this.player1; });
+    this.player2.allActive().forEach((card) => { card.owner = this.player2; });
   }
 
   mulliganPhase(){
@@ -235,23 +241,27 @@ class Game {
     // console.log(`\n${this.activePlayer.name}'s playable cards: `);
     // console.log(this.activePlayer.playableCards().map((card) => { return card.name; }));
     // this.delay();
-    if (this.activePlayer.playableCards().length > 0) {
-      this.activePlayer.play(this.activePlayer.playableCards()[0]);
-    } else {
-      console.log("no playable cards");
-      console.log(this.activePlayer);
+    if (this.activePlayer.bot) {
+      if (this.activePlayer.playableCards().length > 0) {
+        this.activePlayer.play(this.activePlayer.playableCards()[0]);
+      } else {
+        console.log("no playable cards");
+        console.log(this.activePlayer);
+      }
     }
     // this.delay();
     // console.log(`\n${this.activePlayer.name}'s minions ready to attack: `);
     // console.log(this.activePlayer.minionsReadyToAttack().map((card) => { return [card.name, card.health]; }));
-    this.activePlayer.minionsReadyToAttack().forEach((minion) => {
-      if (minion.owner.opponent.board[0]) {
-        minion.makeAttack(minion.owner.opponent.board[0]);
-      } else {
-        minion.makeAttack(minion.owner.opponent);
-      }
-      // this.delay(2000);
-    })
+    if (this.activePlayer.bot) {
+      this.activePlayer.minionsReadyToAttack().forEach((minion) => {
+        if (minion.owner.opponent.board[0]) {
+          minion.makeAttack(minion.owner.opponent.board[0]);
+        } else {
+          minion.makeAttack(minion.owner.opponent);
+        }
+        // this.delay(2000);
+      })
+    }
     // console.log("\nAfter becoming active: ");
     // console.log(`Max mana of ${this.activePlayer.name}: ${this.activePlayer.maxMana}`);
     // console.log(`Current mana of ${this.activePlayer.name}: ${this.activePlayer.currentMana}`);

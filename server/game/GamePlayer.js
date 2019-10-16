@@ -21,6 +21,7 @@ class GamePlayer {
     this.summoned = [];
     this.game;
     this.opponent;
+    this.bot;
   }
 
 
@@ -69,6 +70,7 @@ class GamePlayer {
       }
     } else {
       this.health = 0;
+      this.game.resolveDamage();
       // throw "overdrew and died"
     }
   }
@@ -84,6 +86,7 @@ class GamePlayer {
       }
     } else {
       this.health = 0;
+      this.game.resolveDamage();
       // throw "overdrew and died"
 
     }

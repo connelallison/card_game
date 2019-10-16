@@ -1,12 +1,12 @@
-const Card = require("./Card.js");
+const Card = require('./Card.js')
 
 class Spell extends Card {
-  constructor(name, cost) {
-    super(name, cost);
-    this.type = "spell";
+  constructor (name, cost) {
+    super(name, cost)
+    this.type = 'spell'
   }
 
-  provideReport(){
+  provideReport () {
     return {
       name: this.name,
       id: this.id,
@@ -17,8 +17,6 @@ class Spell extends Card {
       ownerName: this.owner.name
     }
   }
-
-
 }
 
-module.exports = Spell;
+module.exports = Spell

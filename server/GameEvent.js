@@ -1,5 +1,5 @@
-const EventEmitter = require("events");
+const EventEmitter = require('events')
 class GameEvent extends EventEmitter {}
-const gameEvent = new GameEvent();
+const gameEvent = new GameEvent()
 
-module.exports = gameEvent;
+module.exports = gameEvent

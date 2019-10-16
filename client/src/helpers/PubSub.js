@@ -2,13 +2,13 @@ const PubSub = {
   publish: function (channel, payload) {
     const event = new CustomEvent(channel, {
       detail: payload
-    });
-    document.dispatchEvent(event);
+    })
+    document.dispatchEvent(event)
   },
 
   subscribe: function (channel, callback) {
-    document.addEventListener(channel, callback);
+    document.addEventListener(channel, callback)
   }
-};
+}
 
-export default PubSub;
+export default PubSub

@@ -1,18 +1,18 @@
-const express = require('express');
-const socket = require('socket.io');
-const path = require('path');
-const EventEmitter = require("events");
-const ServerPlayer = require("./ServerPlayer.js");
-const gameEvent = require("./GameEvent.js")
+const express = require('express')
+const socket = require('socket.io')
+const path = require('path')
+const EventEmitter = require('events')
+const ServerPlayer = require('./ServerPlayer.js')
+const gameEvent = require('./GameEvent.js')
 // const { Deck, deck1, deck2 } = require("./game/Deck.js");
-const Game = require("./game/Game.js");
+const Game = require('./game/Game.js')
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
-function testGame(socketID=null) {
-  if (Math.floor(Math.random()*2)) {
-    const testGame = new Game(connectedPlayers[socketID].displayName, "TestBot", "TestDeckOne", "TestDeckTwo", true, true, true, socketID);
+function testGame (socketID = null) {
+  if (Math.floor(Math.random() * 2)) {
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', true, true, true, socketID)
   } else {
-    const testGame = new Game(connectedPlayers[socketID].displayName, "TestBot", "TestDeckTwo", "TestDeckOne", true, true, true, socketID);
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', true, true, true, socketID)
   }
 
   // const gameThread = new Worker('./worker.js');
@@ -28,73 +28,72 @@ function testGame(socketID=null) {
   // console.log('Message posted to worker');
 }
 
-const app = express();
-app.use(express.static(path.join(__dirname, '../client/public')));
+const app = express()
+app.use(express.static(path.join(__dirname, '../client/public')))
 
-app.get('*', (req,res) =>{
-  res.sendFile(path.join(__dirname+'/../client/public/index.html'));
-});
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../client/public/index.html'))
+})
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4000
 const server = app.listen(port, function () {
-  console.log('App is listening on port ' + port);
-});
+  console.log('App is listening on port ' + port)
+})
 
-const io = socket(server);
+const io = socket(server)
 
-const connectedPlayers = {};
+const connectedPlayers = {}
 
 io.on('connection', function (socket) {
-  console.log('made websocket connection: ', socket.id);
-  const socketID = socket.id;
-  const serverPlayer = new ServerPlayer(socketID);
-  connectedPlayers[socketID] = serverPlayer;
-  console.log(connectedPlayers);
-  socket.on("updateDisplayName", function (data) {
-    console.log("updateDisplayName request received");
-    const oldName = serverPlayer.displayName;
-    serverPlayer.displayName = data.displayName;
-    console.log(serverPlayer.displayName);
-    socket.broadcast.emit("displayNameAnnouncement", {
+  console.log('made websocket connection: ', socket.id)
+  const socketID = socket.id
+  const serverPlayer = new ServerPlayer(socketID)
+  connectedPlayers[socketID] = serverPlayer
+  console.log(connectedPlayers)
+  socket.on('updateDisplayName', function (data) {
+    console.log('updateDisplayName request received')
+    const oldName = serverPlayer.displayName
+    serverPlayer.displayName = data.displayName
+    console.log(serverPlayer.displayName)
+    socket.broadcast.emit('displayNameAnnouncement', {
       message: `${oldName} is now: ${serverPlayer.displayName}`
     })
   })
-  socket.on("requestTestGame", function () {
+  socket.on('requestTestGame', function () {
     // console.log(`server: newGameStatus:${socketID}`);
     gameEvent.on(`newGameStatus:${socketID}`, function (gameState) {
       // console.log(gameState);
-      console.log(`server: newGameStatus:${socketID}`);
-      socket.emit("gameStateUpdate", gameState);
-    });
+      console.log(`server: newGameStatus:${socketID}`)
+      socket.emit('gameStateUpdate', gameState)
+    })
 
     gameEvent.on(`newTurnTimer:${socketID}`, function (turnTimer) {
-      socket.emit("turnTimerUpdate", turnTimer);
+      socket.emit('turnTimerUpdate', turnTimer)
     })
     // setTimeout(testGame, 1000, socketID);
-    testGame(socketID);
+    testGame(socketID)
   })
-  socket.on("newMoveRequest", function (moveRequest) {
-    console.log(moveRequest);
+  socket.on('newMoveRequest', function (moveRequest) {
+    console.log(moveRequest)
     gameEvent.emit(`playerMoveRequest:${socketID}`, moveRequest)
   })
   socket.on('disconnect', () => {
     // connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
-    delete connectedPlayers[socketID];
-    console.log('disconnected: ', socketID);
-  });
+    delete connectedPlayers[socketID]
+    console.log('disconnected: ', socketID)
+  })
   // class GameEvent extends EventEmitter {}
   // const gameEvent = new GameEvent();
 })
 
-gameEvent.on("newGameStatus", function (gameState) {
+gameEvent.on('newGameStatus', function (gameState) {
   // console.log(gameState);
-  io.emit("gameStateUpdate", gameState);
-});
-
-gameEvent.on("newTurnTimer", function (turnTimer) {
-  io.emit("turnTimerUpdate", turnTimer);
+  io.emit('gameStateUpdate', gameState)
 })
 
+gameEvent.on('newTurnTimer', function (turnTimer) {
+  io.emit('turnTimerUpdate', turnTimer)
+})
 
 // setTimeout(testGame, 5000);
 

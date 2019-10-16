@@ -1,5 +1,5 @@
-const GamePlayer = require("../GamePlayer.js");
-const Game = require("../Game.js");
+const GamePlayer = require('../GamePlayer.js')
+const Game = require('../Game.js')
 // const Cards = require("../CardLib");
 // const Card = require("../Card.js");
 // const Minion = require("../Minion.js");
@@ -7,7 +7,7 @@ const Game = require("../Game.js");
 // const { Deck, deck1, deck2 } = require("../Deck.js");
 // const { deck } = require("../DeckLib.js");
 
-const testGame = new Game("player 1", "player 2", "TestDeckTwo", "TestDeckTwo", true);
+const testGame = new Game('player 1', 'player 2', 'TestDeckTwo', 'TestDeckTwo', true)
 
 // console.log("Player 1 board: ");
 // // console.log(testGame.player1.board.length);

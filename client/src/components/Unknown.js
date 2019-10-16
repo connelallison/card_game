@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react'
 
 const Unknown = (props) => {
-  return(
-    <div className="unknown card">
-      <br/>
+  return (
+    <div className='unknown card'>
+      <br />
       <p>Unknown Card</p>
-      <br/>
-      <br/>
+      <br />
+      <br />
     </div>
   )
 }
 
-export default Unknown;
+export default Unknown

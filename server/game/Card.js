@@ -56,19 +56,18 @@
 // console.log(Card.collectibleCards.length);
 // console.log(Card.allCards.length);
 
-
 class Card {
-  constructor(id, cost, owner=null) {
-    this.name;
-    this.id = id;
-    this.cost = cost;
-    this.type;
-    this.zone;
-    this.owner = owner;
-    this.objectId = `${this.id}:${Math.random()}`;
+  constructor (id, cost, owner = null) {
+    this.name
+    this.id = id
+    this.cost = cost
+    this.type
+    this.zone
+    this.owner = owner
+    this.objectId = `${this.id}:${Math.random()}`
   }
 
-  provideReport(){
+  provideReport () {
     return {
       name: this.name,
       id: this.id,
@@ -80,37 +79,37 @@ class Card {
     }
   }
 
-  isLegalMove(){
+  isLegalMove () {
     // return this.zone = "hand";
-    return true;
+    return true
   }
 
-  canBePlayed(){
-    return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.isLegalMove();
+  canBePlayed () {
+    return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.isLegalMove()
   }
 
-  onDraw(){
-
-  }
-
-  onPlay(){
+  onDraw () {
 
   }
 
-  onGameStart(){
+  onPlay () {
 
   }
 
-  onAnyTurnStart(){
+  onGameStart () {
 
   }
 
-  onMyTurnStart(){
+  onAnyTurnStart () {
 
   }
 
-  onMyTurnEnd(){
+  onMyTurnStart () {
+
+  }
+
+  onMyTurnEnd () {
 
   }
 }
-module.exports = Card;
+module.exports = Card

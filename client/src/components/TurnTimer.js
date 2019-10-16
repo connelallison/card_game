@@ -1,17 +1,17 @@
-import React from "react";
+import React from 'react'
 
 const TurnTimer = (props) => {
-  let activePlayer;
+  let activePlayer
   if (props.mine) {
-    activePlayer = "my";
+    activePlayer = 'my'
   } else {
     activePlayer = "opponent's"
   }
-  return(
-    <div className="turn-timer">
-    <p className="lowerMargin">Time remaining before end of {activePlayer} turn: {Math.max(0, props.turnEnd/1000).toFixed(1)}s.</p>
+  return (
+    <div className='turn-timer'>
+      <p className='lowerMargin'>Time remaining before end of {activePlayer} turn: {Math.max(0, props.turnEnd / 1000).toFixed(1)}s.</p>
     </div>
   )
 }
 
-export default TurnTimer;
+export default TurnTimer

@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import GameContainer from "./containers/GameContainer.js";
-import './App.css';
+import React, { Component } from 'react'
+import GameContainer from './containers/GameContainer.js'
+import './App.css'
 
 class App extends Component {
-  render() {
+  render () {
     return (
-      <GameContainer/>
-    );
+      <GameContainer />
+    )
   }
 }
 
-export default App;
+export default App

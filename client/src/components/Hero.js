@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react'
 
 const Hero = (props) => {
-  let isMyHero;
+  let isMyHero
   if (props.mine) {
-    isMyHero = "This is my hero."
+    isMyHero = 'This is my hero.'
   } else {
-    isMyHero = "This is the enemy hero."
+    isMyHero = 'This is the enemy hero.'
   }
 
-  return(
-    <div className="hero">
+  return (
+    <div className='hero'>
       <p>{isMyHero}</p>
       <p>Hero's attack: {props.attack}</p>
       <p>Hero's health: {props.health}</p>
@@ -19,4 +19,4 @@ const Hero = (props) => {
   )
 }
 
-export default Hero;
+export default Hero

@@ -1,14 +1,15 @@
 // const Card = require("./Card.js");
 // const Minion = require("./Minion.js");
 // const Spell = require("./Spell.js");
+const Hero = require("./Hero.js")
 const { create } = require('./CardLib')
 
 class GamePlayer {
-  constructor (name, socketID = null) {
+  constructor (name, socketID = null, bot = false) {
     this.name = name
+    this.playerID = `${this.name}:${Math.random()}`
     this.socketID = socketID
-    this.attack = 0
-    this.health = 20
+    this.hero = new Hero(this)
     this.maxMana = 2
     this.currentMana = 2
     this.hand = []
@@ -22,6 +23,10 @@ class GamePlayer {
     this.game
     this.opponent
     this.bot
+  }
+
+  heroReport () {
+    return Object.assign({}, this.hero.provideReport(), {maxMana: this.maxMana, currentMana: this.currentMana})
   }
 
   boardReport () {
@@ -46,15 +51,6 @@ class GamePlayer {
     return allActive
   }
 
-  takeDamage (damage) {
-    if (damage > 0) {
-      this.health -= damage
-      console.log(`${this.name} takes ${damage} damage`)
-      console.log(`${this.name} now has ${this.health} health`)
-      // this.afterTakingDamage();
-    }
-  }
-
   draw () {
     if (this.deck.length > 0) {
       if (this.hand.length < this.maxHand) {
@@ -66,7 +62,7 @@ class GamePlayer {
         this.graveyard.push(this.deck.shift())
       }
     } else {
-      this.health = 0
+      this.hero.health = 0
       this.game.resolveDamage()
       // throw "overdrew and died"
     }
@@ -82,7 +78,7 @@ class GamePlayer {
         this.graveyard.push(this.deck.shift())
       }
     } else {
-      this.health = 0
+      this.hero.health = 0
       this.game.resolveDamage()
       // throw "overdrew and died"
     }
@@ -145,11 +141,7 @@ class GamePlayer {
   }
 
   alive () {
-    return this.health > 0
-  }
-
-  isAttackable () {
-    return true
+    return this.hero.health > 0
   }
 
   spendMana (amount) {

@@ -1,25 +1,45 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-const Spell = (props) => {
-  if (props.canBePlayed) {
+class Spell extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+    this.handleClick = this.handleClick.bind(this)
+    this.canBeTargeted = this.canBeTargeted.bind(this);
+  }
+
+  canBeTargeted () {
+    return this.props.selected !== null && this.props.selected.validTargets !== null && this.props.selected.validTargets.includes(this.props.object.objectID)
+    // return this.props.selected !== null && this.props.selected !== this.props.object
+  }
+
+  handleClick () {
+    if (this.props.selected === this.props.object) {
+      this.props.interactivity.clearSelected();
+    } else if (this.props.selected === null && this.props.object.canBeSelected) {
+      this.props.interactivity.chooseSelected(this.props.object);
+    } else if (this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted()) {
+      this.props.interactivity.chooseTarget(this.props.object)
+    } else {
+      this.props.interactivity.invalidMove()
+    }
+  }
+
+  render () {
+    const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
+      this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
+        this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
+    const styleClasses = outlineStatus + " spell card"
     return (
-      <div className='canBePlayed spell card'>
-        <p>{props.name}</p>
-        <p>{props.cost} mana Spell</p>
-        <br />
-        <br />
-      </div>
-    )
-  } else {
-    return (
-      <div className='spell card'>
-        <p>{props.name}</p>
-        <p>{props.cost} mana Spell</p>
+      <div onClick={this.handleClick} className={styleClasses}>
+        <p>{this.props.object.name}</p>
+        <p>{this.props.object.cost} mana Spell</p>
         <br />
         <br />
       </div>
     )
   }
+
 }
 
 export default Spell

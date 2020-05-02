@@ -10,13 +10,17 @@ class Spell extends Card {
     return {
       name: this.name,
       id: this.id,
-      objectId: this.objectId,
+      objectID: this.objectID,
       cost: this.cost,
       type: this.type,
       zone: this.zone,
-      ownerName: this.owner.name
+      ownerName: this.owner.name,
+      playerID: this.owner.playerID,
+      canBeSelected: this.canBePlayed(),
+      validTargets: this.validTargetIDs()
     }
   }
+  
 }
 
 module.exports = Spell

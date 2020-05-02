@@ -10,9 +10,9 @@ const Game = require('./game/Game.js')
 
 function testGame (socketID = null) {
   if (Math.floor(Math.random() * 2)) {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', true, true, true, socketID)
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', false, true, true, socketID)
   } else {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', true, true, true, socketID)
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', false, true, true, socketID)
   }
 
   // const gameThread = new Worker('./worker.js');
@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
     testGame(socketID)
   })
   socket.on('newMoveRequest', function (moveRequest) {
-    console.log(moveRequest)
+    // console.log(moveRequest)
     gameEvent.emit(`playerMoveRequest:${socketID}`, moveRequest)
   })
   socket.on('disconnect', () => {

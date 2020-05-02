@@ -14,3 +14,9 @@ To set up and view the game:
 8. This should automatically open the game for you, but if it does not, use a web browser and go to "http://localhost:3000/".
 9. If you like, you may open multiple tabs at this address - each will be treated by the server as a separate client, and you can see a different game in each tab.
 10. If you would like to connect to the game from another device in your network, check the terminal tab where the client is running - it should provide the required address.
+
+
+if running the docker image:
+ - navigate to server directory
+ - "sudo docker build ." (// is this actually necessary?)
+ - "sudo docker run -p 4000:4000 connelallison/card_game &"

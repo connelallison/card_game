@@ -13,15 +13,16 @@ class Minion extends Card {
     return {
       name: this.name,
       id: this.id,
-      objectId: this.objectId,
+      objectID: this.objectID,
       cost: this.cost,
       attack: this.attack,
       health: this.health,
       type: this.type,
       zone: this.zone,
       ownerName: this.owner.name,
-      canAttack: this.canAttack(),
-      canBePlayed: this.canBePlayed()
+      playerID: this.owner.playerID,
+      canBeSelected: this.canAttack() || this.canBePlayed(),
+      validTargets: this.validTargetIDs()
     }
   }
 
@@ -67,8 +68,8 @@ class Minion extends Card {
 
   attackTargets () {
     let attackTargets = []
-    if (this.owner.opponent.isAttackable()) {
-      attackTargets.push(this.owner.opponent)
+    if (this.owner.opponent.hero.isAttackable()) {
+      attackTargets.push(this.owner.opponent.hero)
     }
     attackTargets = attackTargets.concat(this.owner.opponent.board.filter((minion) => {
       return minion.isAttackable()
@@ -76,15 +77,24 @@ class Minion extends Card {
     return attackTargets
   }
 
+  validTargetIDs () {
+    if (this.zone === "hand") {
+      return this.playTargets()
+    } else if (this.zone === "board") {
+      return this.attackTargets().map(target => target.objectID)
+    }
+  }
+
   canAttack () {
-    // console.log(this.ready);
-    // console.log(this.attackTargets().length > 0);
-    // console.log(this.ready && this.attackTargets().length > 0);
-    return this.owner.myTurn() && this.ready && this.attackTargets().length > 0
+    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.attack > 0 && this.attackTargets().length > 0
+  }
+
+  canAttackTarget (target) {
+    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.attack > 0 && this.attackTargets().includes(target)
   }
 
   makeAttack (target) {
-    if (!this.owner.game.gameOver && target.isAttackable() && this.canAttack()) {
+    if (!this.owner.game.gameOver && this.canAttackTarget(target)) {
       // this.owner.game.
       // console.log(`${this.name} is attacking ${target.name}`);
       // console.log(`${this.name}'s attack is ${this.attack}`);

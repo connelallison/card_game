@@ -64,24 +64,37 @@ class Card {
     this.type
     this.zone
     this.owner = owner
-    this.objectId = `${this.id}:${Math.random()}`
+    this.objectID = `${this.id}:${Math.random()}`
   }
 
   provideReport () {
     return {
       name: this.name,
       id: this.id,
-      objectId: this.objectId,
+      objectID: this.objectID,
       cost: this.cost,
       type: this.type,
       zone: this.zone,
-      ownerName: this.owner.name
+      ownerName: this.owner.name,
+      playerID: this.owner.playerID,
+      canBeSelected: this.canBePlayed(),
+      validTargets: this.validTargetIDs()
     }
   }
 
   isLegalMove () {
     // return this.zone = "hand";
     return true
+  }
+
+  playTargets () {
+    return null;
+  }
+
+  validTargetIDs () {
+    if (this.zone === "hand") {
+      return this.playTargets()
+    }
   }
 
   canBePlayed () {

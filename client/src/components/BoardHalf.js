@@ -9,19 +9,19 @@ class BoardHalf extends Component {
     this.canBeTargeted = this.canBeTargeted.bind(this);
   }
 
-  canBeTargeted() {
-    // console.log(this.props)
-    return this.props.selected !== null && this.props.selected.validTargets === null
-    // return this.props.selected !== null && this.props.selected !== this.props.object
-  }
+  // canBeTargeted() {
+  //   // console.log(this.props)
+  //   return this.props.selected !== null && this.props.selected.validTargets === null
+  //   // return this.props.selected !== null && this.props.selected !== this.props.object
+  // }
 
-  handleClick() {
-    if (this.canBeTargeted()) {
-      this.props.interactivity.chooseTarget(null)
-    } else {
-      this.props.interactivity.invalidMove()
-    }
-  }
+  // handleClick() {
+  //   if (this.canBeTargeted()) {
+  //     this.props.interactivity.chooseTarget(null)
+  //   } else {
+  //     this.props.interactivity.invalidMove()
+  //   }
+  // }
 
   render() {
     let minionList
@@ -56,10 +56,7 @@ class BoardHalf extends Component {
       owner = "Opponent's"
     }
 
-    const outlineStatus = this.canBeTargeted() ? "canBeTargeted" : ""
-    const styleClasses = outlineStatus + " boardhalf"
     return (
-      // <div onClick={this.handleClick} className={styleClasses}>
       <div className="boardhalf">
         <p className='lowerMargin'>{owner} current minions:</p>
         <div className='cardList'>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Doge from "../images/dogecropped.jpg"
 
 class Hero extends Component {
   constructor(props) {
@@ -31,7 +30,6 @@ class Hero extends Component {
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " hero"
     return (
-      // style={{backgroundImage: `url(${Doge})`}}
     <div onClick={this.handleClick} className={styleClasses} >
       <p>{this.props.mine ? "This is my hero." : "This is the enemy hero."}</p>
       <p>Hero's attack: {this.props.object.attack}</p>

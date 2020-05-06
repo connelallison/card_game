@@ -28,6 +28,14 @@ function testGame (socketID = null) {
   // console.log('Message posted to worker');
 }
 
+function pvpGame (player1SocketID, player2SocketID) {
+  if (Math.floor(Math.random() * 2)) {
+    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckOne', 'TestDeckTwo', false, true, true, player1SocketID, player2SocketID)
+  } else {
+    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckTwo', 'TestDeckOne', false, true, true, player1SocketID, player2SocketID)
+  }
+}
+
 const app = express()
 app.use(express.static(path.join(__dirname, '../client/public')))
 
@@ -43,13 +51,16 @@ const server = app.listen(port, function () {
 const io = socket(server)
 
 const connectedPlayers = {}
+const connectedSockets = {}
 
 io.on('connection', function (socket) {
   console.log('made websocket connection: ', socket.id)
   const socketID = socket.id
   const serverPlayer = new ServerPlayer(socketID)
   connectedPlayers[socketID] = serverPlayer
+  connectedSockets[socketID] = socket
   console.log(connectedPlayers)
+  io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   socket.on('updateDisplayName', function (data) {
     console.log('updateDisplayName request received')
     const oldName = serverPlayer.displayName
@@ -58,8 +69,9 @@ io.on('connection', function (socket) {
     socket.broadcast.emit('displayNameAnnouncement', {
       message: `${oldName} is now: ${serverPlayer.displayName}`
     })
+    io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   })
-  socket.on('requestTestGame', function () {
+  socket.on('requestTestGame', function (opponent) {
     // console.log(`server: newGameStatus:${socketID}`);
     gameEvent.on(`newGameStatus:${socketID}`, function (gameState) {
       // console.log(gameState);
@@ -71,7 +83,20 @@ io.on('connection', function (socket) {
       socket.emit('turnTimerUpdate', turnTimer)
     })
     // setTimeout(testGame, 1000, socketID);
-    testGame(socketID)
+    if (!opponent.opponentID || opponent.opponentID === 'TestBot') {
+      testGame(socketID)
+    } else {
+      const opponentSocket = connectedSockets[opponent.opponentID]
+      gameEvent.on(`newGameStatus:${opponent.opponentID}`, function (gameState) {
+        // console.log(gameState);
+        console.log(`server: newGameStatus:${opponent.opponentID}`)
+        opponentSocket.emit('gameStateUpdate', gameState)
+      })
+      gameEvent.on(`newTurnTimer:${opponent.opponentID}`, function (turnTimer) {
+        opponentSocket.emit('turnTimerUpdate', turnTimer)
+      })
+      pvpGame(socketID, opponent.opponentID)
+    }
   })
   socket.on('newMoveRequest', function (moveRequest) {
     // console.log(moveRequest)
@@ -80,7 +105,9 @@ io.on('connection', function (socket) {
   socket.on('disconnect', () => {
     // connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
     delete connectedPlayers[socketID]
+    delete connectedSockets[socketID]
     console.log('disconnected: ', socketID)
+    io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   })
   // class GameEvent extends EventEmitter {}
   // const gameEvent = new GameEvent();

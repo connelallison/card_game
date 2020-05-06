@@ -5,7 +5,7 @@ import PlayerHand from '../components/PlayerHand.js'
 import Deck from '../components/Deck.js'
 import BoardHalf from '../components/BoardHalf.js'
 import TurnTimer from '../components/TurnTimer.js'
-import TestGameButton from '../components/TestGameButton.js'
+import TestGame from '../components/TestGame.js'
 import DisplayName from '../components/DisplayName.js'
 import PlayArea from '../components/PlayArea.js'
 // import PubSub from "../helpers/PubSub.js";
@@ -45,8 +45,9 @@ class GameContainer extends Component {
           deck: 0
         }
       },
+      serverPlayers: [],
       turnTimer: 0,
-      requestTestGameButtonEnabled: true
+      requestTestGameEnabled: true
     }
     this.timerID = setInterval(
       () => this.tick(),
@@ -72,13 +73,17 @@ class GameContainer extends Component {
       // console.log(gameContainer);
       gameContainer.setState({ gameState: gameState, selected: null })
       if (gameContainer.state.gameState.started && !gameContainer.state.gameState.winner) {
-        gameContainer.setState({ requestTestGameButtonEnabled: false })
+        gameContainer.setState({ requestTestGameEnabled: false })
       } else {
-        gameContainer.setState({ requestTestGameButtonEnabled: true })
+        gameContainer.setState({ requestTestGameEnabled: true })
       }
     })
     socket.on('turnTimerUpdate', function (turnTimer) {
       gameContainer.setState({ turnTimer: turnTimer })
+    })
+    socket.on('serverPlayersUpdate', function (serverPlayers) {
+      console.log(serverPlayers)
+      gameContainer.setState({serverPlayers})
     })
   }
 
@@ -89,10 +94,12 @@ class GameContainer extends Component {
     localStorage.setItem('displayName', displayName)
   }
 
-  handleRequestTestGame () {
-    if (this.state.requestTestGameButtonEnabled) {
+  handleRequestTestGame (opponentID) {
+    if (this.state.requestTestGameEnabled) {
       console.log('requesting test game')
-      socket.emit('requestTestGame')
+      socket.emit('requestTestGame', {
+        opponentID
+      })
     } else {
       console.log('test game button disabled')
     }
@@ -175,7 +182,7 @@ class GameContainer extends Component {
       <>
         <div className='topBar'>
           <DisplayName currentName={currentName} handleSubmit={this.handleUpdateDisplayName} />
-          <TestGameButton onRequested={this.handleRequestTestGame} />
+          <TestGame onRequested={this.handleRequestTestGame} opponents={this.state.serverPlayers}/>
         </div>
         <br />
         <OpponentHand cards={this.state.gameState.opponent.hand} />

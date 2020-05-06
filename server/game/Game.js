@@ -9,9 +9,10 @@ const { deck } = require('./DeckLib')
 const gameEvent = require('../GameEvent.js')
 
 class Game {
-  constructor (player1name, player2name, player1deckID, player2deckID, botPlayer = false, debug = false, online = false, player1socketID = null, player2socketID = null) {
+  constructor (player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
     // Game.games.push(this);
-    this.botPlayer = botPlayer
+    this.botPlayer1 = botPlayer1
+    this.botPlayer2 = botPlayer2
     this.debug = debug
     this.online = online
     this.player1turn = 0
@@ -81,10 +82,6 @@ class Game {
         hand: opponentHand,
         deck: player.opponent.deck.length
       },
-      // legalMoves: {
-      //   canAttackWith: player.reportMinionsReadyToAttack(),
-      //   canPlay: player.reportPlayableCards()
-      // }
     }
     return gameState
   }
@@ -103,7 +100,7 @@ class Game {
   }
 
   actionMoveRequest (moveRequest, player) {
-    console.log(moveRequest)
+    // console.log(moveRequest)
     const selected = this.findObjectByPlayerIDZoneAndObjectID(moveRequest.selected)
     const target = moveRequest.target === null ? null : this.findObjectByPlayerIDZoneAndObjectID(moveRequest.target)
     if (player.myTurn() && selected.owner === player) {
@@ -210,12 +207,16 @@ class Game {
   // }
 
   initPlayers () {
-    if (this.botPlayer) {
+    if (this.botPlayer1) {
       this.player1.bot = true
     } else {
       this.player1.bot = false
     }
-    this.player2.bot = true
+    if (this.botPlayer2) {
+      this.player2.bot = true
+    } else {
+      this.player2.bot = false
+    }
     this.player1.opponent = this.player2
     this.player2.opponent = this.player1
     this.player1.game = this

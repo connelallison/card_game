@@ -104,7 +104,7 @@ p.lowerMargin {
   display: flex;
 }
 
-#request-test-game {
+#request-test-game, #update-display-name {
   background: lightgrey;
 }
 

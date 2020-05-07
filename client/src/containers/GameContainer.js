@@ -82,8 +82,9 @@ class GameContainer extends Component {
       gameContainer.setState({ turnTimer: turnTimer })
     })
     socket.on('serverPlayersUpdate', function (serverPlayers) {
-      console.log(serverPlayers)
-      gameContainer.setState({serverPlayers})
+      const filteredServerPlayers = serverPlayers.filter(player => player.socketID !== socket.id)
+      // console.log(filteredServerPlayers)
+      gameContainer.setState({serverPlayers: filteredServerPlayers})
     })
   }
 
@@ -182,7 +183,7 @@ class GameContainer extends Component {
       <>
         <div className='topBar'>
           <DisplayName currentName={currentName} handleSubmit={this.handleUpdateDisplayName} />
-          <TestGame onRequested={this.handleRequestTestGame} opponents={this.state.serverPlayers}/>
+          <TestGame onRequested={this.handleRequestTestGame} opponents={this.state.serverPlayers} socketID={socket.id}/>
         </div>
         <br />
         <OpponentHand cards={this.state.gameState.opponent.hand} />

@@ -32,6 +32,7 @@ class DisplayName extends Component {
         <p>Display name:</p>
         <form onSubmit={this.handleSubmit}>
           <input type='text' ref='input' defaultValue={this.props.currentName} placeholder={this.props.currentName} onChange={this.handleChange} />
+          <input type='submit' ref='submit' id='update-display-name' value='Update' />
         </form>
       </>
     )

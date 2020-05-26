@@ -1,22 +1,29 @@
 const Card = require('./Card.js')
 
 class Minion extends Card {
-  constructor (id, cost, attack, health) {
-    super(id, cost)
+  constructor(id, name, cost, attack, health) {
+    super(id, name, cost, 'minion')
     this.attack = attack
     this.health = health
-    this.type = 'minion'
+    this.stats = {
+      attack: this.attack,
+      health: this.health,
+      cost: this.cost
+    }
+
     this.ready = false
   }
 
-  provideReport () {
+  provideReport() {
+    this.updateStats()
+
     return {
       name: this.name,
       id: this.id,
       objectID: this.objectID,
-      cost: this.cost,
-      attack: this.attack,
-      health: this.health,
+      cost: this.stats.cost,
+      attack: this.stats.attack,
+      health: this.stats.health,
       type: this.type,
       zone: this.zone,
       ownerName: this.owner.name,
@@ -26,27 +33,45 @@ class Minion extends Card {
     }
   }
 
-  canBePlayed () {
+  updateStats() {
+    const stats = {
+      attack: this.attack,
+      health: this.health,
+      cost: this.cost
+    }
+
+    this.enchantments.static.stats.forEach(enchantment => {
+      if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
+    })
+
+    this.owner.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
+      if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
+    })
+
+    this.stats = stats
+  }
+
+  canBePlayed() {
     return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.owner.board.length < this.owner.maxBoard && this.isLegalMove()
   }
 
-  onPlay () {
+  onPlay() {
     this.afterThisSummoned()
   }
 
-  onDeath () {
+  onDeath() {
 
   }
 
-  afterThisSummoned () {
+  afterThisSummoned() {
 
   }
 
-  afterTakingDamage () {
+  afterTakingDamage() {
 
   }
 
-  readyMinion () {
+  readyMinion() {
     if (this.zone === 'board') {
       this.ready = true
     } else {
@@ -54,19 +79,20 @@ class Minion extends Card {
     }
   }
 
-  isAttackable () {
+  isAttackable() {
     return true
   }
 
-  takeDamage (damage) {
+  takeDamage(damage) {
     if (damage > 0) {
       this.health -= damage
+      this.updateStats()
       // console.log(`${this.name} takes ${damage} damage`);
       this.afterTakingDamage()
     }
   }
 
-  attackTargets () {
+  attackTargets() {
     let attackTargets = []
     if (this.owner.opponent.hero.isAttackable()) {
       attackTargets.push(this.owner.opponent.hero)
@@ -77,7 +103,7 @@ class Minion extends Card {
     return attackTargets
   }
 
-  validTargetIDs () {
+  validTargetIDs() {
     if (this.zone === "hand") {
       return this.playTargets()
     } else if (this.zone === "board") {
@@ -85,21 +111,21 @@ class Minion extends Card {
     }
   }
 
-  canAttack () {
-    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.attack > 0 && this.attackTargets().length > 0
+  canAttack() {
+    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.stats.attack > 0 && this.attackTargets().length > 0
   }
 
-  canAttackTarget (target) {
-    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.attack > 0 && this.attackTargets().includes(target)
+  canAttackTarget(target) {
+    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.stats.attack > 0 && this.attackTargets().includes(target)
   }
 
-  makeAttack (target) {
+  makeAttack(target) {
     if (!this.owner.game.gameOver && this.canAttackTarget(target)) {
       // this.owner.game.
       // console.log(`${this.name} is attacking ${target.name}`);
       // console.log(`${this.name}'s attack is ${this.attack}`);
       // console.log(`${target.name}'s attack is ${target.attack}`);
-      target.takeDamage(this.attack)
+      target.takeDamage(this.stats.attack)
       this.takeDamage(target.attack)
       this.ready = false
       this.owner.game.resolveDamage()

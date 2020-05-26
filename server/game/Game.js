@@ -1,6 +1,7 @@
 const GamePlayer = require('./GamePlayer.js')
 const { create } = require('./CardLib')
 const { deck } = require('./DeckLib')
+const AuraManager = require('./AuraManager.js')
 // const Card = require("./Card.js");
 // const Minion = require("./Minion.js");
 // const Spell = require("./Spell.js");
@@ -19,6 +20,7 @@ class Game {
     this.player2turn = 0
     this.player1 = new GamePlayer(player1name, player1socketID)
     this.player2 = new GamePlayer(player2name, player2socketID)
+    this.auras = new AuraManager(this)
     this.player1deckID = player1deckID
     this.player2deckID = player2deckID
     this.activePlayer = null
@@ -365,9 +367,10 @@ class Game {
 
   resolveDamage () {
     this.board().forEach((minion) => {
-      if (minion.health <= 0) {
+      if (minion.stats.health <= 0) {
         minion.owner.graveyard.push(minion.owner.board.splice(minion.owner.board.indexOf(minion), 1)[0])
         minion.zone = 'graveyard'
+        minion.updateEnchantments()
         minion.onDeath()
         console.log(`${minion.name} has died and been sent to the graveyard`)
       }

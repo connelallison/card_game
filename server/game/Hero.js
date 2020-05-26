@@ -1,17 +1,18 @@
-class Hero {
+const Card = require('./Card.js')
+
+class Hero extends Card {
     constructor(owner) {
+        super('Hero', 'Hero', 'hero')
         this.attack = 1
         this.health = 20
-        this.type = "hero"
-        this.id = "Hero"
         this.zone = "hero"
         this.ready = false
         this.owner = owner
-        this.objectID = `Hero:${Math.random()}`
     }
 
     provideReport () {
         return {
+          name: this.name,
           id: this.id,
           objectID: this.objectID,
           attack: this.attack,

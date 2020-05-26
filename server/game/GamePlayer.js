@@ -57,9 +57,13 @@ class GamePlayer {
         const card = this.deck.shift()
         this.hand.push(card)
         card.zone = 'hand'
+        card.updateEnchantments()
         card.onDraw()
       } else {
-        this.graveyard.push(this.deck.shift())
+        const card = this.deck.shift()
+        this.graveyard.push(card)
+        card.zone = 'graveyard'
+        card.updateEnchantments()
       }
     } else {
       this.hero.health = 0
@@ -74,8 +78,12 @@ class GamePlayer {
         const card = this.deck.shift()
         this.hand.push(card)
         card.zone = 'hand'
+        card.updateEnchantments()
       } else {
-        this.graveyard.push(this.deck.shift())
+        const card = this.deck.shift()
+        this.graveyard.push(card)
+        card.zone = 'graveyard'
+        card.updateEnchantments()
       }
     } else {
       this.hero.health = 0
@@ -118,6 +126,7 @@ class GamePlayer {
         this.played.push(card)
         this.summoned.push(card)
         card.zone = 'board'
+        card.updateEnchantments()
         card.onPlay()
         this.game.announceGameState()
       } else if (card.type === 'spell') {

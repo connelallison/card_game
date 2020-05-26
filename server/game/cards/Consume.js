@@ -2,8 +2,7 @@ const Spell = require('../Spell.js')
 
 class Consume extends Spell {
   constructor () {
-    super('Consume', 3)
-    this.name = 'Consume'
+    super('Consume', 'Consume', 3)
   }
 
   onPlay () {

@@ -10,9 +10,9 @@ const Game = require('./game/Game.js')
 
 function testGame (socketID = null) {
   if (Math.floor(Math.random() * 2)) {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', false, true, true, socketID)
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', false, true, true, socketID, null, true)
   } else {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', false, true, true, socketID)
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', false, true, true, socketID, null, true)
   }
 
   // const gameThread = new Worker('./worker.js');

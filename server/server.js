@@ -3,7 +3,7 @@ const socket = require('socket.io')
 const path = require('path')
 const EventEmitter = require('events')
 const ServerPlayer = require('./ServerPlayer.js')
-const gameEvent = require('./GameEvent.js')
+const serverEvent = require('./ServerEvent.js')
 // const { Deck, deck1, deck2 } = require("./game/Deck.js");
 const Game = require('./game/Game.js')
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
@@ -73,13 +73,13 @@ io.on('connection', function (socket) {
   })
   socket.on('requestTestGame', function (opponent) {
     // console.log(`server: newGameStatus:${socketID}`);
-    gameEvent.on(`newGameStatus:${socketID}`, function (gameState) {
+    serverEvent.on(`newGameStatus:${socketID}`, function (gameState) {
       // console.log(gameState);
       console.log(`server: newGameStatus:${socketID}`)
       socket.emit('gameStateUpdate', gameState)
     })
 
-    gameEvent.on(`newTurnTimer:${socketID}`, function (turnTimer) {
+    serverEvent.on(`newTurnTimer:${socketID}`, function (turnTimer) {
       socket.emit('turnTimerUpdate', turnTimer)
     })
     // setTimeout(testGame, 1000, socketID);
@@ -87,12 +87,12 @@ io.on('connection', function (socket) {
       testGame(socketID)
     } else {
       const opponentSocket = connectedSockets[opponent.opponentID]
-      gameEvent.on(`newGameStatus:${opponent.opponentID}`, function (gameState) {
+      serverEvent.on(`newGameStatus:${opponent.opponentID}`, function (gameState) {
         // console.log(gameState);
         console.log(`server: newGameStatus:${opponent.opponentID}`)
         opponentSocket.emit('gameStateUpdate', gameState)
       })
-      gameEvent.on(`newTurnTimer:${opponent.opponentID}`, function (turnTimer) {
+      serverEvent.on(`newTurnTimer:${opponent.opponentID}`, function (turnTimer) {
         opponentSocket.emit('turnTimerUpdate', turnTimer)
       })
       pvpGame(socketID, opponent.opponentID)
@@ -100,7 +100,7 @@ io.on('connection', function (socket) {
   })
   socket.on('newMoveRequest', function (moveRequest) {
     // console.log(moveRequest)
-    gameEvent.emit(`playerMoveRequest:${socketID}`, moveRequest)
+    serverEvent.emit(`playerMoveRequest:${socketID}`, moveRequest)
   })
   socket.on('disconnect', () => {
     // connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
@@ -109,16 +109,16 @@ io.on('connection', function (socket) {
     console.log('disconnected: ', socketID)
     io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   })
-  // class GameEvent extends EventEmitter {}
-  // const gameEvent = new GameEvent();
+  // class ServerEvent extends EventEmitter {}
+  // const serverEvent = new ServerEvent();
 })
 
-gameEvent.on('newGameStatus', function (gameState) {
+serverEvent.on('newGameStatus', function (gameState) {
   // console.log(gameState);
   io.emit('gameStateUpdate', gameState)
 })
 
-gameEvent.on('newTurnTimer', function (turnTimer) {
+serverEvent.on('newTurnTimer', function (turnTimer) {
   io.emit('turnTimerUpdate', turnTimer)
 })
 

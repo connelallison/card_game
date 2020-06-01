@@ -7,7 +7,7 @@ const AuraManager = require('./AuraManager.js')
 // const Spell = require("./Spell.js");
 // const { Deck, deck1, deck2 } = require("./Deck.js");
 // const EventEmitter = require('events')
-const gameEvent = require('../GameEvent.js')
+const serverEvent = require('../ServerEvent.js')
 
 class Game {
   constructor (player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
@@ -40,7 +40,7 @@ class Game {
 
   announceGameState () {
     if (this.online) {
-      // console.log(gameEvent);
+      // console.log(serverEvent);
       let player1gameState
       let player2gameState
       if (this.player1.socketID) {
@@ -52,13 +52,13 @@ class Game {
       // console.log(gameState);
       // console.log(`game: newGameStatus:${this.socketID}`);
       if (this.player1.socketID) {
-        gameEvent.emit(`newGameStatus:${this.player1.socketID}`, player1gameState)
+        serverEvent.emit(`newGameStatus:${this.player1.socketID}`, player1gameState)
       }
       if (this.player2.socketID) {
-        gameEvent.emit(`newGameStatus:${this.player2.socketID}`, player2gameState)
+        serverEvent.emit(`newGameStatus:${this.player2.socketID}`, player2gameState)
       }
       // if (!this.player1.socketID && !this.player2.socketID) {
-      //   gameEvent.emit("newGameStatus", gameState);
+      //   serverEvent.emit("newGameStatus", gameState);
       // }
     }
   }
@@ -91,13 +91,13 @@ class Game {
 
   announceNewTurn () {
     if (this.player1.socketID) {
-      gameEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.turnLength)
     }
     if (this.player2.socketID) {
-      gameEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.turnLength)
     }
     //  else {
-    //   gameEvent.emit("newTurnTimer", this.turnLength);
+    //   serverEvent.emit("newTurnTimer", this.turnLength);
     // }
   }
 
@@ -107,9 +107,18 @@ class Game {
     const target = moveRequest.target === null ? null : this.findObjectByPlayerIDZoneAndObjectID(moveRequest.target)
     if (player.myTurn() && selected.owner === player) {
       if (selected.zone === "hero" || selected.zone === "board" && selected.type === "minion") {
+        // this.phases.proposedAttack({
+        //   attacker: selected,
+        //   defender: target,
+        // })
         if (selected.canAttackTarget(target)) {
-          selected.makeAttack(target)
-        }
+          this.phases.proposedAttack({
+            attacker: selected,
+            defender: target,
+          })        }
+        // if (selected.canAttackTarget(target)) {
+        //   selected.makeAttack(target)
+        // }
       } else if (selected.zone === "hand") {
         if (selected.canBePlayed()) {
           player.play(selected)
@@ -231,12 +240,12 @@ class Game {
 
   initListeners () {
     if (this.player1.socketID) {
-      gameEvent.on(`playerMoveRequest:${this.player1.socketID}`, (moveRequest) => {
+      serverEvent.on(`playerMoveRequest:${this.player1.socketID}`, (moveRequest) => {
         this.actionMoveRequest(moveRequest, this.player1)
       })
     }
     if (this.player2.socketID) {
-      gameEvent.on(`playerMoveRequest:${this.player2.socketID}`, (moveRequest) => {
+      serverEvent.on(`playerMoveRequest:${this.player2.socketID}`, (moveRequest) => {
         this.actionMoveRequest(moveRequest, this.player2)
       })
     }
@@ -244,10 +253,10 @@ class Game {
 
   removeListeners () {
     if (this.player1.socketID) {
-      gameEvent.removeAllListeners(`playerMoveRequest:${this.player1.socketID}`)
+      serverEvent.removeAllListeners(`playerMoveRequest:${this.player1.socketID}`)
     }
     if (this.player2.socketID) {
-      gameEvent.removeAllListeners(`playerMoveRequest:${this.player2.socketID}`)
+      serverEvent.removeAllListeners(`playerMoveRequest:${this.player2.socketID}`)
     }
   }
 

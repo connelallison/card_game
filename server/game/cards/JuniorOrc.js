@@ -18,7 +18,7 @@ class JuniorOrcDamageAura extends Enchantment {
               category: 'stats',
               types: {
                 minion: ['board'],
-                hero: ['hero']
+                // hero: ['hero']
               },
               targetRequirement: (target, source) => (source.owner.owner === target.owner && source.owner !== target)
             }

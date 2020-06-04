@@ -2,16 +2,19 @@ const GamePlayer = require('./GamePlayer.js')
 const { create } = require('./CardLib')
 const { deck } = require('./DeckLib')
 const AuraManager = require('./AuraManager.js')
+const PhaseManager = require('./PhaseManager.js')
 // const Card = require("./Card.js");
 // const Minion = require("./Minion.js");
 // const Spell = require("./Spell.js");
 // const { Deck, deck1, deck2 } = require("./Deck.js");
 // const EventEmitter = require('events')
 const serverEvent = require('../ServerEvent.js')
+const GameEvent = require('./GameEvent.js')
 
 class Game {
   constructor (player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
     // Game.games.push(this);
+    this.event = new GameEvent()
     this.botPlayer1 = botPlayer1
     this.botPlayer2 = botPlayer2
     this.debug = debug
@@ -21,6 +24,9 @@ class Game {
     this.player1 = new GamePlayer(player1name, player1socketID)
     this.player2 = new GamePlayer(player2name, player2socketID)
     this.auras = new AuraManager(this)
+    this.phases = new PhaseManager(this)
+    this.inPlay = [this.player1.hero, this.player2.hero]
+    this.deathEvents = []
     this.player1deckID = player1deckID
     this.player2deckID = player2deckID
     this.activePlayer = null
@@ -112,19 +118,26 @@ class Game {
         //   defender: target,
         // })
         if (selected.canAttackTarget(target)) {
-          this.phases.proposedAttack({
+          this.phases.proposedAttackPhase({
             attacker: selected,
             defender: target,
-          })        }
+            cancelled: false,
+          })        
+        }
         // if (selected.canAttackTarget(target)) {
         //   selected.makeAttack(target)
         // }
       } else if (selected.zone === "hand") {
         if (selected.canBePlayed()) {
-          player.play(selected)
+          this.phases.playPhase({
+            player: selected.owner,
+            card: selected,
+          })
+          // player.play(selected)
         }
       }
     }
+    this.announceGameState()
   }
 
   findObjectByPlayerIDZoneAndObjectID (params) {
@@ -276,6 +289,8 @@ class Game {
     this.player2.board.push(create('PlayerTwoMinion'))
     this.player2.board[0].zone = 'board'
     this.player2.board[0].owner = this.player2
+    this.inPlay.push(this.player1.board[0])
+    this.inPlay.push(this.player2.board[0])
     // console.log(this);
     // this.announceGameState();
     console.log('starting game')
@@ -319,7 +334,12 @@ class Game {
     // this.delay();
     if (!this.gameOver && this.activePlayer.bot) {
       if (this.activePlayer.playableCards().length > 0) {
-        this.activePlayer.play(this.activePlayer.playableCards()[0])
+        this.phases.playPhase({
+          player: this.activePlayer,
+          card: this.activePlayer.playableCards()[0]
+        })
+        this.announceGameState()
+        // this.activePlayer.play(this.activePlayer.playableCards()[0])
       } else {
         console.log('no playable cards')
         console.log(this.activePlayer)
@@ -331,9 +351,21 @@ class Game {
     if (!this.gameOver && this.activePlayer.bot) {
       this.activePlayer.minionsReadyToAttack().forEach((minion) => {
         if (minion.owner.opponent.board[0]) {
-          minion.makeAttack(minion.owner.opponent.board[0])
+          this.phases.proposedAttackPhase({
+            attacker: minion,
+            defender: minion.owner.opponent.board[0],
+            cancelled: false,
+          })  
+          this.announceGameState()
+          // minion.makeAttack(minion.owner.opponent.board[0])
         } else {
-          minion.makeAttack(minion.owner.opponent.hero)
+          this.phases.proposedAttackPhase({
+            attacker: minion,
+            defender: minion.owner.opponent.hero,
+            cancelled: false,
+          })  
+          this.announceGameState()
+          // minion.makeAttack(minion.owner.opponent.hero)
         }
         // this.delay(2000);
       })
@@ -375,22 +407,22 @@ class Game {
   }
 
   resolveDamage () {
-    this.board().forEach((minion) => {
-      if (minion.stats.health <= 0) {
-        minion.owner.graveyard.push(minion.owner.board.splice(minion.owner.board.indexOf(minion), 1)[0])
-        minion.zone = 'graveyard'
-        minion.updateEnchantments()
-        minion.onDeath()
-        console.log(`${minion.name} has died and been sent to the graveyard`)
-      }
-    })
-    if (!this.activePlayer) {
-      // throw new Error('active player is ' + this.activePlayer)
-    }
-    if (!this.activePlayer.alive() || !this.nextActivePlayer.alive()) {
-      this.endGame()
-    }
-    this.announceGameState()
+    // this.board().forEach((minion) => {
+    //   if (minion.stats.health <= 0) {
+    //     minion.owner.graveyard.push(minion.owner.board.splice(minion.owner.board.indexOf(minion), 1)[0])
+    //     minion.zone = 'graveyard'
+    //     minion.updateEnchantments()
+    //     minion.onDeath()
+    //     console.log(`${minion.name} has died and been sent to the graveyard`)
+    //   }
+    // })
+    // if (!this.activePlayer) {
+    //   // throw new Error('active player is ' + this.activePlayer)
+    // }
+    // if (!this.activePlayer.alive() || !this.nextActivePlayer.alive()) {
+    //   this.endGame()
+    // }
+    // this.announceGameState()
   }
 
   endGame () {

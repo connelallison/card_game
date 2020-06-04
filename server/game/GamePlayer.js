@@ -123,15 +123,18 @@ class GamePlayer {
       this.spendMana(card.cost)
       if (card.type === 'minion') {
         this.board.push(this.hand.splice(this.hand.indexOf(card), 1)[0])
-        this.played.push(card)
-        this.summoned.push(card)
         card.zone = 'board'
         card.updateEnchantments()
+        this.game.inPlay.push(card)
+        // this.played.push(card)
+        // this.summoned.push(card)
         card.onPlay()
         this.game.announceGameState()
       } else if (card.type === 'spell') {
-        this.played.push(this.hand.splice(this.hand.indexOf(card), 1)[0])
+        this.graveyard.push(this.hand.splice(this.hand.indexOf(card), 1)[0])
         card.zone = 'graveyard'
+        card.updateEnchantments()
+        // this.played.push(card)
         card.onPlay()
         this.game.announceGameState()
       }
@@ -144,13 +147,14 @@ class GamePlayer {
       card.owner = this
       this.board.push(card)
       this.summoned.push(card)
+      this.game.inPlay.push(card)
       card.zone = 'board'
       card.afterThisSummoned()
     }
   }
 
   alive () {
-    return this.hero.health > 0
+    return this.hero.stats.health > 0
   }
 
   spendMana (amount) {

@@ -2,21 +2,27 @@ const Card = require('./Card.js')
 
 class Hero extends Card {
     constructor(owner) {
-        super('Hero', 'Hero', 'hero')
+        super('Hero', 'Hero', null,'hero')
         this.attack = 1
         this.health = 20
         this.zone = "hero"
         this.ready = false
         this.owner = owner
+        this.stats = {
+            attack: this.attack,
+            health: this.health,
+          }
     }
 
     provideReport () {
+        this.updateStats()
+
         return {
           name: this.name,
           id: this.id,
           objectID: this.objectID,
-          attack: this.attack,
-          health: this.health,
+          attack: this.stats.attack,
+          health: this.stats.health,
           type: this.type,
           zone: this.zone,
           ownerName: this.owner.name,
@@ -26,9 +32,28 @@ class Hero extends Card {
         }
       }
 
+    updateStats() {
+        const stats = {
+          attack: this.attack,
+          health: this.health,
+        }
+    
+        this.enchantments.static.stats.forEach(enchantment => {
+          if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
+        })
+    
+        // console.log(this.owner.game.auras.auras.stats)
+        this.owner.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
+          if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
+        })
+    
+        this.stats = stats
+      }
+
     takeDamage(damage) {
         if (damage > 0) {
             this.health -= damage
+            this.updateStats()
             console.log(`${this.owner.name} takes ${damage} damage`)
             console.log(`${this.owner.name} now has ${this.health} health`)
             // this.afterTakingDamage();

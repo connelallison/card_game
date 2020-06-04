@@ -44,9 +44,9 @@ class AuraManager {
     emit(auraObject) {
         for (const type in auraObject.effect.types) {
             for (const zone of auraObject.effect.types[type]) {
-                console.log(auraObject.effect.category)
-                console.log(type)
-                console.log(zone)
+                // console.log(auraObject.effect.category)
+                // console.log(type)
+                // console.log(zone)
                 this.auras[auraObject.effect.category][type][zone].push(auraObject)
             }
         }

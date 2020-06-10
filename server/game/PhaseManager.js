@@ -48,15 +48,15 @@ class PhaseManager {
 
     attackPhase(event) {
         this.game.event.emit('beforeAttack', event)
-        // event.attacker.makeAttack(event.defender)
-        // console.log(event.attacker)
         this.damagePhase({
             source: event.attacker,
             target: event.defender,
+            value: event.attacker.stats.attack,
         })
         this.damagePhase({
             source: event.defender,
             target: event.attacker,
+            value: event.defender.stats.attack,
         })
         event.attacker.ready = false
         this.game.event.emit('afterAttack', event)
@@ -65,9 +65,8 @@ class PhaseManager {
 
     damagePhase(event) {
         this.game.event.emit('beforeDamage', event) 
-        // console.log(event.source)
-        event.target.takeDamage(event.source.stats.attack)
-        // event.target.up
+        console.log(event)
+        event.target.takeDamage(event.value)
         this.game.event.emit('afterDamage', event)
     }
 
@@ -77,30 +76,72 @@ class PhaseManager {
     }
 
     playPhase(event) {
+        if (event.card.type === 'minion') {
+            this.playPhaseMinion(event)
+        } else if (event.card.type === 'spell') {
+            this.playPhaseSpell(event)
+        }
+    }
+
+    playPhaseMinion(event) {
         const { player, card } = event
         player.spendMana(card.cost)
-        // event.player.played.push(event.card)
-        if (card.type === 'minion') {
-            player.board.push(player.hand.splice(player.hand.indexOf(card), 1)[0])
-            card.zone = 'board'
-            card.updateEnchantments()
-            this.game.inPlay.push(card)
-            // player.summoned.push(card)
-        } else if (card.type === 'spell') {
-            player.graveyard.push(player.hand.splice(player.hand.indexOf(card), 1)[0])
-            card.zone = 'graveyard'
-            card.updateEnchantments()
-            // this.played.push(card)
-        }
-        this.game.event.emit('midPlay', event)
-        if (card.type === 'spell') {
-            this.game.event.emit('beforeSpell', event) 
-        }
+        card.moveZone('board')
+        this.game.inPlay.push(card)
+        this.game.event.emit('onPlay', event)
+        this.game.event.emit('onSummon', event)
         card.onPlay()
-        if (card.type === 'spell') {
-            this.game.event.emit('afterSpell', event)
-        }
         this.game.event.emit('afterPlay', event)
+        this.game.event.emit('afterSummon', event)
+        this.deathCreationStep()
+    }
+
+    playPhaseSpell(event) {
+        const { player, card } = event
+        player.spendMana(card.cost)
+        card.moveZone('graveyard')
+        this.game.event.emit('onPlay', event)
+        this.spellPhase(event)
+        this.game.event.emit('afterPlay', event)
+        this.deathCreationStep()
+    }
+
+    spellPhase(event) {
+        this.game.event.emit('beforeSpell', event) 
+        event.card.onPlay()
+        this.game.event.emit('afterSpell', event)
+    }
+
+    // summonPhase(event) {
+    //     this.game.event.emit('')
+    // }
+
+    drawPhase(event) {
+        const drawEvent = event
+        this.game.event.emit('proposedDraw', drawEvent)
+        const { player, number = 1, criteria = () => true } = drawEvent
+        const drawQueue = player.deck.filter(criteria)
+        const afterDrawQueue = []
+        for (let i = 0; i < number; i++) {
+            if (i < drawQueue.length) {
+                drawQueue[i].moveZone('hand')
+                this.game.event.emit('onDraw', {
+                    player: player,
+                    card: drawQueue[i]
+                })
+                afterDrawQueue.push(drawQueue[i])
+            } else {
+                player.fatigueCounter++
+                this.damagePhase({
+                    source: player,
+                    target: player.hero,
+                    value: player.fatigueCounter,
+                })                
+            }
+        }
+        afterDrawQueue.forEach(card => {
+            this.game.event.emit('afterDraw', { player, card })
+        })
     }
 
 }

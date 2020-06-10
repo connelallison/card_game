@@ -15,6 +15,7 @@ class GamePlayer {
     this.hand = []
     this.maxHand = 7
     this.deck = []
+    this.fatigueCounter = 0
     this.board = []
     this.maxBoard = 5
     this.graveyard = []

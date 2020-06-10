@@ -24,6 +24,13 @@ class Card extends GameObject {
     }
   }
 
+  moveZone(destination) {
+    this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+    this.owner[destination].push(this)
+    this.zone = destination
+    this.updateEnchantments()
+  }
+
   isLegalMove () {
     // return this.zone = "hand";
     return true

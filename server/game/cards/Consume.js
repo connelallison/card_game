@@ -10,9 +10,15 @@ class Consume extends Spell {
     const targetCount = 1 + this.owner.opponent.board.length
     const target = Math.floor(Math.random() * targetCount)
     const targets = [this.owner.opponent.hero].concat(this.owner.opponent.board)
-    targets[target].takeDamage(3)
-    this.owner.game.resolveDamage()
-    this.owner.draw()
+    this.owner.game.phases.damagePhase({
+      source: this.owner,
+      target: targets[target],
+      value: 3,
+    })
+    // targets[target].takeDamage(3)
+    // this.owner.game.resolveDamage()
+    this.owner.game.phases.drawPhase({ player: this.owner })
+    // this.owner.draw()
   }
 }
 module.exports = Consume

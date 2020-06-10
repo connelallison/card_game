@@ -388,7 +388,10 @@ class Game {
     // }
     this.turnTimer = null
     this.activePlayer = null
-    this.nextNextActivePlayer.draw()
+    this.phases.drawPhase({
+      player: this.nextActivePlayer
+    })
+    // this.nextNextActivePlayer.draw()
     console.log(`${this.nextNextActivePlayer.name} draws a card`)
     this.nextNextActivePlayer.allActive().forEach((card) => {
       card.onMyTurnEnd()

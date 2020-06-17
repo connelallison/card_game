@@ -3,6 +3,8 @@ const { create } = require('./CardLib')
 const { deck } = require('./DeckLib')
 const AuraManager = require('./AuraManager.js')
 const PhaseManager = require('./PhaseManager.js')
+const Turn = require('./Turn.js')
+const TestBot = require('./TestBot.js')
 // const Card = require("./Card.js");
 // const Minion = require("./Minion.js");
 // const Spell = require("./Spell.js");
@@ -13,35 +15,41 @@ const GameEvent = require('./GameEvent.js')
 
 class Game {
   constructor (player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
-    // Game.games.push(this);
     this.event = new GameEvent()
+    this.event.setMaxListeners(100)
     this.botPlayer1 = botPlayer1
     this.botPlayer2 = botPlayer2
     this.debug = debug
     this.online = online
     this.player1turn = 0
     this.player2turn = 0
-    this.player1 = new GamePlayer(player1name, player1socketID)
-    this.player2 = new GamePlayer(player2name, player2socketID)
+    this.gameObjects = {}
+    this.player1 = new GamePlayer(this, player1name, player1socketID)
+    this.player2 = new GamePlayer(this, player2name, player2socketID)
     this.auras = new AuraManager(this)
     this.phases = new PhaseManager(this)
     this.inPlay = [this.player1.hero, this.player2.hero]
-    this.deathEvents = []
+    this.eventCache = { 
+      death: [],
+      play: [],
+      spell: [],
+      attack: [],
+      damage: [],
+      draw: [],
+    }
     this.player1deckID = player1deckID
     this.player2deckID = player2deckID
-    this.activePlayer = null
-    this.nextActivePlayer = this.player1
-    this.nextNextActivePlayer = this.player2
     this.gameOver = false
     this.turnLength = 10000
     this.turnTimer
+    this.turn = null
+    this.turnNumber = 0
+    this.turnCache = []
     this.winner
     this.initPlayers()
     this.initListeners()
     this.mulliganPhase()
     this.start()
-    // this.startTurn = this.startTurn.bind(this);
-    // this.endTurn = this.endTurn.bind(this);
   }
 
   announceGameState () {
@@ -97,10 +105,10 @@ class Game {
 
   announceNewTurn () {
     if (this.player1.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.turn.turnLength)
     }
     if (this.player2.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.turn.turnLength)
     }
     //  else {
     //   serverEvent.emit("newTurnTimer", this.turnLength);
@@ -108,15 +116,12 @@ class Game {
   }
 
   actionMoveRequest (moveRequest, player) {
-    // console.log(moveRequest)
-    const selected = this.findObjectByPlayerIDZoneAndObjectID(moveRequest.selected)
-    const target = moveRequest.target === null ? null : this.findObjectByPlayerIDZoneAndObjectID(moveRequest.target)
+    // const selected = this.findObjectByPlayerIDZoneAndObjectID(moveRequest.selected)
+    const selected = this.gameObjects[moveRequest.selected.objectID]
+    const target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID]
+    // const target = moveRequest.target === null ? null : this.findObjectByPlayerIDZoneAndObjectID(moveRequest.target)
     if (player.myTurn() && selected.owner === player) {
       if (selected.zone === "hero" || selected.zone === "board" && selected.type === "minion") {
-        // this.phases.proposedAttack({
-        //   attacker: selected,
-        //   defender: target,
-        // })
         if (selected.canAttackTarget(target)) {
           this.phases.proposedAttackPhase({
             attacker: selected,
@@ -124,37 +129,34 @@ class Game {
             cancelled: false,
           })        
         }
-        // if (selected.canAttackTarget(target)) {
-        //   selected.makeAttack(target)
-        // }
       } else if (selected.zone === "hand") {
         if (selected.canBePlayed()) {
           this.phases.playPhase({
             player: selected.owner,
             card: selected,
           })
-          // player.play(selected)
         }
       }
     }
     this.announceGameState()
   }
 
-  findObjectByPlayerIDZoneAndObjectID (params) {
-    const { playerID, zone, objectID } = params
-    const player = this.findPlayerbyPlayerID(playerID)
-    if (zone === "hero" && player.hero.objectID === objectID) {
-      return player.hero
-    } else if (zone === "hand" && player.hand.find(card => card.objectID === objectID) !== undefined) {
-      return player.hand.find(card => card.objectID === objectID)
-    } else if (zone === "board" && player.board.find(card => card.objectID === objectID) !== undefined) {
-      return player.board.find(card => card.objectID === objectID)
-    } else if (zone === "other") {
-      throw new Error("findObject: other zones NYI")
-    } else {
-      throw new Error("findObject: not found")
-    }
-  }
+  // findObjectByPlayerIDZoneAndObjectID (params) {
+  //   const { playerID, zone, objectID } = params
+  //   const player = this.findPlayerbyPlayerID(playerID)
+  //   if (zone === "hero" && player.hero.objectID === objectID) {
+  //     return player.hero
+  //   } else if (zone === "hand" && player.hand.find(card => card.objectID === objectID) !== undefined) {
+  //     return player.hand.find(card => card.objectID === objectID)
+  //   } else if (zone === "board" && player.board.find(card => card.objectID === objectID) !== undefined) {
+  //     return player.board.find(card => card.objectID === objectID)
+  //   } else if (zone === "other") {
+  //     throw new Error("findObject: other zones NYI")
+  //   } else {
+  //     console.log(params)
+  //     throw new Error("findObject: not found")
+  //   }
+  // }
 
   findPlayerbyPlayerID (playerID) {
     if (this.player1.playerID === playerID) {
@@ -168,67 +170,9 @@ class Game {
     }
   }
 
-  allActive () {
-    const allActive = this.board().concat(this.hands()).concat(this.decks())
-    return allActive
-  }
-
-  graveyard () {
-    if (this.activePlayer) {
-      return this.activePlayer.graveyard.concat(this.nextActivePlayer.graveyard)
-    } else {
-      return this.nextActivePlayer.graveyard.concat(this.nextNextActivePlayer.graveyard)
-    }
-  }
-
-  played () {
-    if (this.activePlayer) {
-      return this.activePlayer.played.concat(this.nextActivePlayer.played)
-    } else {
-      return this.nextActivePlayer.played.concat(this.nextNextActivePlayer.played)
-    }
-  }
-
-  summoned () {
-    if (this.activePlayer) {
-      return this.activePlayer.summoned.concat(this.nextActivePlayer.summoned)
-    } else {
-      return this.nextActivePlayer.summoned.concat(this.nextNextActivePlayer.summoned)
-    }
-  }
-
-  board () {
-    if (this.activePlayer) {
-      return this.activePlayer.board.concat(this.nextActivePlayer.board)
-    } else {
-      return this.nextActivePlayer.board.concat(this.nextNextActivePlayer.board)
-    }
-  }
-
-  hands () {
-    if (this.activePlayer) {
-      return this.activePlayer.hand.concat(this.nextActivePlayer.hand)
-    } else {
-      return this.nextActivePlayer.hand.concat(this.nextNextActivePlayer.hand)
-    }
-  }
-
-  decks () {
-    if (this.activePlayer) {
-      return this.activePlayer.deck.concat(this.nextActivePlayer.deck)
-    } else {
-      return this.nextActivePlayer.deck.concat(this.nextNextActivePlayer.deck)
-    }
-  }
-
-  // delay (n) {
-  //   n = n || 1000
-  //   return new Promise(done => {
-  //     setTimeout(() => {
-  //       done()
-  //     }, n)
-  //   })
-  // }
+  async sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
 
   initPlayers () {
     if (this.botPlayer1) {
@@ -243,12 +187,8 @@ class Game {
     }
     this.player1.opponent = this.player2
     this.player2.opponent = this.player1
-    this.player1.game = this
-    this.player2.game = this
-    this.player1.deck = deck(this.player1deckID, this.player1).cards
-    this.player2.deck = deck(this.player2deckID, this.player2).cards
-    this.player1.allActive().forEach((card) => { card.owner = this.player1 })
-    this.player2.allActive().forEach((card) => { card.owner = this.player2 })
+    this.player1.deck = deck(this, this.player1, this.player1deckID).cards
+    this.player2.deck = deck(this, this.player2, this.player2deckID).cards
   }
 
   initListeners () {
@@ -282,160 +222,37 @@ class Game {
     }
   }
 
-  start () {
-    this.player1.board.push(create('PlayerOneMinion'))
-    this.player1.board[0].zone = 'board'
-    this.player1.board[0].owner = this.player1
-    this.player2.board.push(create('PlayerTwoMinion'))
-    this.player2.board[0].zone = 'board'
-    this.player2.board[0].owner = this.player2
+  async start () {
+    this.player1.board.push(create(this, this.player1, 'board', 'PlayerOneMinion'))
+    this.player2.board.push(create(this, this.player2, 'board', 'PlayerTwoMinion'))
     this.inPlay.push(this.player1.board[0])
     this.inPlay.push(this.player2.board[0])
-    // console.log(this);
-    // this.announceGameState();
     console.log('starting game')
-    setTimeout(this.startTurn.bind(this), 1000)
-    // this.startTurn();
+    await this.sleep(1000)
+    this.turnLoop({activePlayer: this.player1})
   }
 
-  startTurn () {
-    if (this.nextActivePlayer === this.player1) {
-      this.player1turn++
-      if (this.debug) { console.log('Start of turn ' + this.player1turn + ' for ' + this.player1.name) }
-    } else {
-      this.player2turn++
-      if (this.debug) { console.log('Start of turn ' + this.player2turn + ' for ' + this.player2.name) }
-    }
-    this.allActive().forEach((card) => {
-      card.onAnyTurnStart()
+  async turnLoop (turnObject) {
+    this.turnNumber++
+    this.turn = new Turn(this, {
+      activePlayer: turnObject.activePlayer, 
+      turnNumber: this.turnNumber,
     })
-    this.nextActivePlayer.allActive().forEach((card) => {
-      card.onMyTurnStart()
-    })
-    // console.log("\nBefore gaining mana: ");
-    // console.log(`Max mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.maxMana}`);
-    // console.log(`Current mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.currentMana}`);
-    this.nextActivePlayer.gainMaxMana(1)
-    this.nextActivePlayer.refillMana()
-    // console.log("\nAfter gaining mana: ");
-    // console.log(`Max mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.maxMana}`);
-    // console.log(`Current mana of ${this.nextActivePlayer.name}: ${this.nextActivePlayer.currentMana}`);
-    this.nextActivePlayer.board.forEach((minion) => {
-      minion.readyMinion()
-    })
-    this.nextActivePlayer.hero.readyHero()
-    this.activePlayer = this.nextActivePlayer
-    this.nextActivePlayer = this.nextNextActivePlayer
-    this.nextNextActivePlayer = this.activePlayer
+    this.turnCache.push(this.turn)
+    const nextActivePlayerPromise = this.turn.start()
     this.announceNewTurn()
     this.announceGameState()
-    // console.log(`\n${this.activePlayer.name}'s playable cards: `);
-    // console.log(this.activePlayer.playableCards().map((card) => { return card.name; }));
-    // this.delay();
-    if (!this.gameOver && this.activePlayer.bot) {
-      if (this.activePlayer.playableCards().length > 0) {
-        this.phases.playPhase({
-          player: this.activePlayer,
-          card: this.activePlayer.playableCards()[0]
-        })
-        this.announceGameState()
-        // this.activePlayer.play(this.activePlayer.playableCards()[0])
-      } else {
-        console.log('no playable cards')
-        console.log(this.activePlayer)
-      }
-    }
-    // this.delay();
-    // console.log(`\n${this.activePlayer.name}'s minions ready to attack: `);
-    // console.log(this.activePlayer.minionsReadyToAttack().map((card) => { return [card.name, card.health]; }));
-    if (!this.gameOver && this.activePlayer.bot) {
-      this.activePlayer.minionsReadyToAttack().forEach((minion) => {
-        if (minion.owner.opponent.board[0]) {
-          this.phases.proposedAttackPhase({
-            attacker: minion,
-            defender: minion.owner.opponent.board[0],
-            cancelled: false,
-          })  
-          this.announceGameState()
-          // minion.makeAttack(minion.owner.opponent.board[0])
-        } else {
-          this.phases.proposedAttackPhase({
-            attacker: minion,
-            defender: minion.owner.opponent.hero,
-            cancelled: false,
-          })  
-          this.announceGameState()
-          // minion.makeAttack(minion.owner.opponent.hero)
-        }
-        // this.delay(2000);
-      })
-    }
-    // console.log("\nAfter becoming active: ");
-    // console.log(`Max mana of ${this.activePlayer.name}: ${this.activePlayer.maxMana}`);
-    // console.log(`Current mana of ${this.activePlayer.name}: ${this.activePlayer.currentMana}`);
-    if (!this.gameOver) {
-      if (this.debug) { console.log(this.activePlayer.name + ' is the active player.') }
-      this.turnTimer = setTimeout(this.endTurn.bind(this), this.turnLength)
-    }
-  }
-
-  endTurn () {
-    // console.log(this);
-    // if (this.debug) {
-    //   console.log(this.activePlayer);
-    //   console.log(this.nextActivePlayer);
-    //   console.log(this.nextNextActivePlayer);
-    // }
-    this.turnTimer = null
-    this.activePlayer = null
-    this.phases.drawPhase({
-      player: this.nextActivePlayer
-    })
-    // this.nextNextActivePlayer.draw()
-    console.log(`${this.nextNextActivePlayer.name} draws a card`)
-    this.nextNextActivePlayer.allActive().forEach((card) => {
-      card.onMyTurnEnd()
-    })
-    if (this.debug) {
-      if (this.nextNextActivePlayer === this.player1) {
-        console.log('End of turn ' + this.player1turn + ' for ' + this.player1.name)
-      } else {
-        console.log('End of turn ' + this.player2turn + ' for ' + this.player2.name)
-      }
-    }
+    TestBot(this)
+    const nextActivePlayer = await nextActivePlayerPromise
     this.announceGameState()
-    if (!this.gameOver) {
-      this.startTurn()
+    if (nextActivePlayer) {
+      console.log(nextActivePlayer)
+      this.turnLoop({activePlayer: nextActivePlayer})
     }
-  }
-
-  resolveDamage () {
-    // this.board().forEach((minion) => {
-    //   if (minion.stats.health <= 0) {
-    //     minion.owner.graveyard.push(minion.owner.board.splice(minion.owner.board.indexOf(minion), 1)[0])
-    //     minion.zone = 'graveyard'
-    //     minion.updateEnchantments()
-    //     minion.onDeath()
-    //     console.log(`${minion.name} has died and been sent to the graveyard`)
-    //   }
-    // })
-    // if (!this.activePlayer) {
-    //   // throw new Error('active player is ' + this.activePlayer)
-    // }
-    // if (!this.activePlayer.alive() || !this.nextActivePlayer.alive()) {
-    //   this.endGame()
-    // }
-    // this.announceGameState()
   }
 
   endGame () {
-    if (this.turnTimer) {
-      clearTimeout(this.turnTimer)
-      this.turnTimer = null
-    }
-    this.activePlayer = null
-    this.nextActivePlayer = null
-    this.nextNextActivePlayer = null
+    this.turn.over = true
     this.gameOver = true
     if (this.player1.alive() && !this.player2.alive()) {
       this.winner = this.player1.name + ' wins'
@@ -451,7 +268,5 @@ class Game {
     this.removeListeners()
   }
 }
-
-// Game.games = [];
 
 module.exports = Game

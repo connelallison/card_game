@@ -1,8 +1,8 @@
 const Spell = require('../Spell.js')
 
 class Consume extends Spell {
-  constructor () {
-    super('Consume', 'Consume', 3)
+  constructor (game, owner, zone) {
+    super(game, owner, zone, 'Consume', 'Consume', 3)
   }
 
   onPlay () {

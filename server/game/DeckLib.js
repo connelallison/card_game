@@ -3,9 +3,9 @@ const Decks = {
   TestDeckTwo: require('./decks/TestDeckTwo.js')
 }
 
-const deck = function (deckID, player) {
+const deck = function (game, owner, deckID) {
   if (Decks[deckID]) {
-    return new Decks[deckID](player)
+    return new Decks[deckID](game, owner)
   } else {
     throw new Error(`Deck "${deckID}" not found in Decks.`)
   }

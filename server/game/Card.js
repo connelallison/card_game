@@ -1,12 +1,10 @@
 const GameObject = require("./GameObject.js")
 
 class Card extends GameObject {
-  constructor (id, name, cost, type, owner = null) {
-    super(id, name, type)
+  constructor (game, owner, zone, id, name, cost, type) {
+    super(game, owner, id, name, type)
     this.cost = cost
-    this.zone
-    this.owner = owner
-    this.objectID = `${this.id}:${Math.random()}`
+    this.zone = zone
   }
 
   provideReport () {

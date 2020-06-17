@@ -4,21 +4,13 @@
 const { create } = require('./CardLib.js')
 
 class Deck {
-  constructor (deckID, deckName, player = null, cards = []) {
+  constructor (game, owner, deckID, deckName, cards) {
+    this.game = game
+    this.owner = owner
     this.id = deckID
     this.name = deckName
-    this.owner = player
-    this.cards = cards
-    this.assignOwnerAndZone()
+    this.cards = cards.map(cardID => create(this.game, this.owner, 'deck', cardID))
     this.shuffle()
-  }
-
-  assignOwnerAndZone () {
-    console.log(this.cards)
-    this.cards.forEach((card) => {
-      card.owner = this.owner
-      card.zone = 'deck'
-    })
   }
 
   shuffle () {
@@ -26,7 +18,6 @@ class Deck {
       const j = Math.floor(Math.random() * (i + 1));
       [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]]
     }
-    return this.cards
   }
 }
 

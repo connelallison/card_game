@@ -1,8 +1,8 @@
 const Minion = require('../Minion.js')
 
 class PlayerTwoMinion extends Minion {
-  constructor () {
-    super('PlayerTwoMinion', 'Player 2 Minion', 3, 3, 4)
+  constructor (game, owner, zone) {
+    super(game, owner, zone, 'PlayerTwoMinion', 'Player 2 Minion', 3, 3, 4)
   }
 }
 

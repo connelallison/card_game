@@ -1,8 +1,8 @@
 const Spell = require('../Spell.js')
 
 class Fireburst extends Spell {
-  constructor () {
-    super('Fireburst', 'Fireburst', 2)
+  constructor (game, owner, zone) {
+    super(game, owner, zone, 'Fireburst', 'Fireburst', 2)
   }
 
   onPlay () {

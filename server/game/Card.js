@@ -1,13 +1,20 @@
 const GameObject = require("./GameObject.js")
 
 class Card extends GameObject {
-  constructor (game, owner, zone, id, name, cost, type) {
+  constructor (game, owner, zone, id, name, type, cost, effects = [], targeted = false, targetDomain, targetConstraints) {
     super(game, owner, id, name, type)
     this.cost = cost
     this.zone = zone
+    this.effects = effects
+    this.targeted = targeted
+    this.targetDomain = targetDomain
+    this.targetConstraints = targetConstraints
+    this.validTargets = []
   }
 
   provideReport () {
+    this.updateValidTargets()
+
     return {
       name: this.name,
       id: this.id,
@@ -18,7 +25,20 @@ class Card extends GameObject {
       ownerName: this.owner.name,
       playerID: this.owner.playerID,
       canBeSelected: this.canBePlayed(),
+      requiresTarget: this.targeted,
       validTargets: this.validTargetIDs()
+    }
+  }
+
+  updateValidTargets() {
+    if (this.zone === 'hand' && this.targeted) {
+      let newTargets = this.targetDomain(this.owner)
+      this.targetConstraints.forEach(constraint => {
+        newTargets = newTargets.filter(target => constraint(this.controller(), this, target))
+      })
+      this.validTargets = newTargets
+    } else {
+      this.validTargets = []
     }
   }
 
@@ -29,47 +49,12 @@ class Card extends GameObject {
     this.updateEnchantments()
   }
 
-  isLegalMove () {
-    // return this.zone = "hand";
-    return true
-  }
-
-  playTargets () {
-    return null;
-  }
-
   validTargetIDs () {
-    if (this.zone === "hand") {
-      return this.playTargets()
-    }
+    return this.validTargets.map(target => target.objectID)
   }
 
   canBePlayed () {
-    return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.isLegalMove()
-  }
-
-  onDraw () {
-
-  }
-
-  onPlay () {
-
-  }
-
-  onGameStart () {
-
-  }
-
-  onAnyTurnStart () {
-
-  }
-
-  onMyTurnStart () {
-
-  }
-
-  onMyTurnEnd () {
-
+    return this.owner.myTurn() && this.zone === 'hand' && this.cost <= this.owner.currentMana && (!this.targeted || this.validTargets.length > 0)
   }
 }
 module.exports = Card

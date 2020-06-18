@@ -2,14 +2,16 @@ const TestBot = async (game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
         await game.sleep(1000)
         if (game.turn.activePlayer.playableCards().length > 0) {
-            game.phases.playPhase({
-                player: game.turn.activePlayer,
-                card: game.turn.activePlayer.playableCards()[0]
-            })
-            game.announceGameState()
+            if (!game.turn.activePlayer.hand[0].targeted){
+                game.phases.playPhase({
+                    player: game.turn.activePlayer,
+                    card: game.turn.activePlayer.playableCards()[0]
+                })
+                game.announceGameState()
+            }
         } else {
-            console.log('no playable cards')
-            console.log(game.turn.activePlayer)
+            // console.log('no playable cards')
+            // console.log(game.turn.activePlayer)
         }
     }
     if (!game.gameOver && game.turn.activePlayer.bot) {

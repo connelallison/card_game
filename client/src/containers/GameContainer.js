@@ -134,6 +134,9 @@ class GameContainer extends Component {
   }
 
   announceMove (selected, target) {
+    console.log('move request:')
+    console.log('selected: ', selected)
+    console.log('target: ', target)
     socket.emit("newMoveRequest", {
       selected: {
         objectID: selected.objectID,

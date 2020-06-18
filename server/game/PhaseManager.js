@@ -72,11 +72,10 @@ class PhaseManager {
 
     damagePhase(event) {
         this.game.event.emit('beforeDamage', event) 
-        console.log(event)
+        // console.log(event.target)
         event.target.takeDamage(event.value)
         this.game.turn.cacheEvent(event, 'damage')
         this.game.event.emit('afterDamage', event)
-        this.game.eventCache.damage.push(event)
     }
 
     playPhase(event) {
@@ -85,26 +84,25 @@ class PhaseManager {
         } else if (event.card.type === 'spell') {
             this.playPhaseSpell(event)
         }
-        this.game.eventCache.play.push(event)
         this.deathPhase()
     }
 
     playPhaseMinion(event) {
-        const { player, card } = event
+        const { player, card, target = null } = event
         player.spendMana(card.cost)
         card.moveZone('board')
         this.game.inPlay.push(card)
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
         this.game.event.emit('onSummon', event)
-        card.onPlay()
+        // card.onPlay()
         this.game.event.emit('afterPlay', event)
         this.game.event.emit('afterSummon', event)
         // this.deathPhase()
     }
 
     playPhaseSpell(event) {
-        const { player, card } = event
+        const { player, card, target = null } = event
         player.spendMana(card.cost)
         card.moveZone('graveyard')
         this.game.turn.cacheEvent(event, 'play')
@@ -115,11 +113,13 @@ class PhaseManager {
     }
 
     spellPhase(event) {
+        const { player, card, target = null } = event
+        // console.log(target)
         this.game.event.emit('beforeSpell', event) 
         this.game.turn.cacheEvent(event, 'spell')
-        event.card.onPlay()
+        card.effects.forEach(effect => effect(player, card, target))
+        // event.card.onPlay()
         this.game.event.emit('afterSpell', event)
-        this.game.eventCache.spell.push(event)
     }
 
     // summonPhase(event) {
@@ -129,8 +129,9 @@ class PhaseManager {
     drawPhase(event) {
         const drawEvent = event
         this.game.event.emit('proposedDraw', drawEvent)
-        const { player, number = 1, criteria = () => true } = drawEvent
-        const drawQueue = player.deck.filter(criteria)
+        const { player, number = 1, criteria = [] } = drawEvent
+        let drawQueue = player.deck
+        criteria.forEach(criterion => drawQueue = drawQueue.filter(criterion))
         const afterDrawQueue = []
         for (let i = 0; i < number; i++) {
             if (i < drawQueue.length) {
@@ -153,7 +154,6 @@ class PhaseManager {
         }
         afterDrawQueue.forEach(event => {
             this.game.event.emit('afterDraw', event)
-            this.game.eventCache.draw.push(event)
         })
     }
 

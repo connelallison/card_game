@@ -4,6 +4,10 @@ const { deck } = require('./DeckLib')
 const AuraManager = require('./AuraManager.js')
 const PhaseManager = require('./PhaseManager.js')
 const Turn = require('./Turn.js')
+const Constraints = require('./Constraints.js')
+const Effects = require('./Effects.js')
+const Permissions = require('./Permissions.js')
+const Utils = require('./Utils.js')
 const TestBot = require('./TestBot.js')
 // const Card = require("./Card.js");
 // const Minion = require("./Minion.js");
@@ -27,6 +31,10 @@ class Game {
     this.player2 = new GamePlayer(this, player2name, player2socketID)
     this.auras = new AuraManager(this)
     this.phases = new PhaseManager(this)
+    this.constraints = new Constraints(this)
+    this.effects = new Effects(this)
+    this.permissions = new Permissions(this)
+    this.utils = new Utils(this)
     this.inPlay = [this.player1.hero, this.player2.hero]
     this.eventCache = { 
       death: [],
@@ -36,6 +44,8 @@ class Game {
       damage: [],
       draw: [],
     }
+    // this.sequence = []
+    // this.sequenceCache = [this.sequence]
     this.player1deckID = player1deckID
     this.player2deckID = player2deckID
     this.gameOver = false
@@ -117,24 +127,47 @@ class Game {
   actionMoveRequest (moveRequest, player) {
     const selected = this.gameObjects[moveRequest.selected.objectID]
     const target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID]
-    if (player.myTurn() && selected.owner === player) {
-      if (selected.zone === "hero" || selected.zone === "board" && selected.type === "minion") {
-        if (selected.canAttackTarget(target)) {
-          this.phases.proposedAttackPhase({
-            attacker: selected,
-            defender: target,
-            cancelled: false,
-          })        
-        }
-      } else if (selected.zone === "hand") {
-        if (selected.canBePlayed()) {
-          this.phases.playPhase({
-            player: selected.owner,
-            card: selected,
-          })
-        }
+    if (selected.zone === 'hero' || selected.zone === 'board') {
+      if (target === null) throw Error("it's null")
+      if (this.permissions.canAttack(selected, target)) {
+        this.phases.proposedAttackPhase({
+          attacker: selected,
+          defender: target,
+          cancelled: false,
+        })  
+      }
+    } else if (selected.zone === 'hand') {
+      if (!selected.targeted && selected.canBePlayed()) {
+        this.phases.playPhase({
+          player: selected.owner,
+          card: selected,
+        })
+      } else if (this.permissions.canTarget(selected, target)) {
+        this.phases.playPhase({
+          player: selected.owner,
+          card: selected,
+          target,
+        })
       }
     }
+    // if (player.myTurn() && selected.owner === player) {
+    //   if (selected.zone === "hero" || selected.zone === "board" && selected.type === "minion") {
+    //     if (selected.canAttackTarget(target)) {
+    //       this.phases.proposedAttackPhase({
+    //         attacker: selected,
+    //         defender: target,
+    //         cancelled: false,
+    //       })        
+    //     }
+    //   } else if (selected.zone === "hand") {
+    //     if (selected.canBePlayed()) {
+    //       this.phases.playPhase({
+    //         player: selected.owner,
+    //         card: selected,
+    //       })
+    //     }
+    //   }
+    // }
     this.announceGameState()
   }
 
@@ -243,7 +276,7 @@ class Game {
     const nextActivePlayer = await nextActivePlayerPromise
     this.announceGameState()
     if (nextActivePlayer) {
-      console.log(nextActivePlayer)
+      // console.log(nextActivePlayer)
       this.turnLoop({activePlayer: nextActivePlayer})
     }
   }

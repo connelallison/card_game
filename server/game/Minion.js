@@ -1,8 +1,8 @@
 const Card = require('./Card.js')
 
 class Minion extends Card {
-  constructor(game, owner, zone, id, name, cost, attack, health) {
-    super(game, owner, zone, id, name, cost, 'minion')
+  constructor(game, owner, zone, id, name, cost, attack, health, effects, targeted, targetDomain, targetConstraints) {
+    super(game, owner, zone, id, name, 'minion', cost, effects, targeted, targetDomain, targetConstraints)
     this.attack = attack
     this.health = health
     this.stats = {
@@ -18,6 +18,7 @@ class Minion extends Card {
 
   provideReport() {
     this.updateStats()
+    this.updateValidTargets()
 
     return {
       name: this.name,
@@ -30,7 +31,8 @@ class Minion extends Card {
       zone: this.zone,
       ownerName: this.owner.name,
       playerID: this.owner.playerID,
-      canBeSelected: this.canAttack() || this.canBePlayed(),
+      canBeSelected: this.canBeSelected(),
+      requiresTarget: this.targeted,
       validTargets: this.validTargetIDs()
     }
   }
@@ -53,6 +55,22 @@ class Minion extends Card {
     this.stats = stats
   }
 
+  updateValidTargets() {
+    if (this.zone === 'hand' && this.targeted) {
+      let newTargets = this.targetDomain(this.owner)
+      this.targetConstraints.forEach(constraint => {
+        newTargets = newTargets.filter(target => constraint(this.controller(), this, target))
+      })
+      this.validTargets = newTargets
+    } else if (this.zone === 'board') {
+      this.validTargets = [this.owner.opponent.hero].concat(this.owner.opponent.board).filter(defender => {
+        return this.game.permissions.canAttack(this, defender)
+      })
+    } else {
+      this.validTargets = []
+    }
+  }
+
   startOfTurn(event) {
     if (event.activePlayer === this.controller() && this.zone === 'board') {
       this.getReady()
@@ -64,23 +82,15 @@ class Minion extends Card {
   }
 
   canBePlayed() {
-    return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.owner.board.length < this.owner.maxBoard && this.isLegalMove()
+    return this.owner.myTurn() && this.zone === 'hand' && this.cost <= this.owner.currentMana && this.owner.board.length < this.owner.maxBoard
   }
 
-  onPlay() {
-    this.afterThisSummoned()
-  }
-
-  onDeath() {
-
-  }
-
-  afterThisSummoned() {
-
-  }
-
-  afterTakingDamage() {
-
+  canBeSelected() {
+    if (this.zone === 'board') {
+      return this.validTargets.length > 0
+    } else {
+      return this.canBePlayed()
+    }
   }
 
   getReady() {
@@ -91,57 +101,16 @@ class Minion extends Card {
     }
   }
 
-  isAttackable() {
-    return true
-  }
-
   takeDamage(damage) {
     if (damage > 0) {
       this.health -= damage
       this.updateStats()
       // console.log(`${this.name} takes ${damage} damage`);
-      this.afterTakingDamage()
-    }
-  }
-
-  attackTargets() {
-    let attackTargets = []
-    if (this.owner.opponent.hero.isAttackable()) {
-      attackTargets.push(this.owner.opponent.hero)
-    }
-    attackTargets = attackTargets.concat(this.owner.opponent.board.filter((minion) => {
-      return minion.isAttackable()
-    }))
-    return attackTargets
-  }
-
-  validTargetIDs() {
-    if (this.zone === "hand") {
-      return this.playTargets()
-    } else if (this.zone === "board") {
-      return this.attackTargets().map(target => target.objectID)
     }
   }
 
   canAttack() {
-    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.stats.attack > 0 && this.attackTargets().length > 0
-  }
-
-  canAttackTarget(target) {
-    return this.owner.myTurn() && this.ready && this.owner.board.includes(this) && this.stats.attack > 0 && this.attackTargets().includes(target)
-  }
-
-  makeAttack(target) {
-    if (!this.owner.game.gameOver && this.canAttackTarget(target)) {
-      // this.owner.game.
-      // console.log(`${this.name} is attacking ${target.name}`);
-      // console.log(`${this.name}'s attack is ${this.attack}`);
-      // console.log(`${target.name}'s attack is ${target.attack}`);
-      target.takeDamage(this.stats.attack)
-      this.takeDamage(target.attack)
-      this.ready = false
-      this.owner.game.resolveDamage()
-    }
+    return this.owner.myTurn() && this.ready && this.zone && this.stats.attack > 0
   }
 }
 

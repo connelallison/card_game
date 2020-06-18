@@ -16,7 +16,6 @@ const GameEvent = require('./GameEvent.js')
 class Game {
   constructor (player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
     this.event = new GameEvent()
-    this.event.setMaxListeners(100)
     this.botPlayer1 = botPlayer1
     this.botPlayer2 = botPlayer2
     this.debug = debug
@@ -116,10 +115,8 @@ class Game {
   }
 
   actionMoveRequest (moveRequest, player) {
-    // const selected = this.findObjectByPlayerIDZoneAndObjectID(moveRequest.selected)
     const selected = this.gameObjects[moveRequest.selected.objectID]
     const target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID]
-    // const target = moveRequest.target === null ? null : this.findObjectByPlayerIDZoneAndObjectID(moveRequest.target)
     if (player.myTurn() && selected.owner === player) {
       if (selected.zone === "hero" || selected.zone === "board" && selected.type === "minion") {
         if (selected.canAttackTarget(target)) {

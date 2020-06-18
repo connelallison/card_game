@@ -2,11 +2,12 @@ const Minion = require('../Minion.js')
 const Enchantment = require('../Enchantment.js')
 
 class FootmanExtraDamageDuringYourTurn extends Enchantment {
-    constructor(owner) {
+    constructor(game, owner) {
         super(
+            game,
+            owner,
             'FootMan:ExtraDamageDuringYourTurn', 
             'Zeal', 
-            owner, 
             ['board'],
             ['minion'],
             (enchantment) => (enchantment.owner.owner.myTurn()),
@@ -22,9 +23,9 @@ class FootmanExtraDamageDuringYourTurn extends Enchantment {
 }
 
 class Footman extends Minion {
-  constructor () {
-    super('Footman', 'Footman', 2, 2, 4)
-    this.enchantments.static.stats.push(new FootmanExtraDamageDuringYourTurn(this))
+  constructor (game, owner, zone) {
+    super(game, owner, zone, 'Footman', 'Footman', 2, 2, 4)
+    this.enchantments.static.stats.push(new FootmanExtraDamageDuringYourTurn(this.game, this))
   }
 }
 module.exports = Footman

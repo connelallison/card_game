@@ -1,9 +1,12 @@
 class GameObject {
-    constructor(id, name, type) {
+    constructor(game, owner, id, name, type) {
+        this.game = game
+        this.owner = owner
         this.id = id 
         this.name = name
         this.type = type
         this.objectID = `${this.id}:${Math.random()}`
+        this.game.gameObjects[this.objectID] = this
         this.enchantments = {
             static: {
                 stats: [],
@@ -31,6 +34,10 @@ class GameObject {
                 }
             }
         }
+    }
+
+    controller() {
+        return this.owner.controller()
     }
 }
 

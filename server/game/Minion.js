@@ -1,8 +1,8 @@
 const Card = require('./Card.js')
 
 class Minion extends Card {
-  constructor(id, name, cost, attack, health) {
-    super(id, name, cost, 'minion')
+  constructor(game, owner, zone, id, name, cost, attack, health) {
+    super(game, owner, zone, id, name, cost, 'minion')
     this.attack = attack
     this.health = health
     this.stats = {
@@ -10,8 +10,10 @@ class Minion extends Card {
       health: this.health,
       cost: this.cost
     }
-
     this.ready = false
+
+    this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
+    this.game.event.on('endOfTurn', (event) => this.endOfTurn(event))
   }
 
   provideReport() {
@@ -51,6 +53,16 @@ class Minion extends Card {
     this.stats = stats
   }
 
+  startOfTurn(event) {
+    if (event.activePlayer === this.controller() && this.zone === 'board') {
+      this.getReady()
+    }
+  }
+
+  endOfTurn(event) {
+
+  }
+
   canBePlayed() {
     return this.owner.myTurn() && this.owner.hand.includes(this) && this.cost <= this.owner.currentMana && this.owner.board.length < this.owner.maxBoard && this.isLegalMove()
   }
@@ -71,11 +83,11 @@ class Minion extends Card {
 
   }
 
-  readyMinion() {
+  getReady() {
     if (this.zone === 'board') {
       this.ready = true
     } else {
-      throw new Error(`readyMinion() is being called on a minion (${this.name}) with this.zone not set to board`)
+      throw new Error(`getReady() is being called on a minion (${this.name}) with this.zone not set to board`)
     }
   }
 

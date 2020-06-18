@@ -2,11 +2,12 @@ const Minion = require('../Minion.js')
 const Enchantment = require('../Enchantment.js')
 
 class JuniorOrcDamageAura extends Enchantment {
-    constructor(owner) {
+    constructor(game, owner) {
         super(
+            game,
+            owner,
             'JuniorOrc:DamageAura', 
             'Fury', 
-            owner, 
             ['board'],
             ['minion'],
             (enchantment) => (true),
@@ -18,7 +19,7 @@ class JuniorOrcDamageAura extends Enchantment {
               category: 'stats',
               types: {
                 minion: ['board'],
-                hero: ['hero']
+                // hero: ['hero']
               },
               targetRequirement: (target, source) => (source.owner.owner === target.owner && source.owner !== target)
             }
@@ -26,9 +27,9 @@ class JuniorOrcDamageAura extends Enchantment {
     }
 }
 class JuniorOrc extends Minion {
-  constructor () {
-    super('JuniorOrc', 'Junior Orc', 2, 3, 3)
-    this.enchantments.aura.stats.push(new JuniorOrcDamageAura(this))
+  constructor (game, owner, zone) {
+    super(game, owner, zone, 'JuniorOrc', 'Junior Orc', 2, 3, 3)
+    this.enchantments.aura.stats.push(new JuniorOrcDamageAura(this.game, this))
   }
 }
 

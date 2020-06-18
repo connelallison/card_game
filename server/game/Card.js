@@ -1,12 +1,10 @@
 const GameObject = require("./GameObject.js")
 
 class Card extends GameObject {
-  constructor (id, name, cost, type, owner = null) {
-    super(id, name, type)
+  constructor (game, owner, zone, id, name, cost, type) {
+    super(game, owner, id, name, type)
     this.cost = cost
-    this.zone
-    this.owner = owner
-    this.objectID = `${this.id}:${Math.random()}`
+    this.zone = zone
   }
 
   provideReport () {
@@ -22,6 +20,13 @@ class Card extends GameObject {
       canBeSelected: this.canBePlayed(),
       validTargets: this.validTargetIDs()
     }
+  }
+
+  moveZone(destination) {
+    this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+    this.owner[destination].push(this)
+    this.zone = destination
+    this.updateEnchantments()
   }
 
   isLegalMove () {

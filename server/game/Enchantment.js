@@ -1,8 +1,8 @@
 const GameObject = require('./GameObject.js')
 
 class Enchantment extends GameObject {
-    constructor(id, name, owner = null, activeZones, activeTypes, sendRequirement, aura, effectType, effect) {
-        super(id, name, 'enchantment')
+    constructor(game, owner, id, name, activeZones, activeTypes, sendRequirement, aura, effectType, effect) {
+        super(game, owner, id, name, 'enchantment')
         this.owner = owner
         this.activeZones = activeZones
         this.activeTypes = activeTypes

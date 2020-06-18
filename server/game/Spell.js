@@ -1,8 +1,8 @@
 const Card = require('./Card.js')
 
 class Spell extends Card {
-  constructor (id, name, cost) {
-    super(id, name, cost, 'spell')
+  constructor (game, owner, zone, id, name, cost) {
+    super(game, owner, zone, id, name, cost, 'spell')
   }
 
   provideReport () {

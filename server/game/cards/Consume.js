@@ -1,8 +1,8 @@
 const Spell = require('../Spell.js')
 
 class Consume extends Spell {
-  constructor () {
-    super('Consume', 'Consume', 3)
+  constructor (game, owner, zone) {
+    super(game, owner, zone, 'Consume', 'Consume', 3)
   }
 
   onPlay () {
@@ -10,9 +10,12 @@ class Consume extends Spell {
     const targetCount = 1 + this.owner.opponent.board.length
     const target = Math.floor(Math.random() * targetCount)
     const targets = [this.owner.opponent.hero].concat(this.owner.opponent.board)
-    targets[target].takeDamage(3)
-    this.owner.game.resolveDamage()
-    this.owner.draw()
+    this.game.phases.damagePhase({
+      source: this.owner,
+      target: targets[target],
+      value: 3,
+    })
+    this.game.phases.drawPhase({ player: this.owner })
   }
 }
 module.exports = Consume

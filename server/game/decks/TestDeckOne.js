@@ -2,30 +2,32 @@ const Deck = require('../Deck.js')
 const { create } = require('../CardLib.js')
 
 class TestDeckOne extends Deck {
-  constructor (player = null) {
+  constructor (game, owner) {
     const cards = [
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Footman'),
-      create('Fireburst'),
-      create('Fireburst'),
-      create('Fireburst'),
-      create('Fireburst'),
-      create('Fireburst'),
-      create('Fireburst')
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Footman',
+      'Fireburst',
+      'Fireburst',
+      'Fireburst',
+      'Fireburst',
+      'Fireburst',
+      'Fireburst',
     ]
-    super('TestDeckOne', 'Test Deck 1', player, cards)
+    super(game, owner, 'TestDeckOne', 'Test Deck 1', cards)
   }
 }
 

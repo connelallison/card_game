@@ -17,6 +17,7 @@ class Hero extends Card {
 
   provideReport() {
     this.updateStats()
+    this.updateFlags()
     this.updateValidTargets()
 
     return {
@@ -45,8 +46,8 @@ class Hero extends Card {
       if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 
-    // console.log(this.owner.game.auras.auras.stats)
-    this.owner.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
+    // console.log(this.game.auras.auras.stats)
+    this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
       if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 

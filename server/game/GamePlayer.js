@@ -131,13 +131,14 @@ class GamePlayer {
 
   canPlay(card) {
     // console.log(card);
-    if (card.type === 'minion') {
-      return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && this.board.length < this.maxBoard && card.isLegalMove()
-    } else if (card.type === 'spell') {
-      return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && card.isLegalMove()
-    } else {
-      throw new Error(`Card (${card.name}) has ${card.type} for its type.`)
-    }
+    // if (card.type === 'minion') {
+    //   return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && this.board.length < this.maxBoard 
+    // } else if (card.type === 'spell') {
+    //   return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana 
+    // } else {
+    //   throw new Error(`Card (${card.name}) has ${card.type} for its type.`)
+    // }
+    return this.game.permissions.canPlay(this, card)
   }
 
   play(card) {
@@ -151,14 +152,14 @@ class GamePlayer {
         this.game.inPlay.push(card)
         // this.played.push(card)
         // this.summoned.push(card)
-        card.onPlay()
+        // card.onPlay()
         this.game.announceGameState()
       } else if (card.type === 'spell') {
         this.graveyard.push(this.hand.splice(this.hand.indexOf(card), 1)[0])
         card.zone = 'graveyard'
         card.updateEnchantments()
         // this.played.push(card)
-        card.onPlay()
+        // card.onPlay()
         this.game.announceGameState()
       }
     }
@@ -166,12 +167,9 @@ class GamePlayer {
 
   summon(cardID) {
     if (this.board.length < this.maxBoard) {
-      const card = create(this.game, this, cardID)
+      const card = create(this.game, this, 'board', cardID)
       this.board.push(card)
-      // this.summoned.push(card)
       this.game.inPlay.push(card)
-      card.zone = 'board'
-      // card.afterThisSummoned()
     }
   }
 

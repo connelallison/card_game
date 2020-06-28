@@ -7,23 +7,40 @@ class GameObject {
         this.type = type
         this.objectID = `${this.id}:${Math.random()}`
         this.game.gameObjects[this.objectID] = this
+        this.flags = {}
         this.enchantments = {
             static: {
                 stats: [],
-                other: []
+                flags: []
             },
             aura: {
                 stats: [],
-                other: []
+                flags: []
             },
             dynamic: {
                 stats: [],
-                other: []
+                flags: []
             },
             trigger: {
 
             }
         }
+    }
+
+    updateFlags() {
+        const flags = {
+    
+        }
+    
+        this.enchantments.static.flags.forEach(enchantment => {
+          if (enchantment.effectActive()) enchantment.effect.effect(flags, enchantment.effect.value)
+        })
+    
+        this.game.auras.auras.flags[this.type][this.zone].forEach(enchantment => {
+          if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(flags, enchantment.effect.value)
+        })
+    
+        this.flags = flags
     }
 
     updateEnchantments() {

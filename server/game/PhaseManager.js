@@ -10,10 +10,12 @@ class PhaseManager {
 
     startOfTurnPhase(event) {
         this.game.event.emit('startOfTurn', event)
+        this.deathPhase()
     }
 
     endOfTurnPhase(event) {
         this.game.event.emit('endOfTurn', event)
+        this.deathPhase()
     }
 
     deathPhase() {

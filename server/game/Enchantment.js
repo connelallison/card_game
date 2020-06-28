@@ -22,9 +22,9 @@ class Enchantment extends GameObject {
         this.activeZoneAndType = this.activeZones.includes(this.owner.zone) && this.activeTypes.includes(this.owner.type)
         if (this.aura) {
             if (!previousActive && this.activeZoneAndType) {
-                this.owner.owner.game.auras.emit(this)
+                this.game.auras.emit(this)
             } else if (previousActive && !this.activeZoneAndType) {
-                this.owner.owner.game.auras.cancel(this)
+                this.game.auras.cancel(this)
             }
         }
     }

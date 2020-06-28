@@ -20,7 +20,7 @@ class AuraManager {
                     deck: [],
                 },
             },
-            other: {
+            flags: {
                 minion: {
                     board: [],
                     hand: [],

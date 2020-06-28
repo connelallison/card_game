@@ -6,6 +6,7 @@ class Spell extends Card {
   }
 
   provideReport () {
+    this.updateFlags()
     this.updateValidTargets()
 
     return {

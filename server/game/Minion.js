@@ -18,6 +18,7 @@ class Minion extends Card {
 
   provideReport() {
     this.updateStats()
+    this.updateFlags()
     this.updateValidTargets()
 
     return {
@@ -48,7 +49,7 @@ class Minion extends Card {
       if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 
-    this.owner.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
+    this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
       if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 
@@ -82,7 +83,7 @@ class Minion extends Card {
   }
 
   canBePlayed() {
-    return this.owner.myTurn() && this.zone === 'hand' && this.cost <= this.owner.currentMana && this.owner.board.length < this.owner.maxBoard
+    return this.owner.canPlay(this)
   }
 
   canBeSelected() {

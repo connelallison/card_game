@@ -38,6 +38,10 @@ class Utils {
         return targetDomain
         }
     }
+
+    notBehindTaunt(character) {
+        return character.flags.taunt || character.controller().board.every(minion => minion.flags.taunt !== true)
+    }
 }
 
 module.exports = Utils

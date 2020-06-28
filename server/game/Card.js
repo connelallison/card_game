@@ -13,6 +13,7 @@ class Card extends GameObject {
   }
 
   provideReport () {
+    this.updateFlags()
     this.updateValidTargets()
 
     return {
@@ -54,7 +55,7 @@ class Card extends GameObject {
   }
 
   canBePlayed () {
-    return this.owner.myTurn() && this.zone === 'hand' && this.cost <= this.owner.currentMana && (!this.targeted || this.validTargets.length > 0)
+    return this.owner.canPlay(this)
   }
 }
 module.exports = Card

@@ -1,11 +1,22 @@
 const TestBot = async (game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
         await game.sleep(1000)
-        if (game.turn.activePlayer.playableCards().length > 0) {
-            if (!game.turn.activePlayer.hand[0].targeted){
+        // for (card in game.turn.activePlayer.playableCards()) {
+
+        // }
+        const playableCard = game.turn.activePlayer.playableCards()[0]
+        if (playableCard) {
+            if (!playableCard.targeted){
                 game.phases.playPhase({
                     player: game.turn.activePlayer,
-                    card: game.turn.activePlayer.playableCards()[0]
+                    card: playableCard
+                })
+                game.announceGameState()
+            } else {
+                game.phases.playPhase({
+                    player: game.turn.activePlayer,
+                    card: playableCard,
+                    target: playableCard.validTargets[0]
                 })
                 game.announceGameState()
             }

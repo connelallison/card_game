@@ -1,8 +1,8 @@
 const Card = require('./Card.js')
 
 class Hero extends Card {
-  constructor(game, owner, id, name, cost, effects, targeted, targetDomain, targetConstraints) {
-    super(game, owner, 'hero', id, name, 'hero', cost, effects, targeted, targetDomain, targetConstraints)
+  constructor(game, owner, id, name, cost, staticCardText, effects, targeted, targetDomain, targetConstraints) {
+    super(game, owner, 'hero', id, name, 'hero', cost, staticCardText, effects, targeted, targetDomain, targetConstraints)
     this.attack = 1
     // this.health = 20
     this.ready = false
@@ -17,6 +17,7 @@ class Hero extends Card {
 
   provideReport() {
     this.updateStats()
+    this.updateFlags()
     this.updateValidTargets()
 
     return {
@@ -31,7 +32,8 @@ class Hero extends Card {
       playerID: this.owner.playerID,
       canBeSelected: this.canAttack(),
       requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs()
+      validTargets: this.validTargetIDs(),
+      staticCardText: this.staticCardText,
     }
   }
 
@@ -45,8 +47,8 @@ class Hero extends Card {
       if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 
-    // console.log(this.owner.game.auras.auras.stats)
-    this.owner.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
+    // console.log(this.game.auras.auras.stats)
+    this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
       if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 

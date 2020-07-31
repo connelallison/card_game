@@ -1,10 +1,11 @@
 const GameObject = require("./GameObject.js")
 
 class Card extends GameObject {
-  constructor (game, owner, zone, id, name, type, cost, effects = [], targeted = false, targetDomain, targetConstraints) {
+  constructor (game, owner, zone, id, name, type, cost, staticCardText = '', effects = [], targeted = false, targetDomain, targetConstraints) {
     super(game, owner, id, name, type)
-    this.cost = cost
     this.zone = zone
+    this.cost = cost
+    this.staticCardText = staticCardText
     this.effects = effects
     this.targeted = targeted
     this.targetDomain = targetDomain
@@ -13,6 +14,7 @@ class Card extends GameObject {
   }
 
   provideReport () {
+    this.updateFlags()
     this.updateValidTargets()
 
     return {
@@ -26,7 +28,8 @@ class Card extends GameObject {
       playerID: this.owner.playerID,
       canBeSelected: this.canBePlayed(),
       requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs()
+      validTargets: this.validTargetIDs(),
+      staticCardText: this.staticCardText,
     }
   }
 
@@ -54,7 +57,7 @@ class Card extends GameObject {
   }
 
   canBePlayed () {
-    return this.owner.myTurn() && this.zone === 'hand' && this.cost <= this.owner.currentMana && (!this.targeted || this.validTargets.length > 0)
+    return this.owner.canPlay(this)
   }
 }
 module.exports = Card

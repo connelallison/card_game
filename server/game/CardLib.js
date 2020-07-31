@@ -2,6 +2,7 @@ const Cards = {
   PlayerOneMinion: require('./cards/PlayerOneMinion.js'),
   PlayerTwoMinion: require('./cards/PlayerTwoMinion.js'),
   Footman: require('./cards/Footman.js'),
+  RoyalGuard: require('./cards/RoyalGuard.js'),
   JuniorOrc: require('./cards/JuniorOrc.js'),
   Fireburst: require('./cards/Fireburst.js'),
   Consume: require('./cards/Consume.js')

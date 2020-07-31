@@ -1,11 +1,22 @@
 const TestBot = async (game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
         await game.sleep(1000)
-        if (game.turn.activePlayer.playableCards().length > 0) {
-            if (!game.turn.activePlayer.hand[0].targeted){
+        // for (card in game.turn.activePlayer.playableCards()) {
+
+        // }
+        const playableCard = game.turn.activePlayer.playableCards()[0]
+        if (playableCard) {
+            if (!playableCard.targeted){
                 game.phases.playPhase({
                     player: game.turn.activePlayer,
-                    card: game.turn.activePlayer.playableCards()[0]
+                    card: playableCard
+                })
+                game.announceGameState()
+            } else {
+                game.phases.playPhase({
+                    player: game.turn.activePlayer,
+                    card: playableCard,
+                    target: playableCard.validTargets[0]
                 })
                 game.announceGameState()
             }
@@ -17,7 +28,7 @@ const TestBot = async (game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
         game.turn.activePlayer.minionsReadyToAttack().forEach((minion) => {
             // await game.sleep(1000)
-            if (minion.owner.opponent.board[0]) {
+            if (minion.owner.opponent.board[0] && game.permissions.canAttack(minion.owner.opponent.board[0])) {
                 game.phases.proposedAttackPhase({
                     attacker: minion,
                     defender: minion.owner.opponent.board[0],
@@ -25,11 +36,13 @@ const TestBot = async (game) => {
                 })
                 game.announceGameState()
             } else {
-                game.phases.proposedAttackPhase({
-                    attacker: minion,
-                    defender: minion.owner.opponent.hero,
-                    cancelled: false,
-                })
+                if (game.permissions.canAttack(minion.owner.opponent.hero)){
+                    game.phases.proposedAttackPhase({
+                        attacker: minion,
+                        defender: minion.owner.opponent.hero,
+                        cancelled: false,
+                    })
+                }
                 game.announceGameState()
             }
         })

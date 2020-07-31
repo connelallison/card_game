@@ -1,8 +1,8 @@
 const Card = require('./Card.js')
 
 class Minion extends Card {
-  constructor(game, owner, zone, id, name, cost, attack, health, effects, targeted, targetDomain, targetConstraints) {
-    super(game, owner, zone, id, name, 'minion', cost, effects, targeted, targetDomain, targetConstraints)
+  constructor(game, owner, zone, id, name, cost, attack, health, staticCardText = '', effects, targeted, targetDomain, targetConstraints) {
+    super(game, owner, zone, id, name, 'minion', cost, staticCardText, effects, targeted, targetDomain, targetConstraints)
     this.attack = attack
     this.health = health
     this.stats = {
@@ -18,6 +18,7 @@ class Minion extends Card {
 
   provideReport() {
     this.updateStats()
+    this.updateFlags()
     this.updateValidTargets()
 
     return {
@@ -33,7 +34,8 @@ class Minion extends Card {
       playerID: this.owner.playerID,
       canBeSelected: this.canBeSelected(),
       requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs()
+      validTargets: this.validTargetIDs(),
+      staticCardText: this.staticCardText,
     }
   }
 
@@ -48,7 +50,7 @@ class Minion extends Card {
       if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 
-    this.owner.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
+    this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
       if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 
@@ -82,7 +84,7 @@ class Minion extends Card {
   }
 
   canBePlayed() {
-    return this.owner.myTurn() && this.zone === 'hand' && this.cost <= this.owner.currentMana && this.owner.board.length < this.owner.maxBoard
+    return this.owner.canPlay(this)
   }
 
   canBeSelected() {

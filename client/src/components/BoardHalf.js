@@ -49,16 +49,16 @@ class BoardHalf extends Component {
       ]
     }
 
-    let owner
-    if (this.props.mine) {
-      owner = 'My'
-    } else {
-      owner = "Opponent's"
-    }
+    // let owner
+    // if (this.props.mine) {
+    //   owner = 'My'
+    // } else {
+    //   owner = "Opponent's"
+    // }
 
     return (
       <div className="boardhalf">
-        <p className='lowerMargin'>{owner} current minions:</p>
+        {/* <p className='lowerMargin'>{owner} current minions:</p> */}
         <div className='cardList'>
           {minionList}
         </div>

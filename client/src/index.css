@@ -31,6 +31,13 @@ p.lowerMargin {
   text-align: center;
 }
 
+.multicolour-line {
+  display: inline-flex;
+  background-color: inherit;
+  /* align-self: flex-end; */
+  justify-content: center;
+}
+
 .deck {
   text-align: right;
   margin: 0px;
@@ -39,15 +46,20 @@ p.lowerMargin {
 
 .hero {
   /* background-image: url("./images/dogecropped.jpg"); */
+  display: flex;
+  flex-direction: column;
+  background-color: lightgrey;
   text-align: center;
   border: 1px solid black;
   border-radius: 3px;
+  width: 10%;
 }
 
 .heroDiv {
   display: flex;
   justify-content: center;
   text-align: center;
+  height: 140px;
 }
 
 .opponent-hand {
@@ -74,18 +86,67 @@ p.lowerMargin {
   display: flex;
   justify-content: center;
   text-align: center;
+  /* overflow: visible; */
+  height: 140px;
 }
 
-.turn-timer {
+.game-status {
   text-align: center;
+  font-weight: bold;
+  font-size: 18px;
 }
+
 
 .card {
   /* background-image: url("./images/dogecropped.jpg"); */
+  width: 7%;
+  background-color: lightgrey;
   border: 1px solid black;
   border-radius: 3px;
   margin-left: 3px;
   margin-right: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+}
+
+.card-name {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.card-text {
+  flex-grow: 1;
+  padding-bottom: 5px;
+  /* min-height: 30%; */
+  /* height: 70%; */
+}
+
+.text-long {
+  font-size: 12px;
+}
+
+.text-medium {
+  font-size: 14px;
+}
+
+.text-short {
+  font-size: 16px;
+}
+
+.cost-label {
+  color: seagreen;
+  font-weight: bold;
+}
+
+.attack-label {
+  color: blue;
+  font-weight: bold;
+}
+
+.health-label {
+  color: red;
+  font-weight: bold;
 }
 
 .canBeSelected {
@@ -102,6 +163,7 @@ p.lowerMargin {
 
 .topBar {
   display: flex;
+  /* justify-content: space-evenly; */
 }
 
 #request-test-game, #update-display-name {

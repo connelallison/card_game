@@ -33,7 +33,7 @@ const OpponentHand = (props) => {
 
   return (
     <div className='opponent-hand'>
-      <p className='lowerMargin'>Opponent's current cards:</p>
+      {/* <p className='lowerMargin'>Opponent's current cards:</p> */}
       <div className='cardList'>
         {cardList}
       </div>

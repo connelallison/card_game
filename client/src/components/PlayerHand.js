@@ -33,7 +33,7 @@ const PlayerHand = (props) => {
 
   return (
     <div className='player-hand'>
-      <p className='lowerMargin'>My current cards:</p>
+      {/* <p className='lowerMargin'>My current cards:</p> */}
       <div className='cardList'>
         {cardList}
       </div>

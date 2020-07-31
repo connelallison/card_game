@@ -27,16 +27,22 @@ class Minion extends Component {
   }
 
   render () {
+    const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' : 
+                       this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " minion card"
     return (
       <div onClick={this.handleClick} className={styleClasses}>
-        <p>{this.props.object.name}</p>
-        <p>{this.props.object.cost} mana Minion</p>
-        <p>{this.props.object.attack} attack</p>
-        <p>{this.props.object.health} health</p>
+        <p className='card-name'>{this.props.object.name}</p>
+        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
+        {/* <br /> */}
+        <div className="multicolour-line">
+          <p className='attack-label'>{this.props.object.attack}A</p> 
+          <p className='health-label'>{this.props.object.health}H</p>
+          <p className='cost-label'>{this.props.object.cost}C</p>
+        </div>
       </div>
     )
   }

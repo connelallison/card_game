@@ -29,7 +29,7 @@ class TestGame extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <label>
-          Select an opponent:
+          Select an opponent:  
         <select id='select-opponent' name='opponents' value={this.state.value} onChange={this.handleChange}>
             <option value='TestBot' >TestBot</option>
             {options}

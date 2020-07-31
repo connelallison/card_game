@@ -26,16 +26,22 @@ class Spell extends Component {
   }
 
   render () {
+    const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' : 
+                       this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " spell card"
     return (
       <div onClick={this.handleClick} className={styleClasses}>
-        <p>{this.props.object.name}</p>
-        <p>{this.props.object.cost} mana Spell</p>
-        <br />
-        <br />
+        <p className='card-name'>{this.props.object.name}</p>
+        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
+        {/* <br /> */}
+        <div className="multicolour-line">
+          <p className='cost-label'>{this.props.object.cost}C</p>
+          {/* <p> Spell</p> */}
+        </div>
+        {/* <br /> */}
       </div>
     )
   }

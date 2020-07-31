@@ -1,8 +1,8 @@
 const Card = require('./Card.js')
 
 class Spell extends Card {
-  constructor (game, owner, zone, id, name, cost, effects, targeted, targetDomain, targetConstraints) {
-    super(game, owner, zone, id, name, 'spell', cost, effects, targeted, targetDomain, targetConstraints)
+  constructor (game, owner, zone, id, name, cost, staticCardText, effects, targeted, targetDomain, targetConstraints) {
+    super(game, owner, zone, id, name, 'spell', cost, staticCardText, effects, targeted, targetDomain, targetConstraints)
   }
 
   provideReport () {
@@ -20,7 +20,8 @@ class Spell extends Card {
       playerID: this.owner.playerID,
       canBeSelected: this.canBePlayed(),
       requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs()
+      validTargets: this.validTargetIDs(),
+      staticCardText: this.staticCardText,
     }
   }
 }

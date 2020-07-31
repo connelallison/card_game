@@ -23,7 +23,7 @@ class RoyalGuardTaunt extends Enchantment {
 
 class RoyalGuard extends Minion {
   constructor (game, owner, zone) {
-    super(game, owner, zone, 'RoyalGuard', 'Royal Guard', 3, 3, 4)
+    super(game, owner, zone, 'RoyalGuard', 'Royal Guard', 3, 3, 4, 'Taunt')
     this.enchantments.static.flags.push(new RoyalGuardTaunt(this.game, this))
   }
 }

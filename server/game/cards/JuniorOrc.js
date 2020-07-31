@@ -28,7 +28,7 @@ class JuniorOrcDamageAura extends Enchantment {
 }
 class JuniorOrc extends Minion {
   constructor (game, owner, zone) {
-    super(game, owner, zone, 'JuniorOrc', 'Junior Orc', 2, 3, 3)
+    super(game, owner, zone, 'JuniorOrc', 'Junior Orc', 2, 3, 3, 'Your other minions have +1 Attack.')
     this.enchantments.aura.stats.push(new JuniorOrcDamageAura(this.game, this))
   }
 }

@@ -104,6 +104,7 @@ class PhaseManager {
     }
 
     playPhaseSpell(event) {
+        console.log('beginning playPhaseSpell')
         const { player, card, target = null } = event
         player.spendMana(card.cost)
         card.moveZone('graveyard')
@@ -115,11 +116,16 @@ class PhaseManager {
     }
 
     spellPhase(event) {
+        console.log('beginning spellPhase')
         const { player, card, target = null } = event
         // console.log(target)
         this.game.event.emit('beforeSpell', event) 
         this.game.turn.cacheEvent(event, 'spell')
-        card.effects.forEach(effect => effect(player, card, target))
+        console.log(card.effects)
+        card.effects.forEach(effect => {
+            console.log(effect.toString())
+            effect(player, card, target)
+        })
         // event.card.onPlay()
         this.game.event.emit('afterSpell', event)
     }
@@ -137,15 +143,22 @@ class PhaseManager {
         const afterDrawQueue = []
         for (let i = 0; i < number; i++) {
             if (i < drawQueue.length) {
-                drawQueue[i].moveZone('hand')
-                const event = {
-                    player: player,
-                    card: drawQueue[i]
+                if (player.hand.length < player.maxHand) {
+                    // player draws normal
+                    drawQueue[i].moveZone('hand')
+                    const event = {
+                        player: player,
+                        card: drawQueue[i]
+                    }
+                    this.game.turn.cacheEvent(event, 'draw')
+                    this.game.event.emit('onDraw', event)
+                    afterDrawQueue.push(event)
+                } else {
+                    // hand is full
+                    drawQueue[i].moveZone('graveyard')
                 }
-                this.game.turn.cacheEvent(event, 'draw')
-                this.game.event.emit('onDraw', event)
-                afterDrawQueue.push(event)
             } else {
+                // attempts to draw, but can't
                 player.fatigueCounter++
                 this.damagePhase({
                     source: player,

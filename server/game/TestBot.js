@@ -28,7 +28,7 @@ const TestBot = async (game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
         game.turn.activePlayer.minionsReadyToAttack().forEach((minion) => {
             // await game.sleep(1000)
-            if (minion.owner.opponent.board[0]) {
+            if (minion.owner.opponent.board[0] && game.permissions.canAttack(minion.owner.opponent.board[0])) {
                 game.phases.proposedAttackPhase({
                     attacker: minion,
                     defender: minion.owner.opponent.board[0],
@@ -36,11 +36,13 @@ const TestBot = async (game) => {
                 })
                 game.announceGameState()
             } else {
-                game.phases.proposedAttackPhase({
-                    attacker: minion,
-                    defender: minion.owner.opponent.hero,
-                    cancelled: false,
-                })
+                if (game.permissions.canAttack(minion.owner.opponent.hero)){
+                    game.phases.proposedAttackPhase({
+                        attacker: minion,
+                        defender: minion.owner.opponent.hero,
+                        cancelled: false,
+                    })
+                }
                 game.announceGameState()
             }
         })

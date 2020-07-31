@@ -24,7 +24,7 @@ class FootmanExtraDamageDuringYourTurn extends Enchantment {
 
 class Footman extends Minion {
   constructor (game, owner, zone) {
-    super(game, owner, zone, 'Footman', 'Footman', 2, 2, 4)
+    super(game, owner, zone, 'Footman', 'Footman', 2, 2, 4, 'Has +2 Attack during your turn.')
     this.enchantments.static.stats.push(new FootmanExtraDamageDuringYourTurn(this.game, this))
   }
 }

@@ -1,8 +1,8 @@
 const Card = require('./Card.js')
 
 class Minion extends Card {
-  constructor(game, owner, zone, id, name, cost, attack, health, effects, targeted, targetDomain, targetConstraints) {
-    super(game, owner, zone, id, name, 'minion', cost, effects, targeted, targetDomain, targetConstraints)
+  constructor(game, owner, zone, id, name, cost, attack, health, staticCardText = '', effects, targeted, targetDomain, targetConstraints) {
+    super(game, owner, zone, id, name, 'minion', cost, staticCardText, effects, targeted, targetDomain, targetConstraints)
     this.attack = attack
     this.health = health
     this.stats = {
@@ -34,7 +34,8 @@ class Minion extends Card {
       playerID: this.owner.playerID,
       canBeSelected: this.canBeSelected(),
       requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs()
+      validTargets: this.validTargetIDs(),
+      staticCardText: this.staticCardText,
     }
   }
 

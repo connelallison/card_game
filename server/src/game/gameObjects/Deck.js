@@ -1,7 +1,7 @@
 // const Card = require("./Card");
 // const Minion = require("./Minion");
 // const Spell = require("./Spell");
-const { create } = require('./CardLib')
+const { create } = require('../libraries/CardLib')
 
 class Deck {
   constructor (game, owner, deckID, deckName, cards) {

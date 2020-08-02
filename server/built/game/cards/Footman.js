@@ -13,8 +13,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Minion_1 = require("../Minion");
-var Enchantment_1 = require("../Enchantment");
+var Minion_1 = require("../gameObjects/Minion");
+var Enchantment_1 = require("../gameObjects/Enchantment");
 var FootmanExtraDamageDuringYourTurn = /** @class */ (function (_super) {
     __extends(FootmanExtraDamageDuringYourTurn, _super);
     function FootmanExtraDamageDuringYourTurn(game, owner) {

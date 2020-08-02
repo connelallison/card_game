@@ -1,8 +1,11 @@
-import Minion from '../Minion'
-import Enchantment from '../Enchantment'
+import Minion from '../gameObjects/Minion'
+import Enchantment from '../gameObjects/Enchantment'
+import Game from '../Game'
+import GamePlayer from '../gameObjects/GamePlayer'
+import Card from '../gameObjects/Card'
 
 class FootmanExtraDamageDuringYourTurn extends Enchantment {
-    constructor(game, owner) {
+    constructor(game: Game, owner: Card) {
         super(
             game,
             owner,
@@ -23,7 +26,7 @@ class FootmanExtraDamageDuringYourTurn extends Enchantment {
 }
 
 class Footman extends Minion {
-  constructor (game, owner, zone) {
+  constructor (game: Game, owner: GamePlayer, zone: string) {
     super(game, owner, zone, 'Footman', 'Footman', 2, 2, 4, 'Has +2 Attack during your turn.', null, false, null, null)
     this.enchantments.static.stats.push(new FootmanExtraDamageDuringYourTurn(this.game, this))
   }

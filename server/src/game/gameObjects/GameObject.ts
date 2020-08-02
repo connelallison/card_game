@@ -1,6 +1,9 @@
-class GameObject {
-    game: any
-    owner: any
+import Game from "../Game"
+import GamePlayer from "./GamePlayer"
+
+abstract class GameObject {
+    game: Game
+    owner: GamePlayer | GameObject
     id: string
     name: string
     type: string
@@ -8,7 +11,7 @@ class GameObject {
     // flags: any
     enchantments: any
 
-    constructor(game, owner, id, name, type) {
+    constructor(game: Game, owner: GamePlayer | GameObject, id: string, name: string, type: string) {
         this.game = game
         this.owner = owner
         this.id = id 
@@ -52,7 +55,7 @@ class GameObject {
     //     this.flags = flags
     // }
 
-    updateEnchantments() {
+    updateEnchantments(): void {
         for (const effectType in this.enchantments) {
             for (const category in this.enchantments[effectType]) {
                 for (const enchantment of this.enchantments[effectType][category]) {
@@ -62,7 +65,7 @@ class GameObject {
         }
     }
 
-    controller() {
+    controller(): GamePlayer {
         return this.owner.controller()
     }
 }

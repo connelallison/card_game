@@ -1,6 +1,7 @@
-import Game from "./Game";
-import Minion from "./Minion";
-import Hero from "./Hero";
+import Game from "../Game";
+import Minion from "../gameObjects/Minion";
+import Character from "../gameObjects/Character";
+import Leader from "../../../../client/src/components/Hero";
 
 class PhaseManager {
     game: Game
@@ -11,28 +12,28 @@ class PhaseManager {
         this.deathQueue = []
     }
 
-    steps() {
+    steps(): void {
         this.deathPhase()
     }
 
-    startOfTurnPhase(event) {
+    startOfTurnPhase(event): void {
         this.game.event.emit('startOfTurn', event)
         this.deathPhase()
     }
 
-    endOfTurnPhase(event) {
+    endOfTurnPhase(event): void {
         this.game.event.emit('endOfTurn', event)
         this.deathPhase()
     }
 
-    deathPhase() {
-        this.game.inPlay.slice(0).forEach((character: Minion | Hero) => {
-            if (character.stats.health <= 0) {
-                if (character.type === 'hero') {
+    deathPhase(): void {
+        this.game.inPlay.slice(0).forEach((character: Character) => {
+            if (character.health <= 0) {
+                if (character instanceof Leader) {
                     console.log('hero is dead')
                     this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
                     this.game.endGame()
-                } else if (character.type === 'minion') {
+                } else if (character instanceof Minion) {
                     console.log("minion is dying: ", character.name)
                     this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
                     character.owner.graveyard.push(character.owner.board.splice(character.owner.board.indexOf(character), 1)[0])
@@ -55,18 +56,18 @@ class PhaseManager {
         }
     }
 
-    proposedAttackPhase(event) {
+    proposedAttackPhase(event): void {
         this.game.event.emit('proposedAttack', event)
         this.deathPhase()
         if (!event.cancelled) this.attackPhase(event)
     }
 
-    attackPhase(event) {
+    attackPhase(event): void {
         this.game.event.emit('beforeAttack', event)
         this.damagePhase({
             source: event.attacker,
             target: event.defender,
-            value: event.attacker.stats.attack,
+            value: event.attacker.attack,
         })
         this.damagePhase({
             source: event.defender,
@@ -79,7 +80,7 @@ class PhaseManager {
         this.deathPhase()
     }
 
-    damagePhase(event) {
+    damagePhase(event): void {
         this.game.event.emit('beforeDamage', event) 
         // console.log(event.target)
         event.target.takeDamage(event.value)
@@ -87,7 +88,7 @@ class PhaseManager {
         this.game.event.emit('afterDamage', event)
     }
 
-    playPhase(event) {
+    playPhase(event): void {
         if (event.card.type === 'minion') {
             this.playPhaseMinion(event)
         } else if (event.card.type === 'spell') {
@@ -96,7 +97,7 @@ class PhaseManager {
         this.deathPhase()
     }
 
-    playPhaseMinion(event) {
+    playPhaseMinion(event): void {
         const { player, card, target = null } = event
         player.spendMana(card.cost)
         card.moveZone('board')
@@ -110,7 +111,7 @@ class PhaseManager {
         // this.deathPhase()
     }
 
-    playPhaseSpell(event) {
+    playPhaseSpell(event): void {
         const { player, card, target = null } = event
         player.spendMana(card.cost)
         card.moveZone('graveyard')
@@ -121,7 +122,7 @@ class PhaseManager {
         // this.deathPhase()
     }
 
-    spellPhase(event) {
+    spellPhase(event): void {
         const { player, card, target = null } = event
         // console.log(target)
         this.game.event.emit('beforeSpell', event) 
@@ -137,7 +138,7 @@ class PhaseManager {
     //     this.game.event.emit('')
     // }
 
-    drawPhase(event) {
+    drawPhase(event): void {
         const drawEvent = event
         this.game.event.emit('proposedDraw', drawEvent)
         const { player, number = 1, criteria = [] } = drawEvent

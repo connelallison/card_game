@@ -1,4 +1,5 @@
-import Game from "./Game"
+import Game from "../Game"
+import Character from "../gameObjects/Character";
 
 class Utils {
     game: Game
@@ -6,7 +7,7 @@ class Utils {
         this.game = game
     }
 
-    shuffle(array: any[]) {
+    shuffle(array: any[]): void {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [array[i], array[j]] = [array[j], array[i]]
@@ -49,7 +50,7 @@ class Utils {
         }
     }
 
-    notBehindTaunt(character) {
+    notBehindTaunt(character: Character) {
         return character.flags.taunt || character.controller().board.every(minion => minion.flags.taunt !== true)
     }
 }

@@ -1,8 +1,11 @@
-import Minion from '../Minion'
-import Enchantment from '../Enchantment'
+import Minion from '../gameObjects/Minion'
+import Enchantment from '../gameObjects/Enchantment'
+import Game from '../Game'
+import Card from '../gameObjects/Card'
+import GamePlayer from '../gameObjects/GamePlayer'
 
 class JuniorOrcDamageAura extends Enchantment {
-    constructor(game, owner) {
+    constructor(game: Game, owner: Card) {
         super(
             game,
             owner,
@@ -27,7 +30,7 @@ class JuniorOrcDamageAura extends Enchantment {
     }
 }
 class JuniorOrc extends Minion {
-  constructor (game, owner, zone) {
+  constructor (game: Game, owner: GamePlayer, zone: string) {
     super(game, owner, zone, 'JuniorOrc', 'Junior Orc', 2, 3, 3, 'Your other minions have +1 Attack.', null, false, null, null)
     this.enchantments.aura.stats.push(new JuniorOrcDamageAura(this.game, this))
   }

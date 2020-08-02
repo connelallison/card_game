@@ -1,6 +1,8 @@
 import GameObject from './GameObject'
+import Card from './Card'
 
 class Enchantment extends GameObject {
+    owner: Card
     activeZones: string[]
     activeTypes: string[]
     sendRequirement: any
@@ -8,7 +10,7 @@ class Enchantment extends GameObject {
     effectType: string
     effect: any
     activeZoneAndType: boolean
-    
+
     constructor(game, owner, id, name, activeZones, activeTypes, sendRequirement, aura, effectType, effect) {
         super(game, owner, id, name, 'enchantment')
         this.owner = owner
@@ -21,11 +23,11 @@ class Enchantment extends GameObject {
         this.activeZoneAndType = false
     }
     
-    effectActive() {
+    effectActive(): boolean {
         return this.activeZoneAndType && this.sendRequirement(this)
     }
 
-    updateActiveZoneAndType() {
+    updateActiveZoneAndType(): void {
         let previousActive = this.activeZoneAndType
         this.activeZoneAndType = this.activeZones.includes(this.owner.zone) && this.activeTypes.includes(this.owner.type)
         if (this.aura) {

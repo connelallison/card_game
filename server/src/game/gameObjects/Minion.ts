@@ -1,27 +1,20 @@
-import Card from './Card'
+import Game from '../Game'
+import GamePlayer from './GamePlayer'
+import ObjectReport from '../interfaces/ObjectReport'
+import Character from './Character'
 
-class Minion extends Card {
-  attack: number
-  health: number
-  stats: any
-  ready: boolean
+abstract class Minion extends Character {
+  rawHealth: number
 
-  constructor(game, owner, zone, id, name, cost, attack, health, staticCardText = '', effects, targeted, targetDomain, targetConstraints) {
-    super(game, owner, zone, id, name, 'minion', cost, staticCardText, effects, targeted, targetDomain, targetConstraints)
-    this.attack = attack
-    this.health = health
-    this.stats = {
-      attack: this.attack,
-      health: this.health,
-      cost: this.cost
-    }
-    this.ready = false
+  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', effects: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
+    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, effects, targeted, targetDomain, targetConstraints)
+    this.rawHealth = rawHealth
+    this.health = this.rawHealth,
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
-    this.game.event.on('endOfTurn', (event) => this.endOfTurn(event))
   }
 
-  provideReport() {
+  provideReport(): ObjectReport {
     this.updateStats()
     this.updateFlags()
     this.updateValidTargets()
@@ -30,9 +23,9 @@ class Minion extends Card {
       name: this.name,
       id: this.id,
       objectID: this.objectID,
-      cost: this.stats.cost,
-      attack: this.stats.attack,
-      health: this.stats.health,
+      cost: this.cost,
+      attack: this.attack,
+      health: this.health,
       type: this.type,
       zone: this.zone,
       ownerName: this.owner.name,
@@ -44,11 +37,10 @@ class Minion extends Card {
     }
   }
 
-  updateStats() {
+  updateStats(): void {
     const stats = {
-      attack: this.attack,
-      health: this.health,
-      cost: this.cost
+      attack: this.rawAttack,
+      health: this.rawHealth,
     }
 
     this.enchantments.static.stats.forEach(enchantment => {
@@ -59,10 +51,11 @@ class Minion extends Card {
       if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
     })
 
-    this.stats = stats
+    this.attack = stats.attack
+    this.health = stats.health
   }
 
-  updateValidTargets() {
+  updateValidTargets(): void {
     if (this.zone === 'hand' && this.targeted) {
       let newTargets = this.targetDomain(this.owner)
       this.targetConstraints.forEach(constraint => {
@@ -78,21 +71,11 @@ class Minion extends Card {
     }
   }
 
-  startOfTurn(event) {
-    if (event.activePlayer === this.controller() && this.zone === 'board') {
-      this.getReady()
-    }
-  }
-
-  endOfTurn(event) {
-
-  }
-
-  canBePlayed() {
+  canBePlayed(): boolean {
     return this.owner.canPlay(this)
   }
 
-  canBeSelected() {
+  canBeSelected(): boolean {
     if (this.zone === 'board') {
       return this.validTargets.length > 0
     } else {
@@ -100,7 +83,7 @@ class Minion extends Card {
     }
   }
 
-  getReady() {
+  getReady(): void {
     if (this.zone === 'board') {
       this.ready = true
     } else {
@@ -108,16 +91,16 @@ class Minion extends Card {
     }
   }
 
-  takeDamage(damage) {
+  takeDamage(damage): void {
     if (damage > 0) {
-      this.health -= damage
+      this.rawHealth -= damage
       this.updateStats()
       // console.log(`${this.name} takes ${damage} damage`);
     }
   }
 
-  canAttack() {
-    return this.owner.myTurn() && this.ready && this.zone && this.stats.attack > 0
+  inPlay(): boolean {
+    return this.zone === 'board'
   }
 }
 

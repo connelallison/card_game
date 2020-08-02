@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Spell_1 = require("../Spell");
+var Spell_1 = require("../gameObjects/Spell");
 var Fireburst = /** @class */ (function (_super) {
     __extends(Fireburst, _super);
     function Fireburst(game, owner, zone) {

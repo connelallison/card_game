@@ -1,4 +1,4 @@
-import Game from "./Game"
+import Game from "../Game"
 
 const TestBot = async (game: Game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {

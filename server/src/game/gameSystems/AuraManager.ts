@@ -1,8 +1,8 @@
-import Game from "./Game";
+import Game from "../Game";
 
 class AuraManager {
     game: Game
-    auras: object
+    auras: any
 
     constructor(game: Game) {
         this.game = game;

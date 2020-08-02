@@ -1,5 +1,5 @@
-const Deck = require('../Deck')
-const { create } = require('../CardLib')
+const Deck = require('../gameObjects/Deck')
+const { create } = require('../libraries/CardLib')
 
 class TestDeckTwo extends Deck {
   constructor (game, owner) {

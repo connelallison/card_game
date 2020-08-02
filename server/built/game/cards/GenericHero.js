@@ -13,11 +13,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Hero_1 = require("../Hero");
+var Hero_1 = require("../gameObjects/Hero");
 var GenericHero = /** @class */ (function (_super) {
     __extends(GenericHero, _super);
-    function GenericHero(game, owner) {
-        return _super.call(this, game, owner, 'GenericHero', 'Hero', 0, '', null, false, null, null) || this;
+    function GenericHero(game, owner, zone) {
+        return _super.call(this, game, owner, zone, 'GenericHero', 'Hero', 0, 1, '', null, false, null, null) || this;
     }
     return GenericHero;
 }(Hero_1.default));

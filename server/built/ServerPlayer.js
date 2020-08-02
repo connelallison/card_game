@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ServerPlayer = /** @class */ (function () {
     function ServerPlayer(socketID, displayName) {
         if (displayName === void 0) { displayName = 'Anonymous'; }
@@ -7,4 +9,4 @@ var ServerPlayer = /** @class */ (function () {
     }
     return ServerPlayer;
 }());
-module.exports = ServerPlayer;
+exports.default = ServerPlayer;

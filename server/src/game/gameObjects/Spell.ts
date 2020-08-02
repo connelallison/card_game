@@ -1,11 +1,12 @@
 import Card from './Card'
+import ObjectReport from '../interfaces/ObjectReport'
 
-class Spell extends Card {
-  constructor (game, owner, zone, id, name, cost, staticCardText, effects, targeted, targetDomain, targetConstraints) {
-    super(game, owner, zone, id, name, 'spell', cost, staticCardText, effects, targeted, targetDomain, targetConstraints)
+abstract class Spell extends Card {
+  constructor (game, owner, zone, id, name, rawCost, staticCardText, effects, targeted, targetDomain, targetConstraints) {
+    super(game, owner, zone, id, name, 'spell', rawCost, staticCardText, effects, targeted, targetDomain, targetConstraints)
   }
 
-  provideReport () {
+  provideReport (): ObjectReport {
     this.updateFlags()
     this.updateValidTargets()
 

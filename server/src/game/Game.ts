@@ -1,22 +1,24 @@
-import GamePlayer from './GamePlayer'
-import { create } from './CardLib'
-import { deck } from './DeckLib'
-import AuraManager from './AuraManager'
-import PhaseManager from './PhaseManager'
-import Turn from './Turn'
-import Constraints from './Constraints'
-import Effects from './Effects'
-import Permissions from './Permissions'
-import Utils from './Utils'
-import TestBot from './TestBot'
+import GamePlayer from './gameObjects/GamePlayer'
+import { create } from './libraries/CardLib'
+import { deck } from './libraries/DeckLib'
+import AuraManager from './gameSystems/AuraManager'
+import PhaseManager from './gameSystems/PhaseManager'
+import Turn from './gameObjects/Turn'
+import Constraints from './libraries/Constraints'
+import Effects from './libraries/Effects'
+import Permissions from './gameSystems/Permissions'
+import Utils from './gameSystems/Utils'
+import TestBot from './gameTests/TestBot'
 // import Card from "./Card";
 // import Minion from "./Minion";
 // import Spell from "./Spell";
 // import { Deck, deck1, deck2 } from "./Deck";
 // import EventEmitter from 'events'
 import serverEvent from '../ServerEvent'
-import GameEvent from './GameEvent'
-import GameObject from './GameObject'
+import GameEvent from './gameSystems/GameEvent'
+import GameObject from './gameObjects/GameObject'
+import Card from './gameObjects/Card'
+import Character from './gameObjects/Character'
 
 class Game {
   event: GameEvent
@@ -26,11 +28,9 @@ class Game {
   online: boolean
   player1turn: number
   player2turn: number
-  gameObjects: object
-  player1: any
-  player2: any
-  // player1: GamePlayer
-  // player2: GamePlayer
+  gameObjects: { [index: string]: GameObject }
+  player1: GamePlayer
+  player2: GamePlayer
   auras: AuraManager
   phases: PhaseManager
   constraints: Constraints
@@ -156,16 +156,17 @@ class Game {
   }
 
   actionMoveRequest (moveRequest, player) {
-    const selected = this.gameObjects[moveRequest.selected.objectID]
-    const target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID]
-    if (selected.zone === 'hero' || selected.zone === 'board') {
-      if (target === null) throw Error("it's null")
-      if (this.permissions.canAttack(selected, target)) {
-        this.phases.proposedAttackPhase({
-          attacker: selected,
-          defender: target,
-          cancelled: false,
-        })  
+    const selected = this.gameObjects[moveRequest.selected.objectID] as Card
+    let target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID] as Card
+    if (selected instanceof Character && selected.inPlay()) {
+      if (target instanceof Character && target.inPlay()) {
+        if (this.permissions.canAttack(selected, target)) {
+          this.phases.proposedAttackPhase({
+            attacker: selected,
+            defender: target,
+            cancelled: false,
+          })  
+        }
       }
     } else if (selected.zone === 'hand') {
       if (!selected.targeted && selected.canBePlayed()) {

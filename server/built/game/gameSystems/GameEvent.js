@@ -13,12 +13,14 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Minion_1 = require("../gameObjects/Minion");
-var PlayerOneMinion = /** @class */ (function (_super) {
-    __extends(PlayerOneMinion, _super);
-    function PlayerOneMinion(game, owner, zone) {
-        return _super.call(this, game, owner, zone, 'PlayerOneMinion', 'Player 1 Minion', 2, 2, 3, '', null, false, null, null) || this;
+var events_1 = require("events");
+var GameEvent = /** @class */ (function (_super) {
+    __extends(GameEvent, _super);
+    function GameEvent() {
+        var _this = _super.call(this) || this;
+        _this.setMaxListeners(100);
+        return _this;
     }
-    return PlayerOneMinion;
-}(Minion_1.default));
-exports.default = PlayerOneMinion;
+    return GameEvent;
+}(events_1.EventEmitter));
+exports.default = GameEvent;

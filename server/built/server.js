@@ -1,21 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require('express');
-var socket = require('socket.io');
-var path = require('path');
-var EventEmitter = require('events');
-var ServerPlayer = require('./ServerPlayer');
+var express = require("express");
+var socket = require("socket.io");
+var path = require("path");
+var ServerPlayer_1 = require("./ServerPlayer");
 var ServerEvent_1 = require("./ServerEvent");
 // const { Deck, deck1, deck2 } = require("./game/Deck");
-var Game = require('./game/Game');
+var Game_1 = require("./game/Game");
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 function testGame(socketID) {
     if (socketID === void 0) { socketID = null; }
     if (Math.floor(Math.random() * 2)) {
-        var testGame_1 = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', false, true, true, socketID, null, true);
+        var testGame_1 = new Game_1.default(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', false, true, true, socketID, null, true);
     }
     else {
-        var testGame_2 = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', false, true, true, socketID, null, true);
+        var testGame_2 = new Game_1.default(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', false, true, true, socketID, null, true);
     }
     // const gameThread = new Worker('./worker');
     // gameThread.on('message', (message) => {
@@ -31,10 +30,10 @@ function testGame(socketID) {
 }
 function pvpGame(player1SocketID, player2SocketID) {
     if (Math.floor(Math.random() * 2)) {
-        var pvpGame_1 = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckOne', 'TestDeckTwo', false, true, true, player1SocketID, player2SocketID);
+        var pvpGame_1 = new Game_1.default(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckOne', 'TestDeckTwo', false, true, true, player1SocketID, player2SocketID);
     }
     else {
-        var pvpGame_2 = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckTwo', 'TestDeckOne', false, true, true, player1SocketID, player2SocketID);
+        var pvpGame_2 = new Game_1.default(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckTwo', 'TestDeckOne', false, true, true, player1SocketID, player2SocketID);
     }
 }
 var app = express();
@@ -52,7 +51,7 @@ var connectedSockets = {};
 io.on('connection', function (socket) {
     console.log('made websocket connection: ', socket.id);
     var socketID = socket.id;
-    var serverPlayer = new ServerPlayer(socketID);
+    var serverPlayer = new ServerPlayer_1.default(socketID);
     connectedPlayers[socketID] = serverPlayer;
     connectedSockets[socketID] = socket;
     console.log(connectedPlayers);

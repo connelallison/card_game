@@ -1,7 +1,12 @@
 import GameObject from './GameObject'
+import Game from '../Game'
+import GamePlayer from './GamePlayer'
+import ObjectReport from '../interfaces/ObjectReport'
 
-class Card extends GameObject {
+abstract class Card extends GameObject {
+  owner: GamePlayer
   zone: string
+  rawCost: number
   cost: number
   staticCardText: string
   effects: any
@@ -11,10 +16,11 @@ class Card extends GameObject {
   validTargets: any
   flags: any
 
-  constructor (game, owner, zone, id, name, type, cost, staticCardText = '', effects = [], targeted = false, targetDomain, targetConstraints) {
+  constructor (game: Game, owner: GamePlayer, zone: string, id: string, name: string, type: string, rawCost: number, staticCardText: string = '', effects: any[] = [], targeted: boolean = false, targetDomain: any, targetConstraints: any) {
     super(game, owner, id, name, type)
     this.zone = zone
-    this.cost = cost
+    this.rawCost = rawCost
+    this.cost = rawCost
     this.staticCardText = staticCardText
     this.effects = effects
     this.targeted = targeted
@@ -24,7 +30,7 @@ class Card extends GameObject {
     this.flags = {}
   }
 
-  provideReport () {
+  provideReport (): ObjectReport {
     this.updateFlags()
     this.updateValidTargets()
 
@@ -44,7 +50,7 @@ class Card extends GameObject {
     }
   }
 
-  updateFlags() {
+  updateFlags(): void {
     const flags = {
 
     }
@@ -60,7 +66,7 @@ class Card extends GameObject {
     this.flags = flags
 }
 
-  updateValidTargets() {
+  updateValidTargets(): void {
     if (this.zone === 'hand' && this.targeted) {
       let newTargets = this.targetDomain(this.owner)
       this.targetConstraints.forEach(constraint => {
@@ -72,18 +78,18 @@ class Card extends GameObject {
     }
   }
 
-  moveZone(destination) {
+  moveZone(destination): void {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
     this.updateEnchantments()
   }
 
-  validTargetIDs () {
+  validTargetIDs (): string[] {
     return this.validTargets.map(target => target.objectID)
   }
 
-  canBePlayed () {
+  canBePlayed (): boolean {
     return this.owner.canPlay(this)
   }
 }

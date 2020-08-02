@@ -1,7 +1,9 @@
-import Spell from '../Spell'
+import Spell from '../gameObjects/Spell'
+import Game from '../Game'
+import GamePlayer from '../gameObjects/GamePlayer'
 
 class Fireburst extends Spell {
-  constructor (game, owner, zone) {
+  constructor (game: Game, owner: GamePlayer, zone: string) {
     super(
       game, 
       owner, 

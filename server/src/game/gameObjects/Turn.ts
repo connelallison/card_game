@@ -1,4 +1,4 @@
-import Game from "./Game"
+import Game from "../Game"
 import GamePlayer from "./GamePlayer"
 
 class Turn {
@@ -37,12 +37,12 @@ class Turn {
         }
     }
     
-    end() {
+    end(): void {
         this.over = true
         this.game.phases.endOfTurnPhase({activePlayer: this.activePlayer})
     }
 
-    cacheEvent(event, type) {
+    cacheEvent(event, type): void {
         this.game.eventCache[type].push(event)
         this.eventCache[type].push(event)
         this.eventCache.all.push(event)

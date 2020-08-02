@@ -1,5 +1,5 @@
-import Game from './Game'
-import GamePlayer from './GamePlayer'
+import Game from '../Game'
+import GamePlayer from '../gameObjects/GamePlayer'
 
 class Effects {
     game: Game
@@ -21,7 +21,7 @@ class Effects {
     damageWeakestEnemyMinion (value: number = 0) {
         return (player: GamePlayer, source) => {
             const targets = player.opponent.board
-            const target = this.game.utils.findMinByCriterion(targets, (target) => target.stats.attack)
+            const target = this.game.utils.findMinByCriterion(targets, (target) => target.attack)
             if (target) {
                 this.game.phases.damagePhase({
                     source,

@@ -1,12 +1,9 @@
-// const Card = require("./Card");
-// const Minion = require("./Minion");
-// const Spell = require("./Spell");
-import GenericHero from './cards/GenericHero'
-import { create } from './CardLib'
-import Game from './Game'
-import Hero from './Hero'
+import GenericLeader from '../cards/GenericLeader'
+import Game from '../Game'
+import Leader from './Leader'
 import Card from './Card'
 import Minion from './Minion'
+import ObjectReport from '../interfaces/ObjectReport'
 
 class GamePlayer {
   game: Game
@@ -14,7 +11,7 @@ class GamePlayer {
   playerID: string
   socketID: string
   health: number
-  hero: Hero
+  hero: Leader
   maxMana: number
   currentMana: number
   hand: Card[]
@@ -34,7 +31,7 @@ class GamePlayer {
     this.playerID = `${this.name}:${Math.random()}`
     this.socketID = socketID
     this.health = 20
-    this.hero = new GenericHero(this.game, this)
+    this.hero = new GenericLeader(this.game, this, 'hero')
     this.maxMana = 2
     this.currentMana = 2
     this.hand = []
@@ -56,30 +53,30 @@ class GamePlayer {
     return Object.assign({}, this.hero.provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
   }
 
-  boardReport() {
+  boardReport(): ObjectReport[] {
     return this.board.map((minion) => {
       return minion.provideReport()
     })
   }
 
-  handReport() {
+  handReport(): ObjectReport[] {
     return this.hand.map((card) => {
       return card.provideReport()
     })
   }
 
-  myTurn() {
+  myTurn(): boolean {
     return this.game.turn.activePlayer === this
   }
 
-  startOfTurn(event) {
+  startOfTurn(event): void {
     if (this.myTurn()) {
       this.gainMaxMana(1)
       this.refillMana()
     }
   }
 
-  endOfTurn(event) {
+  endOfTurn(event): void {
     if (this.myTurn()) {
       this.game.phases.drawPhase({
         player: this
@@ -87,11 +84,11 @@ class GamePlayer {
     }
   }
 
-  controller() {
+  controller(): GamePlayer {
     return this
   }
 
-  mulliganDraw() {
+  mulliganDraw(): void {
     if (this.deck.length > 0) {
       if (this.hand.length < this.maxHand) {
         const card = this.deck.shift()
@@ -109,14 +106,14 @@ class GamePlayer {
     }
   }
 
-  playableCards() {
+  playableCards(): Card[] {
     // console.log("this.hand is: " + this.hand);
     // console.log("this.playableCards() is: " + this.hand.filter(card => this.canPlay(card)));
     return this.hand.filter(card => this.canPlay(card))
     // console.log(this.hand.filter(this.canPlay.bind(this)));
   }
 
-  canPlay(card) {
+  canPlay(card): boolean {
     // console.log(card);
     // if (card.type === 'minion') {
     //   return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && this.board.length < this.maxBoard 
@@ -160,40 +157,30 @@ class GamePlayer {
   //   }
   // }
 
-  alive() {
-    return this.hero.stats.health > 0
+  alive(): boolean {
+    return this.hero.health > 0
   }
 
-  spendMana(amount) {
+  spendMana(amount): void {
     this.currentMana -= amount
   }
 
-  refillMana() {
+  refillMana(): void {
     if (this.currentMana < this.maxMana) {
       this.currentMana = this.maxMana
     }
   }
 
-  gainMaxMana(number) {
-    const oldMaxMana = this.maxMana
-    if (this.maxMana + number <= 10) {
-      this.maxMana += number
-    } else {
-      this.maxMana = 10
-    }
-    const newMaxMana = this.maxMana
-    return newMaxMana - oldMaxMana
+  gainMaxMana(number): void {
+    this.maxMana += number
   }
 
-  loseMaxMana(number) {
-    const oldMaxMana = this.maxMana
+  loseMaxMana(number): void {
     if (this.maxMana - number >= 0) {
       this.maxMana -= number
     } else {
       this.maxMana = 0
     }
-    const newMaxMana = this.maxMana
-    return oldMaxMana - newMaxMana
   }
 
   reportPlayableCards() {

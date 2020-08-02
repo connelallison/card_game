@@ -36,24 +36,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var GamePlayer_1 = require("./GamePlayer");
-var CardLib_1 = require("./CardLib");
-var DeckLib_1 = require("./DeckLib");
-var AuraManager_1 = require("./AuraManager");
-var PhaseManager_1 = require("./PhaseManager");
-var Turn_1 = require("./Turn");
-var Constraints_1 = require("./Constraints");
-var Effects_1 = require("./Effects");
-var Permissions_1 = require("./Permissions");
-var Utils_1 = require("./Utils");
-var TestBot_1 = require("./TestBot");
+var GamePlayer_1 = require("./gameObjects/GamePlayer");
+var CardLib_1 = require("./libraries/CardLib");
+var DeckLib_1 = require("./libraries/DeckLib");
+var AuraManager_1 = require("./gameSystems/AuraManager");
+var PhaseManager_1 = require("./gameSystems/PhaseManager");
+var Turn_1 = require("./gameObjects/Turn");
+var Constraints_1 = require("./libraries/Constraints");
+var Effects_1 = require("./libraries/Effects");
+var Permissions_1 = require("./gameSystems/Permissions");
+var Utils_1 = require("./gameSystems/Utils");
+var TestBot_1 = require("./gameTests/TestBot");
 // import Card from "./Card";
 // import Minion from "./Minion";
 // import Spell from "./Spell";
 // import { Deck, deck1, deck2 } from "./Deck";
 // import EventEmitter from 'events'
 var ServerEvent_1 = require("../ServerEvent");
-var GameEvent_1 = require("./GameEvent");
+var GameEvent_1 = require("./gameSystems/GameEvent");
+var Character_1 = require("./gameObjects/Character");
 var Game = /** @class */ (function () {
     function Game(player1name, player2name, player1deckID, player2deckID, botPlayer1, debug, online, player1socketID, player2socketID, botPlayer2) {
         if (botPlayer1 === void 0) { botPlayer1 = false; }
@@ -165,15 +166,15 @@ var Game = /** @class */ (function () {
     Game.prototype.actionMoveRequest = function (moveRequest, player) {
         var selected = this.gameObjects[moveRequest.selected.objectID];
         var target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID];
-        if (selected.zone === 'hero' || selected.zone === 'board') {
-            if (target === null)
-                throw Error("it's null");
-            if (this.permissions.canAttack(selected, target)) {
-                this.phases.proposedAttackPhase({
-                    attacker: selected,
-                    defender: target,
-                    cancelled: false,
-                });
+        if (selected instanceof Character_1.default && selected.inPlay()) {
+            if (target instanceof Character_1.default && target.inPlay()) {
+                if (this.permissions.canAttack(selected, target)) {
+                    this.phases.proposedAttackPhase({
+                        attacker: selected,
+                        defender: target,
+                        cancelled: false,
+                    });
+                }
             }
         }
         else if (selected.zone === 'hand') {

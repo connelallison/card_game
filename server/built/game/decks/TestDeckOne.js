@@ -11,8 +11,8 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Deck = require('../Deck');
-var create = require('../CardLib').create;
+var Deck = require('../gameObjects/Deck');
+var create = require('../libraries/CardLib').create;
 var TestDeckOne = /** @class */ (function (_super) {
     __extends(TestDeckOne, _super);
     function TestDeckOne(game, owner) {

@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Minion_1 = require("../Minion");
+var Minion_1 = require("../gameObjects/Minion");
 var PlayerTwoMinion = /** @class */ (function (_super) {
     __extends(PlayerTwoMinion, _super);
     function PlayerTwoMinion(game, owner, zone) {

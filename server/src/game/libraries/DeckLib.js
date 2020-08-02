@@ -1,6 +1,6 @@
 const Decks = {
-  TestDeckOne: require('./decks/TestDeckOne'),
-  TestDeckTwo: require('./decks/TestDeckTwo')
+  TestDeckOne: require('../decks/TestDeckOne'),
+  TestDeckTwo: require('../decks/TestDeckTwo')
 }
 
 const deck = function (game, owner, deckID) {

@@ -1,7 +1,11 @@
 import Game from '../Game'
 import GamePlayer from '../gameObjects/GamePlayer'
+import Character from '../gameObjects/Character'
+import Enchantments from './EnchantmentLib'
+import MinionAttackBuff from '../enchantments/MinionAttackBuff'
+import Minion from '../gameObjects/Minion'
 
-class Effects {
+class Actions {
     game: Game
 
     constructor(game: Game) {
@@ -9,7 +13,7 @@ class Effects {
     }
 
     damageChosenTarget (value: number = 0) {
-        return (player: GamePlayer, source, target) => {
+        return (player: GamePlayer, source, target: Character) => {
             this.game.phases.damagePhase({
                 source,
                 target,
@@ -41,6 +45,24 @@ class Effects {
              })
         }
     }
+
+    buffMinionAttack (attack: number = 0) {
+        return (player: GamePlayer, source, target: Minion) => {
+            target.addEnchantment(new Enchantments['MinionAttackBuff'](this.game, target, { attack }))
+        }
+    }
+
+    buffMinionHealth (health: number = 0) {
+        return (player: GamePlayer, source, target: Minion) => {
+            target.addEnchantment(new Enchantments['MinionHealthBuff'](this.game, target, { health }))
+        }
+    }
+
+    buffMinionAttackAndHealth (attack: number = 0, health: number = 0) {
+        return (player: GamePlayer, source, target: Minion) => {
+            target.addEnchantment(new Enchantments['MinionAttackAndHealthBuff'](this.game, target, { attack, health }))
+        }
+    }
 }
 
-export default Effects
+export default Actions

@@ -2,6 +2,7 @@ import GameObject from './GameObject'
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
 import ObjectReport from '../interfaces/ObjectReport'
+import StaticEnchantment from './StaticEnchantment'
 
 abstract class Card extends GameObject {
   owner: GamePlayer
@@ -9,20 +10,20 @@ abstract class Card extends GameObject {
   rawCost: number
   cost: number
   staticCardText: string
-  effects: any
+  actions: any
   targeted: boolean
   targetDomain: any
   targetConstraints: any
   validTargets: any
   flags: any
 
-  constructor (game: Game, owner: GamePlayer, zone: string, id: string, name: string, type: string, rawCost: number, staticCardText: string = '', effects: any[] = [], targeted: boolean = false, targetDomain: any, targetConstraints: any) {
+  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, type: string, rawCost: number, staticCardText: string = '', actions: any[] = [], targeted: boolean = false, targetDomain: any, targetConstraints: any) {
     super(game, owner, id, name, type)
     this.zone = zone
     this.rawCost = rawCost
     this.cost = rawCost
     this.staticCardText = staticCardText
-    this.effects = effects
+    this.actions = actions
     this.targeted = targeted
     this.targetDomain = targetDomain
     this.targetConstraints = targetConstraints
@@ -30,7 +31,7 @@ abstract class Card extends GameObject {
     this.flags = {}
   }
 
-  provideReport (): ObjectReport {
+  provideReport(): ObjectReport {
     this.updateFlags()
     this.updateValidTargets()
 
@@ -55,16 +56,28 @@ abstract class Card extends GameObject {
 
     }
 
-    this.enchantments.static.flags.forEach(enchantment => {
-      if (enchantment.effectActive()) enchantment.effect.effect(flags, enchantment.effect.value)
+    this.enchantments.forEach(enchantment => {
+      if (
+        enchantment instanceof StaticEnchantment
+        && enchantment.categories.includes('flags')
+        && enchantment.active
+      ) {
+        enchantment.effects.forEach(effect => {
+          if (effect.category === 'flags') effect.effect(flags, effect.value)
+        })
+      }
     })
 
     this.game.auras.auras.flags[this.type][this.zone].forEach(enchantment => {
-      if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(flags, enchantment.effect.value)
+        if (enchantment.targetRequirements.every(requirement => requirement(this, enchantment))) {
+        enchantment.effects.forEach(effect => {
+          if (effect.category === 'flags') effect.effect(flags, effect.value)
+        })
+      }
     })
 
     this.flags = flags
-}
+  }
 
   updateValidTargets(): void {
     if (this.zone === 'hand' && this.targeted) {
@@ -78,18 +91,18 @@ abstract class Card extends GameObject {
     }
   }
 
-  moveZone(destination): void {
+  moveZone(destination: string): void {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
     this.updateEnchantments()
   }
 
-  validTargetIDs (): string[] {
+  validTargetIDs(): string[] {
     return this.validTargets.map(target => target.objectID)
   }
 
-  canBePlayed (): boolean {
+  canBePlayed(): boolean {
     return this.owner.canPlay(this)
   }
 }

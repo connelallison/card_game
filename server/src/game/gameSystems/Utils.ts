@@ -33,14 +33,14 @@ class Utils {
                     case 'enemyMinions':
                         targetDomain.push(...player.opponent.board)
                         break
-                    case 'enemyHero':
-                        targetDomain.push(player.opponent.hero)
+                    case 'enemyLeader':
+                        targetDomain.push(player.opponent.leader)
                         break
                     case 'friendlyMinions':
                         targetDomain.push(...player.board)
                         break
-                    case 'friendlyHero':
-                        targetDomain.push(player.hero)
+                    case 'friendlyLeader':
+                        targetDomain.push(player.leader)
                         break
                     default:
                         break
@@ -50,8 +50,8 @@ class Utils {
         }
     }
 
-    notBehindTaunt(character: Character) {
-        return character.flags.taunt || character.controller().board.every(minion => minion.flags.taunt !== true)
+    notBehindGuard(character: Character) {
+        return character.flags.guard || character.controller().board.every(minion => minion.flags.guard !== true)
     }
 }
 

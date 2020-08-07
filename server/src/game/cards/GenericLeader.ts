@@ -4,7 +4,7 @@ import GamePlayer from '../gameObjects/GamePlayer'
 
 class GenericLeader extends Leader {
     constructor(game: Game, owner: GamePlayer, zone: string) {
-        super(game, owner, zone, 'GenericHero', 'Hero', 0, 1, '', null, false, null, null) 
+        super(game, owner, zone, 'GenericLeader', 'Leader', 0, 1, '', null, false, null, null) 
     }
 }
 

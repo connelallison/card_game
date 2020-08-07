@@ -9,7 +9,7 @@ abstract class GameObject {
     type: string
     objectID: string
     // flags: any
-    enchantments: any
+    enchantments: Enchantment[]
 
     constructor(game: Game, owner: GamePlayer | GameObject, id: string, name: string, type: string) {
         this.game = game
@@ -20,23 +20,7 @@ abstract class GameObject {
         this.objectID = `${this.id}:${Math.random()}`
         this.game.gameObjects[this.objectID] = this
         // this.flags = {}
-        this.enchantments = {
-            static: {
-                stats: [],
-                flags: []
-            },
-            aura: {
-                stats: [],
-                flags: []
-            },
-            dynamic: {
-                stats: [],
-                flags: []
-            },
-            trigger: {
-
-            }
-        }
+        this.enchantments = []
     }
 
     // updateFlags() {
@@ -55,14 +39,19 @@ abstract class GameObject {
     //     this.flags = flags
     // }
 
+    addEnchantment(enchantment: Enchantment): void {
+        this.enchantments.push(enchantment)
+        this.updateEnchantments()
+    }
+
+    removeEnchantment(enchantment: Enchantment): void {
+        if (enchantment instanceof TriggerEnchantment) enchantment.disableListeners()
+        this.enchantments = this.enchantments.filter(item => item !== enchantment)
+        this.updateEnchantments()
+    }
+
     updateEnchantments(): void {
-        for (const effectType in this.enchantments) {
-            for (const category in this.enchantments[effectType]) {
-                for (const enchantment of this.enchantments[effectType][category]) {
-                    enchantment.updateActiveZoneAndType()
-                }
-            }
-        }
+        this.enchantments.forEach(enchantment => enchantment.active())
     }
 
     controller(): GamePlayer {
@@ -71,3 +60,6 @@ abstract class GameObject {
 }
 
 export default GameObject
+
+import Enchantment from "./Enchantment"
+import TriggerEnchantment from "./TriggerEnchantment"

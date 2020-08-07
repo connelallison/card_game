@@ -11,7 +11,7 @@ class GamePlayer {
   playerID: string
   socketID: string
   health: number
-  hero: Leader
+  leader: Leader
   maxMana: number
   currentMana: number
   hand: Card[]
@@ -31,7 +31,7 @@ class GamePlayer {
     this.playerID = `${this.name}:${Math.random()}`
     this.socketID = socketID
     this.health = 20
-    this.hero = new GenericLeader(this.game, this, 'hero')
+    this.leader = new GenericLeader(this.game, this, 'leader')
     this.maxMana = 2
     this.currentMana = 2
     this.hand = []
@@ -49,8 +49,8 @@ class GamePlayer {
     this.game.event.on('endOfTurn', (event) => this.endOfTurn(event))
   }
 
-  heroReport() {
-    return Object.assign({}, this.hero.provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
+  leaderReport() {
+    return Object.assign({}, this.leader.provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
   }
 
   boardReport(): ObjectReport[] {
@@ -66,7 +66,10 @@ class GamePlayer {
   }
 
   myTurn(): boolean {
-    return this.game.turn.activePlayer === this
+    if (this.game.turn !== null) {
+      return this.game.turn.activePlayer === this
+    } 
+    return false
   }
 
   startOfTurn(event): void {
@@ -158,7 +161,7 @@ class GamePlayer {
   // }
 
   alive(): boolean {
-    return this.hero.health > 0
+    return this.leader.health > 0
   }
 
   spendMana(amount): void {

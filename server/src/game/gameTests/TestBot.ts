@@ -38,10 +38,10 @@ const TestBot = async (game: Game) => {
                 })
                 game.announceGameState()
             } else {
-                if (game.permissions.canAttack(minion, minion.owner.opponent.hero)){
+                if (game.permissions.canAttack(minion, minion.owner.opponent.leader)){
                     game.phases.proposedAttackPhase({
                         attacker: minion,
-                        defender: minion.owner.opponent.hero,
+                        defender: minion.owner.opponent.leader,
                         cancelled: false,
                     })
                 }

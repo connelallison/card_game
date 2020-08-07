@@ -1,42 +1,29 @@
+import Game from '../Game'
 import GameObject from './GameObject'
 import Card from './Card'
 
-class Enchantment extends GameObject {
+abstract class Enchantment extends GameObject {
     owner: Card
     activeZones: string[]
     activeTypes: string[]
-    sendRequirement: any
-    aura: boolean
-    effectType: string
-    effect: any
-    activeZoneAndType: boolean
+    activeRequirements: any[]
+    previousActive: boolean
 
-    constructor(game, owner, id, name, activeZones, activeTypes, sendRequirement, aura, effectType, effect) {
+    constructor(game: Game, owner: Card, id: string, name: string, activeZones: string[], activeTypes: string[], activeRequirements: any[] = []) {
         super(game, owner, id, name, 'enchantment')
         this.owner = owner
         this.activeZones = activeZones
         this.activeTypes = activeTypes
-        this.sendRequirement = sendRequirement
-        this.aura = aura
-        this.effectType = effectType
-        this.effect = effect
-        this.activeZoneAndType = false
+        this.activeRequirements = activeRequirements
+        this.previousActive = false
     }
     
-    effectActive(): boolean {
-        return this.activeZoneAndType && this.sendRequirement(this)
-    }
-
-    updateActiveZoneAndType(): void {
-        let previousActive = this.activeZoneAndType
-        this.activeZoneAndType = this.activeZones.includes(this.owner.zone) && this.activeTypes.includes(this.owner.type)
-        if (this.aura) {
-            if (!previousActive && this.activeZoneAndType) {
-                this.game.auras.emit(this)
-            } else if (previousActive && !this.activeZoneAndType) {
-                this.game.auras.cancel(this)
-            }
-        }
+    active(): boolean {
+        const active = this.activeZones.includes(this.owner.zone) 
+                      && this.activeTypes.includes(this.owner.type) 
+                      && this.activeRequirements.every(requirement => requirement(this))
+        this.previousActive = active
+        return active
     }
 }
 

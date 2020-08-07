@@ -1,11 +1,12 @@
 import GamePlayer from './gameObjects/GamePlayer'
-import { create } from './libraries/CardLib'
-import { deck } from './libraries/DeckLib'
+import Cards from './libraries/CardLib'
+import Decks from './libraries/DeckLib'
 import AuraManager from './gameSystems/AuraManager'
 import PhaseManager from './gameSystems/PhaseManager'
 import Turn from './gameObjects/Turn'
 import Constraints from './libraries/Constraints'
-import Effects from './libraries/Effects'
+import Actions from './libraries/Actions'
+import Effects from './libraries/EffectLib'
 import Permissions from './gameSystems/Permissions'
 import Utils from './gameSystems/Utils'
 import TestBot from './gameTests/TestBot'
@@ -19,7 +20,6 @@ import GameEvent from './gameSystems/GameEvent'
 import GameObject from './gameObjects/GameObject'
 import Card from './gameObjects/Card'
 import Character from './gameObjects/Character'
-import Minion from './gameObjects/Minion'
 
 class Game {
   event: GameEvent
@@ -35,6 +35,7 @@ class Game {
   auras: AuraManager
   phases: PhaseManager
   constraints: Constraints
+  actions: Actions
   effects: Effects
   permissions: Permissions
   utils: Utils
@@ -64,10 +65,11 @@ class Game {
     this.auras = new AuraManager(this)
     this.phases = new PhaseManager(this)
     this.constraints = new Constraints(this)
+    this.actions = new Actions(this)
     this.effects = new Effects(this)
     this.permissions = new Permissions(this)
     this.utils = new Utils(this)
-    this.inPlay = [this.player1.hero, this.player2.hero]
+    this.inPlay = [this.player1.leader, this.player2.leader]
     this.eventCache = { 
       death: [],
       play: [],
@@ -118,7 +120,7 @@ class Game {
     }
   }
 
-  prepareGameState (player) {
+  prepareGameState (player: GamePlayer) {
     const opponentHand = []
     for (let i = 0; i < player.opponent.hand.length; i++) {
       opponentHand.push({ type: 'unknown' })
@@ -128,13 +130,13 @@ class Game {
       winner: this.winner,
       myTurn: player.myTurn(),
       my: {
-        hero: player.heroReport(),
+        leader: player.leaderReport(),
         board: player.boardReport(),
         hand: player.handReport(),
         deck: player.deck.length
       },
       opponent: {
-        hero: player.opponent.heroReport(),
+        leader: player.opponent.leaderReport(),
         board: player.opponent.boardReport(),
         hand: opponentHand,
         deck: player.opponent.deck.length
@@ -184,7 +186,7 @@ class Game {
       }
     }
     // if (player.myTurn() && selected.owner === player) {
-    //   if (selected.zone === "hero" || selected.zone === "board" && selected.type === "minion") {
+    //   if (selected.zone === "leader" || selected.zone === "board" && selected.type === "minion") {
     //     if (selected.canAttackTarget(target)) {
     //       this.phases.proposedAttackPhase({
     //         attacker: selected,
@@ -207,8 +209,8 @@ class Game {
   // findObjectByPlayerIDZoneAndObjectID (params) {
   //   const { playerID, zone, objectID } = params
   //   const player = this.findPlayerbyPlayerID(playerID)
-  //   if (zone === "hero" && player.hero.objectID === objectID) {
-  //     return player.hero
+  //   if (zone === "leader" && player.leader.objectID === objectID) {
+  //     return player.leader
   //   } else if (zone === "hand" && player.hand.find(card => card.objectID === objectID) !== undefined) {
   //     return player.hand.find(card => card.objectID === objectID)
   //   } else if (zone === "board" && player.board.find(card => card.objectID === objectID) !== undefined) {
@@ -250,8 +252,8 @@ class Game {
     }
     this.player1.opponent = this.player2
     this.player2.opponent = this.player1
-    this.player1.deck = deck(this, this.player1, this.player1deckID).cards
-    this.player2.deck = deck(this, this.player2, this.player2deckID).cards
+    this.player1.deck = new Decks[this.player1deckID](this, this.player1).cards
+    this.player2.deck = new Decks[this.player2deckID](this, this.player2).cards
   }
 
   initListeners () {
@@ -286,10 +288,8 @@ class Game {
   }
 
   async start () {
-    const player1minion = create(this, this.player1, 'board', 'PlayerOneMinion')
-    const player2minion = create(this, this.player2, 'board', 'PlayerTwoMinion')
-    if (player1minion instanceof Minion) this.player1.board.push(player1minion)
-    if (player2minion instanceof Minion) this.player2.board.push(player2minion)
+    this.player1.board.push(new Cards['PlayerOneMinion'](this, this.player1, 'board'))
+    this.player2.board.push(new Cards['PlayerTwoMinion'](this, this.player2, 'board'))
     this.inPlay.push(this.player1.board[0])
     this.inPlay.push(this.player2.board[0])
     console.log('starting game')

@@ -49,7 +49,7 @@ abstract class Character extends Card {
       })
       this.validTargets = newTargets
     } else if (this.inPlay()) {
-      this.validTargets = [this.owner.opponent.hero as Character].concat(this.owner.opponent.board).filter(defender => {
+      this.validTargets = [this.owner.opponent.leader as Character].concat(this.owner.opponent.board).filter(defender => {
         return this.game.permissions.canAttack(this, defender)
       })
     } else {

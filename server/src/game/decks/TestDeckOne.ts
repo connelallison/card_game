@@ -1,5 +1,4 @@
-const Deck = require('../gameObjects/Deck')
-const { create } = require('../libraries/CardLib')
+import Deck from '../gameObjects/Deck'
 
 class TestDeckOne extends Deck {
   constructor (game, owner) {
@@ -31,4 +30,4 @@ class TestDeckOne extends Deck {
   }
 }
 
-module.exports = TestDeckOne
+export default TestDeckOne

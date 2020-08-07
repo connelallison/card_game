@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class Hero extends Component {
+class Leader extends Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -28,10 +28,10 @@ class Hero extends Component {
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
-    const styleClasses = outlineStatus + " hero"
+    const styleClasses = outlineStatus + " leader"
     return (
       <div onClick={this.handleClick} className={styleClasses} >
-        <p className='card-name'>{this.props.mine ? "My hero." : "Opponent's hero."}</p>
+        <p className='card-name'>{this.props.mine ? "My leader." : "Opponent's leader."}</p>
         <p className={`card-text`}>{this.props.object.staticCardText}</p>
         <div className="multicolour-line">
           <p className='attack-label'>{this.props.object.attack}A</p>
@@ -39,14 +39,14 @@ class Hero extends Component {
           <p className='cost-label'>{this.props.object.currentMana}/{this.props.object.maxMana}C</p>
         </div>
         {/* 
-      <p>Hero's attack: {this.props.object.attack}</p>
-      <p>Hero's health: {this.props.object.health}</p>
-      <p>Hero's current mana: {this.props.object.currentMana}</p>
-      <p>Hero's max mana: {this.props.object.maxMana}</p> */}
+      <p>Leader's attack: {this.props.object.attack}</p>
+      <p>Leader's health: {this.props.object.health}</p>
+      <p>Leader's current mana: {this.props.object.currentMana}</p>
+      <p>Leader's max mana: {this.props.object.maxMana}</p> */}
       </div>
     )
   }
 
 }
 
-export default Hero
+export default Leader

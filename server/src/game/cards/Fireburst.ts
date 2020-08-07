@@ -12,7 +12,7 @@ class Fireburst extends Spell {
       'Fireburst', 
       1, 
       'Deal 3 damage to a minion with 4 or more attack.',
-      [game.effects.damageChosenTarget(3)],
+      [game.actions.damageChosenTarget(3)],
       true, 
       game.utils.targetDomain(['enemyMinions', 'friendlyMinions',]),
       [game.constraints.minAttack(4)], 

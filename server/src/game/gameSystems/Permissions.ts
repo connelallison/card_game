@@ -16,7 +16,7 @@ class Permissions {
             attacker.canAttack()
             && defender.inPlay()
             && defender.controller() === attacker.controller().opponent
-            && this.game.utils.notBehindTaunt(defender)
+            && this.game.utils.notBehindGuard(defender)
         )
     }
 

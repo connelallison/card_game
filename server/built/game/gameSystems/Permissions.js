@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Minion_1 = require("../gameObjects/Minion");
-var Hero_1 = require("../gameObjects/Hero");
 var Spell_1 = require("../gameObjects/Spell");
 var Permissions = /** @class */ (function () {
     function Permissions(game) {
@@ -9,7 +8,7 @@ var Permissions = /** @class */ (function () {
     }
     Permissions.prototype.canAttack = function (attacker, defender) {
         return (attacker.canAttack()
-            && (defender instanceof Minion_1.default && defender.zone === 'board' || defender instanceof Hero_1.default && defender.zone === 'hero')
+            && defender.inPlay()
             && defender.controller() === attacker.controller().opponent
             && this.game.utils.notBehindTaunt(defender));
     };

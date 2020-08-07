@@ -13,14 +13,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var events_1 = require("events");
-var GameEvent = /** @class */ (function (_super) {
-    __extends(GameEvent, _super);
-    function GameEvent() {
-        var _this = _super.call(this) || this;
-        _this.setMaxListeners(100);
-        return _this;
+var Leader_1 = require("../gameObjects/Leader");
+var GenericLeader = /** @class */ (function (_super) {
+    __extends(GenericLeader, _super);
+    function GenericLeader(game, owner, zone) {
+        return _super.call(this, game, owner, zone, 'GenericHero', 'Hero', 0, 1, '', null, false, null, null) || this;
     }
-    return GameEvent;
-}(events_1.EventEmitter));
-exports.default = GameEvent;
+    return GenericLeader;
+}(Leader_1.default));
+exports.default = GenericLeader;

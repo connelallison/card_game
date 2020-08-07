@@ -19,6 +19,7 @@ import GameEvent from './gameSystems/GameEvent'
 import GameObject from './gameObjects/GameObject'
 import Card from './gameObjects/Card'
 import Character from './gameObjects/Character'
+import Minion from './gameObjects/Minion'
 
 class Game {
   event: GameEvent
@@ -285,8 +286,10 @@ class Game {
   }
 
   async start () {
-    this.player1.board.push(create(this, this.player1, 'board', 'PlayerOneMinion'))
-    this.player2.board.push(create(this, this.player2, 'board', 'PlayerTwoMinion'))
+    const player1minion = create(this, this.player1, 'board', 'PlayerOneMinion')
+    const player2minion = create(this, this.player2, 'board', 'PlayerTwoMinion')
+    if (player1minion instanceof Minion) this.player1.board.push(player1minion)
+    if (player2minion instanceof Minion) this.player2.board.push(player2minion)
     this.inPlay.push(this.player1.board[0])
     this.inPlay.push(this.player2.board[0])
     console.log('starting game')

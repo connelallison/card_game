@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var GenericHero_1 = require("../cards/GenericHero");
+var GenericLeader_1 = require("../cards/GenericLeader");
 var GamePlayer = /** @class */ (function () {
     function GamePlayer(game, name, socketID, bot) {
         var _this = this;
@@ -11,7 +11,7 @@ var GamePlayer = /** @class */ (function () {
         this.playerID = this.name + ":" + Math.random();
         this.socketID = socketID;
         this.health = 20;
-        this.hero = new GenericHero_1.default(this.game, this, 'hero');
+        this.hero = new GenericLeader_1.default(this.game, this, 'hero');
         this.maxMana = 2;
         this.currentMana = 2;
         this.hand = [];

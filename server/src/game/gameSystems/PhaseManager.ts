@@ -1,7 +1,7 @@
 import Game from "../Game";
 import Minion from "../gameObjects/Minion";
 import Character from "../gameObjects/Character";
-import Leader from "../../../../client/src/components/Hero";
+import Leader from "../gameObjects/Leader";
 
 class PhaseManager {
     game: Game

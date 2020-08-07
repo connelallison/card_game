@@ -55,6 +55,7 @@ var TestBot_1 = require("./gameTests/TestBot");
 var ServerEvent_1 = require("../ServerEvent");
 var GameEvent_1 = require("./gameSystems/GameEvent");
 var Character_1 = require("./gameObjects/Character");
+var Minion_1 = require("./gameObjects/Minion");
 var Game = /** @class */ (function () {
     function Game(player1name, player2name, player1deckID, player2deckID, botPlayer1, debug, online, player1socketID, player2socketID, botPlayer2) {
         if (botPlayer1 === void 0) { botPlayer1 = false; }
@@ -297,11 +298,16 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.start = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var player1minion, player2minion;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.player1.board.push(CardLib_1.create(this, this.player1, 'board', 'PlayerOneMinion'));
-                        this.player2.board.push(CardLib_1.create(this, this.player2, 'board', 'PlayerTwoMinion'));
+                        player1minion = CardLib_1.create(this, this.player1, 'board', 'PlayerOneMinion');
+                        player2minion = CardLib_1.create(this, this.player2, 'board', 'PlayerTwoMinion');
+                        if (player1minion instanceof Minion_1.default)
+                            this.player1.board.push(player1minion);
+                        if (player2minion instanceof Minion_1.default)
+                            this.player2.board.push(player2minion);
                         this.inPlay.push(this.player1.board[0]);
                         this.inPlay.push(this.player2.board[0]);
                         console.log('starting game');

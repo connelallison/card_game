@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var Minion_1 = require("../gameObjects/Minion");
+var Leader_1 = require("../gameObjects/Leader");
 var PhaseManager = /** @class */ (function () {
     function PhaseManager(game) {
         this.game = game;
@@ -20,12 +22,12 @@ var PhaseManager = /** @class */ (function () {
         var _this = this;
         this.game.inPlay.slice(0).forEach(function (character) {
             if (character.health <= 0) {
-                if (character.type === 'hero') {
+                if (character instanceof Leader_1.default) {
                     console.log('hero is dead');
                     _this.game.inPlay.splice(_this.game.inPlay.indexOf(character), 1);
                     _this.game.endGame();
                 }
-                else if (character.type === 'minion') {
+                else if (character instanceof Minion_1.default) {
                     console.log("minion is dying: ", character.name);
                     _this.game.inPlay.splice(_this.game.inPlay.indexOf(character), 1);
                     character.owner.graveyard.push(character.owner.board.splice(character.owner.board.indexOf(character), 1)[0]);
@@ -64,7 +66,7 @@ var PhaseManager = /** @class */ (function () {
         this.damagePhase({
             source: event.defender,
             target: event.attacker,
-            value: event.defender.attack,
+            value: event.defender.stats.attack,
         });
         this.game.turn.cacheEvent(event, 'attack');
         event.attacker.ready = false;

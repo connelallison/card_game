@@ -14,16 +14,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Character_1 = require("./Character");
-var Hero = /** @class */ (function (_super) {
-    __extends(Hero, _super);
-    function Hero(game, owner, zone, id, name, rawCost, rawAttack, staticCardText, effects, targeted, targetDomain, targetConstraints) {
+var Leader = /** @class */ (function (_super) {
+    __extends(Leader, _super);
+    function Leader(game, owner, zone, id, name, rawCost, rawAttack, staticCardText, effects, targeted, targetDomain, targetConstraints) {
         var _this = _super.call(this, game, owner, zone, id, name, 'hero', rawCost, rawAttack, staticCardText, effects, targeted, targetDomain, targetConstraints) || this;
         // this.health = 20
         _this.health = _this.owner.health,
             _this.game.event.on('startOfTurn', function (event) { return _this.startOfTurn(event); });
         return _this;
     }
-    Hero.prototype.provideReport = function () {
+    Leader.prototype.provideReport = function () {
         this.updateStats();
         this.updateFlags();
         this.updateValidTargets();
@@ -44,7 +44,7 @@ var Hero = /** @class */ (function (_super) {
             staticCardText: this.staticCardText,
         };
     };
-    Hero.prototype.updateStats = function () {
+    Leader.prototype.updateStats = function () {
         var _this = this;
         var stats = {
             attack: this.rawAttack,
@@ -62,7 +62,7 @@ var Hero = /** @class */ (function (_super) {
         this.attack = stats.attack;
         this.health = stats.health;
     };
-    Hero.prototype.takeDamage = function (damage) {
+    Leader.prototype.takeDamage = function (damage) {
         if (damage > 0) {
             this.owner.health -= damage;
             this.updateStats();
@@ -70,12 +70,12 @@ var Hero = /** @class */ (function (_super) {
             console.log(this.owner.name + " now has " + this.health + " health");
         }
     };
-    Hero.prototype.getReady = function () {
+    Leader.prototype.getReady = function () {
         this.ready = true;
     };
-    Hero.prototype.inPlay = function () {
+    Leader.prototype.inPlay = function () {
         return this.zone === 'hero';
     };
-    return Hero;
+    return Leader;
 }(Character_1.default));
-exports.default = Hero;
+exports.default = Leader;

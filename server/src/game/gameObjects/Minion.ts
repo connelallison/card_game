@@ -2,16 +2,17 @@ import Game from '../Game'
 import GamePlayer from './GamePlayer'
 import ObjectReport from '../interfaces/ObjectReport'
 import Character from './Character'
+import StaticEnchantment from './StaticEnchantment'
 
 abstract class Minion extends Character {
   rawHealth: number
 
-  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', effects: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
-    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, effects, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
+    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, actions, targeted, targetDomain, targetConstraints)
     this.rawHealth = rawHealth
     this.health = this.rawHealth,
 
-    this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
+      this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
   provideReport(): ObjectReport {
@@ -43,12 +44,24 @@ abstract class Minion extends Character {
       health: this.rawHealth,
     }
 
-    this.enchantments.static.stats.forEach(enchantment => {
-      if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
+    this.enchantments.forEach(enchantment => {
+      if (
+        enchantment instanceof StaticEnchantment
+        && enchantment.categories.includes('stats')
+        && enchantment.active()
+      ) {
+        enchantment.effects.forEach(effect => {
+          if (effect.category === 'stats') effect.effect(stats, effect.value)
+        })
+      }
     })
 
     this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
-      if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
+      if (enchantment.targetRequirements.every(requirement => requirement(this, enchantment))) {
+        enchantment.effects.forEach(effect => {
+          if (effect.category === 'stats') effect.effect(stats, effect.value)
+        })
+      }
     })
 
     this.attack = stats.attack
@@ -63,7 +76,7 @@ abstract class Minion extends Character {
       })
       this.validTargets = newTargets
     } else if (this.zone === 'board') {
-      this.validTargets = [this.owner.opponent.hero].concat(this.owner.opponent.board).filter(defender => {
+      this.validTargets = [this.owner.opponent.leader].concat(this.owner.opponent.board).filter(defender => {
         return this.game.permissions.canAttack(this, defender)
       })
     } else {

@@ -1,15 +1,23 @@
 // const Card = require("./Card");
 // const Minion = require("./Minion");
-// const Spell = require("./Spell");
-const { create } = require('../libraries/CardLib')
+import Cards from '../libraries/CardLib'
+import Game from '../Game'
+import GamePlayer from './GamePlayer'
+import Card from './Card'
 
 class Deck {
+  game: Game
+  owner: GamePlayer
+  id: string
+  name: string
+  cards: Card[]
+
   constructor (game, owner, deckID, deckName, cards) {
     this.game = game
     this.owner = owner
     this.id = deckID
     this.name = deckName
-    this.cards = cards.map(cardID => create(this.game, this.owner, 'deck', cardID))
+    this.cards = cards.map(cardID => new Cards[cardID](this.game, this.owner, 'deck'))
     this.shuffle()
   }
 
@@ -21,4 +29,4 @@ class Deck {
   }
 }
 
-module.exports = Deck
+export default Deck

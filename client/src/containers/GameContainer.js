@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Hero from '../components/Hero.js'
+import Leader from '../components/Leader.js'
 import OpponentHand from '../components/OpponentHand.js'
 import PlayerHand from '../components/PlayerHand.js'
 import Deck from '../components/Deck.js'
@@ -21,7 +21,7 @@ class GameContainer extends Component {
         winner: null,
         myTurn: false,
         my: {
-          hero: {
+          leader: {
             attack: 0,
             health: 0,
             currentMana: 0,
@@ -33,7 +33,7 @@ class GameContainer extends Component {
           deck: 0
         },
         opponent: {
-          hero: {
+          leader: {
             attack: 0,
             health: 0,
             currentMana: 0,
@@ -180,16 +180,16 @@ class GameContainer extends Component {
         <PlayArea selected={this.state.selected} interactivity={this.interactivityHandlers}>
           <Deck mine={false} cardNumber={this.state.gameState.opponent.deck} />
           {/* <br /> */}
-          <div className='heroDiv'>
-            <Hero mine={false} object={this.state.gameState.opponent.hero} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+          <div className='leaderDiv'>
+            <Leader mine={false} object={this.state.gameState.opponent.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <br />
           <BoardHalf mine={false} minions={this.state.gameState.opponent.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           <br />
           <BoardHalf mine minions={this.state.gameState.my.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           <br />
-          <div className='heroDiv'>
-            <Hero mine object={this.state.gameState.my.hero} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+          <div className='leaderDiv'>
+            <Leader mine object={this.state.gameState.my.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <Deck mine cardNumber={this.state.gameState.my.deck} />
           {/* <br /> */}

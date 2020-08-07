@@ -44,7 +44,7 @@ p.lowerMargin {
   /* display: inline-block; */
 }
 
-.hero {
+.leader {
   /* background-image: url("./images/dogecropped.jpg"); */
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@ p.lowerMargin {
   width: 10%;
 }
 
-.heroDiv {
+.leaderDiv {
   display: flex;
   justify-content: center;
   text-align: center;

@@ -2,8 +2,8 @@ import Card from './Card'
 import ObjectReport from '../interfaces/ObjectReport'
 
 abstract class Spell extends Card {
-  constructor (game, owner, zone, id, name, rawCost, staticCardText, effects, targeted, targetDomain, targetConstraints) {
-    super(game, owner, zone, id, name, 'spell', rawCost, staticCardText, effects, targeted, targetDomain, targetConstraints)
+  constructor (game, owner, zone, id, name, rawCost, staticCardText, actions, targeted, targetDomain, targetConstraints) {
+    super(game, owner, zone, id, name, 'spell', rawCost, staticCardText, actions, targeted, targetDomain, targetConstraints)
   }
 
   provideReport (): ObjectReport {

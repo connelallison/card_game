@@ -12,7 +12,7 @@ class Consume extends Spell {
       'Consume', 
       3,
       'Deal 3 damage to the weakest enemy minion and draw a card.',
-      [game.effects.damageWeakestEnemyMinion(3), game.effects.drawCards()],
+      [game.actions.damageWeakestEnemyMinion(3), game.actions.drawCards()],
       false,
       null,
       null

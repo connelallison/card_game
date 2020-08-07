@@ -30,7 +30,7 @@ class PhaseManager {
         this.game.inPlay.slice(0).forEach((character: Character) => {
             if (character.health <= 0) {
                 if (character instanceof Leader) {
-                    console.log('hero is dead')
+                    console.log('leader is dead')
                     this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
                     this.game.endGame()
                 } else if (character instanceof Minion) {
@@ -41,7 +41,7 @@ class PhaseManager {
                     character.updateEnchantments()
                     const deathEvent = {
                         object: character,
-                        owner: character.owner,
+                        controller: character.controller(),
                     }
                     this.game.turn.cacheEvent(deathEvent, 'death')
                     this.deathQueue.push(deathEvent)
@@ -72,7 +72,7 @@ class PhaseManager {
         this.damagePhase({
             source: event.defender,
             target: event.attacker,
-            value: event.defender.stats.attack,
+            value: event.defender.attack,
         })
         this.game.turn.cacheEvent(event, 'attack')
         event.attacker.ready = false
@@ -127,8 +127,8 @@ class PhaseManager {
         // console.log(target)
         this.game.event.emit('beforeSpell', event) 
         this.game.turn.cacheEvent(event, 'spell')
-        card.effects.forEach(effect => {
-            effect(player, card, target)
+        card.actions.forEach(action => {
+            action(player, card, target)
         })
         // event.card.onPlay()
         this.game.event.emit('afterSpell', event)
@@ -166,7 +166,7 @@ class PhaseManager {
                 player.fatigueCounter++
                 this.damagePhase({
                     source: player,
-                    target: player.hero,
+                    target: player.leader,
                     value: player.fatigueCounter,
                 })                
             }

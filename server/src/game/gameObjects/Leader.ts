@@ -2,10 +2,11 @@ import Game from '../Game'
 import GamePlayer from './GamePlayer'
 import ObjectReport from '../interfaces/ObjectReport'
 import Character from './Character'
+import StaticEnchantment from './StaticEnchantment'
 
 abstract class Leader extends Character {
-  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, rawCost: number, rawAttack: number, staticCardText: string, effects: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
-    super(game, owner, zone, id, name, 'hero', rawCost, rawAttack, staticCardText, effects, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, rawCost: number, rawAttack: number, staticCardText: string, actions: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
+    super(game, owner, zone, id, name, 'leader', rawCost, rawAttack, staticCardText, actions, targeted, targetDomain, targetConstraints)
     // this.health = 20
     this.health = this.owner.health,
 
@@ -41,14 +42,25 @@ abstract class Leader extends Character {
       health: this.owner.health,
     }
 
-    this.enchantments.static.stats.forEach(enchantment => {
-      if (enchantment.effectActive()) enchantment.effect.effect(stats, enchantment.effect.value)
+    this.enchantments.forEach(enchantment => {
+      if (
+        enchantment instanceof StaticEnchantment
+        && enchantment.categories.includes('stats') 
+        && enchantment.active()
+        ) {
+          enchantment.effects.forEach(effect => {
+            if (effect.category === 'stats') effect.effect(stats, effect.value)
+          })
+        }
     })
 
-    // console.log(this.game.auras.auras.stats)
     this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
-      if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(stats, enchantment.effect.value)
-    })
+      if (enchantment.targetRequirements.every(requirement => requirement(this, enchantment))) {
+      enchantment.effects.forEach(effect => {
+        if (effect.category === 'stats') effect.effect(stats, effect.value)
+      })
+    }
+  })
 
     this.attack = stats.attack
     this.health = stats.health
@@ -68,7 +80,7 @@ abstract class Leader extends Character {
   }
 
   inPlay(): boolean {
-    return this.zone === 'hero'
+    return this.zone === 'leader'
   }
 }
 

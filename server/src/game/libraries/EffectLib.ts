@@ -1,23 +1,9 @@
-import Game from '../Game'
+import Effect from '../interfaces/Effect'
 
-class Effects {
-    game: Game
-
-    constructor(game: Game) {
-        this.game = game
-    }
-
-    guard (flags) {
-        flags.guard = true
-    }
-
-    incrementAttack(stats, value) {
-        stats.attack += value
-    }
-
-    incrementHealth(stats, value) {
-        stats.health += value
-    }
+const Effects: { [index: string]: Effect } = {
+    guard: (flags) => { flags.guard = true },
+    incrementAttack: (stats, value) => { stats.attack += value },
+    incrementHealth: (stats, value) => { stats.health += value },
 }
 
 export default Effects

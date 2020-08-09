@@ -6,12 +6,12 @@ abstract class GameObject {
     owner: GamePlayer | GameObject
     id: string
     name: string
-    type: string
+    type: ObjectTypeString
     objectID: string
     // flags: any
     enchantments: Enchantment[]
 
-    constructor(game: Game, owner: GamePlayer | GameObject, id: string, name: string, type: string) {
+    constructor(game: Game, owner: GamePlayer | GameObject, id: string, name: string, type: ObjectTypeString) {
         this.game = game
         this.owner = owner
         this.id = id 
@@ -63,3 +63,5 @@ export default GameObject
 
 import Enchantment from "./Enchantment"
 import TriggerEnchantment from "./TriggerEnchantment"
+import ObjectTypeString from "../interfaces/ObjectTypeString"
+

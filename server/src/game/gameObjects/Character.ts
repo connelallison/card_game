@@ -2,15 +2,21 @@ import Card from './Card'
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
 import ObjectReport from '../interfaces/ObjectReport'
+import ZoneString from '../interfaces/ZoneString'
+import Action from '../interfaces/Action'
+import TargetRequirement from '../interfaces/TargetRequirement'
+import StaticEnchantment from './StaticEnchantment'
+import AuraEnchantment from './AuraEnchantment'
 
 abstract class Character extends Card {
+  type: 'leader' | 'minion'
   rawAttack: number
   ready: boolean
   attack: number
   health: number
 
-  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, type: string, rawCost: number, rawAttack: number, staticCardText: string, effects: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
-    super(game, owner, zone, id, name, type, rawCost, staticCardText, effects, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'minion', rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], targeted: boolean, targetDomain: any, targetConstraints: TargetRequirement[]) {
+    super(game, owner, zone, id, name, type, rawCost, staticCardText, actions, targeted, targetDomain, targetConstraints)
     this.rawAttack = rawAttack
     this.attack = this.rawAttack
     this.ready = false
@@ -40,22 +46,54 @@ abstract class Character extends Card {
       staticCardText: this.staticCardText,
     }
   }
-  
+
+  updateStats(): void {
+    const stats = this.baseStats()
+
+    this.enchantments.forEach(enchantment => {
+      if (
+        enchantment instanceof StaticEnchantment
+        && enchantment.categories.includes('stats')
+        && enchantment.active()
+      ) {
+        enchantment.effects.forEach(effect => {
+          if (effect.category === 'stats') effect.effect(stats, effect.value)
+        })
+      }
+    })
+
+    const auras: AuraEnchantment[] = this.game.auras.auras.stats[this.type][this.zone]
+    auras.forEach(enchantment => {
+      if (
+        enchantment.targetRequirements.every(requirement => requirement(enchantment.controller(), enchantment, enchantment.charOwner(), this))
+        && enchantment.categories.includes('stats')
+      ) {
+        enchantment.effects.forEach(effect => {
+          if (effect.category === 'stats') effect.effect(stats, effect.value)
+        })
+      }
+    })
+
+    this.attack = stats.attack
+    this.health = stats.health
+  }
+
   updateValidTargets(): void {
     if (!this.inPlay() && this.targeted) {
       let newTargets = this.targetDomain(this.owner)
-      this.targetConstraints.forEach(constraint => {
-        newTargets = newTargets.filter(target => constraint(this.controller(), this, target))
+      this.targetRequirements.forEach(requirement => {
+        newTargets = newTargets.filter(target => requirement(this.controller(), this, this.charOwner(), target))
       })
       this.validTargets = newTargets
     } else if (this.inPlay()) {
-      this.validTargets = [this.owner.opponent.leader as Character].concat(this.owner.opponent.board).filter(defender => {
+      this.validTargets = (this.owner.opponent.leader as Character[]).concat(this.owner.opponent.board).filter(defender => {
         return this.game.permissions.canAttack(this, defender)
       })
     } else {
       this.validTargets = []
     }
   }
+
 
   startOfTurn(event): void {
     if (event.activePlayer === this.controller() && this.inPlay()) {
@@ -71,8 +109,12 @@ abstract class Character extends Card {
     return this.owner.myTurn() && this.ready && this.inPlay() && this.attack > 0
   }
 
-  abstract updateStats(): void 
-  abstract takeDamage(damage: number): void 
+  charOwner(): Character {
+    return this
+  }
+
+  abstract baseStats(): { attack: number, health: number }
+  abstract takeDamage(damage: number): void
   abstract inPlay(): boolean
 }
 

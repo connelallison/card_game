@@ -23,8 +23,8 @@ class Permissions {
     canTarget (card: Card, target: Card): boolean {
         return (
             card.targeted 
-            && card.targetDomain(card.owner).includes(target)
-            && card.targetConstraints.every(constraint => constraint(card.controller(), card, target))
+            && card.targetDomain(card.controller()).includes(target)
+            && card.targetRequirements.every(constraint => constraint(card.controller(), card, card.charOwner(), target))
         )
     }
 

@@ -3,6 +3,8 @@ import Minion from "../gameObjects/Minion"
 import StaticEnchantment from "../gameObjects/StaticEnchantment"
 
 class MinionAttackBuff extends StaticEnchantment {
+    owner: Minion
+    
     constructor(game: Game, owner: Minion, values: any = { attack: 0 }) {
         super(
             game,

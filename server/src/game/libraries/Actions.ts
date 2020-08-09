@@ -1,68 +1,64 @@
-import Game from '../Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Character from '../gameObjects/Character'
 import Enchantments from './EnchantmentLib'
-import MinionAttackBuff from '../enchantments/MinionAttackBuff'
 import Minion from '../gameObjects/Minion'
+import GameObject from '../gameObjects/GameObject'
+import ActionFactory from '../interfaces/ActionFactory'
 
-class Actions {
-    game: Game
-
-    constructor(game: Game) {
-        this.game = game
-    }
-
-    damageChosenTarget (value: number = 0) {
-        return (player: GamePlayer, source, target: Character) => {
-            this.game.phases.damagePhase({
-                source,
+const Actions: { [index: string]: ActionFactory } = {
+    damageChosenTarget: (value: number = 0) => {
+        return (player: GamePlayer, objectSource: GameObject, charSource: Character, target: Character) => {
+            player.game.phases.damagePhase({
+                objectSource: objectSource,
+                charSource,
                 target,
                 value,
             })
         }
-    }
+    },
 
-    damageWeakestEnemyMinion (value: number = 0) {
-        return (player: GamePlayer, source) => {
+    damageWeakestEnemyMinion: (value: number = 0) => {
+        return (player: GamePlayer, objectSource: GameObject, charSource: Character) => {
             const targets = player.opponent.board
-            const target = this.game.utils.findMinByCriterion(targets, (target) => target.attack)
+            const target = player.game.utils.findMinByCriterion(targets, (target) => target.attack)
             if (target) {
-                this.game.phases.damagePhase({
-                    source,
+                player.game.phases.damagePhase({
+                    objectSource: objectSource,
+                    charSource,
                     target,
                     value,
                 })
             }
         }
-    }
+    },
 
-    drawCards (number = 1, constraints = []) {
-        return (player, source) => {
-            this.game.phases.drawPhase({ 
+    drawCards: (number = 1, criteria: (() => boolean)[] = []) => {
+        return (player: GamePlayer, objectSource: GameObject, charSource: Character) => {
+            player.game.phases.drawPhase({ 
                 player,
                 number, 
-                constraints,
+                criteria,
              })
         }
-    }
+    },
 
-    buffMinionAttack (attack: number = 0) {
-        return (player: GamePlayer, source, target: Minion) => {
-            target.addEnchantment(new Enchantments['MinionAttackBuff'](this.game, target, { attack }))
+    buffMinionAttack: (attack: number = 0) => {
+        return (player: GamePlayer, objectSource: GameObject, charSource: Character, target: Minion) => {
+            target.addEnchantment(new Enchantments['MinionAttackBuff'](player.game, target, { attack }))
         }
-    }
+    },
 
-    buffMinionHealth (health: number = 0) {
-        return (player: GamePlayer, source, target: Minion) => {
-            target.addEnchantment(new Enchantments['MinionHealthBuff'](this.game, target, { health }))
+    buffMinionHealth: (health: number = 0) => {
+        return (player: GamePlayer, objectSource: GameObject, charSource: Character, target: Minion) => {
+            target.addEnchantment(new Enchantments['MinionHealthBuff'](player.game, target, { health }))
         }
-    }
+    },
 
-    buffMinionAttackAndHealth (attack: number = 0, health: number = 0) {
-        return (player: GamePlayer, source, target: Minion) => {
-            target.addEnchantment(new Enchantments['MinionAttackAndHealthBuff'](this.game, target, { attack, health }))
+    buffMinionAttackAndHealth: (attack: number = 0, health: number = 0) => {
+        return (player: GamePlayer, objectSource: GameObject, charSource: Character, target: Minion) => {
+            target.addEnchantment(new Enchantments['MinionAttackAndHealthBuff'](player.game, target, { attack, health }))
         }
-    }
+    },
 }
 
 export default Actions

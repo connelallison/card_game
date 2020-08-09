@@ -1,8 +1,12 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
 import Game from "../Game";
 import Card from "../gameObjects/Card";
+import Minion from "../gameObjects/Minion";
+import TargetRequirements from "../libraries/TargetRequirements";
 
 class JuniorOrcAttackAura extends AuraEnchantment {
+    owner: Minion
+    
     constructor(game: Game, owner: Card) {
         super(
             game,
@@ -19,7 +23,7 @@ class JuniorOrcAttackAura extends AuraEnchantment {
               category: 'stats',
             }],
             { minion: ['board'] },
-            [(target, source) => (source.controller() === target.controller()), (target, source) => (source.owner !== target)]
+            [TargetRequirements.friendlyTarget(), TargetRequirements.notSelf()]
         )
     }
 }

@@ -1,11 +1,12 @@
 import Enchantment from './Enchantment'
 import Game from '../Game'
 import Card from './Card'
-import Trigger from '../interfaces/Trigger'
-import GameEvent from '../gameSystems/GameEvent'
-import TriggerTypeString from '../interfaces/TriggerTypeString'
-import ZoneString from '../interfaces/ZoneString'
-import ObjectTypeString from '../interfaces/ObjectTypeString'
+import Trigger from '../structs/Trigger'
+import GameEvent from '../gameEvents/GameEvent'
+import TriggerTypeString from '../stringTypes/TriggerTypeString'
+import ZoneString from '../stringTypes/ZoneString'
+import ObjectTypeString from '../stringTypes/ObjectTypeString'
+import TriggerAction from '../functionTypes/TriggerAction'
 
 abstract class TriggerEnchantment extends Enchantment {
     repeatable: boolean
@@ -49,11 +50,11 @@ abstract class TriggerEnchantment extends Enchantment {
         this.triggers.forEach(trigger => trigger.wrapped = this.wrapActions(trigger))
     }
 
-    wrapActions(trigger: Trigger) {
+    wrapActions(trigger: Trigger): TriggerAction {
         return (event: GameEvent) => {
-            if (trigger.requirements.every(requirement => requirement(event))) {
+            if (trigger.requirements.every(requirement => requirement(event, this))) {
                 trigger.actions.forEach(action => {
-                    action(event)
+                    action(event, this)
                 })
                 if (!this.repeatable) this.owner.removeEnchantment(this)
             }

@@ -1,7 +1,7 @@
 import Game from "../Game"
 import GamePlayer from "./GamePlayer"
-import EventCache from "../interfaces/EventCache"
-import GameEvent from "../gameSystems/GameEvent"
+import EventCache from "../gameEvents/EventCache"
+import GameEvent from "../gameEvents/GameEvent"
 
 class Turn {
     game: Game

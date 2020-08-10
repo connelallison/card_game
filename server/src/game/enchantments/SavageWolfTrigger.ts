@@ -2,8 +2,8 @@ import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import Game from "../Game";
 import Card from "../gameObjects/Card";
 import Minion from "../gameObjects/Minion";
-import DeathEvent from "../gameSystems/DeathEvent";
-import Actions from "../libraries/Actions";
+import TriggerRequirements from "../dictionaries/TriggerRequirements";
+import TriggerActions from "../dictionaries/TriggerActions";
 
 class SavageWolfTrigger extends TriggerEnchantment {
     owner: Minion
@@ -21,8 +21,8 @@ class SavageWolfTrigger extends TriggerEnchantment {
             ['afterDeath'],
             [{
                 eventType: 'afterDeath',
-                requirements: [(event: DeathEvent) => (event.object instanceof Minion), (event: DeathEvent) => (event.controller === this.controller())],
-                actions: [(event) => {Actions.buffMinionAttackAndHealth(1, 1)(this.controller(), this, this.owner, this.owner)}]
+                requirements: [TriggerRequirements.isMinion('object'), TriggerRequirements.isFriendly('object')],
+                actions: [TriggerActions.buffCharOwnerAttackAndHealth(1, 1)]
             }]
         )
     }

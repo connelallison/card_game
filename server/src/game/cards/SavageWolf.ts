@@ -1,8 +1,8 @@
 import Minion from '../gameObjects/Minion'
 import Game from '../Game'
 import GamePlayer from '../gameObjects/GamePlayer'
-import Enchantments from '../libraries/EnchantmentLib'
-import MinionZoneString from '../interfaces/MinionZoneString'
+import Enchantments from '../dictionaries/Enchantments'
+import MinionZoneString from '../stringTypes/MinionZoneString'
 
 class SavageWolf extends Minion {
   constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
@@ -16,7 +16,8 @@ class SavageWolf extends Minion {
       4, 
       2, 
       'Whenever a friendly minion dies, gain +1/+1.', 
-      null, 
+      [], 
+      [],
       false, 
       null, 
       null

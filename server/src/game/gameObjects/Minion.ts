@@ -1,18 +1,19 @@
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 import Character from './Character'
 import StaticEnchantment from './StaticEnchantment'
-import MinionZoneString from '../interfaces/MinionZoneString'
-import Action from '../interfaces/Action'
+import MinionZoneString from '../stringTypes/MinionZoneString'
+import Action from '../functionTypes/Action'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Minion extends Character {
   zone: MinionZoneString
   type: 'minion'
   rawHealth: number
 
-  constructor(game: Game, owner: GamePlayer, zone: MinionZoneString, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
-    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, actions, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: MinionZoneString, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
+    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
     this.rawHealth = rawHealth
     this.health = this.rawHealth,
 
@@ -46,7 +47,7 @@ abstract class Minion extends Character {
     if (this.zone === 'hand' && this.targeted) {
       let newTargets = this.targetDomain(this.owner)
       this.targetRequirements.forEach(targetRequirement => {
-        newTargets = newTargets.filter(target => targetRequirement(this.controller(), this, this.charOwner(), target))
+        newTargets = newTargets.filter(target => targetRequirement(this, target))
       })
       this.validTargets = newTargets
     } else if (this.zone === 'board') {

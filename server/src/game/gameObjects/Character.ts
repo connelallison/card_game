@@ -1,12 +1,13 @@
 import Card from './Card'
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../interfaces/ObjectReport'
-import ZoneString from '../interfaces/ZoneString'
-import Action from '../interfaces/Action'
-import TargetRequirement from '../interfaces/TargetRequirement'
+import ObjectReport from '../structs/ObjectReport'
+import ZoneString from '../stringTypes/ZoneString'
+import Action from '../functionTypes/Action'
+import TargetRequirement from '../functionTypes/TargetRequirement'
 import StaticEnchantment from './StaticEnchantment'
 import AuraEnchantment from './AuraEnchantment'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Character extends Card {
   type: 'leader' | 'minion'
@@ -15,8 +16,8 @@ abstract class Character extends Card {
   attack: number
   health: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'minion', rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], targeted: boolean, targetDomain: any, targetConstraints: TargetRequirement[]) {
-    super(game, owner, zone, id, name, type, rawCost, staticCardText, actions, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'minion', rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: TargetRequirement[]) {
+    super(game, owner, zone, id, name, type, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
     this.rawAttack = rawAttack
     this.attack = this.rawAttack
     this.ready = false
@@ -65,7 +66,7 @@ abstract class Character extends Card {
     const auras: AuraEnchantment[] = this.game.auras.auras.stats[this.type][this.zone]
     auras.forEach(enchantment => {
       if (
-        enchantment.targetRequirements.every(requirement => requirement(enchantment.controller(), enchantment, enchantment.charOwner(), this))
+        enchantment.targetRequirements.every(requirement => requirement(enchantment, this))
         && enchantment.categories.includes('stats')
       ) {
         enchantment.effects.forEach(effect => {
@@ -82,7 +83,7 @@ abstract class Character extends Card {
     if (!this.inPlay() && this.targeted) {
       let newTargets = this.targetDomain(this.owner)
       this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => requirement(this.controller(), this, this.charOwner(), target))
+        newTargets = newTargets.filter(target => requirement(this, target))
       })
       this.validTargets = newTargets
     } else if (this.inPlay()) {

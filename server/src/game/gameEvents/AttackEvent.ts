@@ -1,5 +1,5 @@
 import GameEvent from "./GameEvent";
-import AttackEventObject from "../interfaces/AttackEventObject";
+import AttackEventObject from "./AttackEventObject";
 import Game from "../Game";
 import Character from "../gameObjects/Character";
 

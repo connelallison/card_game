@@ -3,7 +3,7 @@ import Game from '../Game'
 import Leader from './Leader'
 import Card from './Card'
 import Minion from './Minion'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 
 class GamePlayer {
   game: Game

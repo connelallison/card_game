@@ -1,5 +1,5 @@
 import GameEvent from "./GameEvent";
-import DrawSequenceObject from "../interfaces/DrawSequenceObject";
+import DrawSequenceObject from "./DrawSequenceObject";
 import Game from "../Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 

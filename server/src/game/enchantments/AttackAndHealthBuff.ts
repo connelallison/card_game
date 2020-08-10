@@ -1,18 +1,18 @@
 import Game from "../Game"
-import Minion from "../gameObjects/Minion"
 import StaticEnchantment from "../gameObjects/StaticEnchantment"
+import Character from "../gameObjects/Character"
 
-class MinionAttackAndHealthBuff extends StaticEnchantment {
-    owner: Minion
+class AttackAndHealthBuff extends StaticEnchantment {
+    owner: Character
     
-    constructor(game: Game, owner: Minion, values: { attack: number, health: number }) {
+    constructor(game: Game, owner: Character, values: { attack: number, health: number }) {
         super(
             game,
             owner,
-            'MinionAttackandHealthBuff',
-            'Minion Attack and Health Buff',
-            ['board', 'hand', 'deck'],
-            ['minion'],
+            'AttackandHealthBuff',
+            'Attack and Health Buff',
+            ['board', 'hand', 'deck', 'leader'],
+            ['minion', 'leader'],
             [],
             ['stats'],
             [
@@ -31,4 +31,4 @@ class MinionAttackAndHealthBuff extends StaticEnchantment {
     }
 }
 
-export default MinionAttackAndHealthBuff
+export default AttackAndHealthBuff

@@ -24,7 +24,7 @@ class Permissions {
         return (
             card.targeted 
             && card.targetDomain(card.controller()).includes(target)
-            && card.targetRequirements.every(constraint => constraint(card.controller(), card, card.charOwner(), target))
+            && card.targetRequirements.every(requirement => requirement(card, target))
         )
     }
 
@@ -34,8 +34,9 @@ class Permissions {
             && player.myTurn()
             && card.zone === 'hand'
             && card.cost <= player.currentMana
-            && (card !instanceof Spell || !card.targeted || card.validTargets.length > 0)
-            && (card !instanceof Minion || player.board.length < player.maxBoard)
+            && (card.targeted ? card.validTargets.length > 0 : true )
+            && (card instanceof Minion ? player.board.length < player.maxBoard : true)
+            && card.playRequirements.every(requirement => requirement(card))
         )
     }
 }

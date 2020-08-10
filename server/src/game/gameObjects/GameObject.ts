@@ -57,11 +57,16 @@ abstract class GameObject {
     controller(): GamePlayer {
         return this.owner.controller()
     }
+
+    charOwner(): Character {
+        return this.controller().leader[0]
+    }
 }
 
 export default GameObject
 
 import Enchantment from "./Enchantment"
 import TriggerEnchantment from "./TriggerEnchantment"
-import ObjectTypeString from "../interfaces/ObjectTypeString"
+import ObjectTypeString from "../stringTypes/ObjectTypeString"
+import Character from "./Character"
 

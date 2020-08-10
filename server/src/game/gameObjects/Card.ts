@@ -1,14 +1,15 @@
 import GameObject from './GameObject'
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 import StaticEnchantment from './StaticEnchantment'
-import ZoneString from '../interfaces/ZoneString'
-import CardTypeString from '../interfaces/CardTypeString'
-import Action from '../interfaces/Action'
+import ZoneString from '../stringTypes/ZoneString'
+import CardTypeString from '../stringTypes/CardTypeString'
+import Action from '../functionTypes/Action'
 import Character from './Character'
-import TargetRequirement from '../interfaces/TargetRequirement'
+import TargetRequirement from '../functionTypes/TargetRequirement'
 import AuraEnchantment from './AuraEnchantment'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Card extends GameObject {
   owner: GamePlayer
@@ -18,19 +19,21 @@ abstract class Card extends GameObject {
   cost: number
   staticCardText: string
   actions: Action[]
+  playRequirements: PlayRequirement[]
   targeted: boolean
   targetDomain: any
   targetRequirements: TargetRequirement[]
   validTargets: any
   flags: any
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, rawCost: number, staticCardText: string = '', actions: Action[] = [], targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, rawCost: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[],  targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
     super(game, owner, id, name, type)
     this.zone = zone
     this.rawCost = rawCost
     this.cost = rawCost
     this.staticCardText = staticCardText
     this.actions = actions
+    this.playRequirements = playRequirements
     this.targeted = targeted
     this.targetDomain = targetDomain
     this.targetRequirements = targetRequirements
@@ -78,7 +81,7 @@ abstract class Card extends GameObject {
     const auras: AuraEnchantment[] = this.game.auras.auras.flags[this.type][this.zone]
     auras.forEach(enchantment => {
         if (
-          enchantment.targetRequirements.every(requirement => requirement(enchantment.controller(), enchantment, enchantment.charOwner(), this))
+          enchantment.targetRequirements.every(requirement => requirement(enchantment, this))
           && enchantment.categories.includes('flags')
         ) {
         enchantment.effects.forEach(effect => {
@@ -94,7 +97,7 @@ abstract class Card extends GameObject {
     if (this.zone === 'hand' && this.targeted) {
       let newTargets = this.targetDomain(this.owner)
       this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => requirement(this.controller(), this, this.charOwner(), target))
+        newTargets = newTargets.filter(target => requirement(this, target))
       })
       this.validTargets = newTargets
     } else {
@@ -108,10 +111,6 @@ abstract class Card extends GameObject {
 
   canBePlayed(): boolean {
     return this.owner.canPlay(this)
-  }
-
-  charOwner(): Character {
-    return this.controller().leader[0]
   }
 
   abstract moveZone(destination: ZoneString): void 

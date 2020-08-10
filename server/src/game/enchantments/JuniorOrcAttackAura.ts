@@ -2,7 +2,7 @@ import AuraEnchantment from "../gameObjects/AuraEnchantment";
 import Game from "../Game";
 import Card from "../gameObjects/Card";
 import Minion from "../gameObjects/Minion";
-import TargetRequirements from "../libraries/TargetRequirements";
+import TargetRequirements from "../dictionaries/TargetRequirements";
 
 class JuniorOrcAttackAura extends AuraEnchantment {
     owner: Minion

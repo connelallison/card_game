@@ -1,4 +1,4 @@
-import Effect from "./Effect";
+import Effect from "../functionTypes/Effect";
 
 interface EnchantmentEffect {
     effect: Effect,

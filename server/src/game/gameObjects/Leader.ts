@@ -1,19 +1,18 @@
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 import Character from './Character'
-import StaticEnchantment from './StaticEnchantment'
-import LeaderZoneString from '../interfaces/LeaderZoneString'
-import Action from '../interfaces/Action'
-import TargetRequirement from '../interfaces/TargetRequirement'
-import AuraEnchantment from './AuraEnchantment'
+import LeaderZoneString from '../stringTypes/LeaderZoneString'
+import Action from '../functionTypes/Action'
+import TargetRequirement from '../functionTypes/TargetRequirement'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
   type: 'leader'
 
-  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]) {
-    super(game, owner, zone, id, name, 'leader', rawCost, rawAttack, staticCardText, actions, targeted, targetDomain, targetRequirements)
+  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]) {
+    super(game, owner, zone, id, name, 'leader', rawCost, rawAttack, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     // this.health = 20
     this.health = this.owner.health,
 

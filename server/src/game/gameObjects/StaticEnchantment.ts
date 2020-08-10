@@ -1,9 +1,9 @@
 import Enchantment from './Enchantment'
 import Game from '../Game'
 import Card from './Card'
-import ZoneString from '../interfaces/ZoneString'
-import ObjectTypeString from '../interfaces/ObjectTypeString'
-import EnchantmentEffect from '../interfaces/EnchantmentEffect'
+import ZoneString from '../stringTypes/ZoneString'
+import ObjectTypeString from '../stringTypes/ObjectTypeString'
+import EnchantmentEffect from '../structs/EnchantmentEffect'
 
 abstract class StaticEnchantment extends Enchantment {
     categories: EffectCategoryString[]

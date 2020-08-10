@@ -1,6 +1,6 @@
 // const Card = require("./Card");
 // const Minion = require("./Minion");
-import Cards from '../libraries/CardLib'
+import Cards from '../dictionaries/Cards'
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
 import Card from './Card'

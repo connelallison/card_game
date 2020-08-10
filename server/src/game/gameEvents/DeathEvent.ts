@@ -1,5 +1,5 @@
 import GameEvent from "./GameEvent";
-import DeathEventObject from "../interfaces/DeathEventObject";
+import DeathEventObject from "./DeathEventObject";
 import Game from "../Game";
 import GameObject from "../gameObjects/GameObject";
 import GamePlayer from "../gameObjects/GamePlayer";

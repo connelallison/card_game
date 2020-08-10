@@ -1,8 +1,8 @@
 import Game from '../Game'
 import GameObject from './GameObject'
 import Card from './Card'
-import ZoneString from '../interfaces/ZoneString'
-import ObjectTypeString from '../interfaces/ObjectTypeString'
+import ZoneString from '../stringTypes/ZoneString'
+import ObjectTypeString from '../stringTypes/ObjectTypeString'
 import Character from './Character'
 
 abstract class Enchantment extends GameObject {

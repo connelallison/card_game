@@ -1,8 +1,8 @@
 import Minion from '../gameObjects/Minion'
 import Game from '../Game'
 import GamePlayer from '../gameObjects/GamePlayer'
-import Enchantments from '../libraries/EnchantmentLib'
-import MinionZoneString from '../interfaces/MinionZoneString'
+import Enchantments from '../dictionaries/Enchantments'
+import MinionZoneString from '../stringTypes/MinionZoneString'
 
 class JuniorOrc extends Minion {
   constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
@@ -16,7 +16,8 @@ class JuniorOrc extends Minion {
       3, 
       3, 
       'Your other minions have +1 Attack.', 
-      null, 
+      [], 
+      [],
       false, 
       null, 
       null)

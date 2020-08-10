@@ -2,19 +2,19 @@ import Game from "../Game";
 import Minion from "../gameObjects/Minion";
 import Character from "../gameObjects/Character";
 import Leader from "../gameObjects/Leader";
-import DeathEvent from "./DeathEvent";
-import DrawEvent from "./DrawEvent";
-import AttackEventObject from "../interfaces/AttackEventObject";
-import AttackEvent from "./AttackEvent";
-import DamageEventObject from "../interfaces/DamageEventObject";
-import DamageEvent from "./DamageEvent";
-import StartOfTurnEvent from "./StartOfTurnEvent";
-import EndOfTurnEvent from "./EndOfTurnEvent";
-import PlayEventObject from "../interfaces/PlayEventObject";
-import PlayEvent from "./PlayEvent";
+import DeathEvent from "../gameEvents/DeathEvent";
+import DrawEvent from "../gameEvents/DrawEvent";
+import AttackEventObject from "../gameEvents/AttackEventObject";
+import AttackEvent from "../gameEvents/AttackEvent";
+import DamageEventObject from "../gameEvents/DamageEventObject";
+import DamageEvent from "../gameEvents/DamageEvent";
+import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
+import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
+import PlayEventObject from "../gameEvents/PlayEventObject";
+import PlayEvent from "../gameEvents/PlayEvent";
 import Spell from "../gameObjects/Spell";
-import DrawSequenceObject from "../interfaces/DrawSequenceObject";
-import DrawSequence from "./DrawSequence";
+import DrawSequenceObject from "../gameEvents/DrawSequenceObject";
+import DrawSequence from "../gameEvents/DrawSequence";
 
 class PhaseManager {
     game: Game
@@ -146,7 +146,7 @@ class PhaseManager {
         this.game.event.emit('beforeSpell', event) 
         this.game.turn.cacheEvent(event, 'spell')
         spell.actions.forEach(action => {
-            action(player, spell, player.leader[0], target)
+            action(spell, target)
         })
         this.game.event.emit('afterSpell', event)
     }

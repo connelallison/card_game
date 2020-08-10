@@ -1,17 +1,18 @@
 import Card from './Card'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
-import SpellZoneString from '../interfaces/SpellZoneString'
-import Action from '../interfaces/Action'
-import TargetRequirement from '../interfaces/TargetRequirement'
+import SpellZoneString from '../stringTypes/SpellZoneString'
+import Action from '../functionTypes/Action'
+import TargetRequirement from '../functionTypes/TargetRequirement'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Spell extends Card {
   zone: SpellZoneString
   type: 'spell'
 
-  constructor (game: Game, owner: GamePlayer, zone: SpellZoneString, id: string, name: string, rawCost: number, staticCardText: string, actions: Action[], targeted: boolean, targetDomain, targetConstraints: TargetRequirement[]) {
-    super(game, owner, zone, id, name, 'spell', rawCost, staticCardText, actions, targeted, targetDomain, targetConstraints)
+  constructor (game: Game, owner: GamePlayer, zone: SpellZoneString, id: string, name: string, rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetConstraints: TargetRequirement[]) {
+    super(game, owner, zone, id, name, 'spell', rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
   }
 
   provideReport (): ObjectReport {

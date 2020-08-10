@@ -1,7 +1,7 @@
 import Minion from '../gameObjects/Minion'
 import Game from '../Game'
 import GamePlayer from '../gameObjects/GamePlayer'
-import MinionZoneString from '../interfaces/MinionZoneString'
+import MinionZoneString from '../stringTypes/MinionZoneString'
 
 class PlayerTwoMinion extends Minion {
   constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
@@ -15,7 +15,8 @@ class PlayerTwoMinion extends Minion {
       3, 
       4, 
       '', 
-      null, 
+      [], 
+      [],
       false, 
       null, 
       null

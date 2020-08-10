@@ -1,11 +1,11 @@
 import Enchantment from './Enchantment'
 import Game from '../Game'
 import Card from './Card'
-import ZoneString from '../interfaces/ZoneString'
-import ObjectTypeString from '../interfaces/ObjectTypeString'
-import EnchantmentEffect from '../interfaces/EnchantmentEffect'
-import AuraTargetTypes from '../interfaces/AuraTargetTypes'
-import TargetRequirement from '../interfaces/TargetRequirement'
+import ZoneString from '../stringTypes/ZoneString'
+import ObjectTypeString from '../stringTypes/ObjectTypeString'
+import EnchantmentEffect from '../structs/EnchantmentEffect'
+import AuraTargetTypes from '../structs/AuraTargetTypes'
+import TargetRequirement from '../functionTypes/TargetRequirement'
 
 abstract class AuraEnchantment extends Enchantment {
     categories: EffectCategoryString[]

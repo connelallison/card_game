@@ -1,8 +1,8 @@
 import Game from "../Game";
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import ObjectTypeString from "../interfaces/ObjectTypeString";
-import ZoneString from "../interfaces/ZoneString";
-import AurasObject from "../interfaces/AurasObject";
+import ObjectTypeString from "../stringTypes/ObjectTypeString";
+import ZoneString from "../stringTypes/ZoneString";
+import AurasObject from "../structs/AurasObject";
 
 class AuraManager {
     game: Game

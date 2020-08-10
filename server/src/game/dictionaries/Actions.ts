@@ -16,7 +16,7 @@ const Actions: { [index: string]: ActionFactory } = {
         }
     },
 
-    damageWeakestEnemyMinion: (value: number = 0) => {
+    damageWeakestEnemyUnit: (value: number = 0) => {
         return (source: GameObject) => {
             const targets = source.controller().opponent.board
             const target = source.game.utils.findMinByCriterion(targets, (target) => target.attack)

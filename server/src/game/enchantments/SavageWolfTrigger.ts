@@ -1,12 +1,12 @@
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import Game from "../Game";
 import Card from "../gameObjects/Card";
-import Minion from "../gameObjects/Minion";
+import Unit from "../gameObjects/Unit";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";
 import TriggerActions from "../dictionaries/TriggerActions";
 
 class SavageWolfTrigger extends TriggerEnchantment {
-    owner: Minion
+    owner: Unit
 
     constructor(game: Game, owner: Card) {
         super(
@@ -15,13 +15,13 @@ class SavageWolfTrigger extends TriggerEnchantment {
             'SavageWolf:Trigger', 
             'Savage Wolf Trigger', 
             ['board'],
-            ['minion'],
+            ['unit'],
             [],
             true,
             ['afterDeath'],
             [{
                 eventType: 'afterDeath',
-                requirements: [TriggerRequirements.isMinion('object'), TriggerRequirements.isFriendly('object')],
+                requirements: [TriggerRequirements.isUnit('object'), TriggerRequirements.isFriendly('object')],
                 actions: [TriggerActions.buffCharOwnerAttackAndHealth(1, 1)]
             }]
         )

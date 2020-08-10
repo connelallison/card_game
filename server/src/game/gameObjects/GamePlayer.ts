@@ -2,7 +2,7 @@ import GenericLeader from '../cards/GenericLeader'
 import Game from '../Game'
 import Leader from './Leader'
 import Card from './Card'
-import Minion from './Minion'
+import Unit from './Unit'
 import ObjectReport from '../structs/ObjectReport'
 
 class GamePlayer {
@@ -18,7 +18,7 @@ class GamePlayer {
   maxHand: number
   deck: Card[]
   fatigueCounter: number
-  board: Minion[]
+  board: Unit[]
   maxBoard: number
   graveyard: Card[]
   passives: any[]
@@ -54,8 +54,8 @@ class GamePlayer {
   }
 
   boardReport(): ObjectReport[] {
-    return this.board.map((minion) => {
-      return minion.provideReport()
+    return this.board.map((unit) => {
+      return unit.provideReport()
     })
   }
 

@@ -1,11 +1,11 @@
 const GamePlayer = require('../game/GamePlayer')
 const Card = require('../game/Card')
-const Minion = require('../game/Minion')
+const Unit = require('../game/Unit')
 const Spell = require('../game/Spell')
 
 const testPlayer = new GamePlayer('testPlayer')
 for (let i = 0; i < 10; i++) {
-  const card = new Minion(`testMinion ${i}`, 0, 1, 1)
+  const card = new Unit(`testUnit ${i}`, 0, 1, 1)
   testPlayer.deck.push(card)
   card.zone = 'deck'
 }

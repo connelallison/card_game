@@ -10,13 +10,13 @@ import AuraEnchantment from './AuraEnchantment'
 import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Character extends Card {
-  type: 'leader' | 'minion'
+  type: 'leader' | 'unit'
   rawAttack: number
   ready: boolean
   attack: number
   health: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'minion', rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: TargetRequirement[]) {
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'unit', rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: TargetRequirement[]) {
     super(game, owner, zone, id, name, type, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
     this.rawAttack = rawAttack
     this.attack = this.rawAttack

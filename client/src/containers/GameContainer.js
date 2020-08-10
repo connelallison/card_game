@@ -184,9 +184,9 @@ class GameContainer extends Component {
             <Leader mine={false} object={this.state.gameState.opponent.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <br />
-          <BoardHalf mine={false} minions={this.state.gameState.opponent.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+          <BoardHalf mine={false} units={this.state.gameState.opponent.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           <br />
-          <BoardHalf mine minions={this.state.gameState.my.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+          <BoardHalf mine units={this.state.gameState.my.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           <br />
           <div className='leaderDiv'>
             <Leader mine object={this.state.gameState.my.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />

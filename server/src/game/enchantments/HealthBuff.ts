@@ -12,7 +12,7 @@ class HealthBuff extends StaticEnchantment {
             'HealthBuff', 
             'Health Buff', 
             ['board', 'hand', 'deck', 'leader'],
-            ['minion', 'leader'],
+            ['unit', 'leader'],
             [],
             ['stats'],
             [{

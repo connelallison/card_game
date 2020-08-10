@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class Minion extends Component {
+class Unit extends Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -32,7 +32,7 @@ class Minion extends Component {
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
-    const styleClasses = outlineStatus + " minion card"
+    const styleClasses = outlineStatus + " unit card"
     return (
       <div onClick={this.handleClick} className={styleClasses}>
         <p className='card-name'>{this.props.object.name}</p>
@@ -49,4 +49,4 @@ class Minion extends Component {
 
 }
 
-export default Minion
+export default Unit

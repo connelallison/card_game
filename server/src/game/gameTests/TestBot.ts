@@ -29,14 +29,14 @@ const TestBot = async (game: Game) => {
         }
     }
     if (!game.gameOver && game.turn.activePlayer.bot) {
-        const readyMinions = game.turn.activePlayer.board.filter(minion => minion.canAttack())
-        for (const minion of readyMinions) {
-            const targets = (minion.owner.opponent.board as Character[]).concat(minion.owner.opponent.leader as Character[])
+        const readyUnits = game.turn.activePlayer.board.filter(unit => unit.canAttack())
+        for (const unit of readyUnits) {
+            const targets = (unit.owner.opponent.board as Character[]).concat(unit.owner.opponent.leader as Character[])
             for (const target of targets) {
-                if (game.permissions.canAttack(minion, target)) {
+                if (game.permissions.canAttack(unit, target)) {
                     await game.sleep(1000)
                     game.phases.proposedAttackPhase({
-                        attacker: minion,
+                        attacker: unit,
                         defender: target,
                     })
                     game.announceGameState()

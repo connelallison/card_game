@@ -12,7 +12,7 @@ class AuraManager {
         this.game = game;
         this.auras = {
             stats: {
-                minion: {
+                unit: {
                     hand: [],
                     deck: [],
                     board: [],
@@ -28,7 +28,7 @@ class AuraManager {
                 },
             },
             flags: {
-                minion: {
+                unit: {
                     hand: [],
                     deck: [],
                     board: [],

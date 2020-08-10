@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Minion from './Minion.js'
+import Unit from './Unit.js'
 
 class BoardHalf extends Component {
   constructor(props) {
@@ -24,24 +24,24 @@ class BoardHalf extends Component {
   // }
 
   render() {
-    let minionList
-    if (this.props.minions.length > 0) {
+    let unitList
+    if (this.props.units.length > 0) {
       if (this.props.mine) {
-        minionList = this.props.minions.map((minion) => {
+        unitList = this.props.units.map((unit) => {
           return (
-            <Minion object={minion} selected={this.props.selected} interactivity={this.props.interactivity} />
+            <Unit object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
           )
         })
       } else {
-        minionList = this.props.minions.map((minion) => {
+        unitList = this.props.units.map((unit) => {
           return (
-            <Minion object={minion} selected={this.props.selected} interactivity={this.props.interactivity} />
+            <Unit object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
           )
         })
       }
     } else {
-      minionList = [
-        <p>No minions on board.</p>,
+      unitList = [
+        <p>No units on board.</p>,
         <br />,
         <br />,
         <br />,
@@ -58,9 +58,9 @@ class BoardHalf extends Component {
 
     return (
       <div className="boardhalf">
-        {/* <p className='lowerMargin'>{owner} current minions:</p> */}
+        {/* <p className='lowerMargin'>{owner} current units:</p> */}
         <div className='cardList'>
-          {minionList}
+          {unitList}
         </div>
       </div>
     )

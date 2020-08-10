@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
     // console.log(`server: newGameStatus:${socketID}`);
     serverEvent.on(`newGameStatus:${socketID}`, function (gameState) {
       // console.log(gameState);
-      console.log(`server: newGameStatus:${socketID}`)
+      // console.log(`server: newGameStatus:${socketID}`)
       socket.emit('gameStateUpdate', gameState)
     })
 

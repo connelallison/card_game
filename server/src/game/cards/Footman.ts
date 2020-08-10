@@ -1,11 +1,11 @@
-import Minion from '../gameObjects/Minion'
+import Unit from '../gameObjects/Unit'
 import Game from '../Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
-import MinionZoneString from '../stringTypes/MinionZoneString'
+import UnitZoneString from '../stringTypes/UnitZoneString'
 
-class Footman extends Minion {
-  constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
+class Footman extends Unit {
+  constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 
       owner, 

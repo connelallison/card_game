@@ -1,11 +1,11 @@
-import Minion from '../gameObjects/Minion'
+import Unit from '../gameObjects/Unit'
 import Game from '../Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
-import MinionZoneString from '../stringTypes/MinionZoneString'
+import UnitZoneString from '../stringTypes/UnitZoneString'
 
-class JuniorOrc extends Minion {
-  constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
+class JuniorOrc extends Unit {
+  constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 
       owner, 
@@ -15,7 +15,7 @@ class JuniorOrc extends Minion {
       2, 
       3, 
       3, 
-      'Your other minions have +1 Attack.', 
+      'Your other units have +1 Attack.', 
       [], 
       [],
       false, 

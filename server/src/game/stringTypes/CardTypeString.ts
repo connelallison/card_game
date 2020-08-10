@@ -1,3 +1,3 @@
-type CardTypeString = 'leader' | 'minion' | 'spell'
+type CardTypeString = 'leader' | 'unit' | 'spell'
 
 export default CardTypeString

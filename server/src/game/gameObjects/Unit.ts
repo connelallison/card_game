@@ -3,17 +3,17 @@ import GamePlayer from './GamePlayer'
 import ObjectReport from '../structs/ObjectReport'
 import Character from './Character'
 import StaticEnchantment from './StaticEnchantment'
-import MinionZoneString from '../stringTypes/MinionZoneString'
+import UnitZoneString from '../stringTypes/UnitZoneString'
 import Action from '../functionTypes/Action'
 import PlayRequirement from '../functionTypes/PlayRequirement'
 
-abstract class Minion extends Character {
-  zone: MinionZoneString
-  type: 'minion'
+abstract class Unit extends Character {
+  zone: UnitZoneString
+  type: 'unit'
   rawHealth: number
 
-  constructor(game: Game, owner: GamePlayer, zone: MinionZoneString, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
-    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
+    super(game, owner, zone, id, name, 'unit', rawCost, rawAttack, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
     this.rawHealth = rawHealth
     this.health = this.rawHealth,
 
@@ -75,7 +75,7 @@ abstract class Minion extends Character {
     if (this.zone === 'board') {
       this.ready = true
     } else {
-      throw new Error(`getReady() is being called on a minion (${this.name}) with this.zone not set to board`)
+      throw new Error(`getReady() is being called on a unit (${this.name}) with this.zone not set to board`)
     }
   }
 
@@ -91,7 +91,7 @@ abstract class Minion extends Character {
     return this.zone === 'board'
   }
 
-  moveZone(destination: MinionZoneString): void {
+  moveZone(destination: UnitZoneString): void {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
@@ -103,4 +103,4 @@ abstract class Minion extends Character {
   }
 }
 
-export default Minion
+export default Unit

@@ -10,7 +10,7 @@ import Permissions from './gameSystems/Permissions'
 import Utils from './gameSystems/Utils'
 import TestBot from './gameTests/TestBot'
 // import Card from "./Card";
-// import Minion from "./Minion";
+// import Unit from "./Unit";
 // import Spell from "./Spell";
 // import { Deck, deck1, deck2 } from "./Deck";
 // import EventEmitter from 'events'
@@ -191,7 +191,7 @@ class Game {
       }
     }
     // if (player.myTurn() && selected.owner === player) {
-    //   if (selected.zone === "leader" || selected.zone === "board" && selected.type === "minion") {
+    //   if (selected.zone === "leader" || selected.zone === "board" && selected.type === "unit") {
     //     if (selected.canAttackTarget(target)) {
     //       this.phases.proposedAttackPhase({
     //         attacker: selected,
@@ -293,8 +293,8 @@ class Game {
   }
 
   async start () {
-    this.player1.board.push(new Cards['PlayerOneMinion'](this, this.player1, 'board'))
-    this.player2.board.push(new Cards['PlayerTwoMinion'](this, this.player2, 'board'))
+    this.player1.board.push(new Cards['PlayerOneUnit'](this, this.player1, 'board'))
+    this.player2.board.push(new Cards['PlayerTwoUnit'](this, this.player2, 'board'))
     this.inPlay.push(this.player1.board[0])
     this.inPlay.push(this.player2.board[0])
     console.log('starting game')

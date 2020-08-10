@@ -1,5 +1,5 @@
 import Game from "../Game";
-import Minion from "../gameObjects/Minion";
+import Unit from "../gameObjects/Unit";
 import Character from "../gameObjects/Character";
 import Leader from "../gameObjects/Leader";
 import DeathEvent from "../gameEvents/DeathEvent";
@@ -48,8 +48,8 @@ class PhaseManager {
                     console.log('leader is dead')
                     this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
                     this.game.endGame()
-                } else if (character instanceof Minion) {
-                    console.log("minion is dying: ", character.name)
+                } else if (character instanceof Unit) {
+                    console.log("unit is dying: ", character.name)
                     this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
                     const deathEvent = new DeathEvent(this.game, {
                         object: character,
@@ -108,20 +108,20 @@ class PhaseManager {
 
     playPhase(eventObject: PlayEventObject): void {
         const event = new PlayEvent(this.game, eventObject)
-        if (event.card.type === 'minion') {
-            this.playPhaseMinion(event)
+        if (event.card.type === 'unit') {
+            this.playPhaseUnit(event)
         } else if (event.card.type === 'spell') {
             this.playPhaseSpell(event)
         }
         this.deathPhase()
     }
 
-    playPhaseMinion(event: PlayEvent): void {
+    playPhaseUnit(event: PlayEvent): void {
         const { player, target = null } = event
-        const minion = event.card as Minion
-        player.spendMana(minion.cost)
-        minion.moveZone('board')
-        this.game.inPlay.push(minion)
+        const unit = event.card as Unit
+        player.spendMana(unit.cost)
+        unit.moveZone('board')
+        this.game.inPlay.push(unit)
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
         this.game.event.emit('onSummon', event)

@@ -30,13 +30,13 @@ class Utils {
             const targetDomain = []
             zones.forEach(zone => {
                 switch (zone) {
-                    case 'enemyMinions':
+                    case 'enemyUnits':
                         targetDomain.push(...player.opponent.board)
                         break
                     case 'enemyLeader':
                         targetDomain.push(player.opponent.leader)
                         break
-                    case 'friendlyMinions':
+                    case 'friendlyUnits':
                         targetDomain.push(...player.board)
                         break
                     case 'friendlyLeader':
@@ -51,7 +51,7 @@ class Utils {
     }
 
     notBehindGuard(character: Character) {
-        return character.flags.guard || character.controller().board.every(minion => minion.flags.guard !== true)
+        return character.flags.guard || character.controller().board.every(unit => unit.flags.guard !== true)
     }
 }
 

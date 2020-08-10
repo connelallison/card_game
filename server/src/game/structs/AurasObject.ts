@@ -2,7 +2,7 @@ import AuraEnchantment from "../gameObjects/AuraEnchantment";
 
 interface AurasObject {
     stats: {
-        minion: {
+        unit: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
             board: AuraEnchantment[],
@@ -18,7 +18,7 @@ interface AurasObject {
         },
     },
     flags: {
-        minion: {
+        unit: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
             board: AuraEnchantment[],

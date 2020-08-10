@@ -1,5 +1,5 @@
 import Game from "../Game"
-import Minion from "../gameObjects/Minion"
+import Unit from "../gameObjects/Unit"
 import Card from "../gameObjects/Card"
 import GamePlayer from "../gameObjects/GamePlayer"
 import Spell from "../gameObjects/Spell"
@@ -35,7 +35,7 @@ class Permissions {
             && card.zone === 'hand'
             && card.cost <= player.currentMana
             && (card.targeted ? card.validTargets.length > 0 : true )
-            && (card instanceof Minion ? player.board.length < player.maxBoard : true)
+            && (card instanceof Unit ? player.board.length < player.maxBoard : true)
             && card.playRequirements.every(requirement => requirement(card))
         )
     }

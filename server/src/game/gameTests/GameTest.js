@@ -2,7 +2,7 @@ const GamePlayer = require('../GamePlayer')
 const Game = require('../Game')
 // const Cards = require("../CardLib");
 // const Card = require("../Card");
-// const Minion = require("../Minion");
+// const Unit = require("../Unit");
 // const Spell = require("../Spell");
 // const { Deck, deck1, deck2 } = require("../Deck");
 // const { deck } = require("../DeckLib");
@@ -29,14 +29,14 @@ const testGame = new Game('player 1', 'player 2', 'TestDeckTwo', 'TestDeckTwo', 
 // // console.log(testGame.player2.deck);
 // // console.log(testGame.allActive());
 // // setTimeout(testGame.activePlayer.playableCards.bind(testGame.activePlayer), 1000);
-// console.log("\nPlayer 1 Minion attack targets:");
+// console.log("\nPlayer 1 Unit attack targets:");
 // console.log(testGame.player1.board[0].attackTargets().length);
 // console.log(testGame.player1.board[0].attackTargets());
-// console.log("\nPlayer 2 Minion attack targets:");
+// console.log("\nPlayer 2 Unit attack targets:");
 // console.log(testGame.player2.board[0].attackTargets());
-// console.log("\nPlayer 1 Minion can attack: ")
+// console.log("\nPlayer 1 Unit can attack: ")
 // testGame.player1.board[0].canAttack();
-// setTimeout(console.log, 12000, "\nPlayer 1 Minion can attack: ");
+// setTimeout(console.log, 12000, "\nPlayer 1 Unit can attack: ");
 // setTimeout(testGame.player1.board[0].canAttack.bind(testGame.player1.board[0]), 12000);
 // setTimeout(console.log, 11800, "Player 1 hand: ")
 // setTimeout(console.log, 11900, testGame.player1.playableCards.bind(testGame.player1).length)

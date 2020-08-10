@@ -1,9 +1,9 @@
 import TriggerRequirementFactory from "../functionTypes/TriggerRequirementFactory"
-import Minion from "../gameObjects/Minion"
+import Unit from "../gameObjects/Unit"
 import GameEvent from "../gameEvents/GameEvent"
 
 const TriggerRequirements: {[index: string]: TriggerRequirementFactory} = {
-    isMinion: (property: string) => (event: GameEvent, enchantment) => (event[property] instanceof Minion),
+    isUnit: (property: string) => (event: GameEvent, enchantment) => (event[property] instanceof Unit),
     isFriendly: (property: string) => (event: GameEvent, enchantment) => (event[property].controller() === enchantment.controller())
 }
 

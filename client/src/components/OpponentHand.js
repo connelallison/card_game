@@ -1,5 +1,5 @@
 import React from 'react'
-import Minion from './Minion.js'
+import Unit from './Unit.js'
 import Spell from './Spell.js'
 import Unknown from './Unknown.js'
 
@@ -9,16 +9,16 @@ const OpponentHand = (props) => {
     cardList = props.cards.map((card) => {
       if (card.type === 'unknown') {
         return (<Unknown />)
-      } else if (card.type === 'minion') {
+      } else if (card.type === 'unit') {
         return (
-          <Minion name={card.name} cost={card.cost} attack={card.attack} health={card.health} />
+          <Unit name={card.name} cost={card.cost} attack={card.attack} health={card.health} />
         )
       } else if (card.type === 'spell') {
         return (
           <Spell name={card.name} cost={card.cost} />
         )
       } else {
-        return new Error('card is neither a minion nor a spell')
+        return new Error('card is neither a unit nor a spell')
       }
     })
   } else {

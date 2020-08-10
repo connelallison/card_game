@@ -1,12 +1,11 @@
 import GamePlayer from './gameObjects/GamePlayer'
-import Cards from './libraries/CardLib'
-import Decks from './libraries/DeckLib'
+import Cards from './dictionaries/Cards'
+import Decks from './dictionaries/Decks'
 import AuraManager from './gameSystems/AuraManager'
 import PhaseManager from './gameSystems/PhaseManager'
 import Turn from './gameObjects/Turn'
-import Constraints from './libraries/Constraints'
-import Actions from './libraries/Actions'
-import Effects from './libraries/EffectLib'
+import Actions from './dictionaries/Actions'
+import Effects from './dictionaries/Effects'
 import Permissions from './gameSystems/Permissions'
 import Utils from './gameSystems/Utils'
 import TestBot from './gameTests/TestBot'
@@ -16,13 +15,18 @@ import TestBot from './gameTests/TestBot'
 // import { Deck, deck1, deck2 } from "./Deck";
 // import EventEmitter from 'events'
 import serverEvent from '../ServerEvent'
-import GameEvent from './gameSystems/GameEvent'
 import GameObject from './gameObjects/GameObject'
 import Card from './gameObjects/Card'
 import Character from './gameObjects/Character'
+import { EventEmitter } from 'events'
+import EventCache from './gameEvents/EventCache'
+import Effect from './functionTypes/Effect'
+import ActionFactory from './functionTypes/ActionFactory'
+import TargetRequirementFactory from './functionTypes/TargetRequirementFactory'
+import TargetRequirements from './dictionaries/TargetRequirements'
 
 class Game {
-  event: GameEvent
+  event: EventEmitter
   botPlayer1: boolean
   botPlayer2: boolean
   debug: boolean
@@ -34,13 +38,13 @@ class Game {
   player2: GamePlayer
   auras: AuraManager
   phases: PhaseManager
-  constraints: Constraints
-  actions: Actions
-  effects: Effects
+  targetRequirements: {[index: string]: TargetRequirementFactory}
+  actions: {[index: string]: ActionFactory}
+  effects: {[index: string]: Effect}
   permissions: Permissions
   utils: Utils
   inPlay: GameObject[]
-  eventCache: object
+  eventCache: EventCache
   player1deckID: string
   player2deckID: string
   gameOver: boolean
@@ -52,7 +56,8 @@ class Game {
   winner: string
 
   constructor (player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
-    this.event = new GameEvent()
+    this.event = new EventEmitter()
+    this.event.setMaxListeners(100)
     this.botPlayer1 = botPlayer1
     this.botPlayer2 = botPlayer2
     this.debug = debug
@@ -64,13 +69,14 @@ class Game {
     this.player2 = new GamePlayer(this, player2name, player2socketID)
     this.auras = new AuraManager(this)
     this.phases = new PhaseManager(this)
-    this.constraints = new Constraints(this)
-    this.actions = new Actions(this)
-    this.effects = new Effects(this)
+    this.targetRequirements = TargetRequirements
+    this.actions = Actions
+    this.effects = Effects
     this.permissions = new Permissions(this)
     this.utils = new Utils(this)
-    this.inPlay = [this.player1.leader, this.player2.leader]
+    this.inPlay = [this.player1.leader[0], this.player2.leader[0]]
     this.eventCache = { 
+      all: [],
       death: [],
       play: [],
       spell: [],
@@ -167,7 +173,6 @@ class Game {
           this.phases.proposedAttackPhase({
             attacker: selected,
             defender: target,
-            cancelled: false,
           })  
         }
       }

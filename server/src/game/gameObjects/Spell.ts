@@ -1,9 +1,18 @@
 import Card from './Card'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
+import Game from '../Game'
+import GamePlayer from './GamePlayer'
+import SpellZoneString from '../stringTypes/SpellZoneString'
+import Action from '../functionTypes/Action'
+import TargetRequirement from '../functionTypes/TargetRequirement'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Spell extends Card {
-  constructor (game, owner, zone, id, name, rawCost, staticCardText, actions, targeted, targetDomain, targetConstraints) {
-    super(game, owner, zone, id, name, 'spell', rawCost, staticCardText, actions, targeted, targetDomain, targetConstraints)
+  zone: SpellZoneString
+  type: 'spell'
+
+  constructor (game: Game, owner: GamePlayer, zone: SpellZoneString, id: string, name: string, rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetConstraints: TargetRequirement[]) {
+    super(game, owner, zone, id, name, 'spell', rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
   }
 
   provideReport (): ObjectReport {
@@ -24,6 +33,13 @@ abstract class Spell extends Card {
       validTargets: this.validTargetIDs(),
       staticCardText: this.staticCardText,
     }
+  }
+
+  moveZone(destination: SpellZoneString): void {
+    this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+    this.owner[destination].push(this)
+    this.zone = destination
+    this.updateEnchantments()
   }
 }
 

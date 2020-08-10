@@ -1,16 +1,22 @@
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 import Character from './Character'
-import StaticEnchantment from './StaticEnchantment'
+import LeaderZoneString from '../stringTypes/LeaderZoneString'
+import Action from '../functionTypes/Action'
+import TargetRequirement from '../functionTypes/TargetRequirement'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Leader extends Character {
-  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, rawCost: number, rawAttack: number, staticCardText: string, actions: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
-    super(game, owner, zone, id, name, 'leader', rawCost, rawAttack, staticCardText, actions, targeted, targetDomain, targetConstraints)
+  zone: LeaderZoneString
+  type: 'leader'
+
+  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]) {
+    super(game, owner, zone, id, name, 'leader', rawCost, rawAttack, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     // this.health = 20
     this.health = this.owner.health,
 
-    this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
+      this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
   provideReport(): ObjectReport {
@@ -36,37 +42,7 @@ abstract class Leader extends Character {
     }
   }
 
-  updateStats(): void {
-    const stats = {
-      attack: this.rawAttack,
-      health: this.owner.health,
-    }
-
-    this.enchantments.forEach(enchantment => {
-      if (
-        enchantment instanceof StaticEnchantment
-        && enchantment.categories.includes('stats') 
-        && enchantment.active()
-        ) {
-          enchantment.effects.forEach(effect => {
-            if (effect.category === 'stats') effect.effect(stats, effect.value)
-          })
-        }
-    })
-
-    this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
-      if (enchantment.targetRequirements.every(requirement => requirement(this, enchantment))) {
-      enchantment.effects.forEach(effect => {
-        if (effect.category === 'stats') effect.effect(stats, effect.value)
-      })
-    }
-  })
-
-    this.attack = stats.attack
-    this.health = stats.health
-  }
-
-  takeDamage(damage): void {
+    takeDamage(damage): void {
     if (damage > 0) {
       this.owner.health -= damage
       this.updateStats()
@@ -81,6 +57,17 @@ abstract class Leader extends Character {
 
   inPlay(): boolean {
     return this.zone === 'leader'
+  }
+
+  baseStats() {
+    return { attack: this.rawAttack, health: this.owner.health }
+  }
+
+  moveZone(destination: LeaderZoneString): void {
+    this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+    this.owner[destination].push(this)
+    this.zone = destination
+    this.updateEnchantments()
   }
 }
 

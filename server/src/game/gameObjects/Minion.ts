@@ -1,18 +1,23 @@
 import Game from '../Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 import Character from './Character'
 import StaticEnchantment from './StaticEnchantment'
+import MinionZoneString from '../stringTypes/MinionZoneString'
+import Action from '../functionTypes/Action'
+import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Minion extends Character {
+  zone: MinionZoneString
+  type: 'minion'
   rawHealth: number
 
-  constructor(game: Game, owner: GamePlayer, zone: string, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: any[], targeted: boolean, targetDomain: any, targetConstraints: any) {
-    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, actions, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: MinionZoneString, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
+    super(game, owner, zone, id, name, 'minion', rawCost, rawAttack, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
     this.rawHealth = rawHealth
     this.health = this.rawHealth,
 
-      this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
+    this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
   provideReport(): ObjectReport {
@@ -38,45 +43,15 @@ abstract class Minion extends Character {
     }
   }
 
-  updateStats(): void {
-    const stats = {
-      attack: this.rawAttack,
-      health: this.rawHealth,
-    }
-
-    this.enchantments.forEach(enchantment => {
-      if (
-        enchantment instanceof StaticEnchantment
-        && enchantment.categories.includes('stats')
-        && enchantment.active()
-      ) {
-        enchantment.effects.forEach(effect => {
-          if (effect.category === 'stats') effect.effect(stats, effect.value)
-        })
-      }
-    })
-
-    this.game.auras.auras.stats[this.type][this.zone].forEach(enchantment => {
-      if (enchantment.targetRequirements.every(requirement => requirement(this, enchantment))) {
-        enchantment.effects.forEach(effect => {
-          if (effect.category === 'stats') effect.effect(stats, effect.value)
-        })
-      }
-    })
-
-    this.attack = stats.attack
-    this.health = stats.health
-  }
-
   updateValidTargets(): void {
     if (this.zone === 'hand' && this.targeted) {
       let newTargets = this.targetDomain(this.owner)
-      this.targetConstraints.forEach(constraint => {
-        newTargets = newTargets.filter(target => constraint(this.controller(), this, target))
+      this.targetRequirements.forEach(targetRequirement => {
+        newTargets = newTargets.filter(target => targetRequirement(this, target))
       })
       this.validTargets = newTargets
     } else if (this.zone === 'board') {
-      this.validTargets = [this.owner.opponent.leader].concat(this.owner.opponent.board).filter(defender => {
+      this.validTargets = (this.owner.opponent.leader as Character[]).concat(this.owner.opponent.board).filter(defender => {
         return this.game.permissions.canAttack(this, defender)
       })
     } else {
@@ -114,6 +89,17 @@ abstract class Minion extends Character {
 
   inPlay(): boolean {
     return this.zone === 'board'
+  }
+
+  moveZone(destination: MinionZoneString): void {
+    this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+    this.owner[destination].push(this)
+    this.zone = destination
+    this.updateEnchantments()
+  }
+
+  baseStats() {
+    return { attack: this.rawAttack, health: this.rawHealth }
   }
 }
 

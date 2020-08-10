@@ -23,8 +23,8 @@ class Permissions {
     canTarget (card: Card, target: Card): boolean {
         return (
             card.targeted 
-            && card.targetDomain(card.owner).includes(target)
-            && card.targetConstraints.every(constraint => constraint(card.controller(), card, target))
+            && card.targetDomain(card.controller()).includes(target)
+            && card.targetRequirements.every(requirement => requirement(card, target))
         )
     }
 
@@ -34,8 +34,9 @@ class Permissions {
             && player.myTurn()
             && card.zone === 'hand'
             && card.cost <= player.currentMana
-            && (card !instanceof Spell || !card.targeted || card.validTargets.length > 0)
-            && (card !instanceof Minion || player.board.length < player.maxBoard)
+            && (card.targeted ? card.validTargets.length > 0 : true )
+            && (card instanceof Minion ? player.board.length < player.maxBoard : true)
+            && card.playRequirements.every(requirement => requirement(card))
         )
     }
 }

@@ -3,7 +3,7 @@ import Game from '../Game'
 import Leader from './Leader'
 import Card from './Card'
 import Minion from './Minion'
-import ObjectReport from '../interfaces/ObjectReport'
+import ObjectReport from '../structs/ObjectReport'
 
 class GamePlayer {
   game: Game
@@ -11,7 +11,7 @@ class GamePlayer {
   playerID: string
   socketID: string
   health: number
-  leader: Leader
+  leader: Leader[]
   maxMana: number
   currentMana: number
   hand: Card[]
@@ -31,7 +31,7 @@ class GamePlayer {
     this.playerID = `${this.name}:${Math.random()}`
     this.socketID = socketID
     this.health = 20
-    this.leader = new GenericLeader(this.game, this, 'leader')
+    this.leader = [new GenericLeader(this.game, this, 'leader')]
     this.maxMana = 2
     this.currentMana = 2
     this.hand = []
@@ -50,7 +50,7 @@ class GamePlayer {
   }
 
   leaderReport() {
-    return Object.assign({}, this.leader.provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
+    return Object.assign({}, this.leader[0].provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
   }
 
   boardReport(): ObjectReport[] {
@@ -110,58 +110,15 @@ class GamePlayer {
   }
 
   playableCards(): Card[] {
-    // console.log("this.hand is: " + this.hand);
-    // console.log("this.playableCards() is: " + this.hand.filter(card => this.canPlay(card)));
     return this.hand.filter(card => this.canPlay(card))
-    // console.log(this.hand.filter(this.canPlay.bind(this)));
   }
 
   canPlay(card): boolean {
-    // console.log(card);
-    // if (card.type === 'minion') {
-    //   return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana && this.board.length < this.maxBoard 
-    // } else if (card.type === 'spell') {
-    //   return this.myTurn() && this.hand.includes(card) && card.cost <= this.currentMana 
-    // } else {
-    //   throw new Error(`Card (${card.name}) has ${card.type} for its type.`)
-    // }
     return this.game.permissions.canPlay(this, card)
   }
-
-  // play(card) {
-  //   // console.log(this.currentMana);
-  //   if (this.canPlay(card)) {
-  //     this.spendMana(card.cost)
-  //     if (card.type === 'minion') {
-  //       this.board.push(this.hand.splice(this.hand.indexOf(card), 1)[0])
-  //       card.zone = 'board'
-  //       card.updateEnchantments()
-  //       this.game.inPlay.push(card)
-  //       // this.played.push(card)
-  //       // this.summoned.push(card)
-  //       // card.onPlay()
-  //       this.game.announceGameState()
-  //     } else if (card.type === 'spell') {
-  //       this.graveyard.push(this.hand.splice(this.hand.indexOf(card), 1)[0])
-  //       card.zone = 'graveyard'
-  //       card.updateEnchantments()
-  //       // this.played.push(card)
-  //       // card.onPlay()
-  //       this.game.announceGameState()
-  //     }
-  //   }
-  // }
-
-  // summon(cardID) {
-  //   if (this.board.length < this.maxBoard) {
-  //     const card = create(this.game, this, 'board', cardID)
-  //     this.board.push(card)
-  //     this.game.inPlay.push(card)
-  //   }
-  // }
-
+  
   alive(): boolean {
-    return this.leader.health > 0
+    return this.leader[0].health > 0
   }
 
   spendMana(amount): void {

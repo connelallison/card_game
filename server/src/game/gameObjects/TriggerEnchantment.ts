@@ -1,16 +1,22 @@
 import Enchantment from './Enchantment'
 import Game from '../Game'
 import Card from './Card'
+import Trigger from '../structs/Trigger'
+import GameEvent from '../gameEvents/GameEvent'
+import TriggerTypeString from '../stringTypes/TriggerTypeString'
+import ZoneString from '../stringTypes/ZoneString'
+import ObjectTypeString from '../stringTypes/ObjectTypeString'
+import TriggerAction from '../functionTypes/TriggerAction'
 
 abstract class TriggerEnchantment extends Enchantment {
     repeatable: boolean
-    eventTypes: string[]
-    triggers: any[]
+    triggerTypes: TriggerTypeString[]
+    triggers: Trigger[]
 
-    constructor(game: Game, owner: Card, id: string, name: string, activeZones: string[], activeTypes: string[], activeRequirements: any[] = [], repeatable: boolean, eventTypes: string[], triggers: any[]) {
+    constructor(game: Game, owner: Card, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: any[] = [], repeatable: boolean, triggerTypes: TriggerTypeString[], triggers: Trigger[]) {
         super(game, owner, id, name, activeZones, activeTypes, activeRequirements = [])
         this.repeatable = repeatable
-        this.eventTypes = eventTypes
+        this.triggerTypes = triggerTypes
         this.triggers = triggers
         this.wrapTriggers()
     }
@@ -28,27 +34,27 @@ abstract class TriggerEnchantment extends Enchantment {
         return active
     }
 
-    enableListeners() {
+    enableListeners(): void {
         this.triggers.forEach(trigger => {
             this.game.event.on(trigger.eventType, trigger.wrapped)
         })
     }
 
-    disableListeners() {
+    disableListeners(): void {
         this.triggers.forEach(trigger => {
             this.game.event.removeListener(trigger.eventType, trigger.wrapped)
         })
     }
 
-    wrapTriggers() {
+    wrapTriggers(): void {
         this.triggers.forEach(trigger => trigger.wrapped = this.wrapActions(trigger))
     }
 
-    wrapActions(trigger) {
-        return (event) => {
-            if (trigger.requirements.every(requirement => requirement(event))) {
+    wrapActions(trigger: Trigger): TriggerAction {
+        return (event: GameEvent) => {
+            if (trigger.requirements.every(requirement => requirement(event, this))) {
                 trigger.actions.forEach(action => {
-                    action(event)
+                    action(event, this)
                 })
                 if (!this.repeatable) this.owner.removeEnchantment(this)
             }

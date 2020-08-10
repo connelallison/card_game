@@ -1,15 +1,18 @@
 import Game from '../Game'
 import GameObject from './GameObject'
 import Card from './Card'
+import ZoneString from '../stringTypes/ZoneString'
+import ObjectTypeString from '../stringTypes/ObjectTypeString'
+import Character from './Character'
 
 abstract class Enchantment extends GameObject {
     owner: Card
-    activeZones: string[]
-    activeTypes: string[]
-    activeRequirements: any[]
+    activeZones: ZoneString[]
+    activeTypes: ObjectTypeString[]
+    activeRequirements: ((...args) => boolean)[]
     previousActive: boolean
 
-    constructor(game: Game, owner: Card, id: string, name: string, activeZones: string[], activeTypes: string[], activeRequirements: any[] = []) {
+    constructor(game: Game, owner: Card, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = []) {
         super(game, owner, id, name, 'enchantment')
         this.owner = owner
         this.activeZones = activeZones
@@ -23,7 +26,12 @@ abstract class Enchantment extends GameObject {
                       && this.activeTypes.includes(this.owner.type) 
                       && this.activeRequirements.every(requirement => requirement(this))
         this.previousActive = active
+        this.updateEnchantments()
         return active
+    }
+
+    charOwner(): Character{
+        return this.owner.charOwner()
     }
 }
 

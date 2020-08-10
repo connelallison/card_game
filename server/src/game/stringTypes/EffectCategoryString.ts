@@ -1,0 +1,1 @@
+type EffectCategoryString = 'stats' | 'flags'

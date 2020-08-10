@@ -2,10 +2,23 @@ import Game from "../Game";
 import Minion from "../gameObjects/Minion";
 import Character from "../gameObjects/Character";
 import Leader from "../gameObjects/Leader";
+import DeathEvent from "../gameEvents/DeathEvent";
+import DrawEvent from "../gameEvents/DrawEvent";
+import AttackEventObject from "../gameEvents/AttackEventObject";
+import AttackEvent from "../gameEvents/AttackEvent";
+import DamageEventObject from "../gameEvents/DamageEventObject";
+import DamageEvent from "../gameEvents/DamageEvent";
+import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
+import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
+import PlayEventObject from "../gameEvents/PlayEventObject";
+import PlayEvent from "../gameEvents/PlayEvent";
+import Spell from "../gameObjects/Spell";
+import DrawSequenceObject from "../gameEvents/DrawSequenceObject";
+import DrawSequence from "../gameEvents/DrawSequence";
 
 class PhaseManager {
     game: Game
-    deathQueue: object[]
+    deathQueue: DeathEvent[]
 
     constructor(game: Game) {
         this.game = game;
@@ -16,12 +29,14 @@ class PhaseManager {
         this.deathPhase()
     }
 
-    startOfTurnPhase(event): void {
+    startOfTurnPhase(): void {
+        const event = new StartOfTurnEvent(this.game)
         this.game.event.emit('startOfTurn', event)
         this.deathPhase()
     }
 
-    endOfTurnPhase(event): void {
+    endOfTurnPhase(): void {
+        const event = new EndOfTurnEvent(this.game)
         this.game.event.emit('endOfTurn', event)
         this.deathPhase()
     }
@@ -36,15 +51,13 @@ class PhaseManager {
                 } else if (character instanceof Minion) {
                     console.log("minion is dying: ", character.name)
                     this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
-                    character.owner.graveyard.push(character.owner.board.splice(character.owner.board.indexOf(character), 1)[0])
-                    character.zone = 'graveyard'
-                    character.updateEnchantments()
-                    const deathEvent = {
+                    const deathEvent = new DeathEvent(this.game, {
                         object: character,
                         controller: character.controller(),
-                    }
+                    })
                     this.game.turn.cacheEvent(deathEvent, 'death')
                     this.deathQueue.push(deathEvent)
+                    character.moveZone('graveyard')
                 }
             }
         })
@@ -56,21 +69,25 @@ class PhaseManager {
         }
     }
 
-    proposedAttackPhase(event): void {
+    proposedAttackPhase(eventObject: AttackEventObject): void {
+        const event = new AttackEvent(this.game, eventObject)
         this.game.event.emit('proposedAttack', event)
         this.deathPhase()
+        // console.log('attackEvent: ', event.attacker.objectID, event.defender.objectID, event.cancelled)
         if (!event.cancelled) this.attackPhase(event)
     }
 
-    attackPhase(event): void {
+    attackPhase(event: AttackEvent): void {
         this.game.event.emit('beforeAttack', event)
         this.damagePhase({
-            source: event.attacker,
+            objectSource: event.attacker,
+            charSource: event.attacker,
             target: event.defender,
             value: event.attacker.attack,
         })
         this.damagePhase({
-            source: event.defender,
+            objectSource: event.defender,
+            charSource: event.defender,
             target: event.attacker,
             value: event.defender.attack,
         })
@@ -80,15 +97,17 @@ class PhaseManager {
         this.deathPhase()
     }
 
-    damagePhase(event): void {
+    damagePhase(eventObject: DamageEventObject): void {
+        const event = new DamageEvent(this.game, eventObject)
+        // console.log('damageEvent: ', event.objectSource.objectID, event.charSource.objectID, event.target.objectID, event.value)
         this.game.event.emit('beforeDamage', event) 
-        // console.log(event.target)
         event.target.takeDamage(event.value)
         this.game.turn.cacheEvent(event, 'damage')
         this.game.event.emit('afterDamage', event)
     }
 
-    playPhase(event): void {
+    playPhase(eventObject: PlayEventObject): void {
+        const event = new PlayEvent(this.game, eventObject)
         if (event.card.type === 'minion') {
             this.playPhaseMinion(event)
         } else if (event.card.type === 'spell') {
@@ -97,63 +116,57 @@ class PhaseManager {
         this.deathPhase()
     }
 
-    playPhaseMinion(event): void {
-        const { player, card, target = null } = event
-        player.spendMana(card.cost)
-        card.moveZone('board')
-        this.game.inPlay.push(card)
+    playPhaseMinion(event: PlayEvent): void {
+        const { player, target = null } = event
+        const minion = event.card as Minion
+        player.spendMana(minion.cost)
+        minion.moveZone('board')
+        this.game.inPlay.push(minion)
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
         this.game.event.emit('onSummon', event)
-        // card.onPlay()
         this.game.event.emit('afterPlay', event)
         this.game.event.emit('afterSummon', event)
-        // this.deathPhase()
     }
 
-    playPhaseSpell(event): void {
-        const { player, card, target = null } = event
-        player.spendMana(card.cost)
-        card.moveZone('graveyard')
+    playPhaseSpell(event: PlayEvent): void {
+        const { player, target = null } = event
+        const spell = event.card as Spell
+        player.spendMana(spell.cost)
+        spell.moveZone('graveyard')
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
         this.spellPhase(event)
         this.game.event.emit('afterPlay', event)
-        // this.deathPhase()
     }
 
-    spellPhase(event): void {
-        const { player, card, target = null } = event
-        // console.log(target)
+    spellPhase(event: PlayEvent): void {
+        const { player, target = null } = event
+        const spell = event.card as Spell
         this.game.event.emit('beforeSpell', event) 
         this.game.turn.cacheEvent(event, 'spell')
-        card.actions.forEach(action => {
-            action(player, card, target)
+        spell.actions.forEach(action => {
+            action(spell, target)
         })
-        // event.card.onPlay()
         this.game.event.emit('afterSpell', event)
     }
 
-    // summonPhase(event) {
-    //     this.game.event.emit('')
-    // }
-
-    drawPhase(event): void {
-        const drawEvent = event
-        this.game.event.emit('proposedDraw', drawEvent)
-        const { player, number = 1, criteria = [] } = drawEvent
+    drawPhase(eventObject: DrawSequenceObject): void {
+        const drawSequence = new DrawSequence(this.game, eventObject)
+        this.game.event.emit('proposedDrawSequence', drawSequence)
+        const { player, number, criteria } = drawSequence
         let drawQueue = player.deck
         criteria.forEach(criterion => drawQueue = drawQueue.filter(criterion))
-        const afterDrawQueue = []
+        const afterDrawQueue: DrawEvent[] = []
         for (let i = 0; i < number; i++) {
             if (i < drawQueue.length) {
                 if (player.hand.length < player.maxHand) {
                     // player draws normally
                     drawQueue[i].moveZone('hand')
-                    const event = {
+                    const event = new DrawEvent(this.game, {
                         player: player,
                         card: drawQueue[i]
-                    }
+                    })
                     this.game.turn.cacheEvent(event, 'draw')
                     this.game.event.emit('onDraw', event)
                     afterDrawQueue.push(event)
@@ -165,8 +178,9 @@ class PhaseManager {
                 // attempts to draw, but can't
                 player.fatigueCounter++
                 this.damagePhase({
-                    source: player,
-                    target: player.leader,
+                    objectSource: player.leader[0],
+                    charSource: player.leader[0],
+                    target: player.leader[0],
                     value: player.fatigueCounter,
                 })                
             }

@@ -1,17 +1,21 @@
 import Game from "../Game"
 import GamePlayer from "./GamePlayer"
+import EventCache from "../gameEvents/EventCache"
+import GameEvent from "../gameEvents/GameEvent"
 
 class Turn {
     game: Game
     activePlayer: GamePlayer
+    nextActivePlayer: GamePlayer
     turnNumber: number
     turnLength: number
-    eventCache: any
+    eventCache: EventCache
     over: boolean
 
     constructor(game: Game, activePlayer: GamePlayer, turnNumber: number) {
         this.game = game
         this.activePlayer = activePlayer
+        this.nextActivePlayer = activePlayer.opponent
         this.turnNumber = turnNumber
         this.turnLength = 10000 
         this.eventCache = { 
@@ -27,7 +31,7 @@ class Turn {
     }
 
     async start() {
-        this.game.phases.startOfTurnPhase({activePlayer: this.activePlayer})
+        this.game.phases.startOfTurnPhase()
         await this.game.sleep(this.turnLength)
         if (!this.over) {
             this.end()
@@ -39,11 +43,12 @@ class Turn {
     
     end(): void {
         this.over = true
-        this.game.phases.endOfTurnPhase({activePlayer: this.activePlayer})
+        this.game.phases.endOfTurnPhase()
     }
 
-    cacheEvent(event, type): void {
+    cacheEvent(event: GameEvent, type: string): void {
         this.game.eventCache[type].push(event)
+        this.game.eventCache.all.push(event)
         this.eventCache[type].push(event)
         this.eventCache.all.push(event)
     }

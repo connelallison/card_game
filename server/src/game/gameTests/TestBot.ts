@@ -1,4 +1,4 @@
-import Game from "../Game"
+import Game from "../gameSystems/Game"
 import Character from "../gameObjects/Character"
 
 const TestBot = async (game: Game) => {
@@ -12,14 +12,15 @@ const TestBot = async (game: Game) => {
             if (!playableCard.targeted){
                 game.phases.playPhase({
                     player: game.turn.activePlayer,
-                    card: playableCard
+                    card: playableCard,
+                    targets: []
                 })
                 game.announceGameState()
             } else {
                 game.phases.playPhase({
                     player: game.turn.activePlayer,
                     card: playableCard,
-                    target: playableCard.validTargets[0]
+                    targets: [playableCard.validTargets[0]]
                 })
                 game.announceGameState()
             }

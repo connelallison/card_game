@@ -1,11 +1,11 @@
 import GameEvent from "./GameEvent";
 import DeathEventObject from "./DeathEventObject";
-import Game from "../Game";
-import GameObject from "../gameObjects/GameObject";
+import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
+import DestroyableCard from "../gameObjects/DestroyableCard";
 
 class DeathEvent extends GameEvent {
-    object: GameObject
+    object: DestroyableCard
     controller: GamePlayer
 
     constructor(game: Game, object: DeathEventObject) {

@@ -4,7 +4,7 @@ import Card from "../gameObjects/Card";
 interface PlayEventObject {
     player: GamePlayer,
     card: Card,
-    target?: Card,
+    targets: Card[],
 }
 
 export default PlayEventObject

@@ -1,3 +1,3 @@
-type SpellZoneString = 'hand' | 'deck' | 'graveyard'
+type SpellZoneString = 'hand' | 'deck' | 'graveyard' | 'setAside'
 
 export default SpellZoneString

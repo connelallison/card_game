@@ -1,4 +1,4 @@
-import Game from "../Game";
+import Game from "../gameSystems/Game";
 import Turn from "../gameObjects/Turn";
 
 abstract class GameEvent {

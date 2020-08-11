@@ -1,4 +1,4 @@
-import Game from "./game/Game"
+import Game from "./game/gameSystems/Game"
 
 class ServerPlayer {
   socketID: string

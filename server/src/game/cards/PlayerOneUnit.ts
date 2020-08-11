@@ -1,9 +1,9 @@
-import Unit from '../gameObjects/Unit'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import UnitZoneString from '../stringTypes/UnitZoneString'
+import GenericUnit from '../gameObjects/GenericUnit'
 
-class PlayerOneUnit extends Unit {
+class PlayerOneUnit extends GenericUnit {
   constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 

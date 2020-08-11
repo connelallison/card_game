@@ -44,6 +44,22 @@ p.lowerMargin {
   /* display: inline-block; */
 }
 
+.creationZone {
+  width: 35%;
+}
+
+.creationList.cardList {
+  justify-content: flex-end;
+}
+
+.passiveZone {
+  width: 35%;
+}
+
+.passiveList.cardList {
+  justify-content: flex-start;
+}
+
 .leader {
   /* background-image: url("./images/dogecropped.jpg"); */
   display: flex;
@@ -51,8 +67,10 @@ p.lowerMargin {
   background-color: lightgrey;
   text-align: center;
   border: 1px solid black;
-  border-radius: 3px;
-  width: 10%;
+  /* border-radius: 3px; */
+  width: 160px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .leaderDiv {
@@ -88,6 +106,12 @@ p.lowerMargin {
   text-align: center;
   /* overflow: visible; */
   height: 140px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.cardList.playerHand {
+  height: 165px;
 }
 
 .game-status {
@@ -99,10 +123,11 @@ p.lowerMargin {
 
 .card {
   /* background-image: url("./images/dogecropped.jpg"); */
-  width: 7%;
+  width: 150px;
+  /* width: 7%; */
   background-color: lightgrey;
   border: 1px solid black;
-  border-radius: 3px;
+  /* border-radius: 0px; */
   margin-left: 3px;
   margin-right: 3px;
   display: flex;
@@ -134,23 +159,34 @@ p.lowerMargin {
   font-size: 16px;
 }
 
-.cost-label {
-  color: seagreen;
+.stat-label {
+  color: white;
   font-weight: bold;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-bottom: 1px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-radius: 7px;
+}
+
+.cost-label {
+  /* color: seagreen; */
+  background-color: rgb(78, 156, 111);
 }
 
 .attack-label {
-  color: blue;
-  font-weight: bold;
+  /* color: blue; */
+  background-color: rgb(61, 107, 207);
 }
 
 .health-label {
-  color: red;
-  font-weight: bold;
+  /* color: red; */
+  background-color: rgb(201, 81, 81);
 }
 
 .canBeSelected {
-  outline: solid green 1px;
+  outline: solid green 2px;
 }
 
 .canBeTargeted {

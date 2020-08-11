@@ -8,12 +8,12 @@ class Spell extends Component {
     this.canBeTargeted = this.canBeTargeted.bind(this);
   }
 
-  canBeTargeted () {
+  canBeTargeted() {
     return this.props.selected !== null && this.props.selected.validTargets !== null && this.props.selected.validTargets.includes(this.props.object.objectID)
     // return this.props.selected !== null && this.props.selected !== this.props.object
   }
 
-  handleClick () {
+  handleClick() {
     if (this.props.selected === this.props.object) {
       this.props.interactivity.clearSelected();
     } else if (this.props.selected === null && this.props.object.canBeSelected) {
@@ -25,22 +25,30 @@ class Spell extends Component {
     }
   }
 
-  render () {
-    const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' : 
-                       this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
+  render() {
+    const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' :
+      this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " spell card"
+    const type = this.props.object.type.charAt(0).toUpperCase() + this.props.object.type.slice(1)
+    const subtype = this.props.object.subtype.charAt(0).toUpperCase() + this.props.object.subtype.slice(1)
+    const handInfo = this.props.object.zone === 'hand' ? (
+      <div className="multicolour-line text-medium">
+        <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+        <p>{subtype} {type}</p>
+      </div>
+    ) : null
     return (
       <div onClick={this.handleClick} className={styleClasses}>
         <p className='card-name'>{this.props.object.name}</p>
+        {handInfo}
         <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
         {/* <br /> */}
-        <div className="multicolour-line">
-          <p className='cost-label'>{this.props.object.cost}C</p>
-          {/* <p> Spell</p> */}
-        </div>
+        {/* <div className="multicolour-line">
+          <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+        </div> */}
         {/* <br /> */}
       </div>
     )

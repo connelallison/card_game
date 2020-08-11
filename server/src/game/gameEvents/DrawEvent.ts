@@ -1,6 +1,6 @@
 import GameEvent from "./GameEvent";
 import DrawEventObject from "./DrawEventObject";
-import Game from "../Game";
+import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import Card from "../gameObjects/Card";
 

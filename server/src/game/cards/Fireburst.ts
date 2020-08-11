@@ -1,11 +1,11 @@
-import Spell from '../gameObjects/Spell'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import SpellZoneString from '../stringTypes/SpellZoneString'
 import Actions from '../dictionaries/Actions'
 import TargetRequirements from '../dictionaries/TargetRequirements'
+import ActionSpell from '../gameObjects/ActionSpell'
 
-class Fireburst extends Spell {
+class Fireburst extends ActionSpell {
   constructor (game: Game, owner: GamePlayer, zone: SpellZoneString) {
     super(
       game, 

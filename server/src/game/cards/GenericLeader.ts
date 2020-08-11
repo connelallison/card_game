@@ -1,5 +1,5 @@
 import Leader from '../gameObjects/Leader'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import LeaderZoneString from '../stringTypes/LeaderZoneString'
 
@@ -13,6 +13,7 @@ class GenericLeader extends Leader {
             'Leader', 
             0, 
             1, 
+            5,
             '', 
             [], 
             [],

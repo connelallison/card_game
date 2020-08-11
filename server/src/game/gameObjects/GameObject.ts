@@ -1,43 +1,61 @@
-import Game from "../Game"
-import GamePlayer from "./GamePlayer"
-
 abstract class GameObject {
     game: Game
     owner: GamePlayer | GameObject
+    zone: ZoneString
     id: string
     name: string
     type: ObjectTypeString
+    subtype: ObjectSubtypeString
     objectID: string
-    // flags: any
+    flags: any
     enchantments: Enchantment[]
 
-    constructor(game: Game, owner: GamePlayer | GameObject, id: string, name: string, type: ObjectTypeString) {
+    constructor(game: Game, owner: GamePlayer | GameObject, id: string, name: string, type: ObjectTypeString, subtype: ObjectSubtypeString) {
         this.game = game
         this.owner = owner
-        this.id = id 
+        this.id = id
         this.name = name
         this.type = type
+        this.subtype = subtype
         this.objectID = `${this.id}:${Math.random()}`
         this.game.gameObjects[this.objectID] = this
-        // this.flags = {}
+        this.flags = {}
         this.enchantments = []
     }
 
-    // updateFlags() {
-    //     const flags = {
-    
-    //     }
-    
-    //     this.enchantments.static.flags.forEach(enchantment => {
-    //       if (enchantment.effectActive()) enchantment.effect.effect(flags, enchantment.effect.value)
-    //     })
-    
-    //     this.game.auras.auras.flags[this.type][this.zone].forEach(enchantment => {
-    //       if (enchantment.effect.targetRequirement(this, enchantment)) enchantment.effect.effect(flags, enchantment.effect.value)
-    //     })
-    
-    //     this.flags = flags
-    // }
+    updateFlags(): void {
+        const flags = this.baseFlags()
+
+        this.enchantments.forEach(enchantment => {
+            if (
+                enchantment instanceof StaticEnchantment
+                && enchantment.categories.includes('flags')
+                && enchantment.active()
+            ) {
+                enchantment.effects.forEach(effect => {
+                    if (effect.category === 'flags') effect.effect(flags, effect.value)
+                })
+            }
+        })
+
+        const auras: AuraEnchantment[] = this.game.auras.auras.flags[this.type][this.zone]
+        auras.forEach(enchantment => {
+            if (
+                enchantment.targetRequirements.every(requirement => requirement(enchantment, this))
+                && enchantment.categories.includes('flags')
+            ) {
+                enchantment.effects.forEach(effect => {
+                    if (effect.category === 'flags') effect.effect(flags, effect.value)
+                })
+            }
+        })
+
+        this.flags = flags
+    }
+
+    baseFlags() {
+        return {}
+    }
 
     addEnchantment(enchantment: Enchantment): void {
         this.enchantments.push(enchantment)
@@ -65,8 +83,14 @@ abstract class GameObject {
 
 export default GameObject
 
-import Enchantment from "./Enchantment"
+import Game from "../gameSystems/Game"
+import GamePlayer from "./GamePlayer"
 import TriggerEnchantment from "./TriggerEnchantment"
+import Enchantment from "./Enchantment"
 import ObjectTypeString from "../stringTypes/ObjectTypeString"
 import Character from "./Character"
+import ObjectSubtypeString from "../stringTypes/ObjectSubtypeString"
+import StaticEnchantment from "./StaticEnchantment"
+import AuraEnchantment from "./AuraEnchantment"
+import ZoneString from "../stringTypes/ZoneString"
 

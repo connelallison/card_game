@@ -1,4 +1,5 @@
-import AuraEnchantment from "../gameObjects/AuraEnchantment";
+import AuraEnchantment from "../gameObjects/AuraEnchantment"
+// console.log(AuraEnchantment)
 
 interface AurasObject {
     stats: {
@@ -11,6 +12,11 @@ interface AurasObject {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
             leader: AuraEnchantment[],
+        },
+        creation: {
+            hand: AuraEnchantment[],
+            deck: AuraEnchantment[],
+            creations: AuraEnchantment[],
         },
         spell: {
             hand: AuraEnchantment[],
@@ -27,6 +33,11 @@ interface AurasObject {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
             leader: AuraEnchantment[],
+        },
+        creation: {
+            hand: AuraEnchantment[],
+            deck: AuraEnchantment[],
+            creations: AuraEnchantment[],
         },
         spell: {
             hand: AuraEnchantment[],

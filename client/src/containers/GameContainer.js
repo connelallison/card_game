@@ -8,8 +8,9 @@ import GameStatus from '../components/GameStatus.js'
 import TestGame from '../components/TestGame.js'
 import DisplayName from '../components/DisplayName.js'
 import PlayArea from '../components/PlayArea.js'
-// import PubSub from "../helpers/PubSub.js";
+import CreationZone from '../components/CreationZone.js'
 import socket from '../helpers/websocket.js'
+import PassiveZone from '../components/PassiveZone.js'
 
 class GameContainer extends Component {
   constructor(props) {
@@ -29,6 +30,8 @@ class GameContainer extends Component {
             canBeSelected: false
           },
           board: [],
+          creations: [],
+          passives: [],
           hand: [],
           deck: 0
         },
@@ -41,6 +44,8 @@ class GameContainer extends Component {
             canBeSelected: false
           },
           board: [],
+          creations: [],
+          passives: [],
           hand: [],
           deck: 0
         }
@@ -181,7 +186,9 @@ class GameContainer extends Component {
           <Deck mine={false} cardNumber={this.state.gameState.opponent.deck} />
           {/* <br /> */}
           <div className='leaderDiv'>
+            <CreationZone mine={false} creations={this.state.gameState.opponent.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <Leader mine={false} object={this.state.gameState.opponent.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <PassiveZone mine={false} passives={this.state.gameState.opponent.passives} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <br />
           <BoardHalf mine={false} units={this.state.gameState.opponent.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
@@ -189,7 +196,9 @@ class GameContainer extends Component {
           <BoardHalf mine units={this.state.gameState.my.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           <br />
           <div className='leaderDiv'>
+            <CreationZone mine creations={this.state.gameState.my.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <Leader mine object={this.state.gameState.my.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <PassiveZone mine passives={this.state.gameState.my.passives} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <Deck mine cardNumber={this.state.gameState.my.deck} />
           {/* <br /> */}

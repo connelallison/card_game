@@ -1,10 +1,11 @@
 import Unit from '../gameObjects/Unit'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
 import UnitZoneString from '../stringTypes/UnitZoneString'
+import GenericUnit from '../gameObjects/GenericUnit'
 
-class Footman extends Unit {
+class Footman extends GenericUnit {
   constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 
@@ -22,7 +23,7 @@ class Footman extends Unit {
       null, 
       null
     )
-    this.addEnchantment(new Enchantments['FootmanExtraDamageDuringYourTurn'](this.game, this))
+    this.addEnchantment(new Enchantments.FootmanExtraDamageDuringYourTurn(this.game, this))
   }
 }
 export default Footman

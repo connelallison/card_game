@@ -1,5 +1,5 @@
 import StaticEnchantment from "../gameObjects/StaticEnchantment";
-import Game from "../Game";
+import Game from "../gameSystems/Game";
 import Character from "../gameObjects/Character";
 import Unit from "../gameObjects/Unit";
 

@@ -1,6 +1,6 @@
 import GameEvent from "./GameEvent";
-import DamageEventObject from "./DamageEventObject";
-import Game from "../Game";
+import DamageSingleEventObject from "./DamageSingleEventObject";
+import Game from "../gameSystems/Game";
 import Character from "../gameObjects/Character";
 import GameObject from "../gameObjects/GameObject";
 
@@ -10,7 +10,7 @@ class DamageEvent extends GameEvent {
     target: Character
     value: number
 
-    constructor(game: Game, object: DamageEventObject) {
+    constructor(game: Game, object: DamageSingleEventObject) {
         super(game) 
         Object.assign(this, object)
     }

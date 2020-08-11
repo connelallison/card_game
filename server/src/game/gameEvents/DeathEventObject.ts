@@ -1,8 +1,9 @@
 import GameObject from "../gameObjects/GameObject";
 import GamePlayer from "../gameObjects/GamePlayer";
+import DestroyableCard from "../gameObjects/DestroyableCard";
 
 interface DeathEventObject {
-    object: GameObject
+    object: DestroyableCard
     controller: GamePlayer
 }
 

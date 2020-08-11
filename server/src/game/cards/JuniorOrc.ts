@@ -1,10 +1,10 @@
-import Unit from '../gameObjects/Unit'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
 import UnitZoneString from '../stringTypes/UnitZoneString'
+import GenericUnit from '../gameObjects/GenericUnit'
 
-class JuniorOrc extends Unit {
+class JuniorOrc extends GenericUnit {
   constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 
@@ -21,7 +21,7 @@ class JuniorOrc extends Unit {
       false, 
       null, 
       null)
-    this.addEnchantment(new Enchantments['JuniorOrcAttackAura'](this.game, this))
+    this.addEnchantment(new Enchantments.JuniorOrcAttackAura(this.game, this))
   }
 }
 

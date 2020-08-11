@@ -1,3 +1,3 @@
-type UnitZoneString = 'board' | 'hand' | 'deck' | 'graveyard'
+type UnitZoneString = 'board' | 'hand' | 'deck' | 'graveyard' | 'setAside'
 
 export default UnitZoneString

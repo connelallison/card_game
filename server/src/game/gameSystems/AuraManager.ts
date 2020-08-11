@@ -1,7 +1,4 @@
-import Game from "../Game";
-import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import ObjectTypeString from "../stringTypes/ObjectTypeString";
-import ZoneString from "../stringTypes/ZoneString";
+import Game from "./Game";
 import AurasObject from "../structs/AurasObject";
 
 class AuraManager {
@@ -22,6 +19,11 @@ class AuraManager {
                     deck: [],
                     leader: [],
                 },
+                creation: {
+                    hand: [],
+                    deck: [],
+                    creations: [],
+                },
                 spell: {
                     hand: [],
                     deck: [],
@@ -37,6 +39,11 @@ class AuraManager {
                     hand: [],
                     deck: [],
                     leader: [],
+                },
+                creation: {
+                    hand: [],
+                    deck: [],
+                    creations: [],
                 },
                 spell: {
                     hand: [],
@@ -74,3 +81,8 @@ class AuraManager {
 }
 
 export default AuraManager
+
+import AuraEnchantment from "../gameObjects/AuraEnchantment";
+import ObjectTypeString from "../stringTypes/ObjectTypeString";
+import ZoneString from "../stringTypes/ZoneString";
+import EffectCategoryString from "../stringTypes/EffectCategoryString";

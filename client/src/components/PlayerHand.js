@@ -2,6 +2,7 @@ import React from 'react'
 import Unit from './Unit.js'
 import Spell from './Spell.js'
 import Unknown from './Unknown.js'
+import Creation from './Creation.js'
 
 const PlayerHand = (props) => {
   let cardList
@@ -17,8 +18,12 @@ const PlayerHand = (props) => {
         return (
           <Spell object={card} selected={props.selected} interactivity={props.interactivity} />
         )
+      } else if (card.type === 'creation') {
+        return (
+          <Creation object={card} selected={props.selected} interactivity={props.interactivity} />
+        )
       } else {
-        return new Error('card is neither a unit nor a spell')
+        return new Error('card is not a unit, spell, or creation')
       }
     })
   } else {
@@ -34,7 +39,7 @@ const PlayerHand = (props) => {
   return (
     <div className='player-hand'>
       {/* <p className='lowerMargin'>My current cards:</p> */}
-      <div className='cardList'>
+      <div className='cardList playerHand'>
         {cardList}
       </div>
     </div>

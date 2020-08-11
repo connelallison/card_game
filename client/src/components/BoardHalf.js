@@ -42,23 +42,11 @@ class BoardHalf extends Component {
     } else {
       unitList = [
         <p>No units on board.</p>,
-        <br />,
-        <br />,
-        <br />,
-        <br />
       ]
     }
 
-    // let owner
-    // if (this.props.mine) {
-    //   owner = 'My'
-    // } else {
-    //   owner = "Opponent's"
-    // }
-
     return (
       <div className="boardhalf">
-        {/* <p className='lowerMargin'>{owner} current units:</p> */}
         <div className='cardList'>
           {unitList}
         </div>

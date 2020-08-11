@@ -1,7 +1,7 @@
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import Game from "../Game";
+import Game from "../gameSystems/Game";
 import Card from "../gameObjects/Card";
 import Unit from "../gameObjects/Unit";
+import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";
 import TriggerActions from "../dictionaries/TriggerActions";
 
@@ -21,7 +21,7 @@ class SavageWolfTrigger extends TriggerEnchantment {
             ['afterDeath'],
             [{
                 eventType: 'afterDeath',
-                requirements: [TriggerRequirements.isUnit('object'), TriggerRequirements.isFriendly('object')],
+                requirements: [TriggerRequirements.isType('unit', 'object'), TriggerRequirements.isFriendly('object')],
                 actions: [TriggerActions.buffCharOwnerAttackAndHealth(1, 1)]
             }]
         )

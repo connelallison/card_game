@@ -1,89 +1,55 @@
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../structs/ObjectReport'
 import Character from './Character'
-import StaticEnchantment from './StaticEnchantment'
 import UnitZoneString from '../stringTypes/UnitZoneString'
 import Action from '../functionTypes/Action'
 import PlayRequirement from '../functionTypes/PlayRequirement'
+import StaticEnchantment from './StaticEnchantment'
+import AuraEnchantment from './AuraEnchantment'
 
 abstract class Unit extends Character {
   zone: UnitZoneString
+  inPlayZone: 'board'
   type: 'unit'
-  rawHealth: number
+  subtype: 'generic' | 'named'
 
-  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
-    super(game, owner, zone, id, name, 'unit', rawCost, rawAttack, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
-    this.rawHealth = rawHealth
+  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, subtype: 'generic' | 'named', rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
+    super(game, owner, zone, id, name, 'unit', subtype, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
     this.health = this.rawHealth,
+    this.inPlayZone = 'board'
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
-  provideReport(): ObjectReport {
-    this.updateStats()
-    this.updateFlags()
-    this.updateValidTargets()
-
-    return {
-      name: this.name,
-      id: this.id,
-      objectID: this.objectID,
-      cost: this.cost,
-      attack: this.attack,
-      health: this.health,
-      type: this.type,
-      zone: this.zone,
-      ownerName: this.owner.name,
-      playerID: this.owner.playerID,
-      canBeSelected: this.canBeSelected(),
-      requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs(),
-      staticCardText: this.staticCardText,
-    }
-  }
-
   updateValidTargets(): void {
-    if (this.zone === 'hand' && this.targeted) {
-      let newTargets = this.targetDomain(this.owner)
-      this.targetRequirements.forEach(targetRequirement => {
-        newTargets = newTargets.filter(target => targetRequirement(this, target))
-      })
-      this.validTargets = newTargets
-    } else if (this.zone === 'board') {
+    if (this.inPlay()) {
       this.validTargets = (this.owner.opponent.leader as Character[]).concat(this.owner.opponent.board).filter(defender => {
         return this.game.permissions.canAttack(this, defender)
       })
+    } else if (this.zone === 'hand' && this.targeted) {
+      let newTargets = this.targetDomain(this.owner)
+      this.targetRequirements.forEach(requirement => {
+        newTargets = newTargets.filter(target => requirement(this, target))
+      })
+      this.validTargets = newTargets
     } else {
       this.validTargets = []
     }
   }
 
-  canBePlayed(): boolean {
-    return this.owner.canPlay(this)
-  }
-
-  canBeSelected(): boolean {
-    if (this.zone === 'board') {
-      return this.validTargets.length > 0
-    } else {
-      return this.canBePlayed()
-    }
-  }
-
-  getReady(): void {
-    if (this.zone === 'board') {
-      this.ready = true
-    } else {
-      throw new Error(`getReady() is being called on a unit (${this.name}) with this.zone not set to board`)
-    }
-  }
-
-  takeDamage(damage): void {
+  takeDamage(damage: number): void {
     if (damage > 0) {
       this.rawHealth -= damage
       this.updateStats()
-      // console.log(`${this.name} takes ${damage} damage`);
+      console.log(`${this.name} takes ${damage} damage`)
+    }
+  }
+
+  receiveHealing(healing: number): void {
+    if (healing > 0) {
+      this.rawHealth += healing
+      this.updateStats()
+      console.log(`${this.name} receives ${healing} healing`)
     }
   }
 
@@ -100,6 +66,11 @@ abstract class Unit extends Character {
 
   baseStats() {
     return { attack: this.rawAttack, health: this.rawHealth }
+  }
+
+  setStats(stats) {
+    this.attack = stats.attack
+    this.health = stats.health
   }
 }
 

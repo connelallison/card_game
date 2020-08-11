@@ -1,6 +1,6 @@
 import GameEvent from "./GameEvent";
 import DrawSequenceObject from "./DrawSequenceObject";
-import Game from "../Game";
+import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 class DrawSequence extends GameEvent {

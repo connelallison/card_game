@@ -1,5 +1,5 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import Game from "../Game";
+import Game from "../gameSystems/Game";
 import Card from "../gameObjects/Card";
 import Unit from "../gameObjects/Unit";
 import TargetRequirements from "../dictionaries/TargetRequirements";

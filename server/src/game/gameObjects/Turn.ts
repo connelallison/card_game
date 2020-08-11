@@ -1,4 +1,4 @@
-import Game from "../Game"
+import Game from "../gameSystems/Game"
 import GamePlayer from "./GamePlayer"
 import EventCache from "../gameEvents/EventCache"
 import GameEvent from "../gameEvents/GameEvent"
@@ -22,10 +22,12 @@ class Turn {
             all: [],
             death: [],
             play: [],
-            spell: [],
+            action: [],
             attack: [],
             damage: [],
+            healing: [],
             draw: [],
+            enterPlay: [],
         }
         this.over = false  
     }

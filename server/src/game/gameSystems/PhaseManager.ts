@@ -257,5 +257,5 @@ import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
 import EnterPlayEventObject from "../gameEvents/EnterPlayEventObject";
 import PersistentCard from "../gameObjects/PersistentCard";
 import Cards from "../dictionaries/Cards";
-import SummonPhaseObject from "../gameEvents/summonPhaseObject";
+import SummonPhaseObject from "../gameEvents/SummonPhaseObject";
 

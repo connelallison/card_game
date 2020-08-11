@@ -1,10 +1,3 @@
-import GenericLeader from '../cards/GenericLeader'
-import Game from '../Game'
-import Leader from './Leader'
-import Card from './Card'
-import Minion from './Minion'
-import ObjectReport from '../structs/ObjectReport'
-
 class GamePlayer {
   game: Game
   name: string
@@ -15,13 +8,21 @@ class GamePlayer {
   maxMana: number
   currentMana: number
   hand: Card[]
-  maxHand: number
   deck: Card[]
   fatigueCounter: number
-  board: Minion[]
-  maxBoard: number
+  board: Unit[]
   graveyard: Card[]
+  creations: Creation[]
+  max: {
+    hand: number,
+    deck: number,
+    board: number,
+    creations: number,
+    passives: number
+    leader: 1
+  }
   passives: any[]
+  setAside: GameObject[]
   opponent: GamePlayer
   bot: boolean
 
@@ -31,17 +32,25 @@ class GamePlayer {
     this.playerID = `${this.name}:${Math.random()}`
     this.socketID = socketID
     this.health = 20
-    this.leader = [new GenericLeader(this.game, this, 'leader')]
+    this.leader = []
     this.maxMana = 2
     this.currentMana = 2
     this.hand = []
-    this.maxHand = 7
     this.deck = []
     this.fatigueCounter = 0
     this.board = []
-    this.maxBoard = 5
     this.graveyard = []
+    this.creations = []
     this.passives = []
+    this.setAside = []
+    this.max = {
+      hand: 10,
+      deck: 50,
+      board: 7,
+      creations: 4,
+      passives: 4,
+      leader: 1,
+    }
     this.opponent
     this.bot
 
@@ -54,15 +63,15 @@ class GamePlayer {
   }
 
   boardReport(): ObjectReport[] {
-    return this.board.map((minion) => {
-      return minion.provideReport()
-    })
+    return this.board.map(unit => unit.provideReport())
+  }
+
+  creationsReport(): ObjectReport[] {
+    return this.creations.map(creation => creation.provideReport())
   }
 
   handReport(): ObjectReport[] {
-    return this.hand.map((card) => {
-      return card.provideReport()
-    })
+    return this.hand.map(card => card.provideReport())
   }
 
   myTurn(): boolean {
@@ -93,7 +102,7 @@ class GamePlayer {
 
   mulliganDraw(): void {
     if (this.deck.length > 0) {
-      if (this.hand.length < this.maxHand) {
+      if (this.hand.length < this.max.hand) {
         const card = this.deck.shift()
         this.hand.push(card)
         card.zone = 'hand'
@@ -113,10 +122,18 @@ class GamePlayer {
     return this.hand.filter(card => this.canPlay(card))
   }
 
-  canPlay(card): boolean {
+  canPlay(card: Card): boolean {
     return this.game.permissions.canPlay(this, card)
   }
+
+  canSummon(card: PersistentCard): boolean {
+    return this.game.permissions.canSummon(this, card)
+  }
   
+  canSummonType(cardType: PersistentCardTypeString): boolean {
+    return this.game.permissions.canSummonType(this, cardType)
+  }
+
   alive(): boolean {
     return this.leader[0].health > 0
   }
@@ -151,3 +168,13 @@ class GamePlayer {
 }
 
 export default GamePlayer
+
+import Game from '../gameSystems/Game'
+import Leader from './Leader'
+import Card from './Card'
+import Unit from './Unit'
+import ObjectReport from '../structs/ObjectReport'
+import Creation from './Creation'
+import PersistentCard from './PersistentCard'
+import GameObject from './GameObject'
+import PersistentCardTypeString from '../stringTypes/PersistentCardTypeString'

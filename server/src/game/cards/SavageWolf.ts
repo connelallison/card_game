@@ -1,11 +1,12 @@
-import Minion from '../gameObjects/Minion'
-import Game from '../Game'
+import Unit from '../gameObjects/Unit'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
-import MinionZoneString from '../stringTypes/MinionZoneString'
+import UnitZoneString from '../stringTypes/UnitZoneString'
+import GenericUnit from '../gameObjects/GenericUnit'
 
-class SavageWolf extends Minion {
-  constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
+class SavageWolf extends GenericUnit {
+  constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 
       owner, 
@@ -15,14 +16,14 @@ class SavageWolf extends Minion {
       3, 
       4, 
       2, 
-      'Whenever a friendly minion dies, gain +1/+1.', 
+      'Whenever a friendly unit dies, gain +1/+1.', 
       [], 
       [],
       false, 
       null, 
       null
       )
-    this.addEnchantment(new Enchantments['SavageWolfTrigger'](this.game, this))
+    this.addEnchantment(new Enchantments.SavageWolfTrigger(this.game, this))
   }
 }
 export default SavageWolf

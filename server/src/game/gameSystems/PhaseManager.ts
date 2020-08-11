@@ -1,20 +1,4 @@
-import Game from "../Game";
-import Minion from "../gameObjects/Minion";
-import Character from "../gameObjects/Character";
-import Leader from "../gameObjects/Leader";
-import DeathEvent from "../gameEvents/DeathEvent";
-import DrawEvent from "../gameEvents/DrawEvent";
-import AttackEventObject from "../gameEvents/AttackEventObject";
-import AttackEvent from "../gameEvents/AttackEvent";
-import DamageEventObject from "../gameEvents/DamageEventObject";
-import DamageEvent from "../gameEvents/DamageEvent";
-import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
-import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
-import PlayEventObject from "../gameEvents/PlayEventObject";
-import PlayEvent from "../gameEvents/PlayEvent";
-import Spell from "../gameObjects/Spell";
-import DrawSequenceObject from "../gameEvents/DrawSequenceObject";
-import DrawSequence from "../gameEvents/DrawSequence";
+import Game from "./Game";
 
 class PhaseManager {
     game: Game
@@ -42,22 +26,22 @@ class PhaseManager {
     }
 
     deathPhase(): void {
-        this.game.inPlay.slice(0).forEach((character: Character) => {
-            if (character.health <= 0) {
-                if (character instanceof Leader) {
-                    console.log('leader is dead')
-                    this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
+        this.game.inPlay.slice(0).forEach((card: DestroyableCard) => {
+            if (card.health <= 0) {
+                if (card instanceof Leader) {
+                    console.log('leader is dying')
+                    this.game.inPlay.splice(this.game.inPlay.indexOf(card), 1)
                     this.game.endGame()
-                } else if (character instanceof Minion) {
-                    console.log("minion is dying: ", character.name)
-                    this.game.inPlay.splice(this.game.inPlay.indexOf(character), 1)
+                } else {
+                    console.log(`${card.subtype} ${card.type} is being destroyed: ${card.name}`)
+                    this.game.inPlay.splice(this.game.inPlay.indexOf(card), 1)
                     const deathEvent = new DeathEvent(this.game, {
-                        object: character,
-                        controller: character.controller(),
+                        object: card,
+                        controller: card.controller(),
                     })
                     this.game.turn.cacheEvent(deathEvent, 'death')
                     this.deathQueue.push(deathEvent)
-                    character.moveZone('graveyard')
+                    card.moveZone('graveyard')
                 }
             }
         })
@@ -79,13 +63,13 @@ class PhaseManager {
 
     attackPhase(event: AttackEvent): void {
         this.game.event.emit('beforeAttack', event)
-        this.damagePhase({
+        this.damageSinglePhase({
             objectSource: event.attacker,
             charSource: event.attacker,
             target: event.defender,
             value: event.attacker.attack,
         })
-        this.damagePhase({
+        this.damageSinglePhase({
             objectSource: event.defender,
             charSource: event.defender,
             target: event.attacker,
@@ -97,58 +81,114 @@ class PhaseManager {
         this.deathPhase()
     }
 
-    damagePhase(eventObject: DamageEventObject): void {
+    damageSinglePhase(eventObject: DamageSingleEventObject): void {
         const event = new DamageEvent(this.game, eventObject)
         // console.log('damageEvent: ', event.objectSource.objectID, event.charSource.objectID, event.target.objectID, event.value)
-        this.game.event.emit('beforeDamage', event) 
+        this.game.event.emit('beforeDamage', event)
         event.target.takeDamage(event.value)
         this.game.turn.cacheEvent(event, 'damage')
         this.game.event.emit('afterDamage', event)
+        if (event.objectSource.flags.pillage) {
+            this.healSinglePhase({
+                objectSource: event.objectSource,
+                charSource: event.objectSource.charOwner(),
+                target: event.objectSource.controller().leader[0],
+                value: event.value,
+            })
+        }
+    }
+
+    healSinglePhase(eventObject: HealSingleEventObject): void {
+        const event = new HealingEvent(this.game, eventObject)
+        this.game.event.emit('beforeHealing', event)
+        event.target.receiveHealing(event.value)
+        this.game.turn.cacheEvent(event, 'healing')
+        this.game.event.emit('afterHealing', event)
+    }
+
+    healMultiplePhase(eventObject: HealMultipleEventObject): void {
+        const { objectSource, charSource, value } = eventObject
+        const events: HealingEvent[] = []
+        for (const target of eventObject.targets) {
+            events.push(new HealingEvent(this.game, { objectSource, charSource, target, value }))
+        }
+        for (const event of events) {
+            this.game.event.emit('beforeHealing', event)
+        }
+        for (const event of events) {
+            event.target.receiveHealing(event.value)
+            this.game.turn.cacheEvent(event, 'healing')
+        }
+        for (const event of events) {
+            this.game.event.emit('afterHealing', event)
+        }
     }
 
     playPhase(eventObject: PlayEventObject): void {
         const event = new PlayEvent(this.game, eventObject)
-        if (event.card.type === 'minion') {
-            this.playPhaseMinion(event)
-        } else if (event.card.type === 'spell') {
+        if (event.card instanceof PersistentCard) {
+            this.playPhasePersistent(event)
+        } else {
             this.playPhaseSpell(event)
-        }
+        } 
         this.deathPhase()
     }
 
-    playPhaseMinion(event: PlayEvent): void {
-        const { player, target = null } = event
-        const minion = event.card as Minion
-        player.spendMana(minion.cost)
-        minion.moveZone('board')
-        this.game.inPlay.push(minion)
+    playPhasePersistent(event: PlayEvent): void {
+        const card = event.card as PersistentCard
+        event.player.spendMana(card.cost)
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
-        this.game.event.emit('onSummon', event)
+        this.enterPlayPhase({
+            controller: event.player,
+            card,
+            objectSource: card,
+            charSource: event.player.leader[0],
+        })
+        if (card.actions.length > 0) {
+            this.actionPhase(event)
+        }
         this.game.event.emit('afterPlay', event)
-        this.game.event.emit('afterSummon', event)
     }
 
     playPhaseSpell(event: PlayEvent): void {
-        const { player, target = null } = event
         const spell = event.card as Spell
-        player.spendMana(spell.cost)
+        event.player.spendMana(spell.cost)
         spell.moveZone('graveyard')
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
-        this.spellPhase(event)
+        this.actionPhase(event)
         this.game.event.emit('afterPlay', event)
     }
 
-    spellPhase(event: PlayEvent): void {
-        const { player, target = null } = event
-        const spell = event.card as Spell
-        this.game.event.emit('beforeSpell', event) 
-        this.game.turn.cacheEvent(event, 'spell')
-        spell.actions.forEach(action => {
-            action(spell, target)
+    actionPhase(event: PlayEvent): void {
+        const actionCard = event.card
+        this.game.event.emit('beforeAction', event)
+        this.game.turn.cacheEvent(event, 'action')
+        actionCard.actions.forEach(action => {
+            action(actionCard, event.targets)
         })
         this.game.event.emit('afterSpell', event)
+    }
+
+    summonPhase(eventObj: SummonPhaseObject): void {
+        const { controller, objectSource, charSource, cardID } = eventObj
+        const card = new Cards[cardID](this.game, controller, 'setAside')
+        if (controller.canSummon(card)) {
+            this.enterPlayPhase({
+                controller,
+                card,
+                objectSource,
+                charSource,
+            })
+        }
+    }
+
+    enterPlayPhase(eventObj: EnterPlayEventObject) {
+        const event = new EnterPlayEvent(this.game, eventObj)
+        event.card.putIntoPlay()
+        this.game.turn.cacheEvent(event, 'enterPlay')
+        this.game.event.emit('onEnterPlay', event)
     }
 
     drawPhase(eventObject: DrawSequenceObject): void {
@@ -160,12 +200,13 @@ class PhaseManager {
         const afterDrawQueue: DrawEvent[] = []
         for (let i = 0; i < number; i++) {
             if (i < drawQueue.length) {
-                if (player.hand.length < player.maxHand) {
+                if (player.hand.length < player.max.hand) {
                     // player draws normally
-                    drawQueue[i].moveZone('hand')
+                    const card = drawQueue[i]
+                    card.moveZone('hand')
                     const event = new DrawEvent(this.game, {
-                        player: player,
-                        card: drawQueue[i]
+                        player,
+                        card,
                     })
                     this.game.turn.cacheEvent(event, 'draw')
                     this.game.event.emit('onDraw', event)
@@ -177,12 +218,12 @@ class PhaseManager {
             } else {
                 // attempts to draw, but can't
                 player.fatigueCounter++
-                this.damagePhase({
+                this.damageSinglePhase({
                     objectSource: player.leader[0],
                     charSource: player.leader[0],
                     target: player.leader[0],
                     value: player.fatigueCounter,
-                })                
+                })
             }
         }
         afterDrawQueue.forEach(event => {
@@ -193,3 +234,28 @@ class PhaseManager {
 }
 
 export default PhaseManager
+
+import Leader from "../gameObjects/Leader";
+import DeathEvent from "../gameEvents/DeathEvent";
+import DrawEvent from "../gameEvents/DrawEvent";
+import AttackEventObject from "../gameEvents/AttackEventObject";
+import AttackEvent from "../gameEvents/AttackEvent";
+import DamageSingleEventObject from "../gameEvents/DamageSingleEventObject";
+import DamageEvent from "../gameEvents/DamageEvent";
+import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
+import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
+import PlayEventObject from "../gameEvents/PlayEventObject";
+import PlayEvent from "../gameEvents/PlayEvent";
+import Spell from "../gameObjects/Spell";
+import DrawSequenceObject from "../gameEvents/DrawSequenceObject";
+import DrawSequence from "../gameEvents/DrawSequence";
+import DestroyableCard from "../gameObjects/DestroyableCard";
+import HealMultipleEventObject from "../gameEvents/HealingMultipleEventObject";
+import HealingEvent from "../gameEvents/HealingEvent";
+import HealSingleEventObject from "../gameEvents/HealingSingleEventObject";
+import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
+import EnterPlayEventObject from "../gameEvents/EnterPlayEventObject";
+import PersistentCard from "../gameObjects/PersistentCard";
+import Cards from "../dictionaries/Cards";
+import SummonPhaseObject from "../gameEvents/summonPhaseObject";
+

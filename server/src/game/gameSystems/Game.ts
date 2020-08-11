@@ -1,29 +1,5 @@
-import GamePlayer from './gameObjects/GamePlayer'
-import Cards from './dictionaries/Cards'
-import Decks from './dictionaries/Decks'
-import AuraManager from './gameSystems/AuraManager'
-import PhaseManager from './gameSystems/PhaseManager'
-import Turn from './gameObjects/Turn'
-import Actions from './dictionaries/Actions'
-import Effects from './dictionaries/Effects'
-import Permissions from './gameSystems/Permissions'
-import Utils from './gameSystems/Utils'
-import TestBot from './gameTests/TestBot'
-// import Card from "./Card";
-// import Minion from "./Minion";
-// import Spell from "./Spell";
-// import { Deck, deck1, deck2 } from "./Deck";
-// import EventEmitter from 'events'
-import serverEvent from '../ServerEvent'
-import GameObject from './gameObjects/GameObject'
-import Card from './gameObjects/Card'
-import Character from './gameObjects/Character'
-import { EventEmitter } from 'events'
-import EventCache from './gameEvents/EventCache'
-import Effect from './functionTypes/Effect'
-import ActionFactory from './functionTypes/ActionFactory'
-import TargetRequirementFactory from './functionTypes/TargetRequirementFactory'
-import TargetRequirements from './dictionaries/TargetRequirements'
+import GameObject from '../gameObjects/GameObject'
+GameObject // forces GameObject to load in properly
 
 class Game {
   event: EventEmitter
@@ -34,16 +10,20 @@ class Game {
   player1turn: number
   player2turn: number
   gameObjects: { [index: string]: GameObject }
+  player1name: string
+  player2name: string
+  player1socketID: string
+  player2socketID: string
   player1: GamePlayer
   player2: GamePlayer
   auras: AuraManager
   phases: PhaseManager
-  targetRequirements: {[index: string]: TargetRequirementFactory}
-  actions: {[index: string]: ActionFactory}
-  effects: {[index: string]: Effect}
+  targetRequirements: { [index: string]: TargetRequirementFactory }
+  actions: { [index: string]: ActionFactory }
+  effects: { [index: string]: Effect }
   permissions: Permissions
   utils: Utils
-  inPlay: GameObject[]
+  inPlay: PersistentCard[]
   eventCache: EventCache
   player1deckID: string
   player2deckID: string
@@ -55,7 +35,7 @@ class Game {
   turnCache: Turn[]
   winner: string
 
-  constructor (player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
+  constructor(player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
     this.event = new EventEmitter()
     this.event.setMaxListeners(100)
     this.botPlayer1 = botPlayer1
@@ -65,24 +45,23 @@ class Game {
     this.player1turn = 0
     this.player2turn = 0
     this.gameObjects = {}
-    this.player1 = new GamePlayer(this, player1name, player1socketID)
-    this.player2 = new GamePlayer(this, player2name, player2socketID)
-    this.auras = new AuraManager(this)
-    this.phases = new PhaseManager(this)
-    this.targetRequirements = TargetRequirements
-    this.actions = Actions
-    this.effects = Effects
-    this.permissions = new Permissions(this)
-    this.utils = new Utils(this)
-    this.inPlay = [this.player1.leader[0], this.player2.leader[0]]
-    this.eventCache = { 
+    this.player1name = player1name
+    this.player2name = player2name
+    this.player1socketID = player1socketID
+    this.player2socketID = player2socketID
+    // this.player1 = new GamePlayer(this, player1name, player1socketID)
+    // this.player2 = new GamePlayer(this, player2name, player2socketID)
+    this.inPlay = []
+    this.eventCache = {
       all: [],
       death: [],
       play: [],
-      spell: [],
+      action: [],
       attack: [],
       damage: [],
+      healing: [],
       draw: [],
+      enterPlay: [],
     }
     // this.sequence = []
     // this.sequenceCache = [this.sequence]
@@ -95,13 +74,23 @@ class Game {
     this.turnNumber = 0
     this.turnCache = []
     this.winner
+  }
+
+  init() {
+    this.auras = new AuraManager(this)
+    this.phases = new PhaseManager(this)
+    this.targetRequirements = TargetRequirements
+    this.actions = Actions
+    this.effects = Effects
+    this.permissions = new Permissions(this)
+    this.utils = new Utils(this)
     this.initPlayers()
     this.initListeners()
     this.mulliganPhase()
     this.start()
   }
 
-  announceGameState () {
+  announceGameState() {
     if (this.online) {
       // console.log(serverEvent);
       let player1gameState
@@ -126,7 +115,7 @@ class Game {
     }
   }
 
-  prepareGameState (player: GamePlayer) {
+  prepareGameState(player: GamePlayer) {
     const opponentHand = []
     for (let i = 0; i < player.opponent.hand.length; i++) {
       opponentHand.push({ type: 'unknown' })
@@ -136,14 +125,18 @@ class Game {
       winner: this.winner,
       myTurn: player.myTurn(),
       my: {
-        leader: player.leaderReport(),
+        passives: [],
+        creations: player.creationsReport(),
         board: player.boardReport(),
+        leader: player.leaderReport(),
         hand: player.handReport(),
         deck: player.deck.length
       },
       opponent: {
-        leader: player.opponent.leaderReport(),
+        passives: [],
+        creations: player.opponent.creationsReport(),
         board: player.opponent.boardReport(),
+        leader: player.opponent.leaderReport(),
         hand: opponentHand,
         deck: player.opponent.deck.length
       },
@@ -152,7 +145,7 @@ class Game {
   }
 
 
-  announceNewTurn () {
+  announceNewTurn() {
     if (this.player1.socketID) {
       serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.turn.turnLength)
     }
@@ -164,7 +157,7 @@ class Game {
     // }
   }
 
-  actionMoveRequest (moveRequest, player) {
+  executeMoveRequest(moveRequest, player) {
     const selected = this.gameObjects[moveRequest.selected.objectID] as Card
     let target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID] as Card
     if (selected instanceof Character && selected.inPlay()) {
@@ -173,7 +166,7 @@ class Game {
           this.phases.proposedAttackPhase({
             attacker: selected,
             defender: target,
-          })  
+          })
         }
       }
     } else if (selected.zone === 'hand') {
@@ -181,70 +174,40 @@ class Game {
         this.phases.playPhase({
           player: selected.owner,
           card: selected,
+          targets: [],
         })
       } else if (this.permissions.canTarget(selected, target)) {
         this.phases.playPhase({
           player: selected.owner,
           card: selected,
-          target,
+          targets: [target],
         })
       }
     }
-    // if (player.myTurn() && selected.owner === player) {
-    //   if (selected.zone === "leader" || selected.zone === "board" && selected.type === "minion") {
-    //     if (selected.canAttackTarget(target)) {
-    //       this.phases.proposedAttackPhase({
-    //         attacker: selected,
-    //         defender: target,
-    //         cancelled: false,
-    //       })        
-    //     }
-    //   } else if (selected.zone === "hand") {
-    //     if (selected.canBePlayed()) {
-    //       this.phases.playPhase({
-    //         player: selected.owner,
-    //         card: selected,
-    //       })
-    //     }
-    //   }
-    // }
     this.announceGameState()
   }
 
-  // findObjectByPlayerIDZoneAndObjectID (params) {
-  //   const { playerID, zone, objectID } = params
-  //   const player = this.findPlayerbyPlayerID(playerID)
-  //   if (zone === "leader" && player.leader.objectID === objectID) {
-  //     return player.leader
-  //   } else if (zone === "hand" && player.hand.find(card => card.objectID === objectID) !== undefined) {
-  //     return player.hand.find(card => card.objectID === objectID)
-  //   } else if (zone === "board" && player.board.find(card => card.objectID === objectID) !== undefined) {
-  //     return player.board.find(card => card.objectID === objectID)
-  //   } else if (zone === "other") {
-  //     throw new Error("findObject: other zones NYI")
+  // findPlayerbyPlayerID (playerID) {
+  //   if (this.player1.playerID === playerID) {
+  //     return this.player1
+  //   } else if (this.player2.playerID === playerID) {
+  //     return this.player2
   //   } else {
-  //     console.log(params)
-  //     throw new Error("findObject: not found")
+  //     console.log("player1: ", this.player1.playerID)
+  //     console.log("player2: ", this.player2.playerID)
+  //     throw new Error(`player ${playerID} not found`)
   //   }
   // }
 
-  findPlayerbyPlayerID (playerID) {
-    if (this.player1.playerID === playerID) {
-      return this.player1
-    } else if (this.player2.playerID === playerID) {
-      return this.player2
-    } else {
-      console.log("player1: ", this.player1.playerID)
-      console.log("player2: ", this.player2.playerID)
-      throw new Error(`player ${playerID} not found`)
-    }
+  async sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  async sleep (ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-  initPlayers () {
+  initPlayers() {
+    this.player1 = new GamePlayer(this, this.player1name, this.player1socketID)
+    this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
+    this.player1.opponent = this.player2
+    this.player2.opponent = this.player1
     if (this.botPlayer1) {
       this.player1.bot = true
     } else {
@@ -255,26 +218,24 @@ class Game {
     } else {
       this.player2.bot = false
     }
-    this.player1.opponent = this.player2
-    this.player2.opponent = this.player1
     this.player1.deck = new Decks[this.player1deckID](this, this.player1).cards
     this.player2.deck = new Decks[this.player2deckID](this, this.player2).cards
   }
 
-  initListeners () {
+  initListeners() {
     if (this.player1.socketID) {
       serverEvent.on(`playerMoveRequest:${this.player1.socketID}`, (moveRequest) => {
-        this.actionMoveRequest(moveRequest, this.player1)
+        this.executeMoveRequest(moveRequest, this.player1)
       })
     }
     if (this.player2.socketID) {
       serverEvent.on(`playerMoveRequest:${this.player2.socketID}`, (moveRequest) => {
-        this.actionMoveRequest(moveRequest, this.player2)
+        this.executeMoveRequest(moveRequest, this.player2)
       })
     }
   }
 
-  removeListeners () {
+  removeListeners() {
     if (this.player1.socketID) {
       serverEvent.removeAllListeners(`playerMoveRequest:${this.player1.socketID}`)
     }
@@ -283,7 +244,7 @@ class Game {
     }
   }
 
-  mulliganPhase () {
+  mulliganPhase() {
     for (let i = 0; i < 5; i++) {
       this.player1.mulliganDraw()
     }
@@ -292,17 +253,21 @@ class Game {
     }
   }
 
-  async start () {
-    this.player1.board.push(new Cards['PlayerOneMinion'](this, this.player1, 'board'))
-    this.player2.board.push(new Cards['PlayerTwoMinion'](this, this.player2, 'board'))
+  async start() {
+    this.player1.leader.push(new GenericLeader(this, this.player1, 'leader'))
+    this.inPlay.push(this.player1.leader[0])
+    this.player2.leader.push(new GenericLeader(this, this.player2, 'leader'))
+    this.inPlay.push(this.player2.leader[0])
+    this.player1.board.push(new Cards.PlayerOneUnit(this, this.player1, 'board'))
     this.inPlay.push(this.player1.board[0])
+    this.player2.board.push(new Cards.PlayerTwoUnit(this, this.player2, 'board'))
     this.inPlay.push(this.player2.board[0])
     console.log('starting game')
     await this.sleep(1000)
     this.turnLoop(this.player1)
   }
 
-  async turnLoop (activePlayer: GamePlayer) {
+  async turnLoop(activePlayer: GamePlayer) {
     this.turnNumber++
     this.turn = new Turn(this, activePlayer, this.turnNumber)
     this.turnCache.push(this.turn)
@@ -312,13 +277,13 @@ class Game {
     TestBot(this)
     const nextActivePlayer = await nextActivePlayerPromise
     this.announceGameState()
-    if (nextActivePlayer) {
+    if (nextActivePlayer && !this.gameOver) {
       // console.log(nextActivePlayer)
       this.turnLoop(nextActivePlayer)
     }
   }
 
-  endGame () {
+  endGame() {
     this.turn.over = true
     this.gameOver = true
     if (this.player1.alive() && !this.player2.alive()) {
@@ -337,3 +302,31 @@ class Game {
 }
 
 export default Game
+
+import GamePlayer from '../gameObjects/GamePlayer'
+import Cards from '../dictionaries/Cards'
+import Decks from '../dictionaries/Decks'
+import AuraManager from './AuraManager'
+import PhaseManager from './PhaseManager'
+import Turn from '../gameObjects/Turn'
+import Actions from '../dictionaries/Actions'
+import Effects from '../dictionaries/Effects'
+import Permissions from './Permissions'
+import Utils from './Utils'
+import TestBot from '../gameTests/TestBot'
+// import Card from "./Card";
+// import Unit from "./Unit";
+// import Spell from "./Spell";
+// import { Deck, deck1, deck2 } from "./Deck";
+// import EventEmitter from 'events'
+import serverEvent from '../../ServerEvent'
+import Card from '../gameObjects/Card'
+import Character from '../gameObjects/Character'
+import { EventEmitter } from 'events'
+import EventCache from '../gameEvents/EventCache'
+import Effect from '../functionTypes/Effect'
+import ActionFactory from '../functionTypes/ActionFactory'
+import TargetRequirementFactory from '../functionTypes/TargetRequirementFactory'
+import TargetRequirements from '../dictionaries/TargetRequirements'
+import GenericLeader from '../cards/GenericLeader'
+import PersistentCard from '../gameObjects/PersistentCard'

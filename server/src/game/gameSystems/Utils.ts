@@ -1,5 +1,4 @@
-import Game from "../Game"
-import Character from "../gameObjects/Character";
+import Game from "./Game"
 
 class Utils {
     game: Game
@@ -11,6 +10,18 @@ class Utils {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [array[i], array[j]] = [array[j], array[i]]
+        }
+    }
+
+    forEachBackward(array: any[], callback) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            callback(array[i])
+        }
+    }
+
+    findBackward(array: any[], callback) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            if (callback(array[i])) return array[i]
         }
     }
 
@@ -30,13 +41,13 @@ class Utils {
             const targetDomain = []
             zones.forEach(zone => {
                 switch (zone) {
-                    case 'enemyMinions':
+                    case 'enemyUnits':
                         targetDomain.push(...player.opponent.board)
                         break
                     case 'enemyLeader':
                         targetDomain.push(player.opponent.leader)
                         break
-                    case 'friendlyMinions':
+                    case 'friendlyUnits':
                         targetDomain.push(...player.board)
                         break
                     case 'friendlyLeader':
@@ -51,8 +62,10 @@ class Utils {
     }
 
     notBehindGuard(character: Character) {
-        return character.flags.guard || character.controller().board.every(minion => minion.flags.guard !== true)
+        return character.flags.guard || character.controller().board.every(unit => unit.flags.guard !== true)
     }
 }
 
 export default Utils
+
+import Character from "../gameObjects/Character";

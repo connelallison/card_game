@@ -1,10 +1,10 @@
-import Game from "../Game"
+import Game from "../gameSystems/Game"
 import Card from "../gameObjects/Card"
 import StaticEnchantment from "../gameObjects/StaticEnchantment"
-import Minion from "../gameObjects/Minion"
+import Unit from "../gameObjects/Unit"
 
 class FootmanExtraDamageDuringYourTurn extends StaticEnchantment {
-    owner: Minion
+    owner: Unit
     
     constructor(game: Game, owner: Card) {
         super(
@@ -13,7 +13,7 @@ class FootmanExtraDamageDuringYourTurn extends StaticEnchantment {
             'FootMan:ExtraDamageDuringYourTurn', 
             'Zeal', 
             ['board'],
-            ['minion'],
+            ['unit'],
             [(enchantment) => (enchantment.controller().myTurn())],
             ['stats'],
             [{

@@ -1,5 +1,3 @@
-import ObjectReport from "../structs/ObjectReport"
-
-type ObjectTypeString = 'leader' | 'minion' | 'spell' | 'enchantment'
+type ObjectTypeString = 'leader' | 'unit' | 'spell' | 'creation' | 'enchantment'
 
 export default ObjectTypeString

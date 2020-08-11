@@ -1,11 +1,11 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import Game from "../Game";
+import Game from "../gameSystems/Game";
 import Card from "../gameObjects/Card";
-import Minion from "../gameObjects/Minion";
+import Unit from "../gameObjects/Unit";
 import TargetRequirements from "../dictionaries/TargetRequirements";
 
 class JuniorOrcAttackAura extends AuraEnchantment {
-    owner: Minion
+    owner: Unit
     
     constructor(game: Game, owner: Card) {
         super(
@@ -14,7 +14,7 @@ class JuniorOrcAttackAura extends AuraEnchantment {
             'JuniorOrc:AttackAura', 
             'Fury', 
             ['board'],
-            ['minion'],
+            ['unit'],
             [],
             ['stats'],
             [{
@@ -22,7 +22,7 @@ class JuniorOrcAttackAura extends AuraEnchantment {
               value: 1,
               category: 'stats',
             }],
-            { minion: ['board'] },
+            { unit: ['board'] },
             [TargetRequirements.friendlyTarget(), TargetRequirements.notSelf()]
         )
     }

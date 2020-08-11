@@ -1,3 +1,6 @@
+import ObjectSubtypeString from "../stringTypes/ObjectSubtypeString";
+import ObjectTypeString from "../stringTypes/ObjectTypeString";
+
 interface ObjectReport {
   name: string,
   id: string,
@@ -5,7 +8,8 @@ interface ObjectReport {
   cost: number,
   attack?: number,
   health?: number,
-  type: string,
+  type: ObjectTypeString,
+  subtype: ObjectSubtypeString
   zone: string,
   ownerName: string,
   playerID: string,

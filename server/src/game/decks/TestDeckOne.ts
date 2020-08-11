@@ -11,10 +11,6 @@ class TestDeckOne extends Deck {
       'Footman',
       'Footman',
       'Footman',
-      'Footman',
-      'Footman',
-      'RoyalGuard',
-      'RoyalGuard',
       'RoyalGuard',
       'RoyalGuard',
       'RoyalGuard',
@@ -22,9 +18,13 @@ class TestDeckOne extends Deck {
       'Fireburst',
       'Fireburst',
       'Fireburst',
-      'Fireburst',
-      'Fireburst',
-      'Fireburst',
+      'HolyBook',
+      'HolyBook',
+      'HolyBook',
+      'KnightAcademy',
+      'KnightAcademy',
+      'KnightAcademy',
+      'KnightAcademy',
     ]
     super(game, owner, 'TestDeckOne', 'Test Deck 1', cards)
   }

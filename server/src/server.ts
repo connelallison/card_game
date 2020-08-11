@@ -4,14 +4,16 @@ import * as path from 'path'
 import ServerPlayer from './ServerPlayer'
 import serverEvent from './ServerEvent'
 // const { Deck, deck1, deck2 } = require("./game/Deck");
-import Game from './game/Game'
+import Game from './game/gameSystems/Game'
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 function testGame (socketID = null) {
   if (Math.floor(Math.random() * 2)) {
     const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', false, true, true, socketID, null, true)
+    testGame.init()
   } else {
     const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', false, true, true, socketID, null, true)
+    testGame.init()
   }
 
   // const gameThread = new Worker('./worker');
@@ -30,8 +32,10 @@ function testGame (socketID = null) {
 function pvpGame (player1SocketID, player2SocketID) {
   if (Math.floor(Math.random() * 2)) {
     const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckOne', 'TestDeckTwo', false, true, true, player1SocketID, player2SocketID)
+    pvpGame.init()
   } else {
     const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckTwo', 'TestDeckOne', false, true, true, player1SocketID, player2SocketID)
+    pvpGame.init()
   }
 }
 
@@ -74,7 +78,7 @@ io.on('connection', function (socket) {
     // console.log(`server: newGameStatus:${socketID}`);
     serverEvent.on(`newGameStatus:${socketID}`, function (gameState) {
       // console.log(gameState);
-      console.log(`server: newGameStatus:${socketID}`)
+      // console.log(`server: newGameStatus:${socketID}`)
       socket.emit('gameStateUpdate', gameState)
     })
 

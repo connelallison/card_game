@@ -1,4 +1,4 @@
-import Game from "../Game"
+import Game from "../gameSystems/Game"
 import Character from "../gameObjects/Character"
 import StaticEnchantment from "../gameObjects/StaticEnchantment"
 
@@ -12,7 +12,7 @@ class HealthBuff extends StaticEnchantment {
             'HealthBuff', 
             'Health Buff', 
             ['board', 'hand', 'deck', 'leader'],
-            ['minion', 'leader'],
+            ['unit', 'leader'],
             [],
             ['stats'],
             [{

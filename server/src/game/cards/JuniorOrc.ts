@@ -1,11 +1,11 @@
-import Minion from '../gameObjects/Minion'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
-import MinionZoneString from '../stringTypes/MinionZoneString'
+import UnitZoneString from '../stringTypes/UnitZoneString'
+import GenericUnit from '../gameObjects/GenericUnit'
 
-class JuniorOrc extends Minion {
-  constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
+class JuniorOrc extends GenericUnit {
+  constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 
       owner, 
@@ -15,13 +15,13 @@ class JuniorOrc extends Minion {
       2, 
       3, 
       3, 
-      'Your other minions have +1 Attack.', 
+      'Your other units have +1 Attack.', 
       [], 
       [],
       false, 
       null, 
       null)
-    this.addEnchantment(new Enchantments['JuniorOrcAttackAura'](this.game, this))
+    this.addEnchantment(new Enchantments.JuniorOrcAttackAura(this.game, this))
   }
 }
 

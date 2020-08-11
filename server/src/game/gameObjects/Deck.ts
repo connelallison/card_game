@@ -1,7 +1,7 @@
 // const Card = require("./Card");
-// const Minion = require("./Minion");
+// const Unit = require("./Unit");
 import Cards from '../dictionaries/Cards'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import Card from './Card'
 

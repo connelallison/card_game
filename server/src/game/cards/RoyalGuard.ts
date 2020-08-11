@@ -1,11 +1,12 @@
-import Minion from '../gameObjects/Minion'
-import Game from '../Game'
+import Unit from '../gameObjects/Unit'
+import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
-import MinionZoneString from '../stringTypes/MinionZoneString'
+import UnitZoneString from '../stringTypes/UnitZoneString'
+import GenericUnit from '../gameObjects/GenericUnit'
 
-class RoyalGuard extends Minion {
-  constructor (game: Game, owner: GamePlayer, zone: MinionZoneString) {
+class RoyalGuard extends GenericUnit {
+  constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
     super(
       game, 
       owner, 
@@ -22,7 +23,7 @@ class RoyalGuard extends Minion {
       null, 
       null
       )
-    this.addEnchantment(new Enchantments['Guard'](this.game, this))
+    this.addEnchantment(new Enchantments.Guard(this.game, this))
   }
 }
 export default RoyalGuard

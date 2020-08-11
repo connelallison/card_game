@@ -1,26 +1,27 @@
-import Card from './Card'
-import Game from '../Game'
+import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import ObjectReport from '../structs/ObjectReport'
 import ZoneString from '../stringTypes/ZoneString'
 import Action from '../functionTypes/Action'
 import TargetRequirement from '../functionTypes/TargetRequirement'
-import StaticEnchantment from './StaticEnchantment'
-import AuraEnchantment from './AuraEnchantment'
 import PlayRequirement from '../functionTypes/PlayRequirement'
+import DestroyableCard from './DestroyableCard'
+import StartOfTurnEvent from '../gameEvents/StartOfTurnEvent'
 
-abstract class Character extends Card {
-  type: 'leader' | 'minion'
+abstract class Character extends DestroyableCard {
+  type: 'leader' | 'unit'
+  subtype: 'leader' | 'generic' | 'named'
   rawAttack: number
+  rawHealth: number
   ready: boolean
   attack: number
   health: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'minion', rawCost: number, rawAttack: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: TargetRequirement[]) {
-    super(game, owner, zone, id, name, type, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'unit', subtype: 'leader' | 'generic' | 'named', rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]) {
+    super(game, owner, zone, id, name, type, subtype, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    this.ready = false
     this.rawAttack = rawAttack
     this.attack = this.rawAttack
-    this.ready = false
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
@@ -38,85 +39,55 @@ abstract class Character extends Card {
       attack: this.attack,
       health: this.health,
       type: this.type,
+      subtype: this.subtype,
       zone: this.zone,
       ownerName: this.owner.name,
       playerID: this.owner.playerID,
-      canBeSelected: this.canAttack(),
+      canBeSelected: this.canBeSelected(),
       requiresTarget: this.targeted,
       validTargets: this.validTargetIDs(),
       staticCardText: this.staticCardText,
     }
   }
 
-  updateStats(): void {
-    const stats = this.baseStats()
+  abstract updateValidTargets(): void 
 
-    this.enchantments.forEach(enchantment => {
-      if (
-        enchantment instanceof StaticEnchantment
-        && enchantment.categories.includes('stats')
-        && enchantment.active()
-      ) {
-        enchantment.effects.forEach(effect => {
-          if (effect.category === 'stats') effect.effect(stats, effect.value)
-        })
-      }
-    })
-
-    const auras: AuraEnchantment[] = this.game.auras.auras.stats[this.type][this.zone]
-    auras.forEach(enchantment => {
-      if (
-        enchantment.targetRequirements.every(requirement => requirement(enchantment, this))
-        && enchantment.categories.includes('stats')
-      ) {
-        enchantment.effects.forEach(effect => {
-          if (effect.category === 'stats') effect.effect(stats, effect.value)
-        })
-      }
-    })
-
-    this.attack = stats.attack
-    this.health = stats.health
-  }
-
-  updateValidTargets(): void {
-    if (!this.inPlay() && this.targeted) {
-      let newTargets = this.targetDomain(this.owner)
-      this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => requirement(this, target))
-      })
-      this.validTargets = newTargets
-    } else if (this.inPlay()) {
-      this.validTargets = (this.owner.opponent.leader as Character[]).concat(this.owner.opponent.board).filter(defender => {
-        return this.game.permissions.canAttack(this, defender)
-      })
+  canBeSelected(): boolean {
+    if (this.inPlay()) {
+      return this.canAttack() && this.hasTargets()
     } else {
-      this.validTargets = []
+      return this.canBePlayed()
     }
   }
 
-
-  startOfTurn(event): void {
+  startOfTurn(event: StartOfTurnEvent): void {
     if (event.activePlayer === this.controller() && this.inPlay()) {
       this.getReady()
     }
   }
 
   getReady(): void {
-    this.ready = true
+    if (this.inPlay()) {
+      this.ready = true
+    } else {
+      throw new Error(`getReady() is being called on a character (${this.name}) while not in play`)
+    }
   }
 
   canAttack(): boolean {
     return this.owner.myTurn() && this.ready && this.inPlay() && this.attack > 0
   }
 
+  hasTargets(): boolean {
+    return this.validTargets.length > 0
+  }
+
   charOwner(): Character {
     return this
   }
 
-  abstract baseStats(): { attack: number, health: number }
   abstract takeDamage(damage: number): void
-  abstract inPlay(): boolean
+  abstract receiveHealing(healing: number): void
 }
 
 export default Character

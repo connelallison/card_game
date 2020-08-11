@@ -1,4 +1,3 @@
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import GameEvent from "../gameEvents/GameEvent";
 
 interface TriggerRequirement {
@@ -6,3 +5,5 @@ interface TriggerRequirement {
 }
 
 export default TriggerRequirement
+
+import TriggerEnchantment from "../gameObjects/TriggerEnchantment";

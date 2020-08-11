@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class Minion extends Component {
+class Passive extends Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -32,21 +32,20 @@ class Minion extends Component {
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
-    const styleClasses = outlineStatus + " minion card"
+    const styleClasses = outlineStatus + " passive card"
     return (
       <div onClick={this.handleClick} className={styleClasses}>
-        <p className='card-name'>{this.props.object.name}</p>
-        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
+        {/* <p className='card-name'>{this.props.object.name}</p>
+        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p> */}
         {/* <br /> */}
-        <div className="multicolour-line">
-          <p className='attack-label'>{this.props.object.attack}A</p> 
-          <p className='health-label'>{this.props.object.health}H</p>
-          <p className='cost-label'>{this.props.object.cost}C</p>
-        </div>
+        {/* <div className="multicolour-line">
+          <p className='health-label stat-label'>{this.props.object.health}H</p>
+          <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+        </div> */}
       </div>
     )
   }
 
 }
 
-export default Minion
+export default Passive

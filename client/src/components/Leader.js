@@ -29,14 +29,17 @@ class Leader extends Component {
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " leader"
+    const attackLabel = this.props.object.attack > 0 ? (
+      <p className='attack-label stat-label'>{this.props.object.attack}A</p>
+    ) : null
     return (
       <div onClick={this.handleClick} className={styleClasses} >
         <p className='card-name'>{this.props.mine ? "My leader." : "Opponent's leader."}</p>
         <p className={`card-text`}>{this.props.object.staticCardText}</p>
         <div className="multicolour-line">
-          <p className='attack-label'>{this.props.object.attack}A</p>
-          <p className='health-label'>{this.props.object.health}H</p>
-          <p className='cost-label'>{this.props.object.currentMana}/{this.props.object.maxMana}C</p>
+          {attackLabel}
+          <p className='health-label stat-label'>{this.props.object.health}H</p>
+          <p className='cost-label stat-label'>{this.props.object.currentMana}/{this.props.object.maxMana}C</p>
         </div>
         {/* 
       <p>Leader's attack: {this.props.object.attack}</p>

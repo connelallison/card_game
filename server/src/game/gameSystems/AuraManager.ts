@@ -1,7 +1,4 @@
-import Game from "../Game";
-import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import ObjectTypeString from "../stringTypes/ObjectTypeString";
-import ZoneString from "../stringTypes/ZoneString";
+import Game from "./Game";
 import AurasObject from "../structs/AurasObject";
 
 class AuraManager {
@@ -12,7 +9,7 @@ class AuraManager {
         this.game = game;
         this.auras = {
             stats: {
-                minion: {
+                unit: {
                     hand: [],
                     deck: [],
                     board: [],
@@ -21,6 +18,11 @@ class AuraManager {
                     hand: [],
                     deck: [],
                     leader: [],
+                },
+                creation: {
+                    hand: [],
+                    deck: [],
+                    creations: [],
                 },
                 spell: {
                     hand: [],
@@ -28,7 +30,7 @@ class AuraManager {
                 },
             },
             flags: {
-                minion: {
+                unit: {
                     hand: [],
                     deck: [],
                     board: [],
@@ -37,6 +39,11 @@ class AuraManager {
                     hand: [],
                     deck: [],
                     leader: [],
+                },
+                creation: {
+                    hand: [],
+                    deck: [],
+                    creations: [],
                 },
                 spell: {
                     hand: [],
@@ -74,3 +81,8 @@ class AuraManager {
 }
 
 export default AuraManager
+
+import AuraEnchantment from "../gameObjects/AuraEnchantment";
+import ObjectTypeString from "../stringTypes/ObjectTypeString";
+import ZoneString from "../stringTypes/ZoneString";
+import EffectCategoryString from "../stringTypes/EffectCategoryString";

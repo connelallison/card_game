@@ -1,17 +1,17 @@
 import Game from "../gameSystems/Game";
-import Spell from "./Spell";
+import Moment from "./Moment";
 import GamePlayer from "./GamePlayer";
-import SpellZoneString from "../stringTypes/SpellZoneString";
+import MomentZoneString from "../stringTypes/MomentZoneString";
 import Action from "../functionTypes/Action";
 import PlayRequirement from "../functionTypes/PlayRequirement";
 import TargetRequirement from "../functionTypes/TargetRequirement";
 
-abstract class ActionSpell extends Spell {
+abstract class ActionMoment extends Moment {
     subtype: 'action'
 
-    constructor (game: Game, owner: GamePlayer, zone: SpellZoneString, id: string, name: string, rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
+    constructor (game: Game, owner: GamePlayer, zone: MomentZoneString, id: string, name: string, rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
         super(game, owner, zone, id, name, 'action', rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
       }
 }
 
-export default ActionSpell
+export default ActionMoment

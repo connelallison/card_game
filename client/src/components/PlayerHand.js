@@ -1,6 +1,6 @@
 import React from 'react'
 import Unit from './Unit.js'
-import Spell from './Spell.js'
+import Moment from './Moment.js'
 import Unknown from './Unknown.js'
 import Creation from './Creation.js'
 
@@ -14,16 +14,16 @@ const PlayerHand = (props) => {
         return (
           <Unit object={card} selected={props.selected} interactivity={props.interactivity} />
         )
-      } else if (card.type === 'spell') {
+      } else if (card.type === 'moment') {
         return (
-          <Spell object={card} selected={props.selected} interactivity={props.interactivity} />
+          <Moment object={card} selected={props.selected} interactivity={props.interactivity} />
         )
       } else if (card.type === 'creation') {
         return (
           <Creation object={card} selected={props.selected} interactivity={props.interactivity} />
         )
       } else {
-        return new Error('card is not a unit, spell, or creation')
+        return new Error('card is not a unit, moment, or creation')
       }
     })
   } else {

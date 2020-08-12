@@ -1,3 +1,3 @@
-type CardTypeString = 'leader' | 'unit' | 'spell' | 'creation'
+type CardTypeString = 'leader' | 'unit' | 'moment' | 'creation'
 
 export default CardTypeString

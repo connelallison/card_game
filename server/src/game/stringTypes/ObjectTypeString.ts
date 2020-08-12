@@ -1,3 +1,3 @@
-type ObjectTypeString = 'leader' | 'unit' | 'spell' | 'creation' | 'enchantment'
+type ObjectTypeString = 'leader' | 'unit' | 'moment' | 'creation' | 'enchantment'
 
 export default ObjectTypeString

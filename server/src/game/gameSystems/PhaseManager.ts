@@ -129,7 +129,7 @@ class PhaseManager {
         if (event.card instanceof PersistentCard) {
             this.playPhasePersistent(event)
         } else {
-            this.playPhaseSpell(event)
+            this.playPhaseMoment(event)
         } 
         this.deathPhase()
     }
@@ -151,10 +151,10 @@ class PhaseManager {
         this.game.event.emit('afterPlay', event)
     }
 
-    playPhaseSpell(event: PlayEvent): void {
-        const spell = event.card as Spell
-        event.player.spendMana(spell.cost)
-        spell.moveZone('graveyard')
+    playPhaseMoment(event: PlayEvent): void {
+        const moment = event.card as Moment
+        event.player.spendMana(moment.cost)
+        moment.moveZone('graveyard')
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
         this.actionPhase(event)
@@ -168,7 +168,7 @@ class PhaseManager {
         actionCard.actions.forEach(action => {
             action(actionCard, event.targets)
         })
-        this.game.event.emit('afterSpell', event)
+        this.game.event.emit('afterMoment', event)
     }
 
     summonPhase(eventObj: SummonPhaseObject): void {
@@ -246,7 +246,7 @@ import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
 import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
 import PlayEventObject from "../gameEvents/PlayEventObject";
 import PlayEvent from "../gameEvents/PlayEvent";
-import Spell from "../gameObjects/Spell";
+import Moment from "../gameObjects/Moment";
 import DrawSequenceObject from "../gameEvents/DrawSequenceObject";
 import DrawSequence from "../gameEvents/DrawSequence";
 import DestroyableCard from "../gameObjects/DestroyableCard";

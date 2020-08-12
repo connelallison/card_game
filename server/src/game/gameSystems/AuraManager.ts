@@ -24,7 +24,7 @@ class AuraManager {
                     deck: [],
                     creations: [],
                 },
-                spell: {
+                moment: {
                     hand: [],
                     deck: [],
                 },
@@ -45,7 +45,7 @@ class AuraManager {
                     deck: [],
                     creations: [],
                 },
-                spell: {
+                moment: {
                     hand: [],
                     deck: [],
                 },

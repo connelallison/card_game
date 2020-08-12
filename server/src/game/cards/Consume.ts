@@ -1,12 +1,12 @@
 import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
-import SpellZoneString from '../stringTypes/SpellZoneString'
+import MomentZoneString from '../stringTypes/MomentZoneString'
 import Actions from '../dictionaries/Actions'
 import PlayRequirements from '../dictionaries/PlayRequirements'
-import EventSpell from '../gameObjects/EventSpell'
+import EventMoment from '../gameObjects/EventMoment'
 
-class Consume extends EventSpell {
-  constructor (game: Game, owner: GamePlayer, zone: SpellZoneString) {
+class Consume extends EventMoment {
+  constructor (game: Game, owner: GamePlayer, zone: MomentZoneString) {
     super(
       game, 
       owner, 

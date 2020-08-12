@@ -2,18 +2,18 @@ import Card from './Card'
 import ObjectReport from '../structs/ObjectReport'
 import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
-import SpellZoneString from '../stringTypes/SpellZoneString'
+import MomentZoneString from '../stringTypes/MomentZoneString'
 import Action from '../functionTypes/Action'
 import TargetRequirement from '../functionTypes/TargetRequirement'
 import PlayRequirement from '../functionTypes/PlayRequirement'
 
-abstract class Spell extends Card {
-  zone: SpellZoneString
-  type: 'spell'
+abstract class Moment extends Card {
+  zone: MomentZoneString
+  type: 'moment'
   subtype: 'event' | 'action'
 
-  constructor (game: Game, owner: GamePlayer, zone: SpellZoneString, id: string, name: string, subtype: 'event' | 'action', rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
-    super(game, owner, zone, id, name, 'spell', subtype, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+  constructor (game: Game, owner: GamePlayer, zone: MomentZoneString, id: string, name: string, subtype: 'event' | 'action', rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
+    super(game, owner, zone, id, name, 'moment', subtype, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
   }
 
   provideReport (): ObjectReport {
@@ -37,7 +37,7 @@ abstract class Spell extends Card {
     }
   }
 
-  moveZone(destination: SpellZoneString): void {
+  moveZone(destination: MomentZoneString): void {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
@@ -45,4 +45,4 @@ abstract class Spell extends Card {
   }
 }
 
-export default Spell
+export default Moment

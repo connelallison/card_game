@@ -18,7 +18,7 @@ interface AurasObject {
             deck: AuraEnchantment[],
             creations: AuraEnchantment[],
         },
-        spell: {
+        moment: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
         },
@@ -39,7 +39,7 @@ interface AurasObject {
             deck: AuraEnchantment[],
             creations: AuraEnchantment[],
         },
-        spell: {
+        moment: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
         },

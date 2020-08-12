@@ -1,4 +1,5 @@
 node_modules
 testLog.txt
 server/built/*
+client/build/*
 client/.env

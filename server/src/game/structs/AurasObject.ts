@@ -3,43 +3,49 @@ import AuraEnchantment from "../gameObjects/AuraEnchantment"
 
 interface AurasObject {
     stats: {
-        unit: {
+        Unit: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
             board: AuraEnchantment[],
         },
-        leader: {
+        Leader: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
-            leader: AuraEnchantment[],
+            leaderZone: AuraEnchantment[],
         },
-        creation: {
+        LeaderAbility: {
+            leaderAbilityZone: AuraEnchantment[],
+        },
+        Creation: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
-            creations: AuraEnchantment[],
+            creationZone: AuraEnchantment[],
         },
-        spell: {
+        Moment: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
         },
     },
     flags: {
-        unit: {
+        Unit: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
             board: AuraEnchantment[],
         },
-        leader: {
+        Leader: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
-            leader: AuraEnchantment[],
+            leaderZone: AuraEnchantment[],
         },
-        creation: {
+        LeaderAbility: {
+            leaderAbilityZone: AuraEnchantment[],
+        },
+        Creation: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
-            creations: AuraEnchantment[],
+            creationZone: AuraEnchantment[],
         },
-        spell: {
+        Moment: {
             hand: AuraEnchantment[],
             deck: AuraEnchantment[],
         },

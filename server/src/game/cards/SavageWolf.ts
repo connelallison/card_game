@@ -13,6 +13,7 @@ class SavageWolf extends GenericUnit {
       zone, 
       'SavageWolf', 
       'Savage Wolf', 
+      true,
       3, 
       4, 
       2, 

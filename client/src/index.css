@@ -45,19 +45,19 @@ p.lowerMargin {
 }
 
 .creationZone {
-  width: 35%;
+  width: 31%;
 }
 
 .creationList.cardList {
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .passiveZone {
-  width: 35%;
+  width: 39%;
 }
 
 .passiveList.cardList {
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .leader {

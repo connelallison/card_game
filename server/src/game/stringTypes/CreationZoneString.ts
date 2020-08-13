@@ -1,3 +1,3 @@
-type CreationZoneString = 'creations' | 'hand' | 'deck' | 'graveyard' | 'setAside'
+type CreationZoneString = 'creationZone' | 'hand' | 'deck' | 'graveyard' | 'setAside'
 
 export default CreationZoneString

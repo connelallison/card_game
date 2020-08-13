@@ -4,20 +4,24 @@ import Cards from '../dictionaries/Cards'
 import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import Card from './Card'
+import DeckObject from '../structs/DeckObject'
+import Leader from './Leader'
 
 class Deck {
   game: Game
   owner: GamePlayer
   id: string
   name: string
+  leader: Leader
   cards: Card[]
 
-  constructor (game, owner, deckID, deckName, cards) {
+  constructor (game, owner, deckID, deckName, deck: DeckObject) {
     this.game = game
     this.owner = owner
     this.id = deckID
     this.name = deckName
-    this.cards = cards.map(cardID => new Cards[cardID](this.game, this.owner, 'deck'))
+    this.leader = new Cards[deck.leader](this.game, this.owner, 'setAside')
+    this.cards = deck.cards.map(cardID => new Cards[cardID](this.game, this.owner, 'deck'))
     this.shuffle()
   }
 

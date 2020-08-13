@@ -1,10 +1,9 @@
 import StaticEnchantment from "../gameObjects/StaticEnchantment";
 import Game from "../gameSystems/Game";
-import Unit from "../gameObjects/Unit";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 
 class Pillage extends StaticEnchantment {
-    owner: Unit
+    owner: DestroyableCard
     
     constructor(game: Game, owner: DestroyableCard) {
         super(
@@ -12,8 +11,8 @@ class Pillage extends StaticEnchantment {
             owner,
             'Pillage', 
             'Pillage', 
-            ['board', 'leader', 'creations'],
-            ['unit', 'leader', 'creation'],
+            ['board', 'leaderZone', 'creationZone'],
+            ['Unit', 'Leader', 'Creation'],
             [],
             ['flags'],
             [{

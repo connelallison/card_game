@@ -1,9 +1,9 @@
-import TestDeckOne from '../decks/TestDeckOne'
-import TestDeckTwo from '../decks/TestDeckTwo'
+import KnightDeck from '../decks/KnightDeck'
+import OrcDeck from '../decks/OrcDeck'
 
 const Decks = {
-  TestDeckOne,
-  TestDeckTwo,
+  KnightDeck: KnightDeck,
+  OrcDeck: OrcDeck,
 }
 
 export default Decks

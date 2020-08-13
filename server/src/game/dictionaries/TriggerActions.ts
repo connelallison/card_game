@@ -1,12 +1,11 @@
 const TriggerActions: {[index: string]: TriggerActionFactory} = {
     buffCharOwnerAttackAndHealth: (attack: number, health: number) => ((event: GameEvent, enchantment: TriggerEnchantment) => {
-        Actions.buffCharacterAttackAndHealth(attack, health)(enchantment, [enchantment.charOwner()])
+        Actions.buffCharactersAttackAndHealth(attack, health)(enchantment, [enchantment.charOwner()])
     }),
     healFriendlyCharacters: (value: number) => ((event: GameEvent, enchantment: TriggerEnchantment) => {
-        Actions.healMultipleCharacters(value)(enchantment, (enchantment.controller().leader as Character[]).concat(enchantment.controller().board))
+        Actions.healMultipleCharacters(value)(enchantment, (enchantment.controller().leaderZone as Character[]).concat(enchantment.controller().board))
     }),
     summonSpecificCard: (cardID: string, number: number = 1, friendly: boolean = true) => ((event: GameEvent, enchantment: TriggerEnchantment) => {
-        console.log('trigger running')
         Actions.summonCard(cardID, number, friendly)(enchantment)
     })
 }

@@ -1,18 +1,19 @@
 import Game from "../gameSystems/Game";
-import Creation from "../gameObjects/Creation";
+import WorkCreation from "../gameObjects/WorkCreation";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import TriggerActions from "../dictionaries/TriggerActions";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";
 
 class HolyBookHealing extends TriggerEnchantment {
-    constructor(game: Game, owner: Creation) {
+    owner: WorkCreation
+    constructor(game: Game, owner: WorkCreation) {
         super(
             game,
             owner,
             'HolyBook:Healing',
             'Holy Book Healing',
-            ['creations'],
-            ['creation'],
+            ['creationZone'],
+            ['Creation'],
             [],
             true,
             ['endOfTurn'],

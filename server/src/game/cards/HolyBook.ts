@@ -12,6 +12,7 @@ class HolyBook extends WorkCreation {
             zone,
             'HolyBook',
             'Holy Book',
+            true,
             2,
             3,
             'At the end of your turn, restore 2 Health to all friendly characters.',

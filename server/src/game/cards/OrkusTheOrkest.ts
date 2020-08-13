@@ -12,6 +12,7 @@ class OrkusTheOrkest extends NamedUnit {
           zone, 
           'OrkusTheOrkest', 
           'Orkus the Orkest', 
+          true,
           4, 
           4, 
           5, 

@@ -1,8 +1,10 @@
 import Deck from '../gameObjects/Deck'
 
-class TestDeckTwo extends Deck {
+class OrcDeck extends Deck {
   constructor (game, owner) {
-    const cards = [
+    const deck = {
+      leader: 'Orcissimus',
+      cards: [
       'JuniorOrc',
       'JuniorOrc',
       'JuniorOrc',
@@ -16,17 +18,18 @@ class TestDeckTwo extends Deck {
       'SavageWolf',
       'OrkusTheOrkest',
       'OrkusTheOrkest',
-      'OrkusTheOrkest',
       'Consume',
       'Consume',
       'Consume',
       'Consume',
       'ClubOfLooting',
       'ClubOfLooting',
-      'ClubOfLooting',
+      'CorporalMotivation',
+      'CorporalMotivation',
     ]
-    super(game, owner, 'TestDeckTwo', 'Test Deck 2', cards)
+  }
+    super(game, owner, 'OrcDeck', 'Orc Deck', deck)
   }
 }
 
-export default TestDeckTwo
+export default OrcDeck

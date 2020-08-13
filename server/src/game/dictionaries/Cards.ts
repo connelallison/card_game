@@ -11,6 +11,12 @@ import ClubOfLooting from '../cards/ClubOfLooting'
 import KnightAcademy from '../cards/KnightAcademy'
 import Knight from '../cards/Knight'
 import OrkusTheOrkest from '../cards/OrkusTheOrkest'
+import CorporalMotivation from '../cards/CorporalMotivation'
+import Orcissimus from '../cards/Orcissimus'
+import OrcissimusSmash from '../cards/OrcissimusSmash'
+import KingFredTheSaintly from '../cards/KingFredTheSaintly'
+import KingFredTheSaintlyRecruit from '../cards/KingFredTheSaintlyRecruit'
+import PrinceTimothy from '../cards/PrinceTimothy'
 
 const Cards = {
   PlayerOneUnit,
@@ -25,7 +31,13 @@ const Cards = {
   ClubOfLooting,
   KnightAcademy,
   Knight,
-  OrkusTheOrkest
+  OrkusTheOrkest,
+  CorporalMotivation,
+  Orcissimus,
+  OrcissimusSmash,
+  KingFredTheSaintly,
+  KingFredTheSaintlyRecruit,
+  PrinceTimothy,
 }
 
 export default Cards

@@ -15,13 +15,13 @@ class SavageWolfTrigger extends TriggerEnchantment {
             'SavageWolf:Trigger', 
             'Savage Wolf Trigger', 
             ['board'],
-            ['unit'],
+            ['Unit'],
             [],
             true,
             ['afterDeath'],
             [{
                 eventType: 'afterDeath',
-                requirements: [TriggerRequirements.isType('unit', 'object'), TriggerRequirements.isFriendly('object')],
+                requirements: [TriggerRequirements.isType('Unit', 'object'), TriggerRequirements.isFriendly('object')],
                 actions: [TriggerActions.buffCharOwnerAttackAndHealth(1, 1)]
             }]
         )

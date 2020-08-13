@@ -1,3 +1,3 @@
-type ObjectSubtypeString = 'leader' | 'generic' | 'named' | 'action' | 'event' | 'work' | 'wonder'  | 'weapon' | 'discovery' | 'static' | 'aura' | 'trigger'
+type ObjectSubtypeString = 'Leader' | 'Generic' | 'Named' | 'Action' | 'Event' | 'Work' | 'Wonder'  | 'Weapon' | 'Ability' | 'Static' | 'Aura' | 'Trigger' | 'Active' | 'Passive' | 'Auto'
 
 export default ObjectSubtypeString

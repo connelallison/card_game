@@ -13,7 +13,7 @@ class FootmanExtraDamageDuringYourTurn extends StaticEnchantment {
             'FootMan:ExtraDamageDuringYourTurn', 
             'Zeal', 
             ['board'],
-            ['unit'],
+            ['Unit'],
             [(enchantment) => (enchantment.controller().myTurn())],
             ['stats'],
             [{

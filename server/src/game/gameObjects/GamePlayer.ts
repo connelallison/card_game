@@ -4,7 +4,8 @@ class GamePlayer {
   playerID: string
   socketID: string
   health: number
-  leader: Leader[]
+  leaderZone: Leader[]
+  leaderAbilityZone: LeaderAbility[]
   maxMana: number
   currentMana: number
   hand: Card[]
@@ -12,16 +13,15 @@ class GamePlayer {
   fatigueCounter: number
   board: Unit[]
   graveyard: Card[]
-  creations: Creation[]
+  creationZone: Creation[]
   max: {
     hand: number,
     deck: number,
     board: number,
-    creations: number,
-    passives: number
-    leader: 1
+    creationZone: number,
+    passiveZone: number
   }
-  passives: any[]
+  passiveZone: any[]
   setAside: GameObject[]
   opponent: GamePlayer
   bot: boolean
@@ -32,7 +32,8 @@ class GamePlayer {
     this.playerID = `${this.name}:${Math.random()}`
     this.socketID = socketID
     this.health = 20
-    this.leader = []
+    this.leaderZone = []
+    this.leaderAbilityZone = []
     this.maxMana = 2
     this.currentMana = 2
     this.hand = []
@@ -40,16 +41,15 @@ class GamePlayer {
     this.fatigueCounter = 0
     this.board = []
     this.graveyard = []
-    this.creations = []
-    this.passives = []
+    this.creationZone = []
+    this.passiveZone = []
     this.setAside = []
     this.max = {
       hand: 10,
       deck: 50,
       board: 7,
-      creations: 4,
-      passives: 4,
-      leader: 1,
+      creationZone: 4,
+      passiveZone: 5,
     }
     this.opponent
     this.bot
@@ -59,7 +59,11 @@ class GamePlayer {
   }
 
   leaderReport() {
-    return Object.assign({}, this.leader[0].provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
+    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
+  }
+
+  leaderAbilityReport() {
+    return this.leaderAbilityZone[0].provideReport()
   }
 
   boardReport(): ObjectReport[] {
@@ -67,7 +71,7 @@ class GamePlayer {
   }
 
   creationsReport(): ObjectReport[] {
-    return this.creations.map(creation => creation.provideReport())
+    return this.creationZone.map(creation => creation.provideReport())
   }
 
   handReport(): ObjectReport[] {
@@ -126,6 +130,10 @@ class GamePlayer {
     return this.game.permissions.canPlay(this, card)
   }
 
+  canUse(card: AbilityCreation | LeaderAbility): boolean {
+    return this.game.permissions.canUse(this, card)
+  }
+
   canSummon(card: PersistentCard): boolean {
     return this.game.permissions.canSummon(this, card)
   }
@@ -135,7 +143,7 @@ class GamePlayer {
   }
 
   alive(): boolean {
-    return this.leader[0].health > 0
+    return this.leaderZone[0].health > 0
   }
 
   spendMana(amount): void {
@@ -178,3 +186,6 @@ import Creation from './Creation'
 import PersistentCard from './PersistentCard'
 import GameObject from './GameObject'
 import PersistentCardTypeString from '../stringTypes/PersistentCardTypeString'
+import AbilityCreation from './AbilityCreation'
+import LeaderAbility from './LeaderAbility'
+

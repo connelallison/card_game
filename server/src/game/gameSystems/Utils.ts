@@ -45,13 +45,13 @@ class Utils {
                         targetDomain.push(...player.opponent.board)
                         break
                     case 'enemyLeader':
-                        targetDomain.push(player.opponent.leader)
+                        targetDomain.push(...player.opponent.leaderZone)
                         break
                     case 'friendlyUnits':
                         targetDomain.push(...player.board)
                         break
                     case 'friendlyLeader':
-                        targetDomain.push(player.leader)
+                        targetDomain.push(...player.leaderZone)
                         break
                     default:
                         break

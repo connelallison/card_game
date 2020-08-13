@@ -1,6 +1,6 @@
 import React from 'react'
 import Unit from './Unit.js'
-import Spell from './Spell.js'
+import Moment from './Moment.js'
 import Unknown from './Unknown.js'
 
 const OpponentHand = (props) => {
@@ -9,16 +9,16 @@ const OpponentHand = (props) => {
     cardList = props.cards.map((card) => {
       if (card.type === 'unknown') {
         return (<Unknown />)
-      } else if (card.type === 'unit') {
+      } else if (card.type === 'Unit') {
         return (
           <Unit name={card.name} cost={card.cost} attack={card.attack} health={card.health} />
         )
-      } else if (card.type === 'spell') {
+      } else if (card.type === 'Moment') {
         return (
-          <Spell name={card.name} cost={card.cost} />
+          <Moment name={card.name} cost={card.cost} />
         )
       } else {
-        return new Error('card is neither a unit nor a spell')
+        return new Error('card is neither a unit nor a moment')
       }
     })
   } else {

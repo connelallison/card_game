@@ -11,6 +11,7 @@ class Knight extends GenericUnit {
       zone, 
       'Knight', 
       'Knight', 
+      false,
       2, 
       2, 
       2, 

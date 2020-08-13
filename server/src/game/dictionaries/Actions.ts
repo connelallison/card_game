@@ -3,9 +3,9 @@ import Enchantments from './Enchantments'
 import GameObject from '../gameObjects/GameObject'
 import ActionFactory from '../functionTypes/ActionFactory'
 import TargetRequirement from '../functionTypes/TargetRequirement'
-import Cards from './Cards'
 import Unit from '../gameObjects/Unit'
 import DeathEvent from '../gameEvents/DeathEvent'
+import Knight from '../cards/Knight'
 
 const Actions: { [index: string]: ActionFactory } = {
     damageChosenTarget: (value: number = 0) => {
@@ -44,21 +44,21 @@ const Actions: { [index: string]: ActionFactory } = {
         }
     },
 
-    buffCharacterAttack: (attack: number = 0) => {
+    buffCharactersAttack: (attack: number = 0) => {
         return (source: GameObject, targets: Character[]) => {
-            targets[0].addEnchantment(new Enchantments.AttackBuff(source.game, targets[0], { attack }))
+            targets.forEach(target => target.addEnchantment(new Enchantments.AttackBuff(source.game, targets[0], { attack })))
         }
     },
 
-    buffCharacterHealth: (health: number = 0) => {
+    buffCharactersHealth: (health: number = 0) => {
         return (source: GameObject, targets: Character[]) => {
-            targets[0].addEnchantment(new Enchantments.HealthBuff(source.game, targets[0], { health }))
+            targets.forEach(target => target.addEnchantment(new Enchantments.HealthBuff(source.game, targets[0], { health })))
         }
     },
 
-    buffCharacterAttackAndHealth: (attack: number = 0, health: number = 0) => {
+    buffCharactersAttackAndHealth: (attack: number = 0, health: number = 0) => {
         return (source: GameObject, targets: Character[]) => {
-            targets[0].addEnchantment(new Enchantments.AttackAndHealthBuff(source.game, targets[0], { attack, health }))
+            targets.forEach(target => target.addEnchantment(new Enchantments.AttackAndHealthBuff(source.game, targets[0], { attack, health })))
         }
     },
 
@@ -94,7 +94,17 @@ const Actions: { [index: string]: ActionFactory } = {
             })
             if (lastUnitDeath) source.game.actions.summonCard(lastUnitDeath.object.id)(source)
         }
-    }  
+    },  
+
+    handBuffPerFriendlyKnight: () => {
+        return (source: GameObject) => {
+            const knightCount = source.controller().board.filter(unit => unit instanceof Knight).length
+            if (knightCount === 0) return
+            const handUnits = source.controller().hand.filter(card => card instanceof Unit) as Unit[]
+            if (handUnits.length === 0) return
+            source.game.actions.buffCharactersAttackAndHealth(knightCount, knightCount)(source, handUnits)
+        }
+    }
 
 }
 

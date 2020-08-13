@@ -12,6 +12,7 @@ class JuniorOrc extends GenericUnit {
       zone, 
       'JuniorOrc', 
       'Junior Orc', 
+      true,
       2, 
       3, 
       3, 

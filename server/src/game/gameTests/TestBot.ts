@@ -32,7 +32,7 @@ const TestBot = async (game: Game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
         const readyUnits = game.turn.activePlayer.board.filter(unit => unit.canAttack())
         for (const unit of readyUnits) {
-            const targets = (unit.owner.opponent.board as Character[]).concat(unit.owner.opponent.leader as Character[])
+            const targets = (unit.owner.opponent.board as Character[]).concat(unit.owner.opponent.leaderZone as Character[])
             for (const target of targets) {
                 if (game.permissions.canAttack(unit, target)) {
                     await game.sleep(1000)

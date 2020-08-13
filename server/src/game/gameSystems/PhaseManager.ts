@@ -92,7 +92,7 @@ class PhaseManager {
             this.healSinglePhase({
                 objectSource: event.objectSource,
                 charSource: event.objectSource.charOwner(),
-                target: event.objectSource.controller().leader[0],
+                target: event.objectSource.controller().leaderZone[0],
                 value: event.value,
             })
         }
@@ -129,8 +129,8 @@ class PhaseManager {
         if (event.card instanceof PersistentCard) {
             this.playPhasePersistent(event)
         } else {
-            this.playPhaseSpell(event)
-        } 
+            this.playPhaseMoment(event)
+        }
         this.deathPhase()
     }
 
@@ -143,32 +143,57 @@ class PhaseManager {
             controller: event.player,
             card,
             objectSource: card,
-            charSource: event.player.leader[0],
+            charSource: event.player.leaderZone[0],
         })
-        if (card.actions.length > 0) {
-            this.actionPhase(event)
-        }
+        this.actionPhase({
+            player: event.player,
+            card: event.card,
+            targets: event.targets,
+        })
         this.game.event.emit('afterPlay', event)
     }
 
-    playPhaseSpell(event: PlayEvent): void {
-        const spell = event.card as Spell
-        event.player.spendMana(spell.cost)
-        spell.moveZone('graveyard')
+    playPhaseMoment(event: PlayEvent): void {
+        const moment = event.card as Moment
+        event.player.spendMana(moment.cost)
+        moment.moveZone('graveyard')
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
-        this.actionPhase(event)
+        this.actionPhase({
+            player: event.player,
+            card: event.card,
+            targets: event.targets,
+        })
         this.game.event.emit('afterPlay', event)
     }
 
-    actionPhase(event: PlayEvent): void {
+    actionPhase(eventObj: ActionEventObject): void {
+        if (eventObj.card.actions.length === 0) return
+        const event = new ActionEvent(this.game, eventObj)
         const actionCard = event.card
         this.game.event.emit('beforeAction', event)
+        if (actionCard instanceof AbilityCreation || actionCard instanceof LeaderAbility) { 
+            if (actionCard instanceof AbilityCreation) actionCard.loseCharge() 
+        } 
         this.game.turn.cacheEvent(event, 'action')
         actionCard.actions.forEach(action => {
             action(actionCard, event.targets)
         })
-        this.game.event.emit('afterSpell', event)
+        this.game.event.emit('afterAction', event)
+    }
+
+    usePhase(eventObj: ActionEventObject): void {
+        const {player, targets} = eventObj
+        const card = eventObj.card as AbilityCreation | LeaderAbility
+        console.log('repeatable: ', card.repeatable)
+        player.spendMana(card.cost)
+        console.log('disabling ability')
+        console.log('repeatable: ', card.repeatable)
+        console.log('ready: ', card.ready)
+        if (!card.repeatable) card.ready = false
+        console.log('ready: ', card.ready)
+        this.actionPhase(eventObj)
+        this.deathPhase()
     }
 
     summonPhase(eventObj: SummonPhaseObject): void {
@@ -187,8 +212,10 @@ class PhaseManager {
     enterPlayPhase(eventObj: EnterPlayEventObject) {
         const event = new EnterPlayEvent(this.game, eventObj)
         event.card.putIntoPlay()
-        this.game.turn.cacheEvent(event, 'enterPlay')
-        this.game.event.emit('onEnterPlay', event)
+        if (this.game.turn) {
+            this.game.turn.cacheEvent(event, 'enterPlay')
+            this.game.event.emit('onEnterPlay', event)
+        }
     }
 
     drawPhase(eventObject: DrawSequenceObject): void {
@@ -219,9 +246,9 @@ class PhaseManager {
                 // attempts to draw, but can't
                 player.fatigueCounter++
                 this.damageSinglePhase({
-                    objectSource: player.leader[0],
-                    charSource: player.leader[0],
-                    target: player.leader[0],
+                    objectSource: player.leaderZone[0],
+                    charSource: player.leaderZone[0],
+                    target: player.leaderZone[0],
                     value: player.fatigueCounter,
                 })
             }
@@ -246,7 +273,7 @@ import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
 import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
 import PlayEventObject from "../gameEvents/PlayEventObject";
 import PlayEvent from "../gameEvents/PlayEvent";
-import Spell from "../gameObjects/Spell";
+import Moment from "../gameObjects/Moment";
 import DrawSequenceObject from "../gameEvents/DrawSequenceObject";
 import DrawSequence from "../gameEvents/DrawSequence";
 import DestroyableCard from "../gameObjects/DestroyableCard";
@@ -258,4 +285,8 @@ import EnterPlayEventObject from "../gameEvents/EnterPlayEventObject";
 import PersistentCard from "../gameObjects/PersistentCard";
 import Cards from "../dictionaries/Cards";
 import SummonPhaseObject from "../gameEvents/SummonPhaseObject";
+import AbilityCreation from "../gameObjects/AbilityCreation";
+import ActionEventObject from "../gameEvents/ActionEventObject";
+import ActionEvent from "../gameEvents/ActionEvent";
+import LeaderAbility from "../gameObjects/LeaderAbility";
 

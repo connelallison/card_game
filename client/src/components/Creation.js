@@ -17,8 +17,12 @@ class Creation extends Component {
   handleClick () {
     if (this.props.selected === this.props.object) {
       this.props.interactivity.clearSelected();
-    } else if (this.props.selected === null && this.props.object.canBeSelected) {
-      this.props.interactivity.chooseSelected(this.props.object);
+    } else if (this.props.selected === null && this.props.object.zone === 'creationZone' && this.props.object.canBeSelected) {
+      if (this.props.object.requiresTarget) {
+          this.props.interactivity.chooseSelected(this.props.object)
+      } else {
+          this.props.interactivity.chooseSelectedNoTarget(this.props.object)
+      }
     } else if (this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted()) {
       this.props.interactivity.chooseTarget(this.props.object)
     } else {
@@ -36,12 +40,13 @@ class Creation extends Component {
     const attackLabel = this.props.object.attack > 0 ? (
         <p className='attack-label stat-label'>{this.props.object.attack}A</p>
       ) : null
-    const type = this.props.object.type.charAt(0).toUpperCase() + this.props.object.type.slice(1)
-    const subtype = this.props.object.subtype.charAt(0).toUpperCase() + this.props.object.subtype.slice(1)
+    const costLabel = this.props.object.subtype === 'Ability' && this.props.object.zone === 'creationZone' ? (
+        <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+    ) : null
     const handInfo = this.props.object.zone === 'hand' ? (
       <div className="multicolour-line text-medium">
         <p className='cost-label stat-label'>{this.props.object.cost}C</p>
-        <p>{subtype} {type}</p>
+        <p>{this.props.object.subtype} {this.props.object.type}</p>
       </div>
     ) : null
     return (
@@ -51,6 +56,7 @@ class Creation extends Component {
         <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
         {/* <br /> */}
         <div className="multicolour-line">
+            {costLabel}
             {attackLabel}
           <p className='health-label stat-label'>{this.props.object.health}H</p>
         </div>

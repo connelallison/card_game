@@ -1,22 +1,22 @@
 import Enchantment from './Enchantment'
 import Game from '../gameSystems/Game'
-import Card from './Card'
 import ZoneString from '../stringTypes/ZoneString'
 import ObjectTypeString from '../stringTypes/ObjectTypeString'
 import EnchantmentEffect from '../structs/EnchantmentEffect'
 import AuraTargetTypes from '../structs/AuraTargetTypes'
 import TargetRequirement from '../functionTypes/TargetRequirement'
 import EffectCategoryString from '../stringTypes/EffectCategoryString'
+import GameObject from './GameObject'
 
 abstract class AuraEnchantment extends Enchantment {
-    subtype: 'aura'
+    subtype: 'Aura'
     categories: EffectCategoryString[]
     effects: EnchantmentEffect[]
     targetTypes: AuraTargetTypes
     targetRequirements: TargetRequirement[]
 
-    constructor(game: Game, owner: Card, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = [], categories: EffectCategoryString[], effects: EnchantmentEffect[], targetTypes: AuraTargetTypes, targetRequirements: TargetRequirement[] = []) {
-        super(game, owner, id, name, 'aura', activeZones, activeTypes, activeRequirements = [])
+    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = [], categories: EffectCategoryString[], effects: EnchantmentEffect[], targetTypes: AuraTargetTypes, targetRequirements: TargetRequirement[] = []) {
+        super(game, owner, id, name, 'Aura', activeZones, activeTypes, activeRequirements = [])
         this.categories = categories
         this.effects = effects
         this.targetTypes = targetTypes

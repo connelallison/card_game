@@ -7,10 +7,10 @@ import PlayRequirement from "../functionTypes/PlayRequirement";
 import TargetRequirement from "../functionTypes/TargetRequirement";
 
 abstract class ActionMoment extends Moment {
-    subtype: 'action'
+    subtype: 'Action'
 
-    constructor (game: Game, owner: GamePlayer, zone: MomentZoneString, id: string, name: string, rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
-        super(game, owner, zone, id, name, 'action', rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor (game: Game, owner: GamePlayer, zone: MomentZoneString, id: string, name: string, collectable: boolean, rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
+        super(game, owner, zone, id, name, 'Action', collectable, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
       }
 }
 

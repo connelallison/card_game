@@ -9,10 +9,10 @@ import Game from './game/gameSystems/Game'
 
 function testGame (socketID = null) {
   if (Math.floor(Math.random() * 2)) {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckOne', 'TestDeckTwo', false, true, true, socketID, null, true)
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'KnightDeck', 'OrcDeck', false, true, true, socketID, null, true)
     testGame.init()
   } else {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'TestDeckTwo', 'TestDeckOne', false, true, true, socketID, null, true)
+    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'OrcDeck', 'KnightDeck', false, true, true, socketID, null, true)
     testGame.init()
   }
 
@@ -31,10 +31,10 @@ function testGame (socketID = null) {
 
 function pvpGame (player1SocketID, player2SocketID) {
   if (Math.floor(Math.random() * 2)) {
-    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckOne', 'TestDeckTwo', false, true, true, player1SocketID, player2SocketID)
+    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'KnightDeck', 'OrcDeck', false, true, true, player1SocketID, player2SocketID)
     pvpGame.init()
   } else {
-    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'TestDeckTwo', 'TestDeckOne', false, true, true, player1SocketID, player2SocketID)
+    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'OrcDeck', 'KnightDeck', false, true, true, player1SocketID, player2SocketID)
     pvpGame.init()
   }
 }

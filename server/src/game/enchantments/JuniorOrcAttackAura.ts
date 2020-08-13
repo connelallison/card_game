@@ -14,7 +14,7 @@ class JuniorOrcAttackAura extends AuraEnchantment {
             'JuniorOrc:AttackAura', 
             'Fury', 
             ['board'],
-            ['unit'],
+            ['Unit'],
             [],
             ['stats'],
             [{
@@ -22,7 +22,7 @@ class JuniorOrcAttackAura extends AuraEnchantment {
               value: 1,
               category: 'stats',
             }],
-            { unit: ['board'] },
+            { Unit: ['board'] },
             [TargetRequirements.friendlyTarget(), TargetRequirements.notSelf()]
         )
     }

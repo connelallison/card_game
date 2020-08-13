@@ -9,11 +9,11 @@ import PlayRequirement from '../functionTypes/PlayRequirement'
 
 abstract class Moment extends Card {
   zone: MomentZoneString
-  type: 'moment'
-  subtype: 'event' | 'action'
+  type: 'Moment'
+  subtype: 'Event' | 'Action'
 
-  constructor (game: Game, owner: GamePlayer, zone: MomentZoneString, id: string, name: string, subtype: 'event' | 'action', rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
-    super(game, owner, zone, id, name, 'moment', subtype, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+  constructor (game: Game, owner: GamePlayer, zone: MomentZoneString, id: string, name: string, subtype: 'Event' | 'Action', collectable: boolean, rawCost: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain, targetRequirements: TargetRequirement[]) {
+    super(game, owner, zone, id, name, 'Moment', subtype, collectable, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
   }
 
   provideReport (): ObjectReport {

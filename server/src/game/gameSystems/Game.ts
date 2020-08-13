@@ -128,6 +128,7 @@ class Game {
         passives: [],
         creations: player.creationsReport(),
         board: player.boardReport(),
+        leaderAbility: player.leaderAbilityReport(),
         leader: player.leaderReport(),
         hand: player.handReport(),
         deck: player.deck.length
@@ -136,6 +137,7 @@ class Game {
         passives: [],
         creations: player.opponent.creationsReport(),
         board: player.opponent.boardReport(),
+        leaderAbility: player.opponent.leaderAbilityReport(),
         leader: player.opponent.leaderReport(),
         hand: opponentHand,
         deck: player.opponent.deck.length
@@ -160,7 +162,9 @@ class Game {
   executeMoveRequest(moveRequest, player) {
     const selected = this.gameObjects[moveRequest.selected.objectID] as Card
     let target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID] as Card
+
     if (selected instanceof Character && selected.inPlay()) {
+      // character in play attacking
       if (target instanceof Character && target.inPlay()) {
         if (this.permissions.canAttack(selected, target)) {
           this.phases.proposedAttackPhase({
@@ -169,8 +173,24 @@ class Game {
           })
         }
       }
-    } else if (selected.zone === 'hand') {
-      if (!selected.targeted && selected.canBePlayed()) {
+    } else if ((selected instanceof AbilityCreation || selected instanceof LeaderAbility) && selected.inPlay() && selected.canBeUsed()) {
+      // ability in play being used
+      if (!selected.targeted) {
+        this.phases.usePhase({
+          player: selected.owner,
+          card: selected,
+          targets: [],
+        })
+      } else if (this.permissions.canTarget(selected, target)) {
+        this.phases.usePhase({
+          player: selected.owner,
+          card: selected,
+          targets: [target],
+        })
+      }
+    } else if (selected.zone === 'hand' && selected.canBePlayed()) {
+      // card in hand being played
+      if (!selected.targeted) {
         this.phases.playPhase({
           player: selected.owner,
           card: selected,
@@ -218,8 +238,12 @@ class Game {
     } else {
       this.player2.bot = false
     }
-    this.player1.deck = new Decks[this.player1deckID](this, this.player1).cards
-    this.player2.deck = new Decks[this.player2deckID](this, this.player2).cards
+    const player1deck = new Decks[this.player1deckID](this, this.player1)
+    const player2deck = new Decks[this.player2deckID](this, this.player2)
+    player1deck.leader.putIntoPlay()
+    player2deck.leader.putIntoPlay()
+    this.player1.deck = player1deck.cards
+    this.player2.deck = player2deck.cards
   }
 
   initListeners() {
@@ -254,10 +278,10 @@ class Game {
   }
 
   async start() {
-    this.player1.leader.push(new GenericLeader(this, this.player1, 'leader'))
-    this.inPlay.push(this.player1.leader[0])
-    this.player2.leader.push(new GenericLeader(this, this.player2, 'leader'))
-    this.inPlay.push(this.player2.leader[0])
+    this.player1.leaderZone.push(new GenericLeader(this, this.player1, 'leaderZone'))
+    this.inPlay.push(this.player1.leaderZone[0])
+    this.player2.leaderZone.push(new GenericLeader(this, this.player2, 'leaderZone'))
+    this.inPlay.push(this.player2.leaderZone[0])
     this.player1.board.push(new Cards.PlayerOneUnit(this, this.player1, 'board'))
     this.inPlay.push(this.player1.board[0])
     this.player2.board.push(new Cards.PlayerTwoUnit(this, this.player2, 'board'))
@@ -328,5 +352,8 @@ import Effect from '../functionTypes/Effect'
 import ActionFactory from '../functionTypes/ActionFactory'
 import TargetRequirementFactory from '../functionTypes/TargetRequirementFactory'
 import TargetRequirements from '../dictionaries/TargetRequirements'
-import GenericLeader from '../cards/GenericLeader'
+import GenericLeader from '../cards/Orcissimus'
 import PersistentCard from '../gameObjects/PersistentCard'
+import AbilityCreation from '../gameObjects/AbilityCreation'
+import LeaderAbility from '../gameObjects/LeaderAbility'
+

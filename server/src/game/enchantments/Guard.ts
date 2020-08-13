@@ -13,7 +13,7 @@ class Guard extends StaticEnchantment {
             'Guard', 
             'Guard', 
             ['board'],
-            ['unit'],
+            ['Unit'],
             [],
             ['flags'],
             [{

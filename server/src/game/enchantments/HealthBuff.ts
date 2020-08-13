@@ -11,8 +11,8 @@ class HealthBuff extends StaticEnchantment {
             owner,
             'HealthBuff', 
             'Health Buff', 
-            ['board', 'hand', 'deck', 'leader'],
-            ['unit', 'leader'],
+            ['board', 'hand', 'deck', 'leaderZone'],
+            ['Unit', 'Leader'],
             [],
             ['stats'],
             [{

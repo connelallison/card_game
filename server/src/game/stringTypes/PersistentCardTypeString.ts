@@ -1,3 +1,3 @@
-type PersistentCardTypeString = 'leader' | 'unit' | 'creation'
+type PersistentCardTypeString = 'Leader' | 'Unit' | 'Creation' | 'LeaderAbility'
 
 export default PersistentCardTypeString

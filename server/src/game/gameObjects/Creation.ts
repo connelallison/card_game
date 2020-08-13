@@ -11,15 +11,15 @@ import DestroyableCard from "./DestroyableCard";
 
 abstract class Creation extends DestroyableCard {
     zone: CreationZoneString
-    inPlayZone: 'creations'
-    type: 'creation'
+    inPlayZone: 'creationZone'
+    type: 'Creation'
     subtype: CreationSubtypeString
     health: number
 
-    constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, subtype: CreationSubtypeString, rawCost: number, rawHealth: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[], targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
-        super(game, owner, zone, id, name, 'creation', subtype, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, subtype: CreationSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[], targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
+        super(game, owner, zone, id, name, 'Creation', subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
         this.health = this.rawHealth
-        this.inPlayZone = 'creations'
+        this.inPlayZone = 'creationZone'
     }
 
     provideReport(): ObjectReport {
@@ -46,7 +46,7 @@ abstract class Creation extends DestroyableCard {
     }
 
     inPlay(): boolean {
-        return this.zone === 'creations'
+        return this.zone === 'creationZone'
     }
 
     loseCharge() {

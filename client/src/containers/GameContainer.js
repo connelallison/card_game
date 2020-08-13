@@ -11,6 +11,7 @@ import PlayArea from '../components/PlayArea.js'
 import CreationZone from '../components/CreationZone.js'
 import socket from '../helpers/websocket.js'
 import PassiveZone from '../components/PassiveZone.js'
+import LeaderAbility from '../components/LeaderAbility.js'
 
 class GameContainer extends Component {
   constructor(props) {
@@ -29,6 +30,9 @@ class GameContainer extends Component {
             maxMana: 0,
             canBeSelected: false
           },
+          leaderAbility: {
+            staticCardText: ''
+          },
           board: [],
           creations: [],
           passives: [],
@@ -42,6 +46,9 @@ class GameContainer extends Component {
             currentMana: 0,
             maxMana: 0,
             canBeSelected: false
+          },
+          leaderAbility: {
+            staticCardText: ''
           },
           board: [],
           creations: [],
@@ -64,12 +71,14 @@ class GameContainer extends Component {
     this.handleClearSelected = this.handleClearSelected.bind(this)
     this.handleChooseSelected = this.handleChooseSelected.bind(this)
     this.handleChooseTarget = this.handleChooseTarget.bind(this)
+    this.handleChooseSelectedNoTarget = this.handleChooseSelectedNoTarget.bind(this)
     this.handleInvalidMove = this.handleInvalidMove.bind(this)
     this.interactivityHandlers = {
       clearSelected: gameContainer.handleClearSelected,
       chooseSelected: gameContainer.handleChooseSelected,
       chooseTarget: gameContainer.handleChooseTarget,
-      invalidMove: gameContainer.handleInvalidMove
+      chooseSelectedNoTarget: gameContainer.handleChooseSelectedNoTarget,
+      invalidMove: gameContainer.handleInvalidMove,
     }
 
 
@@ -120,6 +129,7 @@ class GameContainer extends Component {
 
   handleChooseSelected(object) {
     console.log("selected chosen")
+    console.log('selected: ', object)
     this.setState({
       selected: object
     })
@@ -134,14 +144,22 @@ class GameContainer extends Component {
     })
   }
 
+  handleChooseSelectedNoTarget(object) {
+    console.log('selected chosen (no target required)')
+    this.announceMove(object, null)
+    this.setState({
+      selected: null
+    })
+  }
+
   handleInvalidMove() {
     console.log("invalid move")
   }
 
   announceMove(selected, target) {
-    // console.log('move request:')
-    // console.log('selected: ', selected)
-    // console.log('target: ', target)
+    console.log('move request:')
+    console.log('selected: ', selected)
+    console.log('target: ', target)
     socket.emit("newMoveRequest", {
       selected: {
         objectID: selected.objectID,
@@ -186,9 +204,10 @@ class GameContainer extends Component {
           <Deck mine={false} cardNumber={this.state.gameState.opponent.deck} />
           {/* <br /> */}
           <div className='leaderDiv'>
-            <CreationZone mine={false} creations={this.state.gameState.opponent.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
-            <Leader mine={false} object={this.state.gameState.opponent.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <PassiveZone mine={false} passives={this.state.gameState.opponent.passives} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <Leader mine={false} object={this.state.gameState.opponent.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <LeaderAbility mine={false} object={this.state.gameState.opponent.leaderAbility} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <CreationZone mine={false} creations={this.state.gameState.opponent.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <br />
           <BoardHalf mine={false} units={this.state.gameState.opponent.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
@@ -196,9 +215,10 @@ class GameContainer extends Component {
           <BoardHalf mine units={this.state.gameState.my.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           <br />
           <div className='leaderDiv'>
-            <CreationZone mine creations={this.state.gameState.my.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
-            <Leader mine object={this.state.gameState.my.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <PassiveZone mine passives={this.state.gameState.my.passives} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <Leader mine object={this.state.gameState.my.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <LeaderAbility mine object={this.state.gameState.my.leaderAbility} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <CreationZone mine creations={this.state.gameState.my.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <Deck mine cardNumber={this.state.gameState.my.deck} />
           {/* <br /> */}

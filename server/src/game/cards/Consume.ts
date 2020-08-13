@@ -13,6 +13,7 @@ class Consume extends EventMoment {
       zone, 
       'Consume', 
       'Consume', 
+      true,
       3,
       'Deal 3 damage to the weakest enemy unit and draw a card.',
       [Actions.damageWeakestEnemyUnit(3), Actions.drawCards()],

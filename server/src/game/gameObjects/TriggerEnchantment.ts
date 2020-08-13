@@ -1,12 +1,12 @@
 import Enchantment from './Enchantment'
 abstract class TriggerEnchantment extends Enchantment {
-    subtype: 'trigger'
+    subtype: 'Trigger'
     repeatable: boolean
     triggerTypes: TriggerTypeString[]
     triggers: Trigger[]
 
-    constructor(game: Game, owner: Card, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: any[] = [], repeatable: boolean, triggerTypes: TriggerTypeString[], triggers: Trigger[]) {
-        super(game, owner, id, name, 'trigger', activeZones, activeTypes, activeRequirements = [])
+    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: any[] = [], repeatable: boolean, triggerTypes: TriggerTypeString[], triggers: Trigger[]) {
+        super(game, owner, id, name, 'Trigger', activeZones, activeTypes, activeRequirements = [])
         this.repeatable = repeatable
         this.triggerTypes = triggerTypes
         this.triggers = triggers
@@ -49,7 +49,6 @@ abstract class TriggerEnchantment extends Enchantment {
                     action(event, this)
                 })
                 if (!this.repeatable) this.owner.removeEnchantment(this)
-                if (this.owner instanceof WonderCreation) this.owner.loseCharge()
             }
         }
     }
@@ -58,11 +57,11 @@ abstract class TriggerEnchantment extends Enchantment {
 export default TriggerEnchantment
 
 import Game from '../gameSystems/Game'
-import Card from './Card'
 import Trigger from '../structs/Trigger'
 import GameEvent from '../gameEvents/GameEvent'
 import TriggerTypeString from '../stringTypes/TriggerTypeString'
 import ZoneString from '../stringTypes/ZoneString'
 import ObjectTypeString from '../stringTypes/ObjectTypeString'
 import TriggerAction from '../functionTypes/TriggerAction'
-import WonderCreation from './WonderCreation'
+import GameObject from './GameObject'
+

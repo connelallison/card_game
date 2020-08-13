@@ -1,3 +1,3 @@
-type PlayZoneString = 'board' | 'leader' | 'creations'
+type PlayZoneString = 'board' | 'leaderZone' | 'creationZone' | 'leaderAbilityZone'
 
 export default PlayZoneString

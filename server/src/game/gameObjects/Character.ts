@@ -9,16 +9,16 @@ import DestroyableCard from './DestroyableCard'
 import StartOfTurnEvent from '../gameEvents/StartOfTurnEvent'
 
 abstract class Character extends DestroyableCard {
-  type: 'leader' | 'unit'
-  subtype: 'leader' | 'generic' | 'named'
+  type: 'Leader' | 'Unit'
+  subtype: 'Leader' | 'Generic' | 'Named'
   rawAttack: number
   rawHealth: number
   ready: boolean
   attack: number
   health: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'leader' | 'unit', subtype: 'leader' | 'generic' | 'named', rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]) {
-    super(game, owner, zone, id, name, type, subtype, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Unit', subtype: 'Leader' | 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]) {
+    super(game, owner, zone, id, name, type, subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     this.ready = false
     this.rawAttack = rawAttack
     this.attack = this.rawAttack

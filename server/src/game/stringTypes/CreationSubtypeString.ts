@@ -1,3 +1,3 @@
-type CreationSubtypeString = 'work' | 'wonder' | 'weapon' | 'ability'
+type CreationSubtypeString = 'Work' | 'Wonder' | 'Weapon' | 'Ability'
 
 export default CreationSubtypeString

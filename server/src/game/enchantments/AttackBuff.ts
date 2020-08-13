@@ -11,8 +11,8 @@ class AttackBuff extends StaticEnchantment {
             owner,
             'AttackBuff', 
             'Attack Buff', 
-            ['board', 'hand', 'deck', 'leader'],
-            ['unit', 'leader'],
+            ['board', 'hand', 'deck', 'leaderZone'],
+            ['Unit', 'Leader'],
             [],
             ['stats'],
             [{

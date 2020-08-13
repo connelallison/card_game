@@ -1,27 +1,26 @@
 import Game from "../gameSystems/Game";
-import Card from "../gameObjects/Card";
-import Unit from "../gameObjects/Unit";
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
+import WonderTriggerEnchantment from "../gameObjects/WonderTriggerEnchantment";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";
 import TriggerActions from "../dictionaries/TriggerActions";
+import WonderCreation from "../gameObjects/WonderCreation";
 
-class KnightAcademyTrigger extends TriggerEnchantment {
-    owner: Unit
+class KnightAcademyTrigger extends WonderTriggerEnchantment {
+    owner: WonderCreation
 
-    constructor(game: Game, owner: Card) {
+    constructor(game: Game, owner: WonderCreation) {
         super(
             game,
             owner,
             'KnightAcademy:Trigger', 
             'Knight Academy Trigger', 
-            ['creations'],
-            ['creation'],
+            ['creationZone'],
+            ['Creation'],
             [],
             true,
             ['afterDraw'],
             [{
                 eventType: 'afterDraw',
-                requirements: [TriggerRequirements.canSummonType('unit'), TriggerRequirements.isType('unit', 'card'), TriggerRequirements.isFriendly('card')],
+                requirements: [TriggerRequirements.canSummonType('Unit'), TriggerRequirements.isType('Unit', 'card'), TriggerRequirements.isFriendly('card')],
                 actions: [TriggerActions.summonSpecificCard('Knight')]
             }]
         )

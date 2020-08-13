@@ -9,11 +9,11 @@ const OpponentHand = (props) => {
     cardList = props.cards.map((card) => {
       if (card.type === 'unknown') {
         return (<Unknown />)
-      } else if (card.type === 'unit') {
+      } else if (card.type === 'Unit') {
         return (
           <Unit name={card.name} cost={card.cost} attack={card.attack} health={card.health} />
         )
-      } else if (card.type === 'moment') {
+      } else if (card.type === 'Moment') {
         return (
           <Moment name={card.name} cost={card.cost} />
         )

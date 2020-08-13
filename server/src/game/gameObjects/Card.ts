@@ -2,12 +2,10 @@ import GameObject from './GameObject'
 import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import ObjectReport from '../structs/ObjectReport'
-import StaticEnchantment from './StaticEnchantment'
 import ZoneString from '../stringTypes/ZoneString'
 import CardTypeString from '../stringTypes/CardTypeString'
 import Action from '../functionTypes/Action'
 import TargetRequirement from '../functionTypes/TargetRequirement'
-import AuraEnchantment from './AuraEnchantment'
 import PlayRequirement from '../functionTypes/PlayRequirement'
 import CardSubtypeString from '../stringTypes/CardSubtypeString'
 
@@ -15,6 +13,7 @@ abstract class Card extends GameObject {
   owner: GamePlayer
   type: CardTypeString
   subtype: CardSubtypeString
+  collectable: boolean
   rawCost: number
   cost: number
   staticCardText: string
@@ -25,9 +24,10 @@ abstract class Card extends GameObject {
   targetRequirements: TargetRequirement[]
   validTargets: any
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, subtype: CardSubtypeString, rawCost: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[],  targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[],  targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
     super(game, owner, id, name, type, subtype)
     this.zone = zone
+    this.collectable = collectable
     this.rawCost = rawCost
     this.cost = rawCost
     this.staticCardText = staticCardText
@@ -56,7 +56,7 @@ abstract class Card extends GameObject {
   }
 
   canBePlayed(): boolean {
-    return this.owner.canPlay(this)
+    return this.controller().canPlay(this)
   }
 
   abstract provideReport(): ObjectReport 

@@ -34,18 +34,13 @@ class Leader extends Component {
     ) : null
     return (
       <div onClick={this.handleClick} className={styleClasses} >
-        <p className='card-name'>{this.props.mine ? "My leader." : "Opponent's leader."}</p>
+        <p className='card-name'>{this.props.object.name}</p>
         <p className={`card-text`}>{this.props.object.staticCardText}</p>
         <div className="multicolour-line">
           {attackLabel}
           <p className='health-label stat-label'>{this.props.object.health}H</p>
           <p className='cost-label stat-label'>{this.props.object.currentMana}/{this.props.object.maxMana}C</p>
         </div>
-        {/* 
-      <p>Leader's attack: {this.props.object.attack}</p>
-      <p>Leader's health: {this.props.object.health}</p>
-      <p>Leader's current mana: {this.props.object.currentMana}</p>
-      <p>Leader's max mana: {this.props.object.maxMana}</p> */}
       </div>
     )
   }

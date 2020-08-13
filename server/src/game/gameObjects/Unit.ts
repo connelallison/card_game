@@ -4,17 +4,15 @@ import Character from './Character'
 import UnitZoneString from '../stringTypes/UnitZoneString'
 import Action from '../functionTypes/Action'
 import PlayRequirement from '../functionTypes/PlayRequirement'
-import StaticEnchantment from './StaticEnchantment'
-import AuraEnchantment from './AuraEnchantment'
 
 abstract class Unit extends Character {
   zone: UnitZoneString
   inPlayZone: 'board'
-  type: 'unit'
-  subtype: 'generic' | 'named'
+  type: 'Unit'
+  subtype: 'Generic' | 'Named'
 
-  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, subtype: 'generic' | 'named', rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
-    super(game, owner, zone, id, name, 'unit', subtype, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, subtype: 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
+    super(game, owner, zone, id, name, 'Unit', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
     this.health = this.rawHealth,
     this.inPlayZone = 'board'
 
@@ -23,7 +21,7 @@ abstract class Unit extends Character {
 
   updateValidTargets(): void {
     if (this.inPlay()) {
-      this.validTargets = (this.owner.opponent.leader as Character[]).concat(this.owner.opponent.board).filter(defender => {
+      this.validTargets = (this.owner.opponent.leaderZone as Character[]).concat(this.owner.opponent.board).filter(defender => {
         return this.game.permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {

@@ -33,12 +33,10 @@ class Unit extends Component {
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " unit card"
-    const type = this.props.object.type.charAt(0).toUpperCase() + this.props.object.type.slice(1)
-    const subtype = this.props.object.subtype.charAt(0).toUpperCase() + this.props.object.subtype.slice(1)
     const handInfo = this.props.object.zone === 'hand' ? (
       <div className="multicolour-line text-medium">
         <p className='cost-label stat-label'>{this.props.object.cost}C</p>
-        <p>{subtype} {type}</p>
+        <p>{this.props.object.subtype} {this.props.object.type}</p>
       </div>
     ) : null
     return (

@@ -13,6 +13,7 @@ class Footman extends GenericUnit {
       zone, 
       'Footman', 
       'Footman', 
+      true,
       2, 
       2, 
       4, 

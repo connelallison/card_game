@@ -25,16 +25,22 @@ class Permissions {
 
     canSummon (player: GamePlayer, card: PersistentCard): boolean {
         return (
-            player[card.inPlayZone].length < player.max[card.inPlayZone]
+            this.canSummonType(player, card.type)
         )
     }
 
     canSummonType (player: GamePlayer, cardType: PersistentCardTypeString): boolean {
-        const playZone: PlayZoneString = cardType === 'leader' ? 'leader'
-                                                        : 'unit' ? 'board'
-                                                        : 'creation' ? 'creations'
-                                                        : null
-        return !!playZone && player[playZone].length < player.max[playZone]
+        switch (cardType) {
+            case 'Leader':
+            case 'LeaderAbility':
+                return true
+            case 'Creation':
+                return player.creationZone.length < player.max.creationZone
+            case 'Unit':
+                return player.board.length < player.max.board
+            default:
+                return false
+        }
     }
 
     canPlay (player: GamePlayer, card: Card): boolean {
@@ -48,6 +54,17 @@ class Permissions {
             && card.playRequirements.every(requirement => requirement(card))
         )
     }
+
+    canUse (player: GamePlayer, card: AbilityCreation | LeaderAbility): boolean {
+        return (
+            player === card.controller()
+            && player.myTurn()
+            && card.inPlay()
+            && card.cost <= player.currentMana
+            && (card.targeted ? card.validTargets.length > 0 : true)
+            && card.playRequirements.every(requirement => requirement(card))
+        )
+    }
 }
 
 export default Permissions
@@ -58,4 +75,6 @@ import Character from "../gameObjects/Character"
 import PersistentCard from "../gameObjects/PersistentCard"
 import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString"
 import PlayZoneString from "../stringTypes/PlayZoneString"
+import AbilityCreation from "../gameObjects/AbilityCreation"
+import LeaderAbility from "../gameObjects/LeaderAbility"
 

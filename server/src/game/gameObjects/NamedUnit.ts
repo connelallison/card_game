@@ -7,10 +7,10 @@ import Action from "../functionTypes/Action";
 import PlayRequirement from "../functionTypes/PlayRequirement";
 
 abstract class NamedUnit extends Unit {
-    subtype: 'named'
+    subtype: 'Named'
 
-    constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]){
-        super(game, owner, zone, id, name, 'named', rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]){
+        super(game, owner, zone, id, name, 'Named', collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     }
 }
 

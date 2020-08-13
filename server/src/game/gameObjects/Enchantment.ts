@@ -1,15 +1,15 @@
 import GameObject from './GameObject'
 
 abstract class Enchantment extends GameObject {
-    owner: Card
-    type: 'enchantment'
+    owner: GameObject
+    type: 'Enchantment'
     activeZones: ZoneString[]
     activeTypes: ObjectTypeString[]
     activeRequirements: ((...args) => boolean)[]
     previousActive: boolean
 
-    constructor(game: Game, owner: Card, id: string, name: string, subtype: ObjectSubtypeString, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = []) {
-        super(game, owner, id, name, 'enchantment', subtype)
+    constructor(game: Game, owner: GameObject, id: string, name: string, subtype: ObjectSubtypeString, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = []) {
+        super(game, owner, id, name, 'Enchantment', subtype)
         this.owner = owner
         this.zone = this.owner.zone
         this.activeZones = activeZones

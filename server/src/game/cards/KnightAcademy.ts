@@ -12,6 +12,7 @@ class KnightAcademy extends WonderCreation {
             zone,
             'KnightAcademy',
             'Knight Academy',
+            true,
             2,
             3,
             'After you draw a unit, summon a 2/2 Knight.',

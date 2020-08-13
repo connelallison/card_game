@@ -3,25 +3,27 @@ import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import LeaderZoneString from '../stringTypes/LeaderZoneString'
 
-class GenericLeader extends Leader {
+class Orcissimus extends Leader {
   constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString) {
         super(
             game, 
             owner, 
             zone, 
-            'GenericLeader', 
-            'Leader', 
+            'Orcissimus', 
+            'Orcissimus', 
+            true,
             0, 
             1, 
-            5,
+            4,
             '', 
             [], 
             [],
             false, 
             null, 
-            null
+            null,
+            'OrcissimusSmash'
             ) 
     }
 }
 
-export default GenericLeader
+export default Orcissimus

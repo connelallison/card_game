@@ -11,6 +11,7 @@ class PlayerTwoUnit extends GenericUnit {
       zone, 
       'PlayerTwoUnit', 
       'Player 2 Unit', 
+      false,
       3, 
       3, 
       4, 

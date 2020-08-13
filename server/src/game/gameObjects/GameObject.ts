@@ -77,7 +77,7 @@ abstract class GameObject {
     }
 
     charOwner(): Character {
-        return this.controller().leader[0]
+        return this.controller().leaderZone[0]
     }
 }
 

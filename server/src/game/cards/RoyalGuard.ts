@@ -13,6 +13,7 @@ class RoyalGuard extends GenericUnit {
       zone, 
       'RoyalGuard', 
       'Royal Guard', 
+      true,
       3, 
       3, 
       4, 

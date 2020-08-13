@@ -9,43 +9,49 @@ class AuraManager {
         this.game = game;
         this.auras = {
             stats: {
-                unit: {
+                Unit: {
                     hand: [],
                     deck: [],
                     board: [],
                 },
-                leader: {
+                Leader: {
                     hand: [],
                     deck: [],
-                    leader: [],
+                    leaderZone: [],
                 },
-                creation: {
+                LeaderAbility: {
+                    leaderAbilityZone: [],
+                },
+                Creation: {
                     hand: [],
                     deck: [],
-                    creations: [],
+                    creationZone: [],
                 },
-                moment: {
+                Moment: {
                     hand: [],
                     deck: [],
                 },
             },
             flags: {
-                unit: {
+                Unit: {
                     hand: [],
                     deck: [],
                     board: [],
                 },
-                leader: {
+                Leader: {
                     hand: [],
                     deck: [],
-                    leader: [],
+                    leaderZone: [],
                 },
-                creation: {
+                LeaderAbility: {
+                    leaderAbilityZone: [],
+                },
+                Creation: {
                     hand: [],
                     deck: [],
-                    creations: [],
+                    creationZone: [],
                 },
-                moment: {
+                Moment: {
                     hand: [],
                     deck: [],
                 },

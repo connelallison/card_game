@@ -10,15 +10,15 @@ const PlayerHand = (props) => {
     cardList = props.cards.map((card) => {
       if (card.type === 'unknown') {
         return (<Unknown />)
-      } else if (card.type === 'unit') {
+      } else if (card.type === 'Unit') {
         return (
           <Unit object={card} selected={props.selected} interactivity={props.interactivity} />
         )
-      } else if (card.type === 'moment') {
+      } else if (card.type === 'Moment') {
         return (
           <Moment object={card} selected={props.selected} interactivity={props.interactivity} />
         )
-      } else if (card.type === 'creation') {
+      } else if (card.type === 'Creation') {
         return (
           <Creation object={card} selected={props.selected} interactivity={props.interactivity} />
         )

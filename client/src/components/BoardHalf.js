@@ -26,19 +26,9 @@ class BoardHalf extends Component {
   render() {
     let unitList
     if (this.props.units.length > 0) {
-      if (this.props.mine) {
-        unitList = this.props.units.map((unit) => {
-          return (
-            <Unit object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
-          )
-        })
-      } else {
-        unitList = this.props.units.map((unit) => {
-          return (
-            <Unit object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
-          )
-        })
-      }
+      unitList = this.props.units.map((unit) => 
+        <Unit object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
+      )
     } else {
       unitList = [
         <p>No units on board.</p>,

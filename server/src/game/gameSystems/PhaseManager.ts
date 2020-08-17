@@ -10,19 +10,28 @@ class PhaseManager {
     }
 
     steps(): void {
+        this.auraUpdate()
         this.deathPhase()
     }
 
     startOfTurnPhase(): void {
         const event = new StartOfTurnEvent(this.game)
         this.game.event.emit('startOfTurn', event)
-        this.deathPhase()
+        this.steps()
     }
 
     endOfTurnPhase(): void {
         const event = new EndOfTurnEvent(this.game)
         this.game.event.emit('endOfTurn', event)
-        this.deathPhase()
+        this.steps()
+    }
+
+    auraUpdate(): void {
+        this.game.event.emit('auraReset')
+        this.game.event.emit('auraEmit1')
+        this.game.event.emit('auraEmit2')
+        this.game.event.emit('auraEmit3')
+        this.game.event.emit('auraApply')
     }
 
     deathPhase(): void {
@@ -36,7 +45,7 @@ class PhaseManager {
                     console.log(`${card.subtype} ${card.type} is being destroyed: ${card.name}`)
                     this.game.inPlay.splice(this.game.inPlay.indexOf(card), 1)
                     const deathEvent = new DeathEvent(this.game, {
-                        object: card,
+                        died: card,
                         controller: card.controller(),
                     })
                     this.game.turn.cacheEvent(deathEvent, 'death')
@@ -47,7 +56,7 @@ class PhaseManager {
         })
         if (!this.game.gameOver && this.deathQueue.length > 0) {
             this.game.event.emit('afterDeath', this.deathQueue.shift())
-            this.deathPhase()
+            this.steps()
         } else {
             // this.game.announceGameState()
         }
@@ -56,7 +65,7 @@ class PhaseManager {
     proposedAttackPhase(eventObject: AttackEventObject): void {
         const event = new AttackEvent(this.game, eventObject)
         this.game.event.emit('proposedAttack', event)
-        this.deathPhase()
+        this.steps()
         // console.log('attackEvent: ', event.attacker.objectID, event.defender.objectID, event.cancelled)
         if (!event.cancelled) this.attackPhase(event)
     }
@@ -67,25 +76,25 @@ class PhaseManager {
             objectSource: event.attacker,
             charSource: event.attacker,
             target: event.defender,
-            value: event.attacker.attack,
+            damage: event.attacker.attack,
         })
         this.damageSinglePhase({
             objectSource: event.defender,
             charSource: event.defender,
             target: event.attacker,
-            value: event.defender.attack,
+            damage: event.defender.attack,
         })
         this.game.turn.cacheEvent(event, 'attack')
         event.attacker.ready = false
         this.game.event.emit('afterAttack', event)
-        this.deathPhase()
+        this.steps()
     }
 
     damageSinglePhase(eventObject: DamageSingleEventObject): void {
         const event = new DamageEvent(this.game, eventObject)
         // console.log('damageEvent: ', event.objectSource.objectID, event.charSource.objectID, event.target.objectID, event.value)
         this.game.event.emit('beforeDamage', event)
-        event.target.takeDamage(event.value)
+        event.target.takeDamage(event.damage)
         this.game.turn.cacheEvent(event, 'damage')
         this.game.event.emit('afterDamage', event)
         if (event.objectSource.flags.pillage) {
@@ -93,7 +102,7 @@ class PhaseManager {
                 objectSource: event.objectSource,
                 charSource: event.objectSource.charOwner(),
                 target: event.objectSource.controller().leaderZone[0],
-                value: event.value,
+                value: event.damage,
             })
         }
     }
@@ -131,7 +140,7 @@ class PhaseManager {
         } else {
             this.playPhaseMoment(event)
         }
-        this.deathPhase()
+        this.steps()
     }
 
     playPhasePersistent(event: PlayEvent): void {
@@ -172,12 +181,10 @@ class PhaseManager {
         const event = new ActionEvent(this.game, eventObj)
         const actionCard = event.card
         this.game.event.emit('beforeAction', event)
-        if (actionCard instanceof AbilityCreation || actionCard instanceof LeaderAbility) { 
-            if (actionCard instanceof AbilityCreation) actionCard.loseCharge() 
-        } 
+        if (actionCard instanceof AbilityCreation) actionCard.loseCharge() 
         this.game.turn.cacheEvent(event, 'action')
         actionCard.actions.forEach(action => {
-            action(actionCard, event.targets)
+            action(event.targets)
         })
         this.game.event.emit('afterAction', event)
     }
@@ -185,20 +192,16 @@ class PhaseManager {
     usePhase(eventObj: ActionEventObject): void {
         const {player, targets} = eventObj
         const card = eventObj.card as AbilityCreation | LeaderAbility
-        console.log('repeatable: ', card.repeatable)
         player.spendMana(card.cost)
-        console.log('disabling ability')
-        console.log('repeatable: ', card.repeatable)
-        console.log('ready: ', card.ready)
         if (!card.repeatable) card.ready = false
-        console.log('ready: ', card.ready)
         this.actionPhase(eventObj)
-        this.deathPhase()
+        this.steps()
     }
 
     summonPhase(eventObj: SummonPhaseObject): void {
         const { controller, objectSource, charSource, cardID } = eventObj
         const card = new Cards[cardID](this.game, controller, 'setAside')
+        controller.setAside.push(card)
         if (controller.canSummon(card)) {
             this.enterPlayPhase({
                 controller,
@@ -212,6 +215,7 @@ class PhaseManager {
     enterPlayPhase(eventObj: EnterPlayEventObject) {
         const event = new EnterPlayEvent(this.game, eventObj)
         event.card.putIntoPlay()
+        this.auraUpdate()
         if (this.game.turn) {
             this.game.turn.cacheEvent(event, 'enterPlay')
             this.game.event.emit('onEnterPlay', event)
@@ -249,7 +253,7 @@ class PhaseManager {
                     objectSource: player.leaderZone[0],
                     charSource: player.leaderZone[0],
                     target: player.leaderZone[0],
-                    value: player.fatigueCounter,
+                    damage: player.fatigueCounter,
                 })
             }
         }

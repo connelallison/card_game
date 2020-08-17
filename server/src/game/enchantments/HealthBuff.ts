@@ -5,7 +5,7 @@ import StaticEnchantment from "../gameObjects/StaticEnchantment"
 class HealthBuff extends StaticEnchantment {
     owner: Character
     
-    constructor(game: Game, owner: Character, values: any = { health: 0 }) {
+    constructor(game: Game, owner: Character, values: {health: number} = { health: 0 }) {
         super(
             game,
             owner,
@@ -14,11 +14,9 @@ class HealthBuff extends StaticEnchantment {
             ['board', 'hand', 'deck', 'leaderZone'],
             ['Unit', 'Leader'],
             [],
-            ['stats'],
             [{
-              effect: game.effects.incrementHealth,
-              value: values.health,
-              category: 'stats',
+                operation: 'incrementHealth',
+                value: values.health,
             }]
         )
     }

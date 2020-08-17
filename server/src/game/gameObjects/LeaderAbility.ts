@@ -1,12 +1,13 @@
 import Game from "../gameSystems/Game";
 import GamePlayer from "./GamePlayer";
-import Action from "../functionTypes/Action";
-import PlayRequirement from "../functionTypes/PlayRequirement";
-import TargetRequirement from "../functionTypes/TargetRequirement";
 import PersistentCard from "./PersistentCard";
 import LeaderAbilitySubtypeString from "../stringTypes/LeaderAbilitySubtypeString";
 import LeaderAbilityZoneString from "../stringTypes/LeaderAbilityZoneString";
 import ObjectReport from "../structs/ObjectReport";
+import TargetDomainString from "../stringTypes/TargetDomainString";
+import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import PlayRequirementObject from "../structs/PlayRequirementObject";
 
 abstract class LeaderAbility extends PersistentCard {
     collectable: false
@@ -17,7 +18,7 @@ abstract class LeaderAbility extends PersistentCard {
     subtype: LeaderAbilitySubtypeString
     zone: LeaderAbilityZoneString
 
-    constructor(game: Game, owner: GamePlayer, zone: LeaderAbilityZoneString, id: string, name: string, subtype: LeaderAbilitySubtypeString, rawCost: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[], targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[], repeatable: boolean) {
+    constructor(game: Game, owner: GamePlayer, zone: LeaderAbilityZoneString, id: string, name: string, subtype: LeaderAbilitySubtypeString, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
         super(game, owner, zone, id, name, 'LeaderAbility', subtype, false, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
         this.repeatable = repeatable
         this.ready = false
@@ -31,7 +32,6 @@ abstract class LeaderAbility extends PersistentCard {
     }
 
     provideReport(): ObjectReport {
-        this.updateFlags()
         this.updateValidTargets()
 
         return {
@@ -53,22 +53,19 @@ abstract class LeaderAbility extends PersistentCard {
 
     updateValidTargets(): void {
         if (this.inPlay() && this.targeted) {
-          let newTargets = this.targetDomain(this.owner)
-          this.targetRequirements.forEach(requirement => {
-            newTargets = newTargets.filter(target => requirement(this, target))
-          })
-          this.validTargets = newTargets
+        //   let newTargets = this.targetDomain(this.owner)
+        //   this.targetRequirements.forEach(requirement => {
+        //     newTargets = newTargets.filter(target => requirement(this, target))
+        //   })
+        //   this.validTargets = newTargets
+        this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
         } else {
           this.validTargets = []
         }
       }
 
-    inPlay(): boolean {
-        return this.zone === 'leaderAbilityZone'
-    }
-
     moveZone(destination: LeaderAbilityZoneString): void {
-        if (this.zone !== 'setAside') this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+        this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
         this.owner[destination].push(this)
         this.zone = destination
         this.updateEnchantments()

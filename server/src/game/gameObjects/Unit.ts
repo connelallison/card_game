@@ -2,8 +2,10 @@ import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
 import UnitZoneString from '../stringTypes/UnitZoneString'
-import Action from '../functionTypes/Action'
-import PlayRequirement from '../functionTypes/PlayRequirement'
+import TargetDomainString from '../stringTypes/TargetDomainString'
+import ActionFunctionObject from '../structs/ActionFunctionObject'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import PlayRequirementObject from '../structs/PlayRequirementObject'
 
 abstract class Unit extends Character {
   zone: UnitZoneString
@@ -11,8 +13,8 @@ abstract class Unit extends Character {
   type: 'Unit'
   subtype: 'Generic' | 'Named'
 
-  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, subtype: 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetConstraints: ((...args) => boolean)[]) {
-    super(game, owner, zone, id, name, 'Unit', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetConstraints)
+  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, subtype: 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
+    super(game, owner, zone, id, name, 'Unit', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     this.health = this.rawHealth,
     this.inPlayZone = 'board'
 
@@ -25,11 +27,12 @@ abstract class Unit extends Character {
         return this.game.permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {
-      let newTargets = this.targetDomain(this.owner)
-      this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => requirement(this, target))
-      })
-      this.validTargets = newTargets
+      // let newTargets = this.targetDomain(this.owner)
+      // this.targetRequirements.forEach(requirement => {
+      //   newTargets = newTargets.filter(target => requirement(this, target))
+      // })
+      // this.validTargets = newTargets
+      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
     } else {
       this.validTargets = []
     }
@@ -38,7 +41,7 @@ abstract class Unit extends Character {
   takeDamage(damage: number): void {
     if (damage > 0) {
       this.rawHealth -= damage
-      this.updateStats()
+      this.update()
       console.log(`${this.name} takes ${damage} damage`)
     }
   }
@@ -46,13 +49,9 @@ abstract class Unit extends Character {
   receiveHealing(healing: number): void {
     if (healing > 0) {
       this.rawHealth += healing
-      this.updateStats()
+      this.update()
       console.log(`${this.name} receives ${healing} healing`)
     }
-  }
-
-  inPlay(): boolean {
-    return this.zone === 'board'
   }
 
   moveZone(destination: UnitZoneString): void {
@@ -60,15 +59,6 @@ abstract class Unit extends Character {
     this.owner[destination].push(this)
     this.zone = destination
     this.updateEnchantments()
-  }
-
-  baseStats() {
-    return { attack: this.rawAttack, health: this.rawHealth }
-  }
-
-  setStats(stats) {
-    this.attack = stats.attack
-    this.health = stats.health
   }
 }
 

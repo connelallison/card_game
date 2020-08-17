@@ -3,13 +3,13 @@ import Character from "../gameObjects/Character"
 
 const TestBot = async (game: Game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
-        await game.sleep(1000)
+        await game.sleep(2500)
         // for (card in game.turn.activePlayer.playableCards()) {
 
         // }
         const playableCard = game.turn.activePlayer.playableCards()[0]
         if (playableCard) {
-            if (!playableCard.targeted){
+            if (!playableCard.targeted) {
                 game.phases.playPhase({
                     player: game.turn.activePlayer,
                     card: playableCard,
@@ -45,6 +45,10 @@ const TestBot = async (game: Game) => {
                 }
             }
         }
+    }
+    if (!game.gameOver && game.turn.activePlayer.bot) {
+        await game.sleep(3000)
+        game.executeEndTurnRequest(game.turn.activePlayer)
     }
 }
 

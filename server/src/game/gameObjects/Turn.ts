@@ -17,8 +17,8 @@ class Turn {
         this.activePlayer = activePlayer
         this.nextActivePlayer = activePlayer.opponent
         this.turnNumber = turnNumber
-        this.turnLength = 10000 
-        this.eventCache = { 
+        this.turnLength = 25000
+        this.eventCache = {
             all: [],
             death: [],
             play: [],
@@ -29,23 +29,26 @@ class Turn {
             draw: [],
             enterPlay: [],
         }
-        this.over = false  
+        this.over = false
     }
 
-    async start() {
+    start() {
         this.game.phases.startOfTurnPhase()
+    }
+
+    async sleep() {
         await this.game.sleep(this.turnLength)
         if (!this.over) {
-            this.end()
-            return this.activePlayer.opponent
+            return this.end()
         } else {
             return null
         }
     }
-    
-    end(): void {
+
+    end(): GamePlayer {
         this.over = true
         this.game.phases.endOfTurnPhase()
+        return this.activePlayer.opponent
     }
 
     cacheEvent(event: GameEvent, type: string): void {

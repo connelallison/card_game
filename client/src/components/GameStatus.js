@@ -12,9 +12,12 @@ const GameStatus = (props) => {
   } else {
     gameStatus = <p className='lowerMargin'>{activePlayer} turn: {turnTime}s remaining.</p>
   }
+
+  const endTurn = props.mine ? <button onClick={props.endTurn}>End Turn</button> : null
   return (
     <div className='game-status'>
       {gameStatus}
+      {endTurn}
     </div>
   )
 }

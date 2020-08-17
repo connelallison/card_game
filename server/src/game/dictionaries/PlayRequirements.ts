@@ -1,12 +1,15 @@
 import PlayRequirementFactory from "../functionTypes/PlayRequirementFactory"
-import Card from "../gameObjects/Card"
 import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString"
+import DynamicNumber from "../functionTypes/DynamicNumber"
+import DynamicString from "../functionTypes/DynamicString"
+import GameObject from "../gameObjects/GameObject"
 
 const PlayRequirements: {[index: string]: PlayRequirementFactory} = {
-    minFriendlyUnits: (min: number) => (card: Card) => (card.controller().board.length >= min),
-    minEnemyUnits: (min: number) => (card: Card) => (card.controller().opponent.board.length >= min),
-    minAllUnits: (min: number) => (card: Card) => (card.controller().board.length + card.controller().opponent.board.length >= min),
-    canSummonType: (cardType: PersistentCardTypeString) => (card: Card) => (card.controller().canSummonType(cardType)),
+    minFriendlyUnits: (object: GameObject, values: {min: DynamicNumber}) => () => (object.controller().board.length >= values.min()),
+    minEnemyUnits: (object: GameObject, values: {min: DynamicNumber}) => () => (object.controller().opponent.board.length >= values.min()),
+    minAllUnits: (object: GameObject, values: {min: DynamicNumber}) => () => (object.controller().board.length + object.controller().opponent.board.length >= values.min()),
+    canSummonType: (object: GameObject, values: {type: DynamicString}) => () => { return object.controller().canSummonType(values.type() as PersistentCardTypeString)},
+    isMyTurn: (object: GameObject) => () => (object.controller().myTurn())
 }
 
 export default PlayRequirements

@@ -2,27 +2,30 @@ import TriggerEnchantment from "./TriggerEnchantment";
 import Game from "../gameSystems/Game";
 import ZoneString from "../stringTypes/ZoneString";
 import ObjectTypeString from "../stringTypes/ObjectTypeString";
-import TriggerTypeString from "../stringTypes/TriggerTypeString";
 import Trigger from "../structs/Trigger";
-import TriggerAction from "../functionTypes/TriggerAction";
 import GameEvent from "../gameEvents/GameEvent";
 import WonderCreation from "./WonderCreation";
 import GameObject from "./GameObject";
+import TriggerObject from "../structs/TriggerObject";
 
 abstract class WonderTriggerEnchantment extends TriggerEnchantment {
-    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: any[] = [], repeatable: boolean, triggerTypes: TriggerTypeString[], triggers: Trigger[]) {
-        super(game, owner, id, name, activeZones, activeTypes, activeRequirements = [], repeatable, triggerTypes, triggers)
+    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: any[] = [], repeatable: boolean, triggerObjs: TriggerObject[]) {
+        super(game, owner, id, name, activeZones, activeTypes, activeRequirements, repeatable, triggerObjs)
     }
 
-    wrapActions(trigger: Trigger): TriggerAction {
-        return (event: GameEvent) => {
-            if (trigger.requirements.every(requirement => requirement(event, this))) {
-                trigger.actions.forEach(action => {
-                    action(event, this)
-                })
+    wrapTrigger(triggerObj: TriggerObject): Trigger {
+        const actionFunctions = triggerObj.actions.map(obj => this.wrapTriggerActionFunction(obj))
+        const requirements = triggerObj.requirements.map(obj => this.wrapTriggerRequirement(obj))
+        const action = (event: GameEvent) => {
+            if (requirements.every(requirement => requirement(event))) {
+                actionFunctions.forEach(action => action(event))
                 if (!this.repeatable) this.owner.removeEnchantment(this)
                 if (this.owner instanceof WonderCreation) this.owner.loseCharge()
             }
+        }
+        return {
+            eventType: triggerObj.eventType,
+            action,
         }
     }
 }

@@ -1,19 +1,18 @@
 import Creation from "./Creation";
 import Game from "../gameSystems/Game";
 import GamePlayer from "./GamePlayer";
-import ZoneString from "../stringTypes/ZoneString";
-import Action from "../functionTypes/Action";
-import PlayRequirement from "../functionTypes/PlayRequirement";
-import TargetRequirement from "../functionTypes/TargetRequirement";
-import ObjectReport from "../structs/ObjectReport";
 import CreationZoneString from "../stringTypes/CreationZoneString";
+import TargetDomainString from "../stringTypes/TargetDomainString";
+import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import PlayRequirementObject from "../structs/PlayRequirementObject";
 
 abstract class AbilityCreation extends Creation {
     subtype: 'Ability'
     ready: boolean
     repeatable: boolean
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[], targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[], repeatable: boolean) {
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
         super(game, owner, zone, id, name, 'Ability', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
         this.repeatable = repeatable
         this.ready = false
@@ -25,36 +24,14 @@ abstract class AbilityCreation extends Creation {
         if (this.inPlay() && this.controller().myTurn()) this.ready = true
     }
 
-    provideReport(): ObjectReport {
-        this.updateStats()
-        this.updateFlags()
-        this.updateValidTargets()
-
-        return {
-            name: this.name,
-            id: this.id,
-            objectID: this.objectID,
-            cost: this.cost,
-            health: this.health,
-            type: this.type,
-            subtype: this.subtype,
-            zone: this.zone,
-            ownerName: this.owner.name,
-            playerID: this.owner.playerID,
-            canBeSelected: this.canBeSelected(),
-            requiresTarget: this.targeted,
-            validTargets: this.validTargetIDs(),
-            staticCardText: this.staticCardText,
-        }
-    }
-
     updateValidTargets(): void {
         if ((this.zone === 'hand' || this.inPlay()) && this.targeted) {
-          let newTargets = this.targetDomain(this.owner)
-          this.targetRequirements.forEach(requirement => {
-            newTargets = newTargets.filter(target => requirement(this, target))
-          })
-          this.validTargets = newTargets
+        //   let newTargets = this.targetDomain(this.owner)
+        //   this.targetRequirements.forEach(requirement => {
+        //     newTargets = newTargets.filter(target => requirement(this, target))
+        //   })
+        //   this.validTargets = newTargets
+        this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
         } else {
           this.validTargets = []
         }

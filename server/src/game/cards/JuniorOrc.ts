@@ -21,8 +21,9 @@ class JuniorOrc extends GenericUnit {
       [],
       false, 
       null, 
-      null)
-    this.addEnchantment(new Enchantments.JuniorOrcAttackAura(this.game, this))
+      null
+      )
+    this.addEnchantment(new Enchantments.JuniorOrcAura(this.game, this))
   }
 }
 

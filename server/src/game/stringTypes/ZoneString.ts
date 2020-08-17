@@ -1,3 +1,3 @@
-type ZoneString = 'hand' | 'board' | 'deck' | 'graveyard' | 'leaderZone' | 'creationZone' | 'setAside' | 'leaderAbilityZone'
+type ZoneString = 'hand' | 'board' | 'deck' | 'graveyard' | 'leaderZone' | 'creationZone' | 'leaderAbilityZone' |'passiveZone' | 'setAside'
 
 export default ZoneString

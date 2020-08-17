@@ -36,31 +36,6 @@ class Utils {
         return minObj
     }
 
-    targetDomain(zones) {
-        return (player) => {
-            const targetDomain = []
-            zones.forEach(zone => {
-                switch (zone) {
-                    case 'enemyUnits':
-                        targetDomain.push(...player.opponent.board)
-                        break
-                    case 'enemyLeader':
-                        targetDomain.push(...player.opponent.leaderZone)
-                        break
-                    case 'friendlyUnits':
-                        targetDomain.push(...player.board)
-                        break
-                    case 'friendlyLeader':
-                        targetDomain.push(...player.leaderZone)
-                        break
-                    default:
-                        break
-                }
-            })
-        return targetDomain
-        }
-    }
-
     notBehindGuard(character: Character) {
         return character.flags.guard || character.controller().board.every(unit => unit.flags.guard !== true)
     }
@@ -68,4 +43,5 @@ class Utils {
 
 export default Utils
 
-import Character from "../gameObjects/Character";
+import Character from "../gameObjects/Character";import GameObject from "../gameObjects/GameObject";
+

@@ -4,6 +4,7 @@ class KnightDeck extends Deck {
   constructor(game, owner) {
     const deck = {
       leader: 'KingFredTheSaintly',
+      passive: 'HolyProtectors',
       cards: [
         'Footman',
         'Footman',
@@ -11,7 +12,6 @@ class KnightDeck extends Deck {
         'Footman',
         'Footman',
         'Footman',
-        'Footman',
         'RoyalGuard',
         'RoyalGuard',
         'RoyalGuard',
@@ -20,12 +20,13 @@ class KnightDeck extends Deck {
         'Fireburst',
         'HolyBook',
         'HolyBook',
-        'HolyBook',
         'KnightAcademy',
         'KnightAcademy',
         'KnightAcademy',
         'PrinceTimothy',
         'PrinceTimothy',
+        'CombatTraining',
+        'CombatTraining',
       ]
     }
     super(game, owner, 'KnightDeck', 'KnightDeck', deck)

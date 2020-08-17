@@ -1,29 +1,29 @@
-import NamedUnit from "../gameObjects/NamedUnit";
-import Game from "../gameSystems/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
-import UnitZoneString from "../stringTypes/UnitZoneString";
-import Actions from "../dictionaries/Actions";
+import Leader from '../gameObjects/Leader'
+import Game from '../gameSystems/Game'
+import GamePlayer from '../gameObjects/GamePlayer'
+import LeaderZoneString from '../stringTypes/LeaderZoneString'
 
-class OrkusTheOrkest extends NamedUnit {
-    constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
+class OrkusTheOrkest extends Leader {
+  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString) {
         super(
-          game, 
-          owner, 
-          zone, 
-          'OrkusTheOrkest', 
-          'Orkus the Orkest', 
-          true,
-          4, 
-          4, 
-          5, 
-          'Action: Summon the last friendly minion that died.', 
-          [Actions.summonLastFriendlyUnitThatDied()], 
-          [],
-          false, 
-          null, 
-          null
-        )
-      }
+            game, 
+            owner, 
+            zone, 
+            'OrkusTheOrkest', 
+            'Orkus The Orkest', 
+            true,
+            0, 
+            1, 
+            4,
+            '', 
+            [], 
+            [],
+            false, 
+            null, 
+            null,
+            'OrkusTheOrkestSmash'
+            ) 
+    }
 }
 
 export default OrkusTheOrkest

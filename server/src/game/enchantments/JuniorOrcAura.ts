@@ -4,28 +4,27 @@ import Card from "../gameObjects/Card";
 import Unit from "../gameObjects/Unit";
 import TargetRequirements from "../dictionaries/TargetRequirements";
 
-class JuniorOrcAttackAura extends AuraEnchantment {
+class JuniorOrcAura extends AuraEnchantment {
     owner: Unit
-    
+
     constructor(game: Game, owner: Card) {
         super(
             game,
             owner,
-            'JuniorOrc:AttackAura', 
-            'Fury', 
+            'JuniorOrcAura',
+            'Junior Orc Aura',
             ['board'],
             ['Unit'],
             [],
-            ['stats'],
             [{
-              effect: game.effects.incrementAttack,
-              value: 1,
-              category: 'stats',
+                operation: 'incrementAttack',
+                value: 1,
             }],
-            { Unit: ['board'] },
-            [TargetRequirements.friendlyTarget(), TargetRequirements.notSelf()]
+            'friendlyBoard',
+            [{ targetRequirement: 'isFriendly' }, { targetRequirement: 'notSelf' }],
+            1,
         )
     }
 }
 
-export default JuniorOrcAttackAura
+export default JuniorOrcAura

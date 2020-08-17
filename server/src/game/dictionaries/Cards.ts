@@ -10,13 +10,16 @@ import HolyBook from '../cards/HolyBook'
 import ClubOfLooting from '../cards/ClubOfLooting'
 import KnightAcademy from '../cards/KnightAcademy'
 import Knight from '../cards/Knight'
-import OrkusTheOrkest from '../cards/OrkusTheOrkest'
 import CorporalMotivation from '../cards/CorporalMotivation'
 import Orcissimus from '../cards/Orcissimus'
-import OrcissimusSmash from '../cards/OrcissimusSmash'
-import KingFredTheSaintly from '../cards/KingFredTheSaintly'
 import KingFredTheSaintlyRecruit from '../cards/KingFredTheSaintlyRecruit'
+import OrkusTheOrkest from '../cards/OrkusTheOrkest'
+import OrkusTheOrkestSmash from '../cards/OrkusTheOrkestSmash'
+import KingFredTheSaintly from '../cards/KingFredTheSaintly'
 import PrinceTimothy from '../cards/PrinceTimothy'
+import HolyProtectors from '../cards/HolyProtectors'
+import SingleMindedFury from '../cards/SingleMindedFury'
+import CombatTraining from '../cards/CombatTraining'
 
 const Cards = {
   PlayerOneUnit,
@@ -31,13 +34,16 @@ const Cards = {
   ClubOfLooting,
   KnightAcademy,
   Knight,
-  OrkusTheOrkest,
-  CorporalMotivation,
   Orcissimus,
-  OrcissimusSmash,
+  CorporalMotivation,
+  OrkusTheOrkest,
+  OrkusTheOrkestSmash,
   KingFredTheSaintly,
   KingFredTheSaintlyRecruit,
   PrinceTimothy,
+  HolyProtectors,
+  SingleMindedFury,
+  CombatTraining,
 }
 
 export default Cards

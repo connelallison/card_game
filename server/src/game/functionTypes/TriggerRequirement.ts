@@ -1,7 +1,7 @@
 import GameEvent from "../gameEvents/GameEvent";
 
 interface TriggerRequirement {
-    (event: GameEvent, enchantment: TriggerEnchantment): boolean
+    (event: GameEvent): boolean
 }
 
 export default TriggerRequirement

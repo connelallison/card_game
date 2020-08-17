@@ -16,11 +16,10 @@ class Game {
   player2socketID: string
   player1: GamePlayer
   player2: GamePlayer
-  auras: AuraManager
   phases: PhaseManager
   targetRequirements: { [index: string]: TargetRequirementFactory }
-  actions: { [index: string]: ActionFactory }
-  effects: { [index: string]: Effect }
+  actions: { [index: string]: ActionOperation }
+  effectOps: { [index: string]: EffectOperation }
   permissions: Permissions
   utils: Utils
   inPlay: PersistentCard[]
@@ -29,7 +28,6 @@ class Game {
   player2deckID: string
   gameOver: boolean
   turnLength: number
-  // turnTimer
   turn: Turn
   turnNumber: number
   turnCache: Turn[]
@@ -49,8 +47,6 @@ class Game {
     this.player2name = player2name
     this.player1socketID = player1socketID
     this.player2socketID = player2socketID
-    // this.player1 = new GamePlayer(this, player1name, player1socketID)
-    // this.player2 = new GamePlayer(this, player2name, player2socketID)
     this.inPlay = []
     this.eventCache = {
       all: [],
@@ -77,11 +73,10 @@ class Game {
   }
 
   init() {
-    this.auras = new AuraManager(this)
     this.phases = new PhaseManager(this)
     this.targetRequirements = TargetRequirements
-    this.actions = Actions
-    this.effects = Effects
+    this.actions = ActionOperations
+    this.effectOps = EffectOperations
     this.permissions = new Permissions(this)
     this.utils = new Utils(this)
     this.initPlayers()
@@ -125,7 +120,7 @@ class Game {
       winner: this.winner,
       myTurn: player.myTurn(),
       my: {
-        passives: [],
+        passives: player.passivesReport(),
         creations: player.creationsReport(),
         board: player.boardReport(),
         leaderAbility: player.leaderAbilityReport(),
@@ -134,7 +129,7 @@ class Game {
         deck: player.deck.length
       },
       opponent: {
-        passives: [],
+        passives: player.opponent.passivesReport(),
         creations: player.opponent.creationsReport(),
         board: player.opponent.boardReport(),
         leaderAbility: player.opponent.leaderAbilityReport(),
@@ -207,6 +202,15 @@ class Game {
     this.announceGameState()
   }
 
+  executeEndTurnRequest(player: GamePlayer) {
+    if (this.turn.activePlayer === player) {
+      const nextActivePlayer = this.turn.end()
+      if (nextActivePlayer && !this.gameOver) {
+        this.turnLoop(nextActivePlayer)
+      }
+    }
+  }
+
   // findPlayerbyPlayerID (playerID) {
   //   if (this.player1.playerID === playerID) {
   //     return this.player1
@@ -238,10 +242,12 @@ class Game {
     } else {
       this.player2.bot = false
     }
-    const player1deck = new Decks[this.player1deckID](this, this.player1)
-    const player2deck = new Decks[this.player2deckID](this, this.player2)
+    const player1deck = new Decks[this.player1deckID](this, this.player1) as Deck
+    const player2deck = new Decks[this.player2deckID](this, this.player2) as Deck
     player1deck.leader.putIntoPlay()
     player2deck.leader.putIntoPlay()
+    player1deck.passive.putIntoPlay()
+    player2deck.passive.putIntoPlay()
     this.player1.deck = player1deck.cards
     this.player2.deck = player2deck.cards
   }
@@ -251,10 +257,24 @@ class Game {
       serverEvent.on(`playerMoveRequest:${this.player1.socketID}`, (moveRequest) => {
         this.executeMoveRequest(moveRequest, this.player1)
       })
+      serverEvent.on(`playerEndTurnRequest:${this.player1.socketID}`, () => {
+        this.executeEndTurnRequest(this.player1)
+      })
+      serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
+        console.log(`${this.player1.name} disconnected - ending game`)
+        this.endGame(this.player1)
+      })
     }
     if (this.player2.socketID) {
       serverEvent.on(`playerMoveRequest:${this.player2.socketID}`, (moveRequest) => {
         this.executeMoveRequest(moveRequest, this.player2)
+      })
+      serverEvent.on(`playerEndTurnRequest:${this.player2.socketID}`, () => {
+        this.executeEndTurnRequest(this.player2)
+      })
+      serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
+        console.log(`${this.player2.name} disconnected - ending game`)
+        this.endGame(this.player2)
       })
     }
   }
@@ -278,14 +298,10 @@ class Game {
   }
 
   async start() {
-    this.player1.leaderZone.push(new GenericLeader(this, this.player1, 'leaderZone'))
-    this.inPlay.push(this.player1.leaderZone[0])
-    this.player2.leaderZone.push(new GenericLeader(this, this.player2, 'leaderZone'))
-    this.inPlay.push(this.player2.leaderZone[0])
-    this.player1.board.push(new Cards.PlayerOneUnit(this, this.player1, 'board'))
-    this.inPlay.push(this.player1.board[0])
-    this.player2.board.push(new Cards.PlayerTwoUnit(this, this.player2, 'board'))
-    this.inPlay.push(this.player2.board[0])
+    // this.player1.board.push(new Cards.PlayerOneUnit(this, this.player1, 'board'))
+    // this.inPlay.push(this.player1.board[0])
+    // this.player2.board.push(new Cards.PlayerTwoUnit(this, this.player2, 'board'))
+    // this.inPlay.push(this.player2.board[0])
     console.log('starting game')
     await this.sleep(1000)
     this.turnLoop(this.player1)
@@ -295,19 +311,19 @@ class Game {
     this.turnNumber++
     this.turn = new Turn(this, activePlayer, this.turnNumber)
     this.turnCache.push(this.turn)
-    const nextActivePlayerPromise = this.turn.start()
+    this.turn.start()
+    const nextActivePlayerPromise = this.turn.sleep()
     this.announceNewTurn()
     this.announceGameState()
     TestBot(this)
     const nextActivePlayer = await nextActivePlayerPromise
     this.announceGameState()
     if (nextActivePlayer && !this.gameOver) {
-      // console.log(nextActivePlayer)
       this.turnLoop(nextActivePlayer)
     }
   }
 
-  endGame() {
+  endGame(disconnected?: GamePlayer) {
     this.turn.over = true
     this.gameOver = true
     if (this.player1.alive() && !this.player2.alive()) {
@@ -316,6 +332,8 @@ class Game {
       this.winner = this.player2.name + ' wins'
     } else if (!this.player1.alive() && !this.player2.alive()) {
       this.winner = 'draw'
+    } else if (disconnected) {
+      this.winner = disconnected.opponent.name + ' wins because their opponent disconnected'
     } else {
       throw new Error('endGame() has been called but neither player is dead')
     }
@@ -330,30 +348,24 @@ export default Game
 import GamePlayer from '../gameObjects/GamePlayer'
 import Cards from '../dictionaries/Cards'
 import Decks from '../dictionaries/Decks'
-import AuraManager from './AuraManager'
 import PhaseManager from './PhaseManager'
 import Turn from '../gameObjects/Turn'
-import Actions from '../dictionaries/Actions'
-import Effects from '../dictionaries/Effects'
+import ActionOperations from '../dictionaries/ActionOperations'
+import EffectOperations from '../dictionaries/EffectOperations'
 import Permissions from './Permissions'
 import Utils from './Utils'
 import TestBot from '../gameTests/TestBot'
-// import Card from "./Card";
-// import Unit from "./Unit";
-// import Moment from "./Moment";
-// import { Deck, deck1, deck2 } from "./Deck";
-// import EventEmitter from 'events'
 import serverEvent from '../../ServerEvent'
 import Card from '../gameObjects/Card'
 import Character from '../gameObjects/Character'
 import { EventEmitter } from 'events'
 import EventCache from '../gameEvents/EventCache'
-import Effect from '../functionTypes/Effect'
-import ActionFactory from '../functionTypes/ActionFactory'
+import EffectOperation from '../functionTypes/EffectOperation'
+import ActionOperation from '../functionTypes/ActionOperation'
 import TargetRequirementFactory from '../functionTypes/TargetRequirementFactory'
 import TargetRequirements from '../dictionaries/TargetRequirements'
-import GenericLeader from '../cards/Orcissimus'
 import PersistentCard from '../gameObjects/PersistentCard'
 import AbilityCreation from '../gameObjects/AbilityCreation'
 import LeaderAbility from '../gameObjects/LeaderAbility'
+import Deck from '../gameObjects/Deck'
 

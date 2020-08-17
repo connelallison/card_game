@@ -5,7 +5,7 @@ interface DamageMultipleEventObject {
     objectSource: GameObject,
     charSource: Character,
     targets: Character[],
-    value: number 
+    damage: number 
 }
 
 export default DamageMultipleEventObject

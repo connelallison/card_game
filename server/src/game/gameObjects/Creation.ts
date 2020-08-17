@@ -1,13 +1,13 @@
 import Game from "../gameSystems/Game";
 import GamePlayer from "./GamePlayer";
-import ZoneString from "../stringTypes/ZoneString";
-import Action from "../functionTypes/Action";
-import PlayRequirement from "../functionTypes/PlayRequirement";
-import TargetRequirement from "../functionTypes/TargetRequirement";
 import CreationSubtypeString from "../stringTypes/CreationSubtypeString";
 import CreationZoneString from "../stringTypes/CreationZoneString";
 import ObjectReport from "../structs/ObjectReport";
 import DestroyableCard from "./DestroyableCard";
+import TargetDomainString from "../stringTypes/TargetDomainString";
+import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import PlayRequirementObject from "../structs/PlayRequirementObject";
 
 abstract class Creation extends DestroyableCard {
     zone: CreationZoneString
@@ -16,16 +16,17 @@ abstract class Creation extends DestroyableCard {
     subtype: CreationSubtypeString
     health: number
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, subtype: CreationSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[], targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, subtype: CreationSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
         super(game, owner, zone, id, name, 'Creation', subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
         this.health = this.rawHealth
         this.inPlayZone = 'creationZone'
     }
 
     provideReport(): ObjectReport {
-        this.updateStats()
-        this.updateFlags()
         this.updateValidTargets()
+        // console.log(this.validTargets.length)
+
+        // console.log(this.canBeSelected())
 
         return {
             name: this.name,
@@ -38,20 +39,16 @@ abstract class Creation extends DestroyableCard {
             zone: this.zone,
             ownerName: this.owner.name,
             playerID: this.owner.playerID,
-            canBeSelected: this.canBePlayed(),
+            canBeSelected: this.canBeSelected(),
             requiresTarget: this.targeted,
             validTargets: this.validTargetIDs(),
             staticCardText: this.staticCardText,
         }
     }
 
-    inPlay(): boolean {
-        return this.zone === 'creationZone'
-    }
-
     loseCharge() {
         this.rawHealth--
-        this.updateStats()
+        this.update()
     }
 
     moveZone(destination: CreationZoneString): void {
@@ -59,14 +56,6 @@ abstract class Creation extends DestroyableCard {
         this.owner[destination].push(this)
         this.zone = destination
         this.updateEnchantments()
-    }
-
-    baseStats() {
-        return { health: this.rawHealth }
-    }
-
-    setStats(stats) {
-        this.health = stats.health
     }
 }
 

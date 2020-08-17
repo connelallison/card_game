@@ -2,8 +2,6 @@ import ActiveLeaderAbility from "../gameObjects/ActiveLeaderAbility";
 import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import LeaderAbilityZoneString from "../stringTypes/LeaderAbilityZoneString";
-import Actions from "../dictionaries/Actions";
-import PlayRequirements from "../dictionaries/PlayRequirements";
 
 class KingFredTheSaintlyRecruit extends ActiveLeaderAbility {
     constructor(game: Game, owner: GamePlayer, zone: LeaderAbilityZoneString) {
@@ -15,8 +13,18 @@ class KingFredTheSaintlyRecruit extends ActiveLeaderAbility {
             'Recruit',
             2,
             'Summon a 2/2 Knight.',
-            [Actions.summonCard('Knight')],
-            [PlayRequirements.canSummonType('Unit')],
+            [{
+                operation: 'summonCard',
+                values: {
+                    cardID: 'Knight',
+                }
+            }],
+            [{
+                playRequirement: 'canSummonType',
+                values: {
+                    type: 'Unit',
+                }
+            }],
             false,
             null,
             null,

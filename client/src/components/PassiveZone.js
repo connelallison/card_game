@@ -9,23 +9,15 @@ class PassiveZone extends Component {
 
     render() {
         let passiveList
-        // if (this.props.passives.length > 0) {
-        //   if (this.props.mine) {
-        //     passiveList = this.props.passives.map((passive) => (
-        //         <Passive object={passive} selected={this.props.selected} interactivity={this.props.interactivity} />
-        //       )
-        //     )
-        //   } else {
-        //     passiveList = this.props.passives.map((passive) => (
-        //         <Passive object={passive} selected={this.props.selected} interactivity={this.props.interactivity} />
-        //       )
-        //     )
-        //   }
-        // } else {
-        passiveList = [
-            <p>No passives in play.</p>,
-        ]
-        // }
+        if (this.props.passives.length > 0) {
+            passiveList = this.props.passives.map((passive) =>
+                <Passive object={passive} selected={this.props.selected} interactivity={this.props.interactivity} />
+            )
+        } else {
+            passiveList = [
+                <p>No passives in play.</p>,
+            ]
+        }
 
         return (
             <div className="passiveZone">

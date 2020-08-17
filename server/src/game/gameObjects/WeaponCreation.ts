@@ -1,18 +1,20 @@
 import Creation from "./Creation";
 import Game from "../gameSystems/Game";
 import GamePlayer from "./GamePlayer";
-import Action from "../functionTypes/Action";
-import PlayRequirement from "../functionTypes/PlayRequirement";
-import TargetRequirement from "../functionTypes/TargetRequirement";
 import ObjectReport from "../structs/ObjectReport";
 import CreationZoneString from "../stringTypes/CreationZoneString";
+import TargetDomainString from "../stringTypes/TargetDomainString";
+import GameObjectData from "../structs/GameObjectData";
+import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import PlayRequirementObject from "../structs/PlayRequirementObject";
 
 abstract class WeaponCreation extends Creation {
     subtype: 'Weapon'
     rawAttack: number
     attack: number
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[], targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
         super(game, owner, zone, id, name, 'Weapon', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
         this.rawAttack = rawAttack
         this.attack = this.rawAttack
@@ -27,8 +29,6 @@ abstract class WeaponCreation extends Creation {
     }
 
     provideReport(): ObjectReport {
-        this.updateStats()
-        this.updateFlags()
         this.updateValidTargets()
 
         return {
@@ -43,21 +43,21 @@ abstract class WeaponCreation extends Creation {
             zone: this.zone,
             ownerName: this.owner.name,
             playerID: this.owner.playerID,
-            canBeSelected: this.canBePlayed(),
+            canBeSelected: this.canBeSelected(),
             requiresTarget: this.targeted,
             validTargets: this.validTargetIDs(),
             staticCardText: this.staticCardText,
         }
     }
 
-    baseStats() {
-        return { attack: this.rawAttack, health: this.rawHealth }
-    }
-
-    setStats(stats) {
-        this.attack = stats.attack
-        this.health = stats.health
-    }
+    baseData(): GameObjectData {
+        return {
+          attack: this.rawAttack,
+          health: this.rawHealth,
+          cost: this.rawCost,
+          flags: this.baseFlags(),
+        }
+      }
 }
 
 export default WeaponCreation

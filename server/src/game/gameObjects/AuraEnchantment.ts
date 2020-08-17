@@ -2,38 +2,51 @@ import Enchantment from './Enchantment'
 import Game from '../gameSystems/Game'
 import ZoneString from '../stringTypes/ZoneString'
 import ObjectTypeString from '../stringTypes/ObjectTypeString'
-import EnchantmentEffect from '../structs/EnchantmentEffect'
-import AuraTargetTypes from '../structs/AuraTargetTypes'
+import EffectFunction from '../functionTypes/EffectFunction'
 import TargetRequirement from '../functionTypes/TargetRequirement'
-import EffectCategoryString from '../stringTypes/EffectCategoryString'
 import GameObject from './GameObject'
+import TargetDomainString from '../stringTypes/TargetDomainString'
+import TargetDomains from '../dictionaries/TargetDomains'
+import EffectFunctionObject from '../structs/EffectFunctionObject'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
 
 abstract class AuraEnchantment extends Enchantment {
     subtype: 'Aura'
-    categories: EffectCategoryString[]
-    effects: EnchantmentEffect[]
-    targetTypes: AuraTargetTypes
+    priority: 1 | 2 | 3
+    effects: EffectFunction[]
+    targetDomain: () => any[]
     targetRequirements: TargetRequirement[]
+    emit: any
 
-    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = [], categories: EffectCategoryString[], effects: EnchantmentEffect[], targetTypes: AuraTargetTypes, targetRequirements: TargetRequirement[] = []) {
-        super(game, owner, id, name, 'Aura', activeZones, activeTypes, activeRequirements = [])
-        this.categories = categories
-        this.effects = effects
-        this.targetTypes = targetTypes
-        this.targetRequirements = targetRequirements
+    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = [], effectObjs: EffectFunctionObject[], targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[] = [], priority: 1 | 2 | 3) {
+        super(game, owner, id, name, 'Aura', activeZones, activeTypes, activeRequirements)
+        this.priority = priority
+        this.effects = this.wrappedEffects(effectObjs)
+        this.targetDomain = TargetDomains(this, targetDomain)
+        this.targetRequirements = targetRequirements ? targetRequirements.map(reqObj => this.wrapTargetRequirement(reqObj)) : null
+        this.emit = (() => this.auraEmit())
     }
 
     active(): boolean {
         const active = this.activeZones.includes(this.owner.zone) 
                       && this.activeTypes.includes(this.owner.type) 
-                      && this.activeRequirements.every(requirement => requirement(this) === true)
+                      && this.activeRequirements.every(requirement => requirement(this))
         if (!this.previousActive && active) {
-            this.game.auras.emit(this)
+            this.game.event.on(`auraEmit${this.priority}`, this.emit)
         } else if (this.previousActive && !active) {
-            this.game.auras.cancel(this)
+            this.game.event.removeListener(`auraEmit${this.priority}`, this.emit)
         }
         this.previousActive = active
         return active
+    }
+
+    auraEmit(): void {
+        const targets = this.targetDomain()
+        targets.forEach(target => {
+            if (this.targetRequirements.every(requirement => requirement(target))){
+                this.effects.forEach(effect => target.auraEffects.push(effect))
+            }
+        })
     }
 }
 

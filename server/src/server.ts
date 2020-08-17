@@ -105,11 +105,15 @@ io.on('connection', function (socket) {
     // console.log(moveRequest)
     serverEvent.emit(`playerMoveRequest:${socketID}`, moveRequest)
   })
+  socket.on('endTurn', function () {
+    serverEvent.emit(`playerEndTurnRequest:${socketID}`)
+  })
   socket.on('disconnect', () => {
     // connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
     delete connectedPlayers[socketID]
     delete connectedSockets[socketID]
     console.log('disconnected: ', socketID)
+    serverEvent.emit(`playerDisconnected:${socketID}`)
     io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   })
   // class ServerEvent extends EventEmitter {}

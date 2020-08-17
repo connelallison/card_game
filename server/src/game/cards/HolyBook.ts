@@ -15,14 +15,14 @@ class HolyBook extends WorkCreation {
             true,
             2,
             3,
-            'At the end of your turn, restore 2 Health to all friendly characters.',
+            'At the end of your turn, give 2 Health to all friendly characters.',
             [],
             [],
             false,
             null,
             null
         )
-        this.addEnchantment(new Enchantments.HolyBookHealing(this.game, this))
+        this.addEnchantment(new Enchantments.HolyBookTrigger(this.game, this))
     }
 }
 

@@ -4,10 +4,16 @@ import GamePlayer from './GamePlayer'
 import ObjectReport from '../structs/ObjectReport'
 import ZoneString from '../stringTypes/ZoneString'
 import CardTypeString from '../stringTypes/CardTypeString'
-import Action from '../functionTypes/Action'
+import ActionFunction from '../functionTypes/ActionFunction'
 import TargetRequirement from '../functionTypes/TargetRequirement'
 import PlayRequirement from '../functionTypes/PlayRequirement'
 import CardSubtypeString from '../stringTypes/CardSubtypeString'
+import TargetDomainString from '../stringTypes/TargetDomainString'
+import TargetDomains from '../dictionaries/TargetDomains'
+import GameObjectData from '../structs/GameObjectData'
+import ActionFunctionObject from '../structs/ActionFunctionObject'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import PlayRequirementObject from '../structs/PlayRequirementObject'
 
 abstract class Card extends GameObject {
   owner: GamePlayer
@@ -17,35 +23,56 @@ abstract class Card extends GameObject {
   rawCost: number
   cost: number
   staticCardText: string
-  actions: Action[]
+  actions: ActionFunction[]
   playRequirements: PlayRequirement[]
   targeted: boolean
-  targetDomain: any
+  targetDomain: () => any[]
   targetRequirements: TargetRequirement[]
   validTargets: any
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: Action[] = [], playRequirements: PlayRequirement[],  targeted: boolean = false, targetDomain: any, targetRequirements: TargetRequirement[]) {
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[],  targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
     super(game, owner, id, name, type, subtype)
     this.zone = zone
     this.collectable = collectable
     this.rawCost = rawCost
     this.cost = rawCost
     this.staticCardText = staticCardText
-    this.actions = actions
-    this.playRequirements = playRequirements
+    this.actions = actions.map(actionObj => this.wrapActionFunction(actionObj))
+    this.playRequirements = playRequirements ? playRequirements.map(reqObj => this.wrapPlayRequirement(reqObj)) : null
     this.targeted = targeted
-    this.targetDomain = targetDomain
-    this.targetRequirements = targetRequirements
+    this.targetDomain = TargetDomains(this, targetDomain)
+    this.targetRequirements = targetRequirements ? targetRequirements.map(reqObj => this.wrapTargetRequirement(reqObj)) : null
     this.validTargets = []
+  }
+
+  provideReport (): ObjectReport {
+    this.updateValidTargets()
+
+    return {
+      name: this.name,
+      id: this.id,
+      objectID: this.objectID,
+      cost: this.cost,
+      type: this.type,
+      subtype: this.subtype,
+      zone: this.zone,
+      ownerName: this.owner.name,
+      playerID: this.owner.playerID,
+      canBeSelected: this.canBeSelected(),
+      requiresTarget: this.targeted,
+      validTargets: this.validTargetIDs(),
+      staticCardText: this.staticCardText,
+    }
   }
 
   updateValidTargets(): void {
     if (this.zone === 'hand' && this.targeted) {
-      let newTargets = this.targetDomain(this.owner)
+      let newTargets = this.targetDomain()
       this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => requirement(this, target))
+        newTargets = newTargets.filter(target => requirement(target))
       })
       this.validTargets = newTargets
+      // this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(this, target)), this.targetDomain())
     } else {
       this.validTargets = []
     }
@@ -55,11 +82,21 @@ abstract class Card extends GameObject {
     return this.validTargets.map(target => target.objectID)
   }
 
+  canBeSelected(): boolean {
+    return this.canBePlayed()
+  }
+
   canBePlayed(): boolean {
     return this.controller().canPlay(this)
   }
 
-  abstract provideReport(): ObjectReport 
+  baseData(): GameObjectData {
+    return {
+      cost: this.rawCost,
+      flags: this.baseFlags(),
+    }
+  }
+
   abstract moveZone(destination: ZoneString): void 
 }
 export default Card

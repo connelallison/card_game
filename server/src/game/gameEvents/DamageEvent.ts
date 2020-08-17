@@ -8,7 +8,7 @@ class DamageEvent extends GameEvent {
     objectSource: GameObject
     charSource: Character
     target: Character
-    value: number
+    damage: number
 
     constructor(game: Game, object: DamageSingleEventObject) {
         super(game) 

@@ -3,6 +3,7 @@ import Unit from './Unit.js'
 import Moment from './Moment.js'
 import Unknown from './Unknown.js'
 import Creation from './Creation.js'
+import Passive from './Passive.js'
 
 const PlayerHand = (props) => {
   let cardList
@@ -21,6 +22,10 @@ const PlayerHand = (props) => {
       } else if (card.type === 'Creation') {
         return (
           <Creation object={card} selected={props.selected} interactivity={props.interactivity} />
+        )
+      } else if (card.type === 'Passive') {
+        return  (
+          <Passive object={card} selected={props.selected} interactivity={props.interactivity} />
         )
       } else {
         return new Error('card is not a unit, moment, or creation')

@@ -1,8 +1,8 @@
 import Card from "../gameObjects/Card";
 import GameObject from "../gameObjects/GameObject";
 
-interface Action {
-    (source: GameObject, targets?: Card[]): void
+interface ActionFunction {
+    (targets?): void
 }
 
-export default Action
+export default ActionFunction

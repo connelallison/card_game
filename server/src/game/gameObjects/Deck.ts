@@ -6,6 +6,7 @@ import GamePlayer from './GamePlayer'
 import Card from './Card'
 import DeckObject from '../structs/DeckObject'
 import Leader from './Leader'
+import Passive from './Passive'
 
 class Deck {
   game: Game
@@ -13,6 +14,7 @@ class Deck {
   id: string
   name: string
   leader: Leader
+  passive: Passive
   cards: Card[]
 
   constructor (game, owner, deckID, deckName, deck: DeckObject) {
@@ -21,6 +23,7 @@ class Deck {
     this.id = deckID
     this.name = deckName
     this.leader = new Cards[deck.leader](this.game, this.owner, 'setAside')
+    this.passive = new Cards[deck.passive](this.game, this.owner, 'setAside')
     this.cards = deck.cards.map(cardID => new Cards[cardID](this.game, this.owner, 'deck'))
     this.shuffle()
   }

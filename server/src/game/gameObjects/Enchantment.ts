@@ -17,6 +17,10 @@ abstract class Enchantment extends GameObject {
         this.activeRequirements = activeRequirements
         this.previousActive = false
     }
+
+    wrappedEffects(effectObjs: EffectFunctionObject[]): EffectFunction[] {
+        return effectObjs.map(effectObj => (data: GameObjectData): void => EffectOperations[effectObj.operation](data, this.dynamicValue(effectObj.value)))
+    }
     
     active(): boolean {
         this.zone = this.owner.zone
@@ -28,16 +32,26 @@ abstract class Enchantment extends GameObject {
         return active
     }
 
-    charOwner(): Character{
+    charOwner(): Character {
         return this.owner.charOwner()
+    }
+
+    baseData(): GameObjectData {
+        return {
+            flags: this.baseFlags()
+        }
     }
 }
 
 export default Enchantment
 
 import Game from '../gameSystems/Game'
-import Card from './Card'
 import ZoneString from '../stringTypes/ZoneString'
 import ObjectTypeString from '../stringTypes/ObjectTypeString'
 import Character from './Character'
 import ObjectSubtypeString from '../stringTypes/ObjectSubtypeString'
+import EffectFunctionObject from '../structs/EffectFunctionObject'
+import EffectFunction from '../functionTypes/EffectFunction'
+import GameObjectData from '../structs/GameObjectData'
+import EffectOperations from '../dictionaries/EffectOperations'
+

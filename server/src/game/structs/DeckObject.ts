@@ -1,5 +1,6 @@
 interface DeckObject {
     leader: string
+    passive: string
     cards: string[]
 }
 

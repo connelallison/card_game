@@ -2,27 +2,36 @@ import ActiveLeaderAbility from "../gameObjects/ActiveLeaderAbility";
 import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import LeaderAbilityZoneString from "../stringTypes/LeaderAbilityZoneString";
-import Actions from "../dictionaries/Actions";
 import PlayRequirements from "../dictionaries/PlayRequirements";
 
-class OrcissimusSmash extends ActiveLeaderAbility {
+class OrkusTheOrkestSmash extends ActiveLeaderAbility {
     constructor(game: Game, owner: GamePlayer, zone: LeaderAbilityZoneString) {
         super(
             game,
             owner,
             zone,
-            'OrcissimushSmash',
+            'OrkusTheOrkestSmash',
             'Smash',
             2,
             'Deal 2 damage to a unit.',
-            [Actions.damageChosenTarget(2)],
-            [PlayRequirements.minAllUnits(1)],
+            [{
+                operation: 'damage',
+                values: {
+                    damage: 2,
+                },
+            }],
+            [{
+                playRequirement: "minAllUnits",
+                values: {
+                    min: 1,
+                }
+            }],
             true,
-            game.utils.targetDomain(['enemyUnits', 'friendlyUnits',]),
+            ['enemyBoard', 'friendlyBoard'],
             [],
             false,
         )
     }
 }
 
-export default OrcissimusSmash
+export default OrkusTheOrkestSmash

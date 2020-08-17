@@ -18,8 +18,8 @@ class Permissions {
     canTarget (card: Card, target: Card): boolean {
         return (
             card.targeted 
-            && card.targetDomain(card.controller()).includes(target)
-            && card.targetRequirements.every(requirement => requirement(card, target))
+            && card.targetDomain().includes(target)
+            && card.targetRequirements.every(requirement => requirement(target))
         )
     }
 
@@ -51,7 +51,7 @@ class Permissions {
             && card.cost <= player.currentMana
             && (card.targeted ? card.validTargets.length > 0 : true )
             && (card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true)
-            && card.playRequirements.every(requirement => requirement(card))
+            && card.playRequirements.every(requirement => requirement())
         )
     }
 
@@ -62,7 +62,7 @@ class Permissions {
             && card.inPlay()
             && card.cost <= player.currentMana
             && (card.targeted ? card.validTargets.length > 0 : true)
-            && card.playRequirements.every(requirement => requirement(card))
+            && card.playRequirements.every(requirement => requirement())
         )
     }
 }
@@ -74,7 +74,6 @@ import GamePlayer from "../gameObjects/GamePlayer"
 import Character from "../gameObjects/Character"
 import PersistentCard from "../gameObjects/PersistentCard"
 import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString"
-import PlayZoneString from "../stringTypes/PlayZoneString"
 import AbilityCreation from "../gameObjects/AbilityCreation"
 import LeaderAbility from "../gameObjects/LeaderAbility"
 

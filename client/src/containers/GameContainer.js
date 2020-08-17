@@ -28,10 +28,12 @@ class GameContainer extends Component {
             health: 0,
             currentMana: 0,
             maxMana: 0,
-            canBeSelected: false
+            canBeSelected: false,
+            name: '',
           },
           leaderAbility: {
-            staticCardText: ''
+            staticCardText: '',
+            name: '',
           },
           board: [],
           creations: [],
@@ -45,10 +47,12 @@ class GameContainer extends Component {
             health: 0,
             currentMana: 0,
             maxMana: 0,
-            canBeSelected: false
+            canBeSelected: false,
+            name: '',
           },
           leaderAbility: {
-            staticCardText: ''
+            staticCardText: '',
+            name: '',
           },
           board: [],
           creations: [],
@@ -68,6 +72,7 @@ class GameContainer extends Component {
     const gameContainer = this
 
     this.handleRequestTestGame = this.handleRequestTestGame.bind(this)
+    this.handleEndTurn = this.handleEndTurn.bind(this)
     this.handleClearSelected = this.handleClearSelected.bind(this)
     this.handleChooseSelected = this.handleChooseSelected.bind(this)
     this.handleChooseTarget = this.handleChooseTarget.bind(this)
@@ -152,6 +157,11 @@ class GameContainer extends Component {
     })
   }
 
+  handleEndTurn() {
+    console.log('ending turn')
+    if (this.state.gameState.myTurn) socket.emit('endTurn')
+  }
+
   handleInvalidMove() {
     console.log("invalid move")
   }
@@ -194,6 +204,7 @@ class GameContainer extends Component {
         <div className='topBar'>
           <DisplayName currentName={currentName} handleSubmit={this.handleUpdateDisplayName} />
           <TestGame onRequested={this.handleRequestTestGame} opponents={this.state.serverPlayers} socketID={socket.id} />
+          <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
           {/* {gameStatus}
           {turnTimer} */}
         </div>
@@ -225,7 +236,7 @@ class GameContainer extends Component {
         </PlayArea>
         <PlayerHand cards={this.state.gameState.my.hand} selected={this.state.selected} interactivity={this.interactivityHandlers} />
         <br />
-        <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer} />
+        {/* <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer} /> */}
       </>
     )
   }

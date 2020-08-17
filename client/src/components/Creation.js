@@ -17,8 +17,8 @@ class Creation extends Component {
   handleClick () {
     if (this.props.selected === this.props.object) {
       this.props.interactivity.clearSelected();
-    } else if (this.props.selected === null && this.props.object.zone === 'creationZone' && this.props.object.canBeSelected) {
-      if (this.props.object.requiresTarget) {
+    } else if (this.props.selected === null && (this.props.object.zone === 'creationZone' || this.props.object.zone === 'hand') && this.props.object.canBeSelected) {
+      if (this.props.object.requiresTarget || this.props.object.zone === 'hand') {
           this.props.interactivity.chooseSelected(this.props.object)
       } else {
           this.props.interactivity.chooseSelectedNoTarget(this.props.object)
@@ -33,6 +33,8 @@ class Creation extends Component {
   render () {
     const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' : 
                        this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
+    const nameLength = this.props.object.name.length > 22 ? 'name-long' : 
+                       this.props.object.name.length > 17 ? 'name-medium' : 'name-short'
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
@@ -51,7 +53,7 @@ class Creation extends Component {
     ) : null
     return (
       <div onClick={this.handleClick} className={styleClasses}>
-        <p className='card-name'>{this.props.object.name}</p>
+        <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
         {handInfo}
         <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
         {/* <br /> */}

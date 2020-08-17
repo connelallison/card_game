@@ -5,7 +5,7 @@ interface DamageSingleEventObject {
     objectSource: GameObject,
     charSource: Character,
     target: Character,
-    value: number 
+    damage: number 
 }
 
 export default DamageSingleEventObject

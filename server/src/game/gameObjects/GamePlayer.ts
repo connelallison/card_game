@@ -21,7 +21,7 @@ class GamePlayer {
     creationZone: number,
     passiveZone: number
   }
-  passiveZone: any[]
+  passiveZone: Passive[]
   setAside: GameObject[]
   opponent: GamePlayer
   bot: boolean
@@ -72,6 +72,10 @@ class GamePlayer {
 
   creationsReport(): ObjectReport[] {
     return this.creationZone.map(creation => creation.provideReport())
+  }
+
+  passivesReport(): ObjectReport[] {
+    return this.passiveZone.map(passive => passive.provideReport())
   }
 
   handReport(): ObjectReport[] {
@@ -188,4 +192,5 @@ import GameObject from './GameObject'
 import PersistentCardTypeString from '../stringTypes/PersistentCardTypeString'
 import AbilityCreation from './AbilityCreation'
 import LeaderAbility from './LeaderAbility'
+import Passive from './Passive'
 

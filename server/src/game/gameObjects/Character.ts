@@ -2,11 +2,13 @@ import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import ObjectReport from '../structs/ObjectReport'
 import ZoneString from '../stringTypes/ZoneString'
-import Action from '../functionTypes/Action'
-import TargetRequirement from '../functionTypes/TargetRequirement'
-import PlayRequirement from '../functionTypes/PlayRequirement'
 import DestroyableCard from './DestroyableCard'
 import StartOfTurnEvent from '../gameEvents/StartOfTurnEvent'
+import TargetDomainString from '../stringTypes/TargetDomainString'
+import GameObjectData from '../structs/GameObjectData'
+import ActionFunctionObject from '../structs/ActionFunctionObject'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import PlayRequirementObject from '../structs/PlayRequirementObject'
 
 abstract class Character extends DestroyableCard {
   type: 'Leader' | 'Unit'
@@ -17,7 +19,7 @@ abstract class Character extends DestroyableCard {
   attack: number
   health: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Unit', subtype: 'Leader' | 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[]) {
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Unit', subtype: 'Leader' | 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
     super(game, owner, zone, id, name, type, subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     this.ready = false
     this.rawAttack = rawAttack
@@ -27,8 +29,6 @@ abstract class Character extends DestroyableCard {
   }
 
   provideReport(): ObjectReport {
-    this.updateStats()
-    this.updateFlags()
     this.updateValidTargets()
 
     return {
@@ -50,7 +50,6 @@ abstract class Character extends DestroyableCard {
     }
   }
 
-  abstract updateValidTargets(): void 
 
   canBeSelected(): boolean {
     if (this.inPlay()) {
@@ -86,6 +85,16 @@ abstract class Character extends DestroyableCard {
     return this
   }
 
+  baseData(): GameObjectData {
+    return {
+      attack: this.rawAttack,
+      health: this.rawHealth,
+      cost: this.rawCost,
+      flags: this.baseFlags(),
+    }
+  }
+
+  abstract updateValidTargets(): void
   abstract takeDamage(damage: number): void
   abstract receiveHealing(healing: number): void
 }

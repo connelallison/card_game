@@ -15,10 +15,9 @@ class Guard extends StaticEnchantment {
             ['board'],
             ['Unit'],
             [],
-            ['flags'],
             [{
-              effect: game.effects.guard,
-              category: 'flags',
+              operation: 'guard',
+              value: true
             }]
         )
     }

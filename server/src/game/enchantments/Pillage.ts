@@ -14,10 +14,9 @@ class Pillage extends StaticEnchantment {
             ['board', 'leaderZone', 'creationZone'],
             ['Unit', 'Leader', 'Creation'],
             [],
-            ['flags'],
             [{
-              effect: game.effects.pillage,
-              category: 'flags',
+                operation: 'pillage',
+                value: true
             }]
         )
     }

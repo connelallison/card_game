@@ -4,9 +4,7 @@ import TriggerRequirement from "../functionTypes/TriggerRequirement";
 
 interface Trigger {
     eventType: TriggerTypeString,
-    requirements: TriggerRequirement[],
-    actions: TriggerAction[],
-    wrapped?: TriggerAction
+    action: TriggerAction
 }
 
 export default Trigger

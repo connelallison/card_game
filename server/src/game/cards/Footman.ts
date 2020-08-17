@@ -24,7 +24,7 @@ class Footman extends GenericUnit {
       null, 
       null
     )
-    this.addEnchantment(new Enchantments.FootmanExtraDamageDuringYourTurn(this.game, this))
+    this.addEnchantment(new Enchantments.FootmanAura(this.game, this))
   }
 }
 export default Footman

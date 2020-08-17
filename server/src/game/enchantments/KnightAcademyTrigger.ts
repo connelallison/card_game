@@ -1,8 +1,8 @@
 import Game from "../gameSystems/Game";
 import WonderTriggerEnchantment from "../gameObjects/WonderTriggerEnchantment";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";
-import TriggerActions from "../dictionaries/TriggerActions";
 import WonderCreation from "../gameObjects/WonderCreation";
+import DrawEvent from "../gameEvents/DrawEvent";
 
 class KnightAcademyTrigger extends WonderTriggerEnchantment {
     owner: WonderCreation
@@ -11,17 +11,39 @@ class KnightAcademyTrigger extends WonderTriggerEnchantment {
         super(
             game,
             owner,
-            'KnightAcademy:Trigger', 
-            'Knight Academy Trigger', 
+            'KnightAcademyTrigger',
+            'Knight Academy Trigger',
             ['creationZone'],
             ['Creation'],
             [],
             true,
-            ['afterDraw'],
             [{
                 eventType: 'afterDraw',
-                requirements: [TriggerRequirements.canSummonType('Unit'), TriggerRequirements.isType('Unit', 'card'), TriggerRequirements.isFriendly('card')],
-                actions: [TriggerActions.summonSpecificCard('Knight')]
+                requirements: [
+                    {
+                        playRequirement: 'canSummonType',
+                        values: {
+                            type: 'Unit',
+                        }
+                    },
+                    {
+                        targetRequirement: 'isType',
+                        values: {
+                            type: 'Unit',
+                        },
+                        eventMap: (event: DrawEvent) => event.card
+                    },
+                    {
+                        targetRequirement: 'isFriendly',
+                        eventMap: (event: DrawEvent) => event.card
+                    }
+                ],
+                actions: [{
+                    operation: 'summonCard',
+                    values: {
+                        cardID: 'Knight'
+                    }
+                }]
             }]
         )
     }

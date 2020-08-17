@@ -2,10 +2,13 @@ import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
 import LeaderZoneString from '../stringTypes/LeaderZoneString'
-import Action from '../functionTypes/Action'
-import TargetRequirement from '../functionTypes/TargetRequirement'
-import PlayRequirement from '../functionTypes/PlayRequirement'
 import WeaponCreation from './WeaponCreation'
+import TargetDomainString from '../stringTypes/TargetDomainString'
+import GameObjectData from '../structs/GameObjectData'
+import FlagsObject from '../structs/FlagsObject'
+import ActionFunctionObject from '../structs/ActionFunctionObject'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import PlayRequirementObject from '../structs/PlayRequirementObject'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
@@ -14,14 +17,10 @@ abstract class Leader extends Character {
   subtype: 'Leader'
   leaderPowerID: string
 
-  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: Action[], playRequirements: PlayRequirement[], targeted: boolean, targetDomain: any, targetRequirements: TargetRequirement[], leaderPowerID: string) {
+  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], leaderPowerID: string) {
     super(game, owner, zone, id, name, 'Leader', 'Leader', collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     this.inPlayZone = 'leaderZone'
-    if (this.inPlay()) {
-      this.health = this.owner.health
-    } else {
-      this.health = this.rawHealth
-    }
+    this.health = this.rawHealth
     this.leaderPowerID = leaderPowerID
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
@@ -33,11 +32,12 @@ abstract class Leader extends Character {
         return this.game.permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {
-      let newTargets = this.targetDomain(this.owner)
-      this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => requirement(this, target))
-      })
-      this.validTargets = newTargets
+      // let newTargets = this.targetDomain(this.owner)
+      // this.targetRequirements.forEach(requirement => {
+      //   newTargets = newTargets.filter(target => requirement(this, target))
+      // })
+      // this.validTargets = newTargets
+      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
     } else {
       this.validTargets = []
     }
@@ -46,53 +46,69 @@ abstract class Leader extends Character {
   takeDamage(damage: number): void {
     if (damage > 0) {
       this.owner.health -= damage
-      this.updateStats()
+      this.update()
       console.log(`${this.owner.name} takes ${damage} damage`)
       console.log(`${this.owner.name} now has ${this.health} health`)
     }
   }
 
-  receiveHealing(healing: number): void  {
+  receiveHealing(healing: number): void {
     if (healing > 0) {
       this.owner.health += healing
-      this.updateStats()
+      this.update()
       console.log(`${this.owner.name} receives ${healing} healing`)
       console.log(`${this.owner.name} now has ${this.health} health`)
     }
   }
 
-  baseStats() {
+  baseData(): GameObjectData {
+    return {
+      attack: this.baseAttack(),
+      health: this.baseHealth(),
+      cost: this.rawCost,
+      flags: this.baseFlags(),
+    }
+  }
+
+  baseAttack(): number {
     if (this.inPlay()) {
       const weaponsAttack = (this.controller().creationZone
-                              .filter(creation => creation instanceof WeaponCreation) as WeaponCreation[])
-                              .map(weapon => weapon.attack)
-                              .reduce((acc, val) => acc + val, 0)
-      return { attack: this.rawAttack + weaponsAttack, health: this.owner.health }
+        .filter(creation => creation instanceof WeaponCreation) as WeaponCreation[])
+        .map(weapon => weapon.attack)
+        .reduce((acc, val) => acc + val, 0)
+      return this.rawAttack + weaponsAttack
     } else {
-      return { attack: this.rawAttack, health: this.rawHealth }
+      return this.rawAttack
+    }
+  }
+  
+  baseHealth(): number {
+    if (this.inPlay()) {
+      return this.owner.health
+    } else {
+      return this.rawHealth
     }
   }
 
-  setStats(stats) {
-    if (!this.inPlay() || this.controller().myTurn()) {
-      this.attack = stats.attack
-    } else {
-      this.attack = 0
-    }
-
-    this.health = stats.health
-  }
-
-  baseFlags() {
+  baseFlags(): FlagsObject {
     if (this.inPlay()) {
       const weaponsFlags = this.controller().creationZone.filter(creation => creation instanceof WeaponCreation).map(weapon => weapon.flags)
       return Object.assign({}, ...weaponsFlags)
-    } 
+    }
     return {}
   }
 
+  toggleAttack(dataObj: GameObjectData): void {
+    if (this.inPlay() && !this.controller().myTurn()) dataObj.attack = 0
+  }
+
+  setData(dataObj: GameObjectData): void {
+    this.toggleAttack(dataObj)    
+    Object.assign(this, dataObj)
+  }
+
   moveZone(destination: LeaderZoneString): void {
-    if (this.zone !== 'setAside') this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+    this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
     this.updateEnchantments()
@@ -109,7 +125,7 @@ abstract class Leader extends Character {
       objectSource: this,
       charSource: this
     })
-}
+  }
 }
 
 export default Leader

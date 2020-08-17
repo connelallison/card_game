@@ -31,6 +31,10 @@ p.lowerMargin {
   text-align: center;
 }
 
+input {
+  margin-left: 5px;
+}
+
 .multicolour-line {
   display: inline-flex;
   background-color: inherit;
@@ -118,6 +122,9 @@ p.lowerMargin {
   text-align: center;
   font-weight: bold;
   font-size: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-self: flex-end;
 }
 
 
@@ -138,6 +145,18 @@ p.lowerMargin {
 .card-name {
   margin-bottom: 8px;
   font-weight: 600;
+}
+
+.name-long {
+  font-size: 12px;
+}
+
+.name-medium {
+  font-size: 14px;
+}
+
+.name-short {
+  font-size: 16px;
 }
 
 .card-text {
@@ -199,7 +218,7 @@ p.lowerMargin {
 
 .topBar {
   display: flex;
-  /* justify-content: space-evenly; */
+  justify-content: space-evenly;
 }
 
 #request-test-game, #update-display-name {

@@ -5,7 +5,7 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 
 class DeathEvent extends GameEvent {
-    object: DestroyableCard
+    died: DestroyableCard
     controller: GamePlayer
 
     constructor(game: Game, object: DeathEventObject) {

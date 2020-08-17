@@ -32,9 +32,11 @@ class Leader extends Component {
     const attackLabel = this.props.object.attack > 0 ? (
       <p className='attack-label stat-label'>{this.props.object.attack}A</p>
     ) : null
+    const nameLength = this.props.object.name.length > 22 ? 'name-long' : 
+                       this.props.object.name.length > 17 ? 'name-medium' : 'name-short'
     return (
       <div onClick={this.handleClick} className={styleClasses} >
-        <p className='card-name'>{this.props.object.name}</p>
+        <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
         <p className={`card-text`}>{this.props.object.staticCardText}</p>
         <div className="multicolour-line">
           {attackLabel}

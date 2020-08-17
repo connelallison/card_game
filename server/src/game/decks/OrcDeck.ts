@@ -3,7 +3,8 @@ import Deck from '../gameObjects/Deck'
 class OrcDeck extends Deck {
   constructor (game, owner) {
     const deck = {
-      leader: 'Orcissimus',
+      leader: 'OrkusTheOrkest',
+      passive: 'SingleMindedFury',
       cards: [
       'JuniorOrc',
       'JuniorOrc',
@@ -16,8 +17,8 @@ class OrcDeck extends Deck {
       'SavageWolf',
       'SavageWolf',
       'SavageWolf',
-      'OrkusTheOrkest',
-      'OrkusTheOrkest',
+      'Orcissimus',
+      'Orcissimus',
       'Consume',
       'Consume',
       'Consume',

@@ -29,14 +29,23 @@ class Passive extends Component {
   render () {
     const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' : 
                        this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
+    const nameLength = this.props.object.name.length > 22 ? 'name-long' : 
+                       this.props.object.name.length > 17 ? 'name-medium' : 'name-short'
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " passive card"
+    const handInfo = this.props.object.zone === 'hand' ? (
+      <div className="multicolour-line text-medium">
+        <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+        <p>{this.props.object.type}</p>
+      </div>
+    ) : null
     return (
       <div onClick={this.handleClick} className={styleClasses}>
-        {/* <p className='card-name'>{this.props.object.name}</p>
-        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p> */}
+        <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
+        {handInfo}
+        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
         {/* <br /> */}
         {/* <div className="multicolour-line">
           <p className='health-label stat-label'>{this.props.object.health}H</p>

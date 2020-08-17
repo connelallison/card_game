@@ -86,7 +86,7 @@ class Game {
   }
 
   announceGameState() {
-    if (this.online) {
+    if (!this.gameOver) {
       // console.log(serverEvent);
       let player1gameState
       let player2gameState
@@ -282,9 +282,13 @@ class Game {
   removeListeners() {
     if (this.player1.socketID) {
       serverEvent.removeAllListeners(`playerMoveRequest:${this.player1.socketID}`)
+      serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player1.socketID}`)
+      serverEvent.removeAllListeners(`playerDisconnected:${this.player1.socketID}`)
     }
     if (this.player2.socketID) {
       serverEvent.removeAllListeners(`playerMoveRequest:${this.player2.socketID}`)
+      serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player2.socketID}`)
+      serverEvent.removeAllListeners(`playerDisconnected:${this.player2.socketID}`)
     }
   }
 
@@ -325,7 +329,6 @@ class Game {
 
   endGame(disconnected?: GamePlayer) {
     this.turn.over = true
-    this.gameOver = true
     if (this.player1.alive() && !this.player2.alive()) {
       this.winner = this.player1.name + ' wins'
     } else if (!this.player1.alive() && this.player2.alive()) {
@@ -339,6 +342,7 @@ class Game {
     }
     console.log('The game is over. The result is: ' + this.winner)
     this.announceGameState()
+    this.gameOver = true
     this.removeListeners()
   }
 }

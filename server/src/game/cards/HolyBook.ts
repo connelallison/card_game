@@ -15,7 +15,7 @@ class HolyBook extends WorkCreation {
             true,
             2,
             3,
-            'At the end of your turn, give 2 Health to all friendly characters.',
+            'At the end of your turn, give 1 Health to all friendly characters.',
             [],
             [],
             false,

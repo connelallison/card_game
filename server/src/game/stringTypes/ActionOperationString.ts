@@ -1,3 +1,3 @@
-type ActionOperationString = 'damage' | 'heal' | 'draw' | 'buffCharacterAttack' | 'buffCharacterHealth' | 'buffCharacterAttackAndHealth' | 'summonCard' | 'incrementEventParam'
+type ActionOperationString = 'damage' | 'heal' | 'draw' | 'buffCharacterAttack' | 'buffCharacterHealth' | 'buffCharacterAttackAndHealth' | 'summonCard' | 'putIntoPlay' | 'incrementEventParam'
 
 export default ActionOperationString

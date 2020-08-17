@@ -24,7 +24,7 @@ class HolyBookTrigger extends TriggerEnchantment {
                 actions: [{
                     operation: 'heal',
                     values: {
-                        healing: 2,
+                        healing: 1,
                     },
                     targets: ['friendlyBoard', 'friendlyLeader']
                 }],

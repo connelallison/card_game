@@ -18,9 +18,6 @@ class CombatTrainingAura extends AuraEnchantment {
             [{
                 operation: 'incrementAttack',
                 value: 1,
-            }, {
-                operation: 'incrementHealth',
-                value: 1,
             }],
             'friendlyBoard',
             [{ 

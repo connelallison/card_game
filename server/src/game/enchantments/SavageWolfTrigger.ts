@@ -12,8 +12,8 @@ class SavageWolfTrigger extends TriggerEnchantment {
         super(
             game,
             owner,
-            'SavageWolfTrigger', 
-            'Savage Wolf Trigger', 
+            'SavageWolfTrigger',
+            'Savage Wolf Trigger',
             ['board'],
             ['Unit'],
             [],
@@ -34,11 +34,18 @@ class SavageWolfTrigger extends TriggerEnchantment {
                     }
                 ],
                 actions: [{
-                        operation: 'buffCharacterAttackAndHealth',
-                        values: {
-                            stats: 1,
-                        },
-                        targets: 'self',
+                    operation: 'buffCharacterAttack',
+                    values: {
+                        attack: 2,
+                    },
+                    targets: 'self',
+                },
+                {
+                    operation: 'buffCharacterHealth',
+                    values: {
+                        health: 1,
+                    },
+                    targets: 'self',
                 }]
             }]
         )

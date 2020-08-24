@@ -1,11 +1,11 @@
 import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import Enchantments from '../dictionaries/Enchantments'
-import UnitZoneString from '../stringTypes/UnitZoneString'
-import GenericUnit from '../gameObjects/GenericUnit'
+import FollowerZoneString from '../stringTypes/FollowerZoneString'
+import NamelessFollower from '../gameObjects/NamelessFollower'
 
-class JuniorOrc extends GenericUnit {
-  constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
+class JuniorOrc extends NamelessFollower {
+  constructor (game: Game, owner: GamePlayer, zone: FollowerZoneString) {
     super(
       game, 
       owner, 

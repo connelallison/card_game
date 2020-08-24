@@ -1,5 +1,5 @@
 import React from 'react'
-import Unit from './Unit.js'
+import Follower from './Follower.js'
 import Moment from './Moment.js'
 import Unknown from './Unknown.js'
 
@@ -9,9 +9,9 @@ const OpponentHand = (props) => {
     cardList = props.cards.map((card) => {
       if (card.type === 'unknown') {
         return (<Unknown />)
-      } else if (card.type === 'Unit') {
+      } else if (card.type === 'Follower') {
         return (
-          <Unit name={card.name} cost={card.cost} attack={card.attack} health={card.health} />
+          <Follower name={card.name} cost={card.cost} attack={card.attack} health={card.health} />
         )
       } else if (card.type === 'Moment') {
         return (

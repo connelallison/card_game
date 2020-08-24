@@ -1,12 +1,12 @@
-import NamedUnit from "../gameObjects/NamedUnit";
+import FamousFollower from "../gameObjects/FamousFollower";
 import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
-import UnitZoneString from "../stringTypes/UnitZoneString";
+import FollowerZoneString from "../stringTypes/FollowerZoneString";
 import DynamicTargetObject from "../structs/DynamicTargetObject";
 import DeathEvent from "../gameEvents/DeathEvent";
 
-class Orcissimus extends NamedUnit {
-  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString) {
+class Orcissimus extends FamousFollower {
+  constructor(game: Game, owner: GamePlayer, zone: FollowerZoneString) {
     super(
       game,
       owner,
@@ -31,7 +31,7 @@ class Orcissimus extends NamedUnit {
             }, {
               targetRequirement: 'isType',
               values: {
-                type: 'Unit',
+                type: 'Follower',
               },
               targetMap: (event: DeathEvent) => event.died
             }],

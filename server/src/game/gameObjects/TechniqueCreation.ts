@@ -7,13 +7,13 @@ import ActionFunctionObject from "../structs/ActionFunctionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
 import PlayRequirementObject from "../structs/PlayRequirementObject";
 
-abstract class AbilityCreation extends Creation {
-    subtype: 'Ability'
+abstract class TechniqueCreation extends Creation {
+    subtype: 'Technique'
     ready: boolean
     repeatable: boolean
 
     constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
-        super(game, owner, zone, id, name, 'Ability', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+        super(game, owner, zone, id, name, 'Technique', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
         this.repeatable = repeatable
         this.ready = false
 
@@ -50,4 +50,4 @@ abstract class AbilityCreation extends Creation {
     }
 }
 
-export default AbilityCreation
+export default TechniqueCreation

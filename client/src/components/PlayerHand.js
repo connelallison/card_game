@@ -1,5 +1,5 @@
 import React from 'react'
-import Unit from './Unit.js'
+import Follower from './Follower.js'
 import Moment from './Moment.js'
 import Unknown from './Unknown.js'
 import Creation from './Creation.js'
@@ -11,9 +11,9 @@ const PlayerHand = (props) => {
     cardList = props.cards.map((card) => {
       if (card.type === 'unknown') {
         return (<Unknown />)
-      } else if (card.type === 'Unit') {
+      } else if (card.type === 'Follower') {
         return (
-          <Unit object={card} selected={props.selected} interactivity={props.interactivity} />
+          <Follower object={card} selected={props.selected} interactivity={props.interactivity} />
         )
       } else if (card.type === 'Moment') {
         return (

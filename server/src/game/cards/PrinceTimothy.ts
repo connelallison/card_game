@@ -1,10 +1,10 @@
-import NamedUnit from "../gameObjects/NamedUnit";
+import FamousFollower from "../gameObjects/FamousFollower";
 import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
-import UnitZoneString from "../stringTypes/UnitZoneString";
+import FollowerZoneString from "../stringTypes/FollowerZoneString";
 
-class PrinceTimothy extends NamedUnit {
-  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString) {
+class PrinceTimothy extends FamousFollower {
+  constructor(game: Game, owner: GamePlayer, zone: FollowerZoneString) {
     super(
       game,
       owner,
@@ -37,7 +37,7 @@ class PrinceTimothy extends NamedUnit {
           requirements: [{
             targetRequirement: 'isType',
             values: {
-              type: 'Unit'
+              type: 'Follower'
             }
           }
           ],

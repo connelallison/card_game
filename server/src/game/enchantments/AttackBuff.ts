@@ -12,7 +12,7 @@ class AttackBuff extends StaticEnchantment {
             'AttackBuff',
             'Attack Buff',
             ['board', 'hand', 'deck', 'leaderZone'],
-            ['Unit', 'Leader'],
+            ['Follower', 'Leader'],
             [],
             [{
                 operation: 'incrementAttack',

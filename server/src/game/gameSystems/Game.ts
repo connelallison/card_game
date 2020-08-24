@@ -123,7 +123,7 @@ class Game {
         passives: player.passivesReport(),
         creations: player.creationsReport(),
         board: player.boardReport(),
-        leaderAbility: player.leaderAbilityReport(),
+        leaderTechnique: player.leaderTechniqueReport(),
         leader: player.leaderReport(),
         hand: player.handReport(),
         deck: player.deck.length
@@ -132,7 +132,7 @@ class Game {
         passives: player.opponent.passivesReport(),
         creations: player.opponent.creationsReport(),
         board: player.opponent.boardReport(),
-        leaderAbility: player.opponent.leaderAbilityReport(),
+        leaderTechnique: player.opponent.leaderTechniqueReport(),
         leader: player.opponent.leaderReport(),
         hand: opponentHand,
         deck: player.opponent.deck.length
@@ -168,7 +168,7 @@ class Game {
           })
         }
       }
-    } else if ((selected instanceof AbilityCreation || selected instanceof LeaderAbility) && selected.inPlay() && selected.canBeUsed()) {
+    } else if ((selected instanceof TechniqueCreation || selected instanceof LeaderTechnique) && selected.inPlay() && selected.canBeUsed()) {
       // ability in play being used
       if (!selected.targeted) {
         this.phases.usePhase({
@@ -302,9 +302,9 @@ class Game {
   }
 
   async start() {
-    // this.player1.board.push(new Cards.PlayerOneUnit(this, this.player1, 'board'))
+    // this.player1.board.push(new Cards.PlayerOneFollower(this, this.player1, 'board'))
     // this.inPlay.push(this.player1.board[0])
-    // this.player2.board.push(new Cards.PlayerTwoUnit(this, this.player2, 'board'))
+    // this.player2.board.push(new Cards.PlayerTwoFollower(this, this.player2, 'board'))
     // this.inPlay.push(this.player2.board[0])
     console.log('starting game')
     await this.sleep(1000)
@@ -369,7 +369,7 @@ import ActionOperation from '../functionTypes/ActionOperation'
 import TargetRequirementFactory from '../functionTypes/TargetRequirementFactory'
 import TargetRequirements from '../dictionaries/TargetRequirements'
 import PersistentCard from '../gameObjects/PersistentCard'
-import AbilityCreation from '../gameObjects/AbilityCreation'
-import LeaderAbility from '../gameObjects/LeaderAbility'
+import TechniqueCreation from '../gameObjects/TechniqueCreation'
+import LeaderTechnique from '../gameObjects/LeaderTechnique'
 import Deck from '../gameObjects/Deck'
 

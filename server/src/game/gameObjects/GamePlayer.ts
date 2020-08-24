@@ -3,17 +3,20 @@ class GamePlayer {
   name: string
   playerID: string
   socketID: string
-  health: number
+  maxHealth: number
+  currentHealth: number
+  maxMoney: number
+  currentMoney: number
   leaderZone: Leader[]
-  leaderAbilityZone: LeaderAbility[]
-  maxMana: number
-  currentMana: number
+  leaderTechniqueZone: LeaderTechnique[]
+  board: Follower[]
   hand: Card[]
   deck: Card[]
-  fatigueCounter: number
-  board: Unit[]
-  graveyard: Card[]
   creationZone: Creation[]
+  passiveZone: Passive[]
+  setAsideZone: GameObject[]
+  graveyard: Card[]
+  fatigueCounter: number
   max: {
     hand: number,
     deck: number,
@@ -21,8 +24,6 @@ class GamePlayer {
     creationZone: number,
     passiveZone: number
   }
-  passiveZone: Passive[]
-  setAside: GameObject[]
   opponent: GamePlayer
   bot: boolean
 
@@ -31,19 +32,20 @@ class GamePlayer {
     this.name = name
     this.playerID = `${this.name}:${Math.random()}`
     this.socketID = socketID
-    this.health = 20
+    this.maxHealth = 20
+    this.currentHealth = this.maxHealth
+    this.maxMoney = 2
+    this.currentMoney = 2
     this.leaderZone = []
-    this.leaderAbilityZone = []
-    this.maxMana = 2
-    this.currentMana = 2
+    this.leaderTechniqueZone = []
+    this.board = []
     this.hand = []
     this.deck = []
-    this.fatigueCounter = 0
-    this.board = []
-    this.graveyard = []
     this.creationZone = []
     this.passiveZone = []
-    this.setAside = []
+    this.setAsideZone = []
+    this.graveyard = []
+    this.fatigueCounter = 0
     this.max = {
       hand: 10,
       deck: 50,
@@ -59,11 +61,11 @@ class GamePlayer {
   }
 
   leaderReport() {
-    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMana: this.maxMana, currentMana: this.currentMana })
+    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.maxMoney, currentMoney: this.currentMoney })
   }
 
-  leaderAbilityReport() {
-    return this.leaderAbilityZone[0].provideReport()
+  leaderTechniqueReport() {
+    return this.leaderTechniqueZone[0].provideReport()
   }
 
   boardReport(): ObjectReport[] {
@@ -85,14 +87,14 @@ class GamePlayer {
   myTurn(): boolean {
     if (this.game.turn !== null) {
       return this.game.turn.activePlayer === this
-    } 
+    }
     return false
   }
 
   startOfTurn(event): void {
     if (this.myTurn()) {
-      this.gainMaxMana(1)
-      this.refillMana()
+      this.gainMaxMoney(1)
+      this.refillMoney()
     }
   }
 
@@ -134,14 +136,14 @@ class GamePlayer {
     return this.game.permissions.canPlay(this, card)
   }
 
-  canUse(card: AbilityCreation | LeaderAbility): boolean {
+  canUse(card: TechniqueCreation | LeaderTechnique): boolean {
     return this.game.permissions.canUse(this, card)
   }
 
   canSummon(card: PersistentCard): boolean {
     return this.game.permissions.canSummon(this, card)
   }
-  
+
   canSummonType(cardType: PersistentCardTypeString): boolean {
     return this.game.permissions.canSummonType(this, cardType)
   }
@@ -150,25 +152,25 @@ class GamePlayer {
     return this.leaderZone[0].health > 0
   }
 
-  spendMana(amount): void {
-    this.currentMana -= amount
+  spendMoney(amount): void {
+    this.currentMoney -= amount
   }
 
-  refillMana(): void {
-    if (this.currentMana < this.maxMana) {
-      this.currentMana = this.maxMana
+  refillMoney(): void {
+    if (this.currentMoney < this.maxMoney) {
+      this.currentMoney = this.maxMoney
     }
   }
 
-  gainMaxMana(number): void {
-    this.maxMana += number
+  gainMaxMoney(number): void {
+    this.maxMoney += number
   }
 
-  loseMaxMana(number): void {
-    if (this.maxMana - number >= 0) {
-      this.maxMana -= number
+  loseMaxMoney(number): void {
+    if (this.maxMoney - number >= 0) {
+      this.maxMoney -= number
     } else {
-      this.maxMana = 0
+      this.maxMoney = 0
     }
   }
 
@@ -184,13 +186,13 @@ export default GamePlayer
 import Game from '../gameSystems/Game'
 import Leader from './Leader'
 import Card from './Card'
-import Unit from './Unit'
+import Follower from './Follower'
 import ObjectReport from '../structs/ObjectReport'
 import Creation from './Creation'
 import PersistentCard from './PersistentCard'
 import GameObject from './GameObject'
 import PersistentCardTypeString from '../stringTypes/PersistentCardTypeString'
-import AbilityCreation from './AbilityCreation'
-import LeaderAbility from './LeaderAbility'
+import TechniqueCreation from './TechniqueCreation'
+import LeaderTechnique from './LeaderTechnique'
 import Passive from './Passive'
 

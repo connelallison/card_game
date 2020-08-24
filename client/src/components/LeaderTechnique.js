@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class LeaderAbility extends Component {
+class LeaderTechnique extends Component {
     constructor(props) {
         super(props)
         this.state = {}
@@ -37,7 +37,7 @@ class LeaderAbility extends Component {
             const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
                 this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
                     this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
-            const styleClasses = outlineStatus + " leaderAbility card"
+            const styleClasses = outlineStatus + " leaderTechnique card"
             return (
                 <div onClick={this.handleClick} className={styleClasses}>
                     <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
@@ -58,4 +58,4 @@ class LeaderAbility extends Component {
 
 }
 
-export default LeaderAbility
+export default LeaderTechnique

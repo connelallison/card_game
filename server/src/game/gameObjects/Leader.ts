@@ -45,7 +45,7 @@ abstract class Leader extends Character {
 
   takeDamage(damage: number): void {
     if (damage > 0) {
-      this.owner.health -= damage
+      this.owner.currentHealth -= damage
       this.update()
       console.log(`${this.owner.name} takes ${damage} damage`)
       console.log(`${this.owner.name} now has ${this.health} health`)
@@ -54,7 +54,7 @@ abstract class Leader extends Character {
 
   receiveHealing(healing: number): void {
     if (healing > 0) {
-      this.owner.health += healing
+      this.owner.currentHealth += healing
       this.update()
       console.log(`${this.owner.name} receives ${healing} healing`)
       console.log(`${this.owner.name} now has ${this.health} health`)
@@ -84,7 +84,7 @@ abstract class Leader extends Character {
   
   baseHealth(): number {
     if (this.inPlay()) {
-      return this.owner.health
+      return this.owner.currentHealth
     } else {
       return this.rawHealth
     }
@@ -118,7 +118,7 @@ abstract class Leader extends Character {
     const health = this.health
     this.moveZone(this.inPlayZone)
     this.game.inPlay.push(this)
-    this.owner.health += health
+    this.owner.currentHealth += health
     this.game.phases.summonPhase({
       controller: this.controller(),
       cardID: this.leaderPowerID,

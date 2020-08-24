@@ -1,3 +1,3 @@
-type PersistentCardSubtypeString = 'Leader' | 'Generic' | 'Named' | 'Work' | 'Wonder' | 'Weapon' | 'Ability' | 'Active' | 'Passive' | 'Auto' | 'Permanent'
+type PersistentCardSubtypeString = 'Leader' | 'Nameless' | 'Famous' | 'Work' | 'Wonder' | 'Weapon' | 'Technique' | 'Active' | 'Passive' | 'Auto' | 'Permanent'
 
 export default PersistentCardSubtypeString

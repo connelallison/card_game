@@ -1,28 +1,28 @@
 import Game from "../gameSystems/Game";
 import GamePlayer from "./GamePlayer";
 import PersistentCard from "./PersistentCard";
-import LeaderAbilitySubtypeString from "../stringTypes/LeaderAbilitySubtypeString";
-import LeaderAbilityZoneString from "../stringTypes/LeaderAbilityZoneString";
+import LeaderTechniqueSubtypeString from "../stringTypes/LeaderTechniqueSubtypeString";
+import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
 import ObjectReport from "../structs/ObjectReport";
 import TargetDomainString from "../stringTypes/TargetDomainString";
 import ActionFunctionObject from "../structs/ActionFunctionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
 import PlayRequirementObject from "../structs/PlayRequirementObject";
 
-abstract class LeaderAbility extends PersistentCard {
+abstract class LeaderTechnique extends PersistentCard {
     collectable: false
-    inPlayZone: 'leaderAbilityZone'
+    inPlayZone: 'leaderTechniqueZone'
     ready: boolean
     repeatable: boolean
-    type: 'LeaderAbility'
-    subtype: LeaderAbilitySubtypeString
-    zone: LeaderAbilityZoneString
+    type: 'LeaderTechnique'
+    subtype: LeaderTechniqueSubtypeString
+    zone: LeaderTechniqueZoneString
 
-    constructor(game: Game, owner: GamePlayer, zone: LeaderAbilityZoneString, id: string, name: string, subtype: LeaderAbilitySubtypeString, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
-        super(game, owner, zone, id, name, 'LeaderAbility', subtype, false, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: LeaderTechniqueZoneString, id: string, name: string, subtype: LeaderTechniqueSubtypeString, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
+        super(game, owner, zone, id, name, 'LeaderTechnique', subtype, false, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
         this.repeatable = repeatable
         this.ready = false
-        this.inPlayZone = 'leaderAbilityZone'
+        this.inPlayZone = 'leaderTechniqueZone'
 
         this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
     }
@@ -64,7 +64,7 @@ abstract class LeaderAbility extends PersistentCard {
         }
       }
 
-    moveZone(destination: LeaderAbilityZoneString): void {
+    moveZone(destination: LeaderTechniqueZoneString): void {
         this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
         this.owner[destination].push(this)
         this.zone = destination
@@ -80,4 +80,4 @@ abstract class LeaderAbility extends PersistentCard {
     }
 }
 
-export default LeaderAbility
+export default LeaderTechnique

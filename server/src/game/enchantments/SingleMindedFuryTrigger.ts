@@ -33,7 +33,7 @@ class SingleMindedFuryTrigger extends TriggerEnchantment {
                             }, {
                                 targetRequirement: 'isType',
                                 values: {
-                                    type: 'Unit',
+                                    type: 'Follower',
                                 },
                                 targetMap: (event: EnterPlayEvent) => event.card
                             }, {

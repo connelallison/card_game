@@ -41,7 +41,7 @@ class Leader extends Component {
         <div className="multicolour-line">
           {attackLabel}
           <p className='health-label stat-label'>{this.props.object.health}H</p>
-          <p className='cost-label stat-label'>{this.props.object.currentMana}/{this.props.object.maxMana}C</p>
+          <p className='cost-label stat-label'>{this.props.object.currentMoney}/{this.props.object.maxMoney}C</p>
         </div>
       </div>
     )

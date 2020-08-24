@@ -1,20 +1,20 @@
 import Game from '../gameSystems/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
-import UnitZoneString from '../stringTypes/UnitZoneString'
+import FollowerZoneString from '../stringTypes/FollowerZoneString'
 import TargetDomainString from '../stringTypes/TargetDomainString'
 import ActionFunctionObject from '../structs/ActionFunctionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
 import PlayRequirementObject from '../structs/PlayRequirementObject'
 
-abstract class Unit extends Character {
-  zone: UnitZoneString
+abstract class Follower extends Character {
+  zone: FollowerZoneString
   inPlayZone: 'board'
-  type: 'Unit'
-  subtype: 'Generic' | 'Named'
+  type: 'Follower'
+  subtype: 'Nameless' | 'Famous'
 
-  constructor(game: Game, owner: GamePlayer, zone: UnitZoneString, id: string, name: string, subtype: 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-    super(game, owner, zone, id, name, 'Unit', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+  constructor(game: Game, owner: GamePlayer, zone: FollowerZoneString, id: string, name: string, subtype: 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
+    super(game, owner, zone, id, name, 'Follower', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     this.health = this.rawHealth,
     this.inPlayZone = 'board'
 
@@ -54,7 +54,7 @@ abstract class Unit extends Character {
     }
   }
 
-  moveZone(destination: UnitZoneString): void {
+  moveZone(destination: FollowerZoneString): void {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
@@ -62,4 +62,4 @@ abstract class Unit extends Character {
   }
 }
 
-export default Unit
+export default Follower

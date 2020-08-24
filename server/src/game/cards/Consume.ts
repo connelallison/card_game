@@ -32,7 +32,7 @@ class Consume extends EventMoment {
         { operation: 'draw' },
       ],
       [{
-        playRequirement: 'minAllUnits',
+        playRequirement: 'minAllFollowers',
         values: {
           min: 1,
         }

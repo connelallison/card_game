@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class Unit extends Component {
+class Follower extends Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -57,4 +57,4 @@ class Unit extends Component {
 
 }
 
-export default Unit
+export default Follower

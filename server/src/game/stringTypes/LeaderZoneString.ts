@@ -1,3 +1,3 @@
-type LeaderZoneString = 'leaderZone' | 'hand' | 'deck' | 'graveyard' | 'setAside'
+type LeaderZoneString = 'leaderZone' | 'hand' | 'deck' | 'graveyard' | 'setAsideZone'
 
 export default LeaderZoneString

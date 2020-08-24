@@ -1,12 +1,12 @@
 import Game from "../gameSystems/Game";
 import Card from "../gameObjects/Card";
-import Unit from "../gameObjects/Unit";
+import Follower from "../gameObjects/Follower";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";
 import DeathEvent from "../gameEvents/DeathEvent";
 
 class SavageWolfTrigger extends TriggerEnchantment {
-    owner: Unit
+    owner: Follower
 
     constructor(game: Game, owner: Card) {
         super(
@@ -15,7 +15,7 @@ class SavageWolfTrigger extends TriggerEnchantment {
             'SavageWolfTrigger',
             'Savage Wolf Trigger',
             ['board'],
-            ['Unit'],
+            ['Follower'],
             [],
             true,
             [{
@@ -24,7 +24,7 @@ class SavageWolfTrigger extends TriggerEnchantment {
                     {
                         targetRequirement: 'isType',
                         values: {
-                            type: 'Unit',
+                            type: 'Follower',
                         },
                         eventMap: (event: DeathEvent) => event.died,
                     },

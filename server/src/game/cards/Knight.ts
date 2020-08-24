@@ -1,10 +1,10 @@
 import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
-import UnitZoneString from '../stringTypes/UnitZoneString'
-import GenericUnit from '../gameObjects/GenericUnit'
+import FollowerZoneString from '../stringTypes/FollowerZoneString'
+import NamelessFollower from '../gameObjects/NamelessFollower'
 
-class Knight extends GenericUnit {
-  constructor (game: Game, owner: GamePlayer, zone: UnitZoneString) {
+class Knight extends NamelessFollower {
+  constructor (game: Game, owner: GamePlayer, zone: FollowerZoneString) {
     super(
       game, 
       owner, 

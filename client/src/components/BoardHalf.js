@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Unit from './Unit.js'
+import Follower from './Follower.js'
 
 class BoardHalf extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class BoardHalf extends Component {
     let unitList
     if (this.props.units.length > 0) {
       unitList = this.props.units.map((unit) => 
-        <Unit object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
+        <Follower object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
       )
     } else {
       unitList = [

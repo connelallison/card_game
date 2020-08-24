@@ -31,7 +31,8 @@ abstract class Card extends GameObject {
   validTargets: any
 
   constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[],  targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-    super(game, owner, id, name, type, subtype)
+    super(game, id, name, type, subtype)
+    this.owner = owner
     this.zone = zone
     this.collectable = collectable
     this.rawCost = rawCost
@@ -57,7 +58,7 @@ abstract class Card extends GameObject {
       subtype: this.subtype,
       zone: this.zone,
       ownerName: this.owner.name,
-      playerID: this.owner.playerID,
+      playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
       requiresTarget: this.targeted,
       validTargets: this.validTargetIDs(),

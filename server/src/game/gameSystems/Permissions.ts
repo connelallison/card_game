@@ -48,7 +48,7 @@ class Permissions {
             player === card.controller()
             && player.myTurn()
             && card.zone === 'hand'
-            && card.cost <= player.currentMoney
+            && card.cost <= player.rawMoney
             && (card.targeted ? card.validTargets.length > 0 : true )
             && (card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true)
             && card.playRequirements.every(requirement => requirement())
@@ -60,7 +60,7 @@ class Permissions {
             player === card.controller()
             && player.myTurn()
             && card.inPlay()
-            && card.cost <= player.currentMoney
+            && card.cost <= player.rawMoney
             && (card.targeted ? card.validTargets.length > 0 : true)
             && card.playRequirements.every(requirement => requirement())
         )

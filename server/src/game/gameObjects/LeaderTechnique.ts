@@ -43,7 +43,7 @@ abstract class LeaderTechnique extends PersistentCard {
             subtype: this.subtype,
             zone: this.zone,
             ownerName: this.owner.name,
-            playerID: this.owner.playerID,
+            playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
             requiresTarget: this.targeted,
             validTargets: this.validTargetIDs(),

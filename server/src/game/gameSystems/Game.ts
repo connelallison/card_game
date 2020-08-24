@@ -211,18 +211,6 @@ class Game {
     }
   }
 
-  // findPlayerbyPlayerID (playerID) {
-  //   if (this.player1.playerID === playerID) {
-  //     return this.player1
-  //   } else if (this.player2.playerID === playerID) {
-  //     return this.player2
-  //   } else {
-  //     console.log("player1: ", this.player1.playerID)
-  //     console.log("player2: ", this.player2.playerID)
-  //     throw new Error(`player ${playerID} not found`)
-  //   }
-  // }
-
   async sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
@@ -230,6 +218,8 @@ class Game {
   initPlayers() {
     this.player1 = new GamePlayer(this, this.player1name, this.player1socketID)
     this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
+    this.player2.increaseIncome(1)
+    this.player2.refillMoney()
     this.player1.opponent = this.player2
     this.player2.opponent = this.player1
     if (this.botPlayer1) {

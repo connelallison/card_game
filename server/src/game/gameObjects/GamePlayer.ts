@@ -1,12 +1,20 @@
-class GamePlayer {
+import GameObject from './GameObject'
+
+class GamePlayer extends GameObject {
   game: Game
+  owner: GamePlayer
   name: string
-  playerID: string
   socketID: string
   maxHealth: number
   currentHealth: number
-  maxMoney: number
-  currentMoney: number
+  rawGrowth: number
+  growth: number
+  rawIncome: number
+  income: number
+  rawMoney: number
+  money: number
+  currentDebt: number
+  queuedDebt: number
   leaderZone: Leader[]
   leaderTechniqueZone: LeaderTechnique[]
   board: Follower[]
@@ -28,14 +36,19 @@ class GamePlayer {
   bot: boolean
 
   constructor(game: Game, name: string, socketID: string = null, bot: boolean = false) {
-    this.game = game
-    this.name = name
-    this.playerID = `${this.name}:${Math.random()}`
+    super(game, name, name, 'Player', 'Player')
+    this.owner = this
     this.socketID = socketID
     this.maxHealth = 20
     this.currentHealth = this.maxHealth
-    this.maxMoney = 2
-    this.currentMoney = 2
+    this.rawGrowth = 2
+    this.growth = this.rawGrowth
+    this.rawIncome = 2
+    this.income = this.rawIncome
+    this.rawMoney = this.income
+    this.money = this.rawMoney
+    this.currentDebt = 0
+    this.queuedDebt = 0
     this.leaderZone = []
     this.leaderTechniqueZone = []
     this.board = []
@@ -49,7 +62,7 @@ class GamePlayer {
     this.max = {
       hand: 10,
       deck: 50,
-      board: 7,
+      board: 8,
       creationZone: 4,
       passiveZone: 5,
     }
@@ -61,7 +74,7 @@ class GamePlayer {
   }
 
   leaderReport() {
-    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.maxMoney, currentMoney: this.currentMoney })
+    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.income, currentMoney: this.money })
   }
 
   leaderTechniqueReport() {
@@ -93,8 +106,8 @@ class GamePlayer {
 
   startOfTurn(event): void {
     if (this.myTurn()) {
-      this.gainMaxMoney(1)
       this.refillMoney()
+      this.payDebt()
     }
   }
 
@@ -103,11 +116,29 @@ class GamePlayer {
       this.game.phases.drawPhase({
         player: this
       })
+      this.increaseIncome(this.growth)
     }
   }
 
   controller(): GamePlayer {
     return this
+  }
+
+  baseMoney(): number {
+    return this.rawMoney - this.currentDebt
+  }
+
+  baseData() {
+    return {
+      growth: this.rawGrowth,
+      income: this.rawIncome,
+      money: this.baseMoney(),
+      flags: this.baseFlags(),
+    }
+  }
+
+  setData(dataObj) {
+    Object.assign(this, dataObj)
   }
 
   mulliganDraw(): void {
@@ -152,26 +183,33 @@ class GamePlayer {
     return this.leaderZone[0].health > 0
   }
 
-  spendMoney(amount): void {
-    this.currentMoney -= amount
+  spendMoney(amount: number): void {
+    this.rawMoney -= amount
+  }
+
+  gainMoney(amount: number): void {
+    this.rawMoney += amount
   }
 
   refillMoney(): void {
-    if (this.currentMoney < this.maxMoney) {
-      this.currentMoney = this.maxMoney
-    }
+    this.rawMoney = this.income
   }
 
-  gainMaxMoney(number): void {
-    this.maxMoney += number
+  increaseIncome(number): void {
+    this.rawIncome += number
   }
 
-  loseMaxMoney(number): void {
-    if (this.maxMoney - number >= 0) {
-      this.maxMoney -= number
+  decreaseIncome(number): void {
+    if (this.rawIncome - number >= 0) {
+      this.rawIncome -= number
     } else {
-      this.maxMoney = 0
+      this.rawIncome = 0
     }
+  }
+
+  payDebt(): void {
+    this.currentDebt = this.queuedDebt
+    this.queuedDebt = 0
   }
 
   reportPlayableCards() {
@@ -190,9 +228,9 @@ import Follower from './Follower'
 import ObjectReport from '../structs/ObjectReport'
 import Creation from './Creation'
 import PersistentCard from './PersistentCard'
-import GameObject from './GameObject'
 import PersistentCardTypeString from '../stringTypes/PersistentCardTypeString'
 import TechniqueCreation from './TechniqueCreation'
 import LeaderTechnique from './LeaderTechnique'
 import Passive from './Passive'
+import GameObjectData from '../structs/GameObjectData'
 

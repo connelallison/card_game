@@ -1,6 +1,6 @@
 abstract class GameObject {
     game: Game
-    owner: GamePlayer | GameObject
+    owner: GameObject
     zone: ZoneString
     id: string
     name: string
@@ -11,9 +11,8 @@ abstract class GameObject {
     enchantments: Enchantment[]
     auraEffects: EffectFunction[]
 
-    constructor(game: Game, owner: GamePlayer | GameObject, id: string, name: string, type: ObjectTypeString, subtype: ObjectSubtypeString) {
+    constructor(game: Game, id: string, name: string, type: ObjectTypeString, subtype: ObjectSubtypeString) {
         this.game = game
-        this.owner = owner
         this.id = id
         this.name = name
         this.type = type

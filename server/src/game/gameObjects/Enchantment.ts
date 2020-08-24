@@ -9,7 +9,7 @@ abstract class Enchantment extends GameObject {
     previousActive: boolean
 
     constructor(game: Game, owner: GameObject, id: string, name: string, subtype: ObjectSubtypeString, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ((...args) => boolean)[] = []) {
-        super(game, owner, id, name, 'Enchantment', subtype)
+        super(game, id, name, 'Enchantment', subtype)
         this.owner = owner
         this.zone = this.owner.zone
         this.activeZones = activeZones

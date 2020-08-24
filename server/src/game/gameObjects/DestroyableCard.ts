@@ -13,6 +13,7 @@ import PlayRequirementObject from "../structs/PlayRequirementObject";
 abstract class DestroyableCard extends PersistentCard {
     rawHealth: number
     health: number
+    maxHealth: number
 
     constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: PersistentCardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[],  targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
         super(game, owner, zone, id, name, type, subtype, collectable, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)

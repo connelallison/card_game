@@ -145,7 +145,7 @@ class PhaseManager {
 
     playPhasePersistent(event: PlayEvent): void {
         const card = event.card as PersistentCard
-        event.player.spendMana(card.cost)
+        event.player.spendMoney(card.cost)
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
         this.enterPlayPhase({
@@ -164,7 +164,7 @@ class PhaseManager {
 
     playPhaseMoment(event: PlayEvent): void {
         const moment = event.card as Moment
-        event.player.spendMana(moment.cost)
+        event.player.spendMoney(moment.cost)
         moment.moveZone('graveyard')
         this.game.turn.cacheEvent(event, 'play')
         this.game.event.emit('onPlay', event)
@@ -181,7 +181,7 @@ class PhaseManager {
         const event = new ActionEvent(this.game, eventObj)
         const actionCard = event.card
         this.game.event.emit('beforeAction', event)
-        if (actionCard instanceof AbilityCreation) actionCard.loseCharge() 
+        if (actionCard instanceof TechniqueCreation) actionCard.loseCharge() 
         this.game.turn.cacheEvent(event, 'action')
         actionCard.actions.forEach(action => {
             action(event.targets)
@@ -191,8 +191,8 @@ class PhaseManager {
 
     usePhase(eventObj: ActionEventObject): void {
         const {player, targets} = eventObj
-        const card = eventObj.card as AbilityCreation | LeaderAbility
-        player.spendMana(card.cost)
+        const card = eventObj.card as TechniqueCreation | LeaderTechnique
+        player.spendMoney(card.cost)
         if (!card.repeatable) card.ready = false
         this.actionPhase(eventObj)
         this.steps()
@@ -200,8 +200,8 @@ class PhaseManager {
 
     summonPhase(eventObj: SummonPhaseObject): void {
         const { controller, objectSource, charSource, cardID } = eventObj
-        const card = new Cards[cardID](this.game, controller, 'setAside')
-        controller.setAside.push(card)
+        const card = new Cards[cardID](this.game, controller, 'setAsideZone')
+        controller.setAsideZone.push(card)
         if (controller.canSummon(card)) {
             this.enterPlayPhase({
                 controller,
@@ -289,8 +289,8 @@ import EnterPlayEventObject from "../gameEvents/EnterPlayEventObject";
 import PersistentCard from "../gameObjects/PersistentCard";
 import Cards from "../dictionaries/Cards";
 import SummonPhaseObject from "../gameEvents/SummonPhaseObject";
-import AbilityCreation from "../gameObjects/AbilityCreation";
+import TechniqueCreation from "../gameObjects/TechniqueCreation";
 import ActionEventObject from "../gameEvents/ActionEventObject";
 import ActionEvent from "../gameEvents/ActionEvent";
-import LeaderAbility from "../gameObjects/LeaderAbility";
+import LeaderTechnique from "../gameObjects/LeaderTechnique";
 

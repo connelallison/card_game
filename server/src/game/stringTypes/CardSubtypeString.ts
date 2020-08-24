@@ -1,3 +1,3 @@
-type CardSubtypeString = 'Leader' | 'Generic' | 'Named' | 'Event' | 'Action' | 'Work' | 'Wonder' | 'Weapon' | 'Ability' | 'Active' | 'Passive' | 'Auto' | 'Permanent'
+type CardSubtypeString = 'Leader' | 'Nameless' | 'Famous' | 'Event' | 'Action' | 'Work' | 'Wonder' | 'Weapon' | 'Technique' | 'Active' | 'Passive' | 'Auto' | 'Permanent'
 
 export default CardSubtypeString

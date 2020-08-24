@@ -1,10 +1,10 @@
-import ActiveLeaderAbility from "../gameObjects/ActiveLeaderAbility";
+import ActiveLeaderTechnique from "../gameObjects/ActiveLeaderTechnique";
 import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
-import LeaderAbilityZoneString from "../stringTypes/LeaderAbilityZoneString";
+import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
 
-class KingFredTheSaintlyRecruit extends ActiveLeaderAbility {
-    constructor(game: Game, owner: GamePlayer, zone: LeaderAbilityZoneString) {
+class KingFredTheSaintlyRecruit extends ActiveLeaderTechnique {
+    constructor(game: Game, owner: GamePlayer, zone: LeaderTechniqueZoneString) {
         super(
             game,
             owner,
@@ -22,7 +22,7 @@ class KingFredTheSaintlyRecruit extends ActiveLeaderAbility {
             [{
                 playRequirement: 'canSummonType',
                 values: {
-                    type: 'Unit',
+                    type: 'Follower',
                 }
             }],
             false,

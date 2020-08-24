@@ -1,9 +1,9 @@
 import Game from '../gameSystems/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import CreationZoneString from '../stringTypes/CreationZoneString'
-import AbilityCreation from '../gameObjects/AbilityCreation'
+import TechniqueCreation from '../gameObjects/TechniqueCreation'
 
-class CorporalMotivation extends AbilityCreation {
+class CorporalMotivation extends TechniqueCreation {
   constructor(game: Game, owner: GamePlayer, zone: CreationZoneString) {
     super(
       game,

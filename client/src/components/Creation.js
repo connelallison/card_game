@@ -42,7 +42,7 @@ class Creation extends Component {
     const attackLabel = this.props.object.attack > 0 ? (
         <p className='attack-label stat-label'>{this.props.object.attack}A</p>
       ) : null
-    const costLabel = this.props.object.subtype === 'Ability' && this.props.object.zone === 'creationZone' ? (
+    const costLabel = this.props.object.subtype === 'Technique' && this.props.object.zone === 'creationZone' ? (
         <p className='cost-label stat-label'>{this.props.object.cost}C</p>
     ) : null
     const handInfo = this.props.object.zone === 'hand' ? (

@@ -11,15 +11,14 @@ import TargetRequirementObject from '../structs/TargetRequirementObject'
 import PlayRequirementObject from '../structs/PlayRequirementObject'
 
 abstract class Character extends DestroyableCard {
-  type: 'Leader' | 'Unit'
-  subtype: 'Leader' | 'Generic' | 'Named'
+  type: 'Leader' | 'Follower'
+  subtype: 'Leader' | 'Nameless' | 'Famous'
   rawAttack: number
   rawHealth: number
   ready: boolean
   attack: number
-  health: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Unit', subtype: 'Leader' | 'Generic' | 'Named', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Follower', subtype: 'Leader' | 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
     super(game, owner, zone, id, name, type, subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     this.ready = false
     this.rawAttack = rawAttack
@@ -42,7 +41,7 @@ abstract class Character extends DestroyableCard {
       subtype: this.subtype,
       zone: this.zone,
       ownerName: this.owner.name,
-      playerID: this.owner.playerID,
+      playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
       requiresTarget: this.targeted,
       validTargets: this.validTargetIDs(),
@@ -85,18 +84,14 @@ abstract class Character extends DestroyableCard {
     return this
   }
 
-  baseData(): GameObjectData {
-    return {
-      attack: this.rawAttack,
-      health: this.rawHealth,
-      cost: this.rawCost,
-      flags: this.baseFlags(),
-    }
+  damaged(): boolean {
+    return this.missingHealth() > 0
   }
 
   abstract updateValidTargets(): void
   abstract takeDamage(damage: number): void
   abstract receiveHealing(healing: number): void
+  abstract missingHealth(): number
 }
 
 export default Character

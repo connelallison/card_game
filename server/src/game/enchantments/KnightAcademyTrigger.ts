@@ -23,13 +23,13 @@ class KnightAcademyTrigger extends WonderTriggerEnchantment {
                     {
                         playRequirement: 'canSummonType',
                         values: {
-                            type: 'Unit',
+                            type: 'Follower',
                         }
                     },
                     {
                         targetRequirement: 'isType',
                         values: {
-                            type: 'Unit',
+                            type: 'Follower',
                         },
                         eventMap: (event: DrawEvent) => event.card
                     },

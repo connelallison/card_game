@@ -1,11 +1,11 @@
-import ActiveLeaderAbility from "../gameObjects/ActiveLeaderAbility";
+import ActiveLeaderTechnique from "../gameObjects/ActiveLeaderTechnique";
 import Game from "../gameSystems/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
-import LeaderAbilityZoneString from "../stringTypes/LeaderAbilityZoneString";
+import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
 import PlayRequirements from "../dictionaries/PlayRequirements";
 
-class OrkusTheOrkestSmash extends ActiveLeaderAbility {
-    constructor(game: Game, owner: GamePlayer, zone: LeaderAbilityZoneString) {
+class OrkusTheOrkestSmash extends ActiveLeaderTechnique {
+    constructor(game: Game, owner: GamePlayer, zone: LeaderTechniqueZoneString) {
         super(
             game,
             owner,
@@ -21,7 +21,7 @@ class OrkusTheOrkestSmash extends ActiveLeaderAbility {
                 },
             }],
             [{
-                playRequirement: "minAllUnits",
+                playRequirement: "minAllFollowers",
                 values: {
                     min: 1,
                 }

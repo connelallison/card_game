@@ -1,11 +1,11 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
 import Game from "../gameSystems/Game";
 import Card from "../gameObjects/Card";
-import Unit from "../gameObjects/Unit";
+import Follower from "../gameObjects/Follower";
 import TargetRequirements from "../dictionaries/TargetRequirements";
 
 class JuniorOrcAura extends AuraEnchantment {
-    owner: Unit
+    owner: Follower
 
     constructor(game: Game, owner: Card) {
         super(
@@ -14,7 +14,7 @@ class JuniorOrcAura extends AuraEnchantment {
             'JuniorOrcAura',
             'Junior Orc Aura',
             ['board'],
-            ['Unit'],
+            ['Follower'],
             [],
             [{
                 operation: 'incrementAttack',

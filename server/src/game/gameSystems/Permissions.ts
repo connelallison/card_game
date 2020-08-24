@@ -32,11 +32,11 @@ class Permissions {
     canSummonType (player: GamePlayer, cardType: PersistentCardTypeString): boolean {
         switch (cardType) {
             case 'Leader':
-            case 'LeaderAbility':
+            case 'LeaderTechnique':
                 return true
             case 'Creation':
                 return player.creationZone.length < player.max.creationZone
-            case 'Unit':
+            case 'Follower':
                 return player.board.length < player.max.board
             default:
                 return false
@@ -48,19 +48,19 @@ class Permissions {
             player === card.controller()
             && player.myTurn()
             && card.zone === 'hand'
-            && card.cost <= player.currentMana
+            && card.cost <= player.rawMoney
             && (card.targeted ? card.validTargets.length > 0 : true )
             && (card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true)
             && card.playRequirements.every(requirement => requirement())
         )
     }
 
-    canUse (player: GamePlayer, card: AbilityCreation | LeaderAbility): boolean {
+    canUse (player: GamePlayer, card: TechniqueCreation | LeaderTechnique): boolean {
         return (
             player === card.controller()
             && player.myTurn()
             && card.inPlay()
-            && card.cost <= player.currentMana
+            && card.cost <= player.rawMoney
             && (card.targeted ? card.validTargets.length > 0 : true)
             && card.playRequirements.every(requirement => requirement())
         )
@@ -74,6 +74,6 @@ import GamePlayer from "../gameObjects/GamePlayer"
 import Character from "../gameObjects/Character"
 import PersistentCard from "../gameObjects/PersistentCard"
 import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString"
-import AbilityCreation from "../gameObjects/AbilityCreation"
-import LeaderAbility from "../gameObjects/LeaderAbility"
+import TechniqueCreation from "../gameObjects/TechniqueCreation"
+import LeaderTechnique from "../gameObjects/LeaderTechnique"
 

@@ -11,7 +11,7 @@ import PlayArea from '../components/PlayArea.js'
 import CreationZone from '../components/CreationZone.js'
 import socket from '../helpers/websocket.js'
 import PassiveZone from '../components/PassiveZone.js'
-import LeaderAbility from '../components/LeaderAbility.js'
+import LeaderTechnique from '../components/LeaderTechnique.js'
 
 class GameContainer extends Component {
   constructor(props) {
@@ -26,12 +26,12 @@ class GameContainer extends Component {
           leader: {
             attack: 0,
             health: 0,
-            currentMana: 0,
-            maxMana: 0,
+            currentMoney: 0,
+            maxMoney: 0,
             canBeSelected: false,
             name: '',
           },
-          leaderAbility: {
+          leaderTechnique: {
             staticCardText: '',
             name: '',
           },
@@ -45,12 +45,12 @@ class GameContainer extends Component {
           leader: {
             attack: 0,
             health: 0,
-            currentMana: 0,
-            maxMana: 0,
+            currentMoney: 0,
+            maxMoney: 0,
             canBeSelected: false,
             name: '',
           },
-          leaderAbility: {
+          leaderTechnique: {
             staticCardText: '',
             name: '',
           },
@@ -217,7 +217,7 @@ class GameContainer extends Component {
           <div className='leaderDiv'>
             <PassiveZone mine={false} passives={this.state.gameState.opponent.passives} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <Leader mine={false} object={this.state.gameState.opponent.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
-            <LeaderAbility mine={false} object={this.state.gameState.opponent.leaderAbility} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <LeaderTechnique mine={false} object={this.state.gameState.opponent.leaderTechnique} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <CreationZone mine={false} creations={this.state.gameState.opponent.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <br />
@@ -228,7 +228,7 @@ class GameContainer extends Component {
           <div className='leaderDiv'>
             <PassiveZone mine passives={this.state.gameState.my.passives} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <Leader mine object={this.state.gameState.my.leader} selected={this.state.selected} interactivity={this.interactivityHandlers} />
-            <LeaderAbility mine object={this.state.gameState.my.leaderAbility} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+            <LeaderTechnique mine object={this.state.gameState.my.leaderTechnique} selected={this.state.selected} interactivity={this.interactivityHandlers} />
             <CreationZone mine creations={this.state.gameState.my.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <Deck mine cardNumber={this.state.gameState.my.deck} />

@@ -1,3 +1,3 @@
-type MomentZoneString = 'hand' | 'deck' | 'graveyard' | 'setAside'
+type MomentZoneString = 'hand' | 'deck' | 'graveyard' | 'setAsideZone'
 
 export default MomentZoneString

@@ -1,10 +1,10 @@
 import Game from "../gameSystems/Game"
 import Card from "../gameObjects/Card"
-import Unit from "../gameObjects/Unit"
+import Follower from "../gameObjects/Follower"
 import AuraEnchantment from "../gameObjects/AuraEnchantment"
 
 class FootmanAura extends AuraEnchantment {
-    owner: Unit
+    owner: Follower
 
     constructor(game: Game, owner: Card) {
         super(
@@ -13,7 +13,7 @@ class FootmanAura extends AuraEnchantment {
             'FootmanAura',
             'Footman Aura',
             ['board'],
-            ['Unit'],
+            ['Follower'],
             [(enchantment) => (enchantment.controller().myTurn())],
             [{
                 operation: 'incrementAttack',

@@ -138,8 +138,8 @@ serverEvent.on('newTurnTimer', function (turnTimer) {
 //     my: {
 //       attack: 0,
 //       health: 30,
-//       currentMana: 3,
-//       maxMana: 3,
+//       currentMoney: 3,
+//       maxMoney: 3,
 //       board: [],
 //       hand: [],
 //       deck: 30
@@ -147,8 +147,8 @@ serverEvent.on('newTurnTimer', function (turnTimer) {
 //     opponent: {
 //       attack: 0,
 //       health: 30,
-//       currentMana: 0,
-//       maxMana: 0,
+//       currentMoney: 0,
+//       maxMoney: 0,
 //       board: [],
 //       hand: 3,
 //       deck: 25

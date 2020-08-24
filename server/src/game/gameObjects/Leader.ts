@@ -15,13 +15,13 @@ abstract class Leader extends Character {
   inPlayZone: 'leaderZone'
   type: 'Leader'
   subtype: 'Leader'
-  leaderPowerID: string
+  leaderTechniqueID: string
 
   constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], leaderPowerID: string) {
     super(game, owner, zone, id, name, 'Leader', 'Leader', collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
     this.inPlayZone = 'leaderZone'
     this.health = this.rawHealth
-    this.leaderPowerID = leaderPowerID
+    this.leaderTechniqueID = leaderPowerID
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
@@ -32,11 +32,6 @@ abstract class Leader extends Character {
         return this.game.permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {
-      // let newTargets = this.targetDomain(this.owner)
-      // this.targetRequirements.forEach(requirement => {
-      //   newTargets = newTargets.filter(target => requirement(this, target))
-      // })
-      // this.validTargets = newTargets
       this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
     } else {
       this.validTargets = []
@@ -45,20 +40,25 @@ abstract class Leader extends Character {
 
   takeDamage(damage: number): void {
     if (damage > 0) {
-      this.owner.health -= damage
+      this.owner.currentHealth -= damage
       this.update()
       console.log(`${this.owner.name} takes ${damage} damage`)
       console.log(`${this.owner.name} now has ${this.health} health`)
     }
   }
 
-  receiveHealing(healing: number): void {
-    if (healing > 0) {
-      this.owner.health += healing
+  receiveHealing(rawHealing: number): void {
+    if (rawHealing > 0) {
+      const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+      this.owner.currentHealth += healing
       this.update()
       console.log(`${this.owner.name} receives ${healing} healing`)
       console.log(`${this.owner.name} now has ${this.health} health`)
     }
+  }
+
+  missingHealth(): number {
+    return this.owner.maxHealth - this.owner.currentHealth
   }
 
   baseData(): GameObjectData {
@@ -84,7 +84,7 @@ abstract class Leader extends Character {
   
   baseHealth(): number {
     if (this.inPlay()) {
-      return this.owner.health
+      return this.owner.currentHealth
     } else {
       return this.rawHealth
     }
@@ -118,10 +118,11 @@ abstract class Leader extends Character {
     const health = this.health
     this.moveZone(this.inPlayZone)
     this.game.inPlay.push(this)
-    this.owner.health += health
+    this.owner.maxHealth += health
+    this.owner.currentHealth += health
     this.game.phases.summonPhase({
       controller: this.controller(),
-      cardID: this.leaderPowerID,
+      cardID: this.leaderTechniqueID,
       objectSource: this,
       charSource: this
     })

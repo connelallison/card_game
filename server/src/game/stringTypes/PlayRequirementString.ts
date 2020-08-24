@@ -1,3 +1,3 @@
-type PlayRequirementString = 'minFriendlyUnits' | 'minEnemyUnits' | 'minAllUnits' | 'canSummonType' | 'isMyTurn'
+type PlayRequirementString = 'minFriendlyFollowers' | 'minEnemyFollowers' | 'minAllFollowers' | 'canSummonType' | 'isMyTurn'
 
 export default PlayRequirementString

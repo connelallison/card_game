@@ -1,10 +1,10 @@
 import StaticEnchantment from "../gameObjects/StaticEnchantment";
 import Game from "../gameSystems/Game";
 import Character from "../gameObjects/Character";
-import Unit from "../gameObjects/Unit";
+import Follower from "../gameObjects/Follower";
 
 class Guard extends StaticEnchantment {
-    owner: Unit
+    owner: Follower
     
     constructor(game: Game, owner: Character) {
         super(
@@ -13,7 +13,7 @@ class Guard extends StaticEnchantment {
             'Guard', 
             'Guard', 
             ['board'],
-            ['Unit'],
+            ['Follower'],
             [],
             [{
               operation: 'guard',

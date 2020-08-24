@@ -12,7 +12,7 @@ class Pillage extends StaticEnchantment {
             'Pillage', 
             'Pillage', 
             ['board', 'leaderZone', 'creationZone'],
-            ['Unit', 'Leader', 'Creation'],
+            ['Follower', 'Leader', 'Creation'],
             [],
             [{
                 operation: 'pillage',

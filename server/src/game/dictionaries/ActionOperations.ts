@@ -110,7 +110,7 @@ const ActionOperations: { [index: string]: ActionOperation } = {
     //     }
     // },
 
-    // damageWeakestEnemyUnit: (value: number = 0) => {
+    // damageWeakestEnemyFollower: (value: number = 0) => {
     //     return (source: GameObject) => {
     //         const targets = source.controller().opponent.board
     //         const target = source.game.utils.findMinByCriterion(targets, (target) => target.attack)
@@ -125,12 +125,12 @@ const ActionOperations: { [index: string]: ActionOperation } = {
     //     }
     // },
 
-    // summonLastFriendlyUnitThatDied: () => {
+    // summonLastFriendlyFollowerThatDied: () => {
     //     return (source: GameObject) => {
-    //         const lastUnitDeath: DeathEvent = source.game.utils.findBackward(source.game.eventCache.death, (death) => {
-    //             return death.object.controller() === source.controller() && death.object instanceof Unit
+    //         const lastFollowerDeath: DeathEvent = source.game.utils.findBackward(source.game.eventCache.death, (death) => {
+    //             return death.object.controller() === source.controller() && death.object instanceof Follower
     //         })
-    //         if (lastUnitDeath) source.game.actions.summonCard(lastUnitDeath.object.id)(source)
+    //         if (lastFollowerDeath) source.game.actions.summonCard(lastFollowerDeath.object.id)(source)
     //     }
     // },  
 
@@ -138,9 +138,9 @@ const ActionOperations: { [index: string]: ActionOperation } = {
     //     return (source: GameObject) => {
     //         const knightCount = source.controller().board.filter(unit => unit instanceof Knight).length
     //         if (knightCount === 0) return
-    //         const handUnits = source.controller().hand.filter(card => card instanceof Unit) as Unit[]
-    //         if (handUnits.length === 0) return
-    //         source.game.actions.buffCharactersAttackAndHealth(knightCount, knightCount)(source, handUnits)
+    //         const handFollowers = source.controller().hand.filter(card => card instanceof Follower) as Follower[]
+    //         if (handFollowers.length === 0) return
+    //         source.game.actions.buffCharactersAttackAndHealth(knightCount, knightCount)(source, handFollowers)
     //     }
     // }
 

@@ -136,7 +136,7 @@ const ActionOperations: { [index: string]: ActionOperation } = {
 
     // handBuffPerFriendlyKnight: () => {
     //     return (source: GameObject) => {
-    //         const knightCount = source.controller().board.filter(unit => unit instanceof Knight).length
+    //         const knightCount = source.controller().board.filter(follower => follower instanceof Knight).length
     //         if (knightCount === 0) return
     //         const handFollowers = source.controller().hand.filter(card => card instanceof Follower) as Follower[]
     //         if (handFollowers.length === 0) return

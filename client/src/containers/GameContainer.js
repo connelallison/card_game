@@ -18,6 +18,7 @@ class GameContainer extends Component {
     super(props)
     this.state = {
       selected: null,
+      selectedSlot: null,
       gameState: {
         started: null,
         winner: null,
@@ -74,15 +75,21 @@ class GameContainer extends Component {
     this.handleRequestTestGame = this.handleRequestTestGame.bind(this)
     this.handleEndTurn = this.handleEndTurn.bind(this)
     this.handleClearSelected = this.handleClearSelected.bind(this)
+    this.handleClearSelectedSlot = this.handleClearSelectedSlot.bind(this)
     this.handleChooseSelected = this.handleChooseSelected.bind(this)
+    this.handleChooseSelectedSlot = this.handleChooseSelectedSlot.bind(this)
     this.handleChooseTarget = this.handleChooseTarget.bind(this)
     this.handleChooseSelectedNoTarget = this.handleChooseSelectedNoTarget.bind(this)
+    this.handleChooseSelectedSlotNoTarget = this.handleChooseSelectedSlotNoTarget.bind(this)
     this.handleInvalidMove = this.handleInvalidMove.bind(this)
     this.interactivityHandlers = {
       clearSelected: gameContainer.handleClearSelected,
+      clearSelectedSlot: gameContainer.handleClearSelectedSlot,
       chooseSelected: gameContainer.handleChooseSelected,
+      chooseSelectedSlot: gameContainer.handleChooseSelectedSlot,
       chooseTarget: gameContainer.handleChooseTarget,
       chooseSelectedNoTarget: gameContainer.handleChooseSelectedNoTarget,
+      chooseSelectedSlotNoTarget: gameContainer.handleChooseSelectedSlotNoTarget,
       invalidMove: gameContainer.handleInvalidMove,
     }
 
@@ -126,39 +133,65 @@ class GameContainer extends Component {
   }
 
   handleClearSelected() {
-    console.log("selected cleared")
+    // console.log("selected cleared")
     this.setState({
       selected: null
     })
   }
 
+  handleClearSelectedSlot() {
+    // console.log('selectedSlot cleared')
+    this.setState({
+      selectedSlot: null
+    })
+  }
+
   handleChooseSelected(object) {
-    console.log("selected chosen")
-    console.log('selected: ', object)
+    // console.log("selected chosen")
+    // console.log('selected: ', object)
     this.setState({
       selected: object
     })
   }
 
+  handleChooseSelectedSlot(object) {
+    // console.log('selectedSlot chosen')
+    // console.log('selectedSlot: ', object)
+    this.setState({
+      selectedSlot: object
+    })
+  }
+
   handleChooseTarget(target = null) {
-    console.log("target chosen")
-    // console.log(`${JSON.stringify(this.state.selected)} targets ${JSON.stringify(target)}`)
+    // console.log("target chosen")
     this.announceMove(this.state.selected, target)
     this.setState({
-      selected: null
+      selected: null,
+      selectedSlot: null,
     })
   }
 
   handleChooseSelectedNoTarget(object) {
-    console.log('selected chosen (no target required)')
+    // console.log('selected chosen (no target required)')
     this.announceMove(object, null)
     this.setState({
-      selected: null
+      selected: null,
+      selectedSlot: null,
+    })
+  }
+
+  handleChooseSelectedSlotNoTarget(object) {
+    // console.log('selectedSlot chosen (no target required)')
+    console.log('selectedSlot: ', object)
+    this.announceMove(this.state.selected, null, object)
+    this.setState({
+      selected: null,
+      selectedSlot: null,
     })
   }
 
   handleEndTurn() {
-    console.log('ending turn')
+    // console.log('ending turn')
     if (this.state.gameState.myTurn) socket.emit('endTurn')
   }
 
@@ -166,15 +199,19 @@ class GameContainer extends Component {
     console.log("invalid move")
   }
 
-  announceMove(selected, target) {
-    console.log('move request:')
-    console.log('selected: ', selected)
-    console.log('target: ', target)
+  announceMove(selected, target = null, selectedSlot = null) {
+    // console.log('move request:')
+    // console.log('selected: ', selected)
+    // console.log('selectedSlot: ', selectedSlot)
+    // console.log('target: ', target)
     socket.emit("newMoveRequest", {
       selected: {
         objectID: selected.objectID,
         zone: selected.zone,
         playerID: selected.playerID
+      },
+      selectedSlot: selectedSlot && {
+        objectID: selectedSlot.objectID,
       },
       target: target && {
         objectID: target.objectID,
@@ -221,9 +258,9 @@ class GameContainer extends Component {
             <CreationZone mine={false} creations={this.state.gameState.opponent.creations} selected={this.state.selected} interactivity={this.interactivityHandlers} />
           </div>
           <br />
-          <BoardHalf mine={false} units={this.state.gameState.opponent.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+          <BoardHalf mine={false} slots={this.state.gameState.opponent.board} selected={this.state.selected} selectedSlot={this.state.selectedSlot} interactivity={this.interactivityHandlers} />
           <br />
-          <BoardHalf mine units={this.state.gameState.my.board} selected={this.state.selected} interactivity={this.interactivityHandlers} />
+          <BoardHalf mine slots={this.state.gameState.my.board} selected={this.state.selected} selectedSlot={this.state.selectedSlot} interactivity={this.interactivityHandlers} />
           <br />
           <div className='leaderDiv'>
             <PassiveZone mine passives={this.state.gameState.my.passives} selected={this.state.selected} interactivity={this.interactivityHandlers} />

@@ -28,7 +28,7 @@ const PlayerHand = (props) => {
           <Passive object={card} selected={props.selected} interactivity={props.interactivity} />
         )
       } else {
-        return new Error('card is not a unit, moment, or creation')
+        return new Error('card is not a follower, moment, or creation')
       }
     })
   } else {

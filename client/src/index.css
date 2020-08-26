@@ -65,7 +65,8 @@ input {
 }
 
 .passiveList.cardList {
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
 }
 
 .leader {
@@ -144,6 +145,10 @@ input {
   display: flex;
   flex-direction: column;
   justify-items: center;
+}
+
+.card.boardSlot {
+  background-color: darkgrey;
 }
 
 .card-name {

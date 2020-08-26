@@ -35,7 +35,7 @@ class Game {
 
   constructor(player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
     this.event = new EventEmitter()
-    this.event.setMaxListeners(100)
+    this.event.setMaxListeners(250)
     this.botPlayer1 = botPlayer1
     this.botPlayer2 = botPlayer2
     this.debug = debug
@@ -156,7 +156,8 @@ class Game {
 
   executeMoveRequest(moveRequest, player) {
     const selected = this.gameObjects[moveRequest.selected.objectID] as Card
-    let target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID] as Card
+    const target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID] as Card
+    const selectedSlot = moveRequest.selectedSlot === null ? null : this.gameObjects[moveRequest.selectedSlot.objectID] as BoardSlot
 
     if (selected instanceof Character && selected.inPlay()) {
       // character in play attacking
@@ -184,19 +185,38 @@ class Game {
         })
       }
     } else if (selected.zone === 'hand' && selected.canBePlayed()) {
-      // card in hand being played
-      if (!selected.targeted) {
-        this.phases.playPhase({
-          player: selected.owner,
-          card: selected,
-          targets: [],
-        })
-      } else if (this.permissions.canTarget(selected, target)) {
-        this.phases.playPhase({
-          player: selected.owner,
-          card: selected,
-          targets: [target],
-        })
+      // follower in hand being played
+      if (selected instanceof Follower && selected.validSlots.includes(selectedSlot)) {
+        if (!selected.targeted) {
+          this.phases.playPhase({
+            player: selected.owner,
+            card: selected,
+            slot: selectedSlot,
+            targets: [],
+          })
+        } else if (this.permissions.canTarget(selected, target)) {
+          this.phases.playPhase({
+            player: selected.owner,
+            card: selected,
+            slot: selectedSlot,
+            targets: [target],
+          })
+        }
+      } else {
+        // non-follower card in hand being played
+        if (!selected.targeted) {
+          this.phases.playPhase({
+            player: selected.owner,
+            card: selected,
+            targets: [],
+          })
+        } else if (this.permissions.canTarget(selected, target)) {
+          this.phases.playPhase({
+            player: selected.owner,
+            card: selected,
+            targets: [target],
+          })
+        }
       }
     }
     this.announceGameState()
@@ -362,4 +382,6 @@ import PersistentCard from '../gameObjects/PersistentCard'
 import TechniqueCreation from '../gameObjects/TechniqueCreation'
 import LeaderTechnique from '../gameObjects/LeaderTechnique'
 import Deck from '../gameObjects/Deck'
+import BoardSlot from '../gameObjects/BoardSlot'
+import Follower from '../gameObjects/Follower'
 

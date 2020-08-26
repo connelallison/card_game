@@ -13,7 +13,7 @@ class Fireburst extends ActionMoment {
       'Fireburst', 
       true,
       1, 
-      'Deal 4 damage to a unit with 4 or more attack.',
+      'Deal 4 damage to a follower with 4 or more attack.',
       [
         {
           operation: "damage",

@@ -1,5 +1,6 @@
 import Game from "../gameSystems/Game"
 import Character from "../gameObjects/Character"
+import Follower from "../gameObjects/Follower"
 
 const TestBot = async (game: Game) => {
     if (!game.gameOver && game.turn.activePlayer.bot) {
@@ -9,20 +10,40 @@ const TestBot = async (game: Game) => {
         // }
         const playableCard = game.turn.activePlayer.playableCards()[0]
         if (playableCard) {
-            if (!playableCard.targeted) {
-                game.phases.playPhase({
-                    player: game.turn.activePlayer,
-                    card: playableCard,
-                    targets: []
-                })
-                game.announceGameState()
+            if (playableCard instanceof Follower) {
+                if (!playableCard.targeted) {
+                    game.phases.playPhase({
+                        player: game.turn.activePlayer,
+                        card: playableCard,
+                        targets: [],
+                        slot: game.turn.activePlayer.firstEmptySlot(),
+                    })
+                    game.announceGameState()
+                } else {
+                    game.phases.playPhase({
+                        player: game.turn.activePlayer,
+                        card: playableCard,
+                        targets: [playableCard.validTargets[0]],
+                        slot: game.turn.activePlayer.firstEmptySlot(),
+                    })
+                    game.announceGameState()
+                }
             } else {
-                game.phases.playPhase({
-                    player: game.turn.activePlayer,
-                    card: playableCard,
-                    targets: [playableCard.validTargets[0]]
-                })
-                game.announceGameState()
+                if (!playableCard.targeted) {
+                    game.phases.playPhase({
+                        player: game.turn.activePlayer,
+                        card: playableCard,
+                        targets: []
+                    })
+                    game.announceGameState()
+                } else {
+                    game.phases.playPhase({
+                        player: game.turn.activePlayer,
+                        card: playableCard,
+                        targets: [playableCard.validTargets[0]]
+                    })
+                    game.announceGameState()
+                }
             }
         } else {
             // console.log('no playable cards')
@@ -30,14 +51,14 @@ const TestBot = async (game: Game) => {
         }
     }
     if (!game.gameOver && game.turn.activePlayer.bot) {
-        const readyFollowers = game.turn.activePlayer.board.filter(unit => unit.canAttack())
-        for (const unit of readyFollowers) {
-            const targets = (unit.owner.opponent.board as Character[]).concat(unit.owner.opponent.leaderZone as Character[])
+        const readyFollowers = game.turn.activePlayer.boardFollowers().filter(follower => follower.canAttack())
+        for (const follower of readyFollowers) {
+            const targets = (follower.owner.opponent.boardFollowers() as Character[]).concat(follower.owner.opponent.leaderZone as Character[])
             for (const target of targets) {
-                if (game.permissions.canAttack(unit, target)) {
+                if (game.permissions.canAttack(follower, target)) {
                     await game.sleep(1000)
                     game.phases.proposedAttackPhase({
-                        attacker: unit,
+                        attacker: follower,
                         defender: target,
                     })
                     game.announceGameState()

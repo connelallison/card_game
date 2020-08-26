@@ -71,23 +71,27 @@ class PhaseManager {
     }
 
     attackPhase(event: AttackEvent): void {
-        this.game.event.emit('beforeAttack', event)
-        this.damageSinglePhase({
-            objectSource: event.attacker,
-            charSource: event.attacker,
-            target: event.defender,
-            damage: event.attacker.attack,
-        })
-        this.damageSinglePhase({
-            objectSource: event.defender,
-            charSource: event.defender,
-            target: event.attacker,
-            damage: event.defender.attack,
-        })
-        this.game.turn.cacheEvent(event, 'attack')
-        event.attacker.ready = false
-        this.game.event.emit('afterAttack', event)
-        this.steps()
+        if (event.attacker.attack > 0) {
+            this.game.event.emit('beforeAttack', event)
+            this.damageSinglePhase({
+                objectSource: event.attacker,
+                charSource: event.attacker,
+                target: event.defender,
+                damage: event.attacker.attack,
+            })
+            if (event.defender.attack > 0) {
+                this.damageSinglePhase({
+                    objectSource: event.defender,
+                    charSource: event.defender,
+                    target: event.attacker,
+                    damage: event.defender.attack,
+                })
+            }
+            this.game.turn.cacheEvent(event, 'attack')
+            event.attacker.ready = false
+            this.game.event.emit('afterAttack', event)
+            this.steps()
+        }
     }
 
     damageSinglePhase(eventObject: DamageSingleEventObject): void {
@@ -135,12 +139,34 @@ class PhaseManager {
 
     playPhase(eventObject: PlayEventObject): void {
         const event = new PlayEvent(this.game, eventObject)
-        if (event.card instanceof PersistentCard) {
+        if (event.card instanceof Follower) {
+            this.playPhaseFollower(event)
+        } else if (event.card instanceof PersistentCard) {
             this.playPhasePersistent(event)
         } else {
             this.playPhaseMoment(event)
         }
         this.steps()
+    }
+
+    playPhaseFollower(event: PlayEvent): void {
+        const card = event.card as Follower
+        event.player.spendMoney(card.cost)
+        this.game.turn.cacheEvent(event, 'play')
+        this.game.event.emit('onPlay', event)
+        this.enterPlayPhase({
+            controller: event.player,
+            card,
+            objectSource: card,
+            charSource: event.player.leaderZone[0],
+            slot: event.slot,
+        })
+        this.actionPhase({
+            player: event.player,
+            card: event.card,
+            targets: event.targets,
+        })
+        this.game.event.emit('afterPlay', event)
     }
 
     playPhasePersistent(event: PlayEvent): void {
@@ -212,7 +238,27 @@ class PhaseManager {
         }
     }
 
-    enterPlayPhase(eventObj: EnterPlayEventObject) {
+    enterPlayPhase(eventObj: EnterPlayEventObject): void {
+        if (eventObj.card instanceof Follower) {
+            this.enterPlayPhaseFollower(eventObj)
+        } else {
+            this.enterPlayPhaseOther(eventObj)
+        }
+    }
+
+    enterPlayPhaseFollower(eventObj: EnterPlayEventObject): void {
+        const event = new EnterPlayEvent(this.game, eventObj)
+        const follower = event.card as Follower
+        const index = event.slot ? event.slot.index() : event.controller.firstEmptySlotIndex()
+        follower.putIntoPlay(index)
+        this.auraUpdate()
+        if (this.game.turn) {
+            this.game.turn.cacheEvent(event, 'enterPlay')
+            this.game.event.emit('onEnterPlay', event)
+        }
+    }
+
+    enterPlayPhaseOther(eventObj: EnterPlayEventObject): void {
         const event = new EnterPlayEvent(this.game, eventObj)
         event.card.putIntoPlay()
         this.auraUpdate()
@@ -293,4 +339,5 @@ import TechniqueCreation from "../gameObjects/TechniqueCreation";
 import ActionEventObject from "../gameEvents/ActionEventObject";
 import ActionEvent from "../gameEvents/ActionEvent";
 import LeaderTechnique from "../gameObjects/LeaderTechnique";
+import Follower from "../gameObjects/Follower";
 

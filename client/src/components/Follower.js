@@ -9,9 +9,7 @@ class Follower extends Component {
   }
 
   canBeTargeted () {
-    // console.log(this.props)
     return this.props.selected !== null && this.props.selected.validTargets !== null && this.props.selected.validTargets.includes(this.props.object.objectID)
-    // return this.props.selected !== null && this.props.selected !== this.props.object
   }
 
   handleClick () {
@@ -34,7 +32,7 @@ class Follower extends Component {
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
-    const styleClasses = outlineStatus + " unit card"
+    const styleClasses = outlineStatus + " follower card"
     const handInfo = this.props.object.zone === 'hand' ? (
       <div className="multicolour-line text-medium">
         <p className='cost-label stat-label'>{this.props.object.cost}C</p>

@@ -23,7 +23,7 @@ abstract class Creation extends DestroyableCard {
     }
 
     provideReport(): ObjectReport {
-        this.updateValidTargets()
+        // this.updateValidTargets()
         // console.log(this.validTargets.length)
 
         // console.log(this.canBeSelected())

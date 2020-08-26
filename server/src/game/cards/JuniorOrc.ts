@@ -16,7 +16,7 @@ class JuniorOrc extends NamelessFollower {
       2, 
       3, 
       3, 
-      'Your other units have +1 Attack.', 
+      'Your other followers have +1 Attack.', 
       [], 
       [],
       false, 

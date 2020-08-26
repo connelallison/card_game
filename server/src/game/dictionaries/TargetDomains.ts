@@ -10,13 +10,13 @@ const TargetDomains = (object: GameObject, zones: TargetDomainString | TargetDom
                 case 'self':
                     targetDomain.push(object.charOwner())
                 case 'enemyBoard':
-                    targetDomain.push(...object.controller().opponent.board)
+                    targetDomain.push(...object.controller().opponent.boardFollowers())
                     break
                 case 'enemyLeader':
                     targetDomain.push(...object.controller().opponent.leaderZone)
                     break
                 case 'friendlyBoard':
-                    targetDomain.push(...object.controller().board)
+                    targetDomain.push(...object.controller().boardFollowers())
                     break
                 case 'friendlyLeader':
                     targetDomain.push(...object.controller().leaderZone)

@@ -18,7 +18,7 @@ const OpponentHand = (props) => {
           <Moment name={card.name} cost={card.cost} />
         )
       } else {
-        return new Error('card is neither a unit nor a moment')
+        return new Error('card is neither a follower nor a moment')
       }
     })
   } else {

@@ -14,7 +14,7 @@ class CorporalMotivation extends TechniqueCreation {
       true,
       1,
       3,
-      'Deal 1 damage to a unit, then give it +3 Attack.',
+      'Deal 1 damage to a follower, then give it +3 Attack.',
       [
         {
           operation: "damage",

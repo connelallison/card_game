@@ -15,7 +15,7 @@ class KnightAcademy extends WonderCreation {
             true,
             3,
             3,
-            'After you draw a unit, summon a 2/2 Knight.',
+            'After you draw a follower, summon a 2/2 Knight.',
             [],
             [],
             false,

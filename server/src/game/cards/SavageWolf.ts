@@ -17,7 +17,7 @@ class SavageWolf extends NamelessFollower {
       3, 
       4, 
       3, 
-      'Whenever a friendly unit dies, gain +2/+1.', 
+      'Whenever a friendly follower dies, gain +2/+1.', 
       [], 
       [],
       false, 

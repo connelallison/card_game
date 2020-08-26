@@ -27,29 +27,6 @@ abstract class Character extends DestroyableCard {
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
-  provideReport(): ObjectReport {
-    this.updateValidTargets()
-
-    return {
-      name: this.name,
-      id: this.id,
-      objectID: this.objectID,
-      cost: this.cost,
-      attack: this.attack,
-      health: this.health,
-      type: this.type,
-      subtype: this.subtype,
-      zone: this.zone,
-      ownerName: this.owner.name,
-      playerID: this.owner.objectID,
-      canBeSelected: this.canBeSelected(),
-      requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs(),
-      staticCardText: this.staticCardText,
-    }
-  }
-
-
   canBeSelected(): boolean {
     if (this.inPlay()) {
       return this.canAttack() && this.hasTargets()

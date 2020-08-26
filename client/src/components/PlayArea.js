@@ -10,7 +10,7 @@ class PlayArea extends Component {
   
     canBeTargeted() {
       // console.log(this.props)
-      return this.props.selected !== null && this.props.selected.requiresTarget === false && this.props.selected.zone === 'hand'
+      return this.props.selected !== null && this.props.selected.type !== 'Follower' && this.props.selected.requiresTarget === false && this.props.selected.zone === 'hand'
       // return this.props.selected !== null && this.props.selected !== this.props.object
     }
   

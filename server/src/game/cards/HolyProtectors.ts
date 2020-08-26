@@ -14,7 +14,7 @@ class HolyProtectors extends PermanentPassive {
             'Holy Protectors',
             true,
             4,
-            'Passive: Your leader gains (temporary) Health equal to the total Health of your units.',
+            'Passive: Your leader gains (temporary) Health equal to the total Health of your followers.',
             [],
             [],
             false,

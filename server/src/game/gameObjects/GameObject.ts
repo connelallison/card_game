@@ -37,10 +37,15 @@ abstract class GameObject {
             enchantment.effects.forEach(effect => effect(data))
             return data
         }, this.baseData())
-
+        
         this.auraEffects.forEach(effect => effect(dataObj))
-
+        
         this.setData(dataObj)
+        this.updateArrays()
+    }
+
+    updateArrays(): void {
+
     }
 
     abstract baseData(): GameObjectData

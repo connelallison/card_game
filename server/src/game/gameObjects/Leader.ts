@@ -9,6 +9,7 @@ import FlagsObject from '../structs/FlagsObject'
 import ActionFunctionObject from '../structs/ActionFunctionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
 import PlayRequirementObject from '../structs/PlayRequirementObject'
+import ObjectReport from '../structs/ObjectReport'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
@@ -26,9 +27,31 @@ abstract class Leader extends Character {
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
+  provideReport(): ObjectReport {
+    // this.updateValidTargets()
+
+    return {
+      name: this.name,
+      id: this.id,
+      objectID: this.objectID,
+      cost: this.cost,
+      attack: this.attack,
+      health: this.health,
+      type: this.type,
+      subtype: this.subtype,
+      zone: this.zone,
+      ownerName: this.owner.name,
+      playerID: this.owner.objectID,
+      canBeSelected: this.canBeSelected(),
+      requiresTarget: this.targeted,
+      validTargets: this.validTargetIDs(),
+      staticCardText: this.staticCardText,
+    }
+  }
+
   updateValidTargets(): void {
     if (this.inPlay()) {
-      this.validTargets = this.owner.opponent.board.filter(defender => {
+      this.validTargets = this.owner.opponent.boardFollowers().filter(defender => {
         return this.game.permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {

@@ -15,7 +15,7 @@ class Consume extends EventMoment {
       'Consume',
       true,
       3,
-      'Deal 3 damage to the weakest enemy unit and draw a card.',
+      'Deal 3 damage to the weakest enemy follower and draw a card.',
       [
         {
           operation: 'damage',
@@ -32,7 +32,7 @@ class Consume extends EventMoment {
         { operation: 'draw' },
       ],
       [{
-        playRequirement: 'minAllFollowers',
+        playRequirement: 'minEnemyFollowers',
         values: {
           min: 1,
         }

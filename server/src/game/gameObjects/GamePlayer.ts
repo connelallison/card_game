@@ -17,7 +17,7 @@ class GamePlayer extends GameObject {
   queuedDebt: number
   leaderZone: Leader[]
   leaderTechniqueZone: LeaderTechnique[]
-  board: Follower[]
+  board: BoardSlot[]
   hand: Card[]
   deck: Card[]
   creationZone: Creation[]
@@ -51,14 +51,6 @@ class GamePlayer extends GameObject {
     this.queuedDebt = 0
     this.leaderZone = []
     this.leaderTechniqueZone = []
-    this.board = []
-    this.hand = []
-    this.deck = []
-    this.creationZone = []
-    this.passiveZone = []
-    this.setAsideZone = []
-    this.graveyard = []
-    this.fatigueCounter = 0
     this.max = {
       hand: 10,
       deck: 50,
@@ -66,11 +58,23 @@ class GamePlayer extends GameObject {
       creationZone: 4,
       passiveZone: 5,
     }
+    this.board = this.populateBoardSlots()
+    this.hand = []
+    this.deck = []
+    this.creationZone = []
+    this.passiveZone = []
+    this.setAsideZone = []
+    this.graveyard = []
+    this.fatigueCounter = 0
     this.opponent
     this.bot
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
     this.game.event.on('endOfTurn', (event) => this.endOfTurn(event))
+  }
+
+  boardFollowers(): Follower[] {
+    return this.board.filter(slot => slot.follower).map(slot => slot.follower)
   }
 
   leaderReport() {
@@ -81,8 +85,12 @@ class GamePlayer extends GameObject {
     return this.leaderTechniqueZone[0].provideReport()
   }
 
-  boardReport(): ObjectReport[] {
-    return this.board.map(unit => unit.provideReport())
+  boardFollowersReport(): ObjectReport[] {
+    return this.boardFollowers().map(follower => follower.provideReport())
+  }
+
+  boardReport(): BoardSlotReport[] {
+    return this.board.map(slot => slot.provideReport())
   }
 
   creationsReport(): ObjectReport[] {
@@ -159,6 +167,31 @@ class GamePlayer extends GameObject {
     }
   }
 
+  populateBoardSlots(): BoardSlot[] {
+    const board = []
+    for (let i = 0; i < this.max.board; i++) {
+      board.push(new BoardSlot(this.game, this, 'board'))
+    }
+    return board
+  }
+
+  firstEmptySlot(): BoardSlot {
+    return this.board.find(slot => slot.isEmpty()) || null
+
+  }
+
+  firstEmptySlotIndex(): number {
+    return this.board.findIndex(slot => slot.isEmpty())
+  }
+
+  filledSlotsCount(): number {
+    return this.board.filter(slot => !slot.isEmpty()).length
+  }
+
+  emptySlotsCount(): number {
+    return this.board.length - this.filledSlotsCount()
+  }
+
   playableCards(): Card[] {
     return this.hand.filter(card => this.canPlay(card))
   }
@@ -233,4 +266,6 @@ import TechniqueCreation from './TechniqueCreation'
 import LeaderTechnique from './LeaderTechnique'
 import Passive from './Passive'
 import GameObjectData from '../structs/GameObjectData'
+import BoardSlot from './BoardSlot'
+import BoardSlotReport from '../structs/BoardSlotReport'
 

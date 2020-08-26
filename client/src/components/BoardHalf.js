@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Follower from './Follower.js'
+import BoardSlot from './BoardSlot.js'
 
 class BoardHalf extends Component {
   constructor(props) {
@@ -24,21 +25,21 @@ class BoardHalf extends Component {
   // }
 
   render() {
-    let unitList
-    if (this.props.units.length > 0) {
-      unitList = this.props.units.map((unit) => 
-        <Follower object={unit} selected={this.props.selected} interactivity={this.props.interactivity} />
+    let slotList
+    if (this.props.slots.length > 0) {
+      slotList = this.props.slots.map((slot) => 
+        <BoardSlot object={slot} selected={this.props.selected} selectedSlot={this.props.selectedSlot} interactivity={this.props.interactivity} />
       )
     } else {
-      unitList = [
-        <p>No units on board.</p>,
+      slotList = [
+        <p>No slots on board.</p>,
       ]
     }
 
     return (
       <div className="boardhalf">
         <div className='cardList'>
-          {unitList}
+          {slotList}
         </div>
       </div>
     )

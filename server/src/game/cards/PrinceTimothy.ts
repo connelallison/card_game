@@ -15,7 +15,7 @@ class PrinceTimothy extends FamousFollower {
       3,
       3,
       5,
-      'Action: Give all units in your hand +1/+1 for every Knight you control.',
+      'Action: Give all followers in your hand +1/+1 for every Knight you control.',
       [{
         operation: 'buffCharacterAttackAndHealth',
         values: {

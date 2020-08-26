@@ -29,7 +29,7 @@ abstract class WeaponCreation extends Creation {
     }
 
     provideReport(): ObjectReport {
-        this.updateValidTargets()
+        // this.updateValidTargets()
 
         return {
             name: this.name,

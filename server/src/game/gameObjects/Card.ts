@@ -47,7 +47,7 @@ abstract class Card extends GameObject {
   }
 
   provideReport (): ObjectReport {
-    this.updateValidTargets()
+    // this.updateArrays()
 
     return {
       name: this.name,
@@ -64,6 +64,10 @@ abstract class Card extends GameObject {
       validTargets: this.validTargetIDs(),
       staticCardText: this.staticCardText,
     }
+  }
+
+  updateArrays(): void {
+    this.updateValidTargets()
   }
 
   updateValidTargets(): void {
@@ -96,6 +100,10 @@ abstract class Card extends GameObject {
       cost: this.rawCost,
       flags: this.baseFlags(),
     }
+  }
+
+  index(): number {
+    return (this.controller()[this.zone] as Card[]).indexOf(this)
   }
 
   abstract moveZone(destination: ZoneString): void 

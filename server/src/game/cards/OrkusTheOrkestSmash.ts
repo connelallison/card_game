@@ -13,7 +13,7 @@ class OrkusTheOrkestSmash extends ActiveLeaderTechnique {
             'OrkusTheOrkestSmash',
             'Smash',
             2,
-            'Deal 2 damage to a unit.',
+            'Deal 2 damage to a follower.',
             [{
                 operation: 'damage',
                 values: {

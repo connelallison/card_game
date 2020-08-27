@@ -3,3 +3,4 @@ testLog.txt
 server/built/*
 client/build/*
 client/.env
+client/.env~

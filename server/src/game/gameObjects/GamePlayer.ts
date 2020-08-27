@@ -74,7 +74,7 @@ class GamePlayer extends GameObject {
   }
 
   boardFollowers(): Follower[] {
-    return this.board.filter(slot => slot.follower).map(slot => slot.follower)
+    return this.board.filter(slot => !slot.isEmpty()).map(slot => slot.follower)
   }
 
   leaderReport() {

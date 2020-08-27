@@ -9,6 +9,7 @@ const TargetDomains = (object: GameObject, zones: TargetDomainString | TargetDom
             switch (zone) {
                 case 'self':
                     targetDomain.push(object.charOwner())
+                    break
                 case 'enemyBoard':
                     targetDomain.push(...object.controller().opponent.boardFollowers())
                     break

@@ -84,7 +84,7 @@ abstract class GameObject {
     dynamicTargets(targets: TargetDomainString | TargetDomainString[] | DynamicTargetObject | DynamicTargetsObject) {
         return typeof targets === 'string' || targets.hasOwnProperty('length')
             ? TargetDomains(this, targets as TargetDomainString | TargetDomainString[])
-            : targets.hasOwnProperty('targets')
+            : targets.hasOwnProperty('reducer')
                 ? this.wrapDynamicTarget(targets as DynamicTargetObject)
                 : this.wrapDynamicTargets(targets as DynamicTargetsObject)
     }

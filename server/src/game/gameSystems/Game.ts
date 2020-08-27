@@ -312,10 +312,6 @@ class Game {
   }
 
   async start() {
-    // this.player1.board.push(new Cards.PlayerOneFollower(this, this.player1, 'board'))
-    // this.inPlay.push(this.player1.board[0])
-    // this.player2.board.push(new Cards.PlayerTwoFollower(this, this.player2, 'board'))
-    // this.inPlay.push(this.player2.board[0])
     console.log('starting game')
     await this.sleep(1000)
     this.turnLoop(this.player1)

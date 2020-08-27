@@ -18,6 +18,8 @@ const ActionOperations: { [index: string]: ActionOperation } = {
                     target: targets[0],
                     damage: values.damage(),
                 })
+            } else {
+                console.log(`not damaging: ${targets.length} targets`)
             }
         }
     },

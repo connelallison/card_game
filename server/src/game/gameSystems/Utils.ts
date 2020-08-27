@@ -37,7 +37,7 @@ class Utils {
     }
 
     notBehindGuard(character: Character) {
-        return character.flags.guard || character.controller().board.every(follower => follower.flags.guard !== true)
+        return character.flags.guard || character.controller().boardFollowers().every(follower => follower.flags.guard !== true)
     }
 }
 

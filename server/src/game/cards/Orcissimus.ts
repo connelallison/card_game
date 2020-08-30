@@ -1,5 +1,5 @@
 import FamousFollower from "../gameObjects/FamousFollower";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import FollowerZoneString from "../stringTypes/FollowerZoneString";
 import DynamicTargetObject from "../structs/DynamicTargetObject";

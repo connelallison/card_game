@@ -1,5 +1,5 @@
 import Enchantment from './Enchantment'
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import ZoneString from '../stringTypes/ZoneString'
 import ObjectTypeString from '../stringTypes/ObjectTypeString'
 import EffectFunction from '../functionTypes/EffectFunction'

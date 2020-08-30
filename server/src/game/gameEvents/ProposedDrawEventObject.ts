@@ -1,10 +1,10 @@
 import GamePlayer from "../gameObjects/GamePlayer";
 import TargetRequirement from "../functionTypes/TargetRequirement";
 
-interface DrawSequenceObject {
+interface ProposedDrawEventObject {
     player: GamePlayer,
     number?: number,
     criteria?: TargetRequirement[]
 }
 
-export default DrawSequenceObject
+export default ProposedDrawEventObject

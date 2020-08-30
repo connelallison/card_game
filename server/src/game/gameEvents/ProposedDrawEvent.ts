@@ -1,14 +1,14 @@
 import GameEvent from "./GameEvent";
-import DrawSequenceObject from "./DrawSequenceObject";
-import Game from "../gameSystems/Game";
+import ProposedDrawEventObject from "./ProposedDrawEventObject";
+import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
-class DrawSequence extends GameEvent {
+class ProposedDrawEvent extends GameEvent {
     player: GamePlayer
     number?: number = 1
     criteria?: (() => boolean)[] = []
     
-    constructor(game: Game, object: DrawSequenceObject) {
+    constructor(game: Game, object: ProposedDrawEventObject) {
         super(game) 
         Object.assign(this, object)
     }
@@ -18,4 +18,4 @@ class DrawSequence extends GameEvent {
     }
 }
 
-export default DrawSequence
+export default ProposedDrawEvent

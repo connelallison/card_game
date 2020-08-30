@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import WorkCreation from "../gameObjects/WorkCreation";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";

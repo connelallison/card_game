@@ -5,7 +5,7 @@ interface HealMultipleEventObject {
     objectSource: GameObject,
     charSource: Character,
     targets: Character[],
-    value: number 
+    healing: number 
 }
 
 export default HealMultipleEventObject

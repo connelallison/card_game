@@ -1,5 +1,5 @@
 import GameEvent from "./GameEvent";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import GameObject from "../gameObjects/GameObject";
 import Character from "../gameObjects/Character";
@@ -12,7 +12,7 @@ class EnterPlayEvent extends GameEvent {
     card: PersistentCard
     objectSource: GameObject
     charSource: Character
-    slot: BoardSlot
+    slot?: BoardSlot
 
     constructor(game: Game, object: EnterPlayEventObject) {
         super(game) 

@@ -1,5 +1,5 @@
 import GameEvent from "./GameEvent";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import ActionEventObject from "./ActionEventObject";

@@ -1,75 +1,47 @@
-import Game from "../gameSystems/Game"
+import Game from "../gamePhases/Game"
 import Character from "../gameObjects/Character"
 import Follower from "../gameObjects/Follower"
+import PlayEvent from "../gameEvents/PlayEvent"
+import AttackEvent from "../gameEvents/AttackEvent"
 
 const TestBot = async (game: Game) => {
-    if (!game.gameOver && game.turn.activePlayer.bot) {
+    if (!game.ended && game.activeChild.activePlayer.bot) {
         await game.sleep(2500)
-        // for (card in game.turn.activePlayer.playableCards()) {
-
-        // }
-        const playableCard = game.turn.activePlayer.playableCards()[0]
+        const playableCard = game.activeChild.activePlayer.playableCards()[0]
         if (playableCard) {
-            if (playableCard instanceof Follower) {
-                if (!playableCard.targeted) {
-                    game.phases.playPhase({
-                        player: game.turn.activePlayer,
-                        card: playableCard,
-                        targets: [],
-                        slot: game.turn.activePlayer.firstEmptySlot(),
-                    })
-                    game.announceGameState()
-                } else {
-                    game.phases.playPhase({
-                        player: game.turn.activePlayer,
-                        card: playableCard,
-                        targets: [playableCard.validTargets[0]],
-                        slot: game.turn.activePlayer.firstEmptySlot(),
-                    })
-                    game.announceGameState()
-                }
-            } else {
-                if (!playableCard.targeted) {
-                    game.phases.playPhase({
-                        player: game.turn.activePlayer,
-                        card: playableCard,
-                        targets: []
-                    })
-                    game.announceGameState()
-                } else {
-                    game.phases.playPhase({
-                        player: game.turn.activePlayer,
-                        card: playableCard,
-                        targets: [playableCard.validTargets[0]]
-                    })
-                    game.announceGameState()
-                }
-            }
-        } else {
-            // console.log('no playable cards')
-            // console.log(game.turn.activePlayer)
+            const slot = playableCard instanceof Follower ? {slot: game.activeChild.activePlayer.firstEmptySlot()} : {}
+            const targets = playableCard.targeted ? [playableCard.validTargets[0]] : []
+            const eventObj = Object.assign(slot, {
+                player: game.activeChild.activePlayer,
+                card: playableCard,
+                targets,
+            })
+            const playEvent = new PlayEvent(game, eventObj)
+            game.startSequence('PlayPhase', playEvent)
+            game.announceGameState()
         }
     }
-    if (!game.gameOver && game.turn.activePlayer.bot) {
-        const readyFollowers = game.turn.activePlayer.boardFollowers().filter(follower => follower.canAttack())
+    if (!game.ended && game.activeChild.activePlayer.bot) {
+        const readyFollowers = game.activeChild.activePlayer.boardFollowers().filter(follower => follower.canAttack())
         for (const follower of readyFollowers) {
             const targets = (follower.owner.opponent.boardFollowers() as Character[]).concat(follower.owner.opponent.leaderZone as Character[])
             for (const target of targets) {
                 if (game.permissions.canAttack(follower, target)) {
                     await game.sleep(1000)
-                    game.phases.proposedAttackPhase({
+                    const attackEvent = new AttackEvent(game, {
                         attacker: follower,
                         defender: target,
                     })
+                    game.startSequence('ProposedAttackPhase', attackEvent)
                     game.announceGameState()
                     break
                 }
             }
         }
     }
-    if (!game.gameOver && game.turn.activePlayer.bot) {
-        await game.sleep(3000)
-        game.executeEndTurnRequest(game.turn.activePlayer)
+    if (!game.ended && game.activeChild.activePlayer.bot) {
+        await game.sleep(2500)
+        game.executeEndTurnRequest(game.activeChild.activePlayer)
     }
 }
 

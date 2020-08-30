@@ -1,6 +1,6 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
 import Passive from "../gameObjects/Passive";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import TargetRequirements from "../dictionaries/TargetRequirements";
 

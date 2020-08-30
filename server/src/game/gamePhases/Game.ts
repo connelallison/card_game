@@ -1,7 +1,8 @@
+import ContainerPhase from './ContainerPhase'
 import GameObject from '../gameObjects/GameObject'
 GameObject // forces GameObject to load in properly
 
-class Game {
+class Game extends ContainerPhase {
   event: EventEmitter
   botPlayer1: boolean
   botPlayer2: boolean
@@ -16,24 +17,24 @@ class Game {
   player2socketID: string
   player1: GamePlayer
   player2: GamePlayer
-  phases: PhaseManager
+  // phases: PhaseManager
   targetRequirements: { [index: string]: TargetRequirementFactory }
   actions: { [index: string]: ActionOperation }
   effectOps: { [index: string]: EffectOperation }
   permissions: Permissions
   utils: Utils
   inPlay: PersistentCard[]
-  eventCache: EventCache
   player1deckID: string
   player2deckID: string
-  gameOver: boolean
-  turnLength: number
-  turn: Turn
+  ended: boolean
+  activeChild: Turn
+  children: Turn[]
+  queuedPhases: Turn[]
   turnNumber: number
-  turnCache: Turn[]
   winner: string
 
   constructor(player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
+    super()
     this.event = new EventEmitter()
     this.event.setMaxListeners(250)
     this.botPlayer1 = botPlayer1
@@ -48,32 +49,21 @@ class Game {
     this.player1socketID = player1socketID
     this.player2socketID = player2socketID
     this.inPlay = []
-    this.eventCache = {
-      all: [],
-      death: [],
-      play: [],
-      action: [],
-      attack: [],
-      damage: [],
-      healing: [],
-      draw: [],
-      enterPlay: [],
-    }
-    // this.sequence = []
-    // this.sequenceCache = [this.sequence]
     this.player1deckID = player1deckID
     this.player2deckID = player2deckID
-    this.gameOver = false
-    this.turnLength = 10000
-    // this.turnTimer
-    this.turn = null
+    this.ended = false
+    this.activeChild = null
     this.turnNumber = 0
-    this.turnCache = []
+    // this.children = []
     this.winner
   }
 
+  game(): Game {
+    return this
+  }
+
   init() {
-    this.phases = new PhaseManager(this)
+    // this.phases = new PhaseManager(this)
     this.targetRequirements = TargetRequirements
     this.actions = ActionOperations
     this.effectOps = EffectOperations
@@ -86,7 +76,7 @@ class Game {
   }
 
   announceGameState() {
-    if (!this.gameOver) {
+    if (!this.ended) {
       // console.log(serverEvent);
       let player1gameState
       let player2gameState
@@ -144,10 +134,10 @@ class Game {
 
   announceNewTurn() {
     if (this.player1.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.turn.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.activeChild.turnLength)
     }
     if (this.player2.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.turn.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.activeChild.turnLength)
     }
     //  else {
     //   serverEvent.emit("newTurnTimer", this.turnLength);
@@ -155,6 +145,8 @@ class Game {
   }
 
   executeMoveRequest(moveRequest, player) {
+    if (player !== this.activeChild.activePlayer) return
+
     const selected = this.gameObjects[moveRequest.selected.objectID] as Card
     const target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID] as Card
     const selectedSlot = moveRequest.selectedSlot === null ? null : this.gameObjects[moveRequest.selectedSlot.objectID] as BoardSlot
@@ -163,83 +155,49 @@ class Game {
       // character in play attacking
       if (target instanceof Character && target.inPlay()) {
         if (this.permissions.canAttack(selected, target)) {
-          this.phases.proposedAttackPhase({
+          const attackEvent = new AttackEvent(this, {
             attacker: selected,
             defender: target,
           })
+          this.startSequence('ProposedAttackPhase', attackEvent)
         }
       }
     } else if ((selected instanceof TechniqueCreation || selected instanceof LeaderTechnique) && selected.inPlay() && selected.canBeUsed()) {
-      // ability in play being used
-      if (!selected.targeted) {
-        this.phases.usePhase({
+      // technique in play being used
+      if (!selected.targeted || this.permissions.canTarget(selected, target)) {
+        const targets = !selected.targeted ? [] : [target] // includes target if technique is targeted
+        const actionEvent = new ActionEvent(this, {
           player: selected.owner,
           card: selected,
-          targets: [],
+          targets,
         })
-      } else if (this.permissions.canTarget(selected, target)) {
-        this.phases.usePhase({
-          player: selected.owner,
-          card: selected,
-          targets: [target],
-        })
-      }
+        this.startSequence('UsePhase', actionEvent)
+      } 
     } else if (selected.zone === 'hand' && selected.canBePlayed()) {
-      // follower in hand being played
-      if (selected instanceof Follower && selected.validSlots.includes(selectedSlot)) {
-        if (!selected.targeted) {
-          this.phases.playPhase({
-            player: selected.owner,
-            card: selected,
-            slot: selectedSlot,
-            targets: [],
-          })
-        } else if (this.permissions.canTarget(selected, target)) {
-          this.phases.playPhase({
-            player: selected.owner,
-            card: selected,
-            slot: selectedSlot,
-            targets: [target],
-          })
-        }
-      } else {
-        // non-follower card in hand being played
-        if (!selected.targeted) {
-          this.phases.playPhase({
-            player: selected.owner,
-            card: selected,
-            targets: [],
-          })
-        } else if (this.permissions.canTarget(selected, target)) {
-          this.phases.playPhase({
-            player: selected.owner,
-            card: selected,
-            targets: [target],
-          })
-        }
-      }
+      // card in hand being played
+      const slot = selected instanceof Follower && selected.validSlots.includes(selectedSlot) ? {slot: selectedSlot} : {} // includes slot if card is follower
+        const targets = !selected.targeted ? [] : [target] // includes target if card is targeted
+        const eventObj = Object.assign(slot, {
+          player: selected.owner,
+          card: selected,
+          targets,
+        })
+        const playEvent = new PlayEvent(this, eventObj)
+        this.startSequence('PlayPhase', playEvent)
     }
     this.announceGameState()
   }
 
   executeEndTurnRequest(player: GamePlayer) {
-    if (this.turn.activePlayer === player) {
-      const nextActivePlayer = this.turn.end()
-      if (nextActivePlayer && !this.gameOver) {
-        this.turnLoop(nextActivePlayer)
-      }
+    if (this.activeChild.activePlayer === player) {
+      this.activeChild.end()
+      // this.startSequence('EndOfTurnPhase')
     }
-  }
-
-  async sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   initPlayers() {
     this.player1 = new GamePlayer(this, this.player1name, this.player1socketID)
     this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
-    this.player2.increaseIncome(1)
-    this.player2.refillMoney()
     this.player1.opponent = this.player2
     this.player2.opponent = this.player1
     if (this.botPlayer1) {
@@ -252,10 +210,14 @@ class Game {
     } else {
       this.player2.bot = false
     }
+    this.player2.increaseIncome(1)
+    this.player2.refillMoney()
     const player1deck = new Decks[this.player1deckID](this, this.player1) as Deck
     const player2deck = new Decks[this.player2deckID](this, this.player2) as Deck
     player1deck.leader.putIntoPlay()
     player2deck.leader.putIntoPlay()
+    player1deck.leaderTechnique.putIntoPlay()
+    player2deck.leaderTechnique.putIntoPlay()
     player1deck.passive.putIntoPlay()
     player2deck.passive.putIntoPlay()
     this.player1.deck = player1deck.cards
@@ -272,7 +234,8 @@ class Game {
       })
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
         console.log(`${this.player1.name} disconnected - ending game`)
-        this.endGame(this.player1)
+        this.player1.disconnected = true
+        this.ended = true
       })
     }
     if (this.player2.socketID) {
@@ -284,7 +247,8 @@ class Game {
       })
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
         console.log(`${this.player2.name} disconnected - ending game`)
-        this.endGame(this.player2)
+        this.player2.disconnected = true
+        this.ended = true
       })
     }
   }
@@ -311,30 +275,47 @@ class Game {
     }
   }
 
+  cacheEvent(event: GameEvent, type: string): void {
+    this.eventCache[type].push(event)
+      this.eventCache.all.push(event)
+  }
+
+  firstTurn(): Turn {
+    return new Turn(this, this.player1, 1)
+  }
+
   async start() {
     console.log('starting game')
     await this.sleep(1000)
-    this.turnLoop(this.player1)
-  }
-
-  async turnLoop(activePlayer: GamePlayer) {
-    this.turnNumber++
-    this.turn = new Turn(this, activePlayer, this.turnNumber)
-    this.turnCache.push(this.turn)
-    this.turn.start()
-    const nextActivePlayerPromise = this.turn.sleep()
-    this.announceNewTurn()
-    this.announceGameState()
-    TestBot(this)
-    const nextActivePlayer = await nextActivePlayerPromise
-    this.announceGameState()
-    if (nextActivePlayer && !this.gameOver) {
-      this.turnLoop(nextActivePlayer)
+    this.queuedPhases.push(this.firstTurn())
+    while (!this.ended && this.queuedPhases.length > 0) {
+      this.startChild(this.queuedPhases.shift())
+      this.announceNewTurn()
+      this.announceGameState()
+      TestBot(this)
+      await this.activeChild.endPromise
     }
+    this.end()
   }
 
-  endGame(disconnected?: GamePlayer) {
-    this.turn.over = true
+  startSequence(phaseType: string, event?: GameEvent): void {
+    const sequence = new Sequence(this.activeChild)
+    const phase = new Phases[phaseType](sequence, event)
+    sequence.queuedPhases.push(phase)
+    this.activeChild.startChild(sequence)
+  }
+
+  startNewDeepestPhase(phaseType: string, event?: GameEvent | GameEvent[]): void {
+    const bottomPhase = this.currentBottomPhase()
+    const newPhase = new Phases[phaseType](bottomPhase, event)
+    bottomPhase.startChild(newPhase)
+  }
+
+  end() {
+    if (this.activeChild) this.activeChild.ended = true
+    const disconnected = this.player1.disconnected ? this.player1 : this.player2.disconnected ? this.player2 : null
+
+    this.emit('auraApply')
     if (this.player1.alive() && !this.player2.alive()) {
       this.winner = this.player1.name + ' wins'
     } else if (!this.player1.alive() && this.player2.alive()) {
@@ -348,28 +329,26 @@ class Game {
     }
     console.log('The game is over. The result is: ' + this.winner)
     this.announceGameState()
-    this.gameOver = true
+    this.ended = true
     this.removeListeners()
+    // console.log(this.eventCache.all)
+    // console.log(this.children)
   }
 }
 
 export default Game
 
 import GamePlayer from '../gameObjects/GamePlayer'
-import Cards from '../dictionaries/Cards'
 import Decks from '../dictionaries/Decks'
-import PhaseManager from './PhaseManager'
-import Turn from '../gameObjects/Turn'
+import Turn from './Turn'
 import ActionOperations from '../dictionaries/ActionOperations'
 import EffectOperations from '../dictionaries/EffectOperations'
-import Permissions from './Permissions'
-import Utils from './Utils'
-import TestBot from '../gameTests/TestBot'
+import Permissions from '../gameSystems/Permissions'
+import Utils from '../gameSystems/Utils'
 import serverEvent from '../../ServerEvent'
 import Card from '../gameObjects/Card'
 import Character from '../gameObjects/Character'
 import { EventEmitter } from 'events'
-import EventCache from '../gameEvents/EventCache'
 import EffectOperation from '../functionTypes/EffectOperation'
 import ActionOperation from '../functionTypes/ActionOperation'
 import TargetRequirementFactory from '../functionTypes/TargetRequirementFactory'
@@ -380,4 +359,11 @@ import LeaderTechnique from '../gameObjects/LeaderTechnique'
 import Deck from '../gameObjects/Deck'
 import BoardSlot from '../gameObjects/BoardSlot'
 import Follower from '../gameObjects/Follower'
+import Sequence from './Sequence'
+import AttackEvent from '../gameEvents/AttackEvent'
+import ActionEvent from '../gameEvents/ActionEvent'
+import GameEvent from '../gameEvents/GameEvent'
+import Phases from '../dictionaries/Phases'
+import PlayEvent from '../gameEvents/PlayEvent'
+import TestBot from '../gameTests/TestBot'
 

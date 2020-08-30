@@ -34,6 +34,7 @@ class GamePlayer extends GameObject {
   }
   opponent: GamePlayer
   bot: boolean
+  disconnected: boolean
 
   constructor(game: Game, name: string, socketID: string = null, bot: boolean = false) {
     super(game, name, name, 'Player', 'Player')
@@ -68,6 +69,7 @@ class GamePlayer extends GameObject {
     this.fatigueCounter = 0
     this.opponent
     this.bot
+    this.disconnected = false
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
     this.game.event.on('endOfTurn', (event) => this.endOfTurn(event))
@@ -106,8 +108,8 @@ class GamePlayer extends GameObject {
   }
 
   myTurn(): boolean {
-    if (this.game.turn !== null) {
-      return this.game.turn.activePlayer === this
+    if (this.game.activeChild !== null) {
+      return this.game.activeChild.activePlayer === this
     }
     return false
   }
@@ -121,9 +123,12 @@ class GamePlayer extends GameObject {
 
   endOfTurn(event): void {
     if (this.myTurn()) {
-      this.game.phases.drawPhase({
-        player: this
+      const proposedDrawEvent = new ProposedDrawEvent(this.game, {
+        player: this,
+        number: 1,
+        criteria: [],
       })
+      this.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
       this.increaseIncome(this.growth)
     }
   }
@@ -254,7 +259,7 @@ class GamePlayer extends GameObject {
 
 export default GamePlayer
 
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import Leader from './Leader'
 import Card from './Card'
 import Follower from './Follower'
@@ -268,4 +273,6 @@ import Passive from './Passive'
 import GameObjectData from '../structs/GameObjectData'
 import BoardSlot from './BoardSlot'
 import BoardSlotReport from '../structs/BoardSlotReport'
+import ProposedDrawPhase from '../gamePhases/ProposedDrawPhase'
+import ProposedDrawEvent from '../gameEvents/ProposedDrawEvent'
 

@@ -71,7 +71,7 @@ abstract class TriggerEnchantment extends Enchantment {
 
 export default TriggerEnchantment
 
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import Trigger from '../structs/Trigger'
 import GameEvent from '../gameEvents/GameEvent'
 import ZoneString from '../stringTypes/ZoneString'

@@ -1,4 +1,4 @@
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import MomentZoneString from '../stringTypes/MomentZoneString'
 import ActionMoment from '../gameObjects/ActionMoment'

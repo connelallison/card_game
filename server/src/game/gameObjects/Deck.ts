@@ -1,12 +1,13 @@
 // const Card = require("./Card");
 // const Follower = require("./Follower");
 import Cards from '../dictionaries/Cards'
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import Card from './Card'
 import DeckObject from '../structs/DeckObject'
 import Leader from './Leader'
 import Passive from './Passive'
+import LeaderTechnique from './LeaderTechnique'
 
 class Deck {
   game: Game
@@ -14,6 +15,7 @@ class Deck {
   id: string
   name: string
   leader: Leader
+  leaderTechnique: LeaderTechnique
   passive: Passive
   cards: Card[]
 
@@ -23,6 +25,7 @@ class Deck {
     this.id = deckID
     this.name = deckName
     this.leader = new Cards[deck.leader](this.game, this.owner, 'setAsideZone')
+    this.leaderTechnique = new Cards[this.leader.leaderTechniqueID](this.game, this.owner, 'setAsideZone')
     this.passive = new Cards[deck.passive](this.game, this.owner, 'setAsideZone')
     this.cards = deck.cards.map(cardID => new Cards[cardID](this.game, this.owner, 'deck'))
     this.shuffle()

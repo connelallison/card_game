@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import Passive from "../gameObjects/Passive";

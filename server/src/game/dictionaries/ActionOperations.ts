@@ -7,17 +7,24 @@ import DynamicNumber from '../functionTypes/DynamicNumber'
 import DynamicString from '../functionTypes/DynamicString'
 import DynamicBoolean from '../functionTypes/DynamicBoolean'
 import PersistentCard from '../gameObjects/PersistentCard'
+import DamageEvent from '../gameEvents/DamageEvent'
+import HealingEvent from '../gameEvents/HealingEvent'
+import ProposedDrawEvent from '../gameEvents/ProposedDrawEvent'
+import SummonEvent from '../gameEvents/SummonEvent'
+import EnterPlayEvent from '../gameEvents/EnterPlayEvent'
 
 const ActionOperations: { [index: string]: ActionOperation } = {
     damage: (source: GameObject, values: { damage: DynamicNumber }) => {
         return (targets: Character[]) => {
+            const damage = values.damage() >= 0 ? values.damage() : 0
             if (targets.length === 1) {
-                source.game.phases.damageSinglePhase({
+                const damageEvent = new DamageEvent(source.game, {
                     objectSource: source,
                     charSource: source.charOwner(),
                     target: targets[0],
-                    damage: values.damage(),
+                    damage,
                 })
+                source.game.startNewDeepestPhase('DamageSinglePhase', damageEvent)
             } else {
                 console.log(`not damaging: ${targets.length} targets`)
             }
@@ -26,24 +33,41 @@ const ActionOperations: { [index: string]: ActionOperation } = {
 
     heal: (source: GameObject, values: { healing: DynamicNumber }) => {
         return (targets: Character[]) => {
-            source.game.phases.healMultiplePhase({
-                objectSource: source,
-                charSource: source.charOwner(),
-                targets,
-                value: values.healing(),
-            })
+            const healing = values.healing() >= 0 ? values.healing() : 0
+            if (targets.length === 1) {
+                const healingEvent = new HealingEvent(source.game, {
+                    objectSource: source,
+                    charSource: source.charOwner(),
+                    target: targets[0],
+                    healing,
+                })
+                source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
+            } else if (targets.length > 1) {
+                const healingEvents: HealingEvent[] = []
+                for (const target of targets) {
+                    const healingEvent = new HealingEvent(source.game, {
+                        objectSource: source,
+                        charSource: source.charOwner(),
+                        target,
+                        healing,
+                    })
+                    healingEvents.push(healingEvent)
+                }
+                source.game.startNewDeepestPhase('HealMultiplePhase', healingEvents)
+            }
         }
     },
 
     draw: (source: GameObject, values?: { number?: DynamicNumber, criteria?: TargetRequirement[] }) => {
-        const number = values.number === undefined ? 1 : values.number()
-        const criteria = values.criteria === undefined ? [] : values.criteria
         return () => {
-            source.game.phases.drawPhase({
+            const number = values.number === undefined ? 1 : values.number()
+            const criteria = values.criteria === undefined ? [] : values.criteria
+            const proposedDrawEvent = new ProposedDrawEvent(source.game, {
                 player: source.controller(),
                 number,
                 criteria,
             })
+            source.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
         }
     },
 
@@ -73,12 +97,13 @@ const ActionOperations: { [index: string]: ActionOperation } = {
             if (cardID.length === 0) return
             // this sometimes receives cardID as an array containing a string. it works anyway as long as it's not empty because >javascript but keep in consideration
             for (let i = 0; i < number; i++) {
-                source.game.phases.summonPhase({
+                const summonEvent = new SummonEvent(source.game, {
                     controller,
                     cardID,
                     objectSource: source,
                     charSource: source.charOwner(),
                 })
+                source.game.startNewDeepestPhase('SummonPhase', summonEvent)
             }
         }
     },
@@ -87,12 +112,13 @@ const ActionOperations: { [index: string]: ActionOperation } = {
         return (targets: PersistentCard[]) => {
             targets.forEach(target => {
                 if (source.controller().canSummon(target)) {
-                    source.game.phases.enterPlayPhase({
+                    const enterPlayEvent = new EnterPlayEvent(source.game, {
                         controller: source.controller(),
                         card: target,
                         objectSource: source,
                         charSource: source.charOwner(),
                     })
+                    source.game.startNewDeepestPhase('EnterPlayPhase', enterPlayEvent)
                 }
             })
         }
@@ -103,49 +129,6 @@ const ActionOperations: { [index: string]: ActionOperation } = {
             event[values.param()] += values.value()
         }
     }
-
-    // damageChosenTarget: (value: number = 0) => {
-    //     return (source: GameObject, targets: Character[]) => {
-    //         source.game.phases.damageSinglePhase({
-    //             c
-    //         })
-    //     }
-    // },
-
-    // damageWeakestEnemyFollower: (value: number = 0) => {
-    //     return (source: GameObject) => {
-    //         const targets = source.controller().opponent.board
-    //         const target = source.game.utils.findMinByCriterion(targets, (target) => target.attack)
-    //         if (target) {
-    //             source.game.phases.damageSinglePhase({
-    //                 objectSource: source,
-    //                 charSource: source.charOwner(),
-    //                 target,
-    //                 value,
-    //             })
-    //         }
-    //     }
-    // },
-
-    // summonLastFriendlyFollowerThatDied: () => {
-    //     return (source: GameObject) => {
-    //         const lastFollowerDeath: DeathEvent = source.game.utils.findBackward(source.game.eventCache.death, (death) => {
-    //             return death.object.controller() === source.controller() && death.object instanceof Follower
-    //         })
-    //         if (lastFollowerDeath) source.game.actions.summonCard(lastFollowerDeath.object.id)(source)
-    //     }
-    // },  
-
-    // handBuffPerFriendlyKnight: () => {
-    //     return (source: GameObject) => {
-    //         const knightCount = source.controller().board.filter(follower => follower instanceof Knight).length
-    //         if (knightCount === 0) return
-    //         const handFollowers = source.controller().hand.filter(card => card instanceof Follower) as Follower[]
-    //         if (handFollowers.length === 0) return
-    //         source.game.actions.buffCharactersAttackAndHealth(knightCount, knightCount)(source, handFollowers)
-    //     }
-    // }
-
 }
 
 export default ActionOperations

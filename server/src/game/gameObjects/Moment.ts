@@ -1,5 +1,5 @@
 import Card from './Card'
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import MomentZoneString from '../stringTypes/MomentZoneString'
 import TargetDomainString from '../stringTypes/TargetDomainString'

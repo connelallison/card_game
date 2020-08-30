@@ -1,5 +1,5 @@
 import PermanentPassive from "../gameObjects/PermanentPassive";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import PassiveZoneString from "../stringTypes/PassiveZoneString";
 import SingleMindedFuryTrigger from "../enchantments/SingleMindedFuryTrigger";

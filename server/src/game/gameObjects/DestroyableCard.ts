@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import ZoneString from "../stringTypes/ZoneString";
 import CardSubtypeString from "../stringTypes/CardSubtypeString";

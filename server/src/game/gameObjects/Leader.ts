@@ -1,4 +1,4 @@
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
 import LeaderZoneString from '../stringTypes/LeaderZoneString'
@@ -10,6 +10,7 @@ import ActionFunctionObject from '../structs/ActionFunctionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
 import PlayRequirementObject from '../structs/PlayRequirementObject'
 import ObjectReport from '../structs/ObjectReport'
+import SummonEvent from '../gameEvents/SummonEvent'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
@@ -131,6 +132,7 @@ abstract class Leader extends Character {
   }
 
   moveZone(destination: LeaderZoneString): void {
+    if (destination === 'leaderZone' && this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('graveyard')
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
@@ -143,12 +145,15 @@ abstract class Leader extends Character {
     this.game.inPlay.push(this)
     this.owner.maxHealth += health
     this.owner.currentHealth += health
-    this.game.phases.summonPhase({
-      controller: this.controller(),
-      cardID: this.leaderTechniqueID,
-      objectSource: this,
-      charSource: this
-    })
+    if (this.game.activeChild) {
+      const summonEvent = new SummonEvent(this.game, {
+        controller: this.controller(),
+        cardID: this.leaderTechniqueID,
+        objectSource: this,
+        charSource: this
+      })
+      this.game.startNewDeepestPhase('SummonPhase', summonEvent)
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
 import FollowerZoneString from '../stringTypes/FollowerZoneString'

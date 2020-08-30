@@ -1,5 +1,5 @@
 import WonderCreation from "../gameObjects/WonderCreation"
-import Game from "../gameSystems/Game"
+import Game from "../gamePhases/Game"
 import GamePlayer from "../gameObjects/GamePlayer"
 import CreationZoneString from "../stringTypes/CreationZoneString"
 import Enchantments from "../dictionaries/Enchantments"

@@ -1,6 +1,6 @@
 import GameEvent from "./GameEvent";
 import PlayEventObject from "./PlayEventObject";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import BoardSlot from "../gameObjects/BoardSlot";
@@ -8,7 +8,7 @@ import BoardSlot from "../gameObjects/BoardSlot";
 class PlayEvent extends GameEvent {
     player: GamePlayer
     card: Card
-    slot: BoardSlot
+    slot?: BoardSlot
     targets: Card[]
 
     constructor(game: Game, object: PlayEventObject) {

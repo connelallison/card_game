@@ -81,6 +81,11 @@ abstract class GameObject {
         return this.controller().leaderZone[0]
     }
 
+    currentTurn(): Turn {
+        return this.game.currentTurn()
+    }
+
+
     dynamicTargets(targets: TargetDomainString | TargetDomainString[] | DynamicTargetObject | DynamicTargetsObject) {
         return typeof targets === 'string' || targets.hasOwnProperty('length')
             ? TargetDomains(this, targets as TargetDomainString | TargetDomainString[])
@@ -177,7 +182,7 @@ abstract class GameObject {
 
 export default GameObject
 
-import Game from "../gameSystems/Game"
+import Game from "../gamePhases/Game"
 import GamePlayer from "./GamePlayer"
 import TriggerEnchantment from "./TriggerEnchantment"
 import Enchantment from "./Enchantment"
@@ -212,4 +217,5 @@ import TargetRequirements from "../dictionaries/TargetRequirements"
 import PlayRequirementObject from "../structs/PlayRequirementObject"
 import PlayRequirement from "../functionTypes/PlayRequirement"
 import PlayRequirements from "../dictionaries/PlayRequirements"
+import Turn from "../gamePhases/Turn"
 

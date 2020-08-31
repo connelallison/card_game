@@ -1,6 +1,6 @@
 import GameEvent from "./GameEvent";
 import DeathEventObject from "./DeathEventObject";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 
@@ -13,8 +13,8 @@ class DeathEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        this.log = `${this.controller.name}'s ${this.died.name} is destroyed.`
     }
 }
 

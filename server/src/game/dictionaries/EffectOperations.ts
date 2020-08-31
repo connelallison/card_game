@@ -5,8 +5,8 @@ import DynamicNumber from '../functionTypes/DynamicNumber'
 const EffectOperations: { [index: string]: EffectOperation } = {
     guard: (data, value: DynamicBoolean) => { data.flags.guard = value() },
     pillage: (data, value: DynamicBoolean) => { data.flags.pillage = value() },
-    incrementAttack: (data, value: DynamicNumber) => { data.attack += value() },
-    incrementHealth: (data, value: DynamicNumber) => { data.health += value() },
+    incrementAttack: (data, value: DynamicNumber) => { data.attack += value() >= 0 ? value() : 0 },
+    incrementHealth: (data, value: DynamicNumber) => { data.health += value() >= 0 ? value() : 0 },
 }
 
 export default EffectOperations

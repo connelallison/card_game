@@ -1,5 +1,5 @@
 import GameObject from "./GameObject";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import GameObjectData from "../structs/GameObjectData";
 import Follower from "./Follower";

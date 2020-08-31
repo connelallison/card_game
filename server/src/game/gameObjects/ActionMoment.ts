@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Moment from "./Moment";
 import GamePlayer from "./GamePlayer";
 import MomentZoneString from "../stringTypes/MomentZoneString";

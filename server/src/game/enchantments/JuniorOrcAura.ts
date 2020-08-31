@@ -1,5 +1,5 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import Follower from "../gameObjects/Follower";
 import TargetRequirements from "../dictionaries/TargetRequirements";

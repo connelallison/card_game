@@ -1,5 +1,5 @@
 import Follower from "./Follower";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import FollowerZoneString from "../stringTypes/FollowerZoneString";
 import TargetDomainString from "../stringTypes/TargetDomainString";

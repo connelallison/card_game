@@ -45,7 +45,7 @@ abstract class Enchantment extends GameObject {
 
 export default Enchantment
 
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import ZoneString from '../stringTypes/ZoneString'
 import ObjectTypeString from '../stringTypes/ObjectTypeString'
 import Character from './Character'

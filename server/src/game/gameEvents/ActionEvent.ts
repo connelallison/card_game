@@ -1,5 +1,5 @@
 import GameEvent from "./GameEvent";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import ActionEventObject from "./ActionEventObject";
@@ -14,8 +14,9 @@ class ActionEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
+        this.log = `${this.card.name}'s action activates${targets}.`
     }
 }
 

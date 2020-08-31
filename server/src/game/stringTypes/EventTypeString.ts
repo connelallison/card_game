@@ -1,0 +1,15 @@
+type EventTypeString = 'death' 
+                        | 'play' 
+                        | 'action' 
+                        | 'attack' 
+                        | 'damage' 
+                        | 'healing' 
+                        | 'draw' 
+                        | 'enterPlay' 
+                        | 'summon' 
+                        | 'use' 
+                        | 'startOfTurn' 
+                        | 'endOfTurn' 
+                        | 'spendMoney'
+
+export default EventTypeString

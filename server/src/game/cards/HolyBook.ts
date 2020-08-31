@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import WorkCreation from "../gameObjects/WorkCreation";
 import CreationZoneString from "../stringTypes/CreationZoneString";
@@ -15,7 +15,7 @@ class HolyBook extends WorkCreation {
             true,
             2,
             3,
-            'At the end of your turn, give 1 Health to all friendly characters.',
+            'At the end of your turn, restore 1 Health to all friendly characters.',
             [],
             [],
             false,

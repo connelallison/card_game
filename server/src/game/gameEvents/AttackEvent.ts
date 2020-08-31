@@ -1,6 +1,6 @@
 import GameEvent from "./GameEvent";
 import AttackEventObject from "./AttackEventObject";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Character from "../gameObjects/Character";
 
 class AttackEvent extends GameEvent {
@@ -13,8 +13,8 @@ class AttackEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        this.log = `${this.attacker.name} attacks ${this.defender.name}.`
     }
 }
 

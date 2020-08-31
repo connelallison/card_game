@@ -1,6 +1,6 @@
 import GameEvent from "./GameEvent";
 import DamageSingleEventObject from "./DamageSingleEventObject";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import Character from "../gameObjects/Character";
 import GameObject from "../gameObjects/GameObject";
 
@@ -15,8 +15,9 @@ class DamageEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name}`
+        this.log = `${this.target.name} takes ${this.damage} damage from ${this.charSource.name}${source}.`
     }
 }
 

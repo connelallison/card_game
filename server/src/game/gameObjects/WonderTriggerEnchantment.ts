@@ -1,5 +1,5 @@
 import TriggerEnchantment from "./TriggerEnchantment";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import ZoneString from "../stringTypes/ZoneString";
 import ObjectTypeString from "../stringTypes/ObjectTypeString";
 import Trigger from "../structs/Trigger";

@@ -1,4 +1,4 @@
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
 import LeaderZoneString from '../stringTypes/LeaderZoneString'
@@ -10,6 +10,7 @@ import ActionFunctionObject from '../structs/ActionFunctionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
 import PlayRequirementObject from '../structs/PlayRequirementObject'
 import ObjectReport from '../structs/ObjectReport'
+import SummonEvent from '../gameEvents/SummonEvent'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
@@ -61,23 +62,21 @@ abstract class Leader extends Character {
     }
   }
 
-  takeDamage(damage: number): void {
-    if (damage > 0) {
-      this.owner.currentHealth -= damage
-      this.update()
-      console.log(`${this.owner.name} takes ${damage} damage`)
-      console.log(`${this.owner.name} now has ${this.health} health`)
-    }
+  takeDamage(damage: number): number {
+    this.owner.currentHealth -= damage
+    this.update()
+    return damage
+    // console.log(`${this.owner.name} takes ${damage} damage`)
+    // console.log(`${this.owner.name} now has ${this.health} health`)
   }
 
-  receiveHealing(rawHealing: number): void {
-    if (rawHealing > 0) {
-      const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
-      this.owner.currentHealth += healing
-      this.update()
-      console.log(`${this.owner.name} receives ${healing} healing`)
-      console.log(`${this.owner.name} now has ${this.health} health`)
-    }
+  receiveHealing(rawHealing: number): number {
+    const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+    this.owner.currentHealth += healing
+    this.update()
+    return healing
+    // console.log(`${this.owner.name} receives ${healing} healing`)
+    // console.log(`${this.owner.name} now has ${this.health} health`)
   }
 
   missingHealth(): number {
@@ -104,7 +103,7 @@ abstract class Leader extends Character {
       return this.rawAttack
     }
   }
-  
+
   baseHealth(): number {
     if (this.inPlay()) {
       return this.owner.currentHealth
@@ -126,11 +125,12 @@ abstract class Leader extends Character {
   }
 
   setData(dataObj: GameObjectData): void {
-    this.toggleAttack(dataObj)    
+    this.toggleAttack(dataObj)
     Object.assign(this, dataObj)
   }
 
   moveZone(destination: LeaderZoneString): void {
+    if (destination === 'leaderZone' && this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('graveyard')
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     this.owner[destination].push(this)
     this.zone = destination
@@ -143,12 +143,15 @@ abstract class Leader extends Character {
     this.game.inPlay.push(this)
     this.owner.maxHealth += health
     this.owner.currentHealth += health
-    this.game.phases.summonPhase({
-      controller: this.controller(),
-      cardID: this.leaderTechniqueID,
-      objectSource: this,
-      charSource: this
-    })
+    if (this.game.activeChild) {
+      const summonEvent = new SummonEvent(this.game, {
+        controller: this.controller(),
+        cardID: this.leaderTechniqueID,
+        objectSource: this,
+        charSource: this
+      })
+      this.game.startNewDeepestPhase('SummonPhase', summonEvent)
+    }
   }
 }
 

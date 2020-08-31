@@ -1,5 +1,5 @@
 import Creation from "./Creation";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import CreationZoneString from "../stringTypes/CreationZoneString";
 import TargetDomainString from "../stringTypes/TargetDomainString";

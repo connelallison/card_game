@@ -11,8 +11,8 @@ class StartOfTurnEvent extends GameEvent {
         this.turnNumber = this.turn.turnNumber
     }
 
-    provideReport() {
-
+    generateLog() {
+        this.log = `${this.activePlayer.name}'s turn begins.`
     }
 }
 

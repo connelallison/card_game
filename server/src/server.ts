@@ -4,7 +4,7 @@ import * as path from 'path'
 import ServerPlayer from './ServerPlayer'
 import serverEvent from './ServerEvent'
 // const { Deck, deck1, deck2 } = require("./game/Deck");
-import Game from './game/gameSystems/Game'
+import Game from './game/gamePhases/Game'
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 function testGame (socketID = null) {

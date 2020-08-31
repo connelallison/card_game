@@ -1,5 +1,5 @@
 import ActiveLeaderTechnique from "../gameObjects/ActiveLeaderTechnique";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
 

@@ -1,4 +1,4 @@
-import Game from '../gameSystems/Game'
+import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
 import FollowerZoneString from '../stringTypes/FollowerZoneString'
@@ -81,21 +81,17 @@ abstract class Follower extends Character {
     return this.validSlots.map(slot => slot.objectID)
   }
 
-  takeDamage(damage: number): void {
-    if (damage > 0) {
-      this.rawHealth -= damage
-      this.update()
-      console.log(`${this.name} takes ${damage} damage`)
-    }
+  takeDamage(damage: number): number {
+    this.rawHealth -= damage
+    this.update()
+    return damage
   }
 
-  receiveHealing(rawHealing: number): void {
-    if (rawHealing > 0) {
-      const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
-      this.rawHealth += healing
-      this.update()
-      console.log(`${this.name} receives ${healing} healing`)
-    }
+  receiveHealing(rawHealing: number): number {
+    const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+    this.rawHealth += healing
+    this.update()
+    return healing
   }
 
   missingHealth(): number {

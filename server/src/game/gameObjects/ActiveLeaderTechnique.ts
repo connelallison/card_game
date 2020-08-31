@@ -1,5 +1,5 @@
 import LeaderTechnique from "./LeaderTechnique";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
 import TargetDomainString from "../stringTypes/TargetDomainString";

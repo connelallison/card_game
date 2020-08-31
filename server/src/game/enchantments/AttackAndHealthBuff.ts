@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game"
+import Game from "../gamePhases/Game"
 import StaticEnchantment from "../gameObjects/StaticEnchantment"
 import Character from "../gameObjects/Character"
 

@@ -1,5 +1,5 @@
 import PersistentCard from "./PersistentCard";
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import ZoneString from "../stringTypes/ZoneString";
 import PassiveSubtypeString from "../stringTypes/PassiveSubtypeString";

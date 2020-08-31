@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import PersistentCard from "./PersistentCard";
 import LeaderTechniqueSubtypeString from "../stringTypes/LeaderTechniqueSubtypeString";
@@ -65,6 +65,7 @@ abstract class LeaderTechnique extends PersistentCard {
       }
 
     moveZone(destination: LeaderTechniqueZoneString): void {
+        if (destination === 'leaderTechniqueZone' && this.owner.leaderTechniqueZone[0]) this.owner.leaderTechniqueZone[0].moveZone('graveyard')
         this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
         this.owner[destination].push(this)
         this.zone = destination

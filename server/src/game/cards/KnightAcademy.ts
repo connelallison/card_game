@@ -1,5 +1,5 @@
 import WonderCreation from "../gameObjects/WonderCreation"
-import Game from "../gameSystems/Game"
+import Game from "../gamePhases/Game"
 import GamePlayer from "../gameObjects/GamePlayer"
 import CreationZoneString from "../stringTypes/CreationZoneString"
 import Enchantments from "../dictionaries/Enchantments"
@@ -13,7 +13,7 @@ class KnightAcademy extends WonderCreation {
             'KnightAcademy',
             'Knight Academy',
             true,
-            3,
+            2,
             3,
             'After you draw a follower, summon a 2/2 Knight.',
             [],

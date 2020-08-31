@@ -94,10 +94,11 @@ class GameContainer extends Component {
     }
 
 
-    socket.on('gameStateUpdate', function (gameState) {
+    socket.on('gameStateUpdate', function (report) {
       // console.log(gameState);
       // console.log(gameContainer);
-      gameContainer.setState({ gameState: gameState, selected: null })
+      gameContainer.setState({ gameState: report.gameState, selected: null })
+      report.eventsReport.forEach(log => console.log(log))
       if (gameContainer.state.gameState.started && !gameContainer.state.gameState.winner) {
         gameContainer.setState({ requestTestGameEnabled: false })
       } else {

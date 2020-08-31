@@ -1,4 +1,4 @@
-import Game from "../gameSystems/Game";
+import Game from "../gamePhases/Game";
 import WonderTriggerEnchantment from "../gameObjects/WonderTriggerEnchantment";
 import TriggerRequirements from "../dictionaries/TriggerRequirements";
 import WonderCreation from "../gameObjects/WonderCreation";

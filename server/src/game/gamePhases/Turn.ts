@@ -1,12 +1,12 @@
 import Game from "./Game"
 import GamePlayer from "../gameObjects/GamePlayer"
-import ContainerPhase from "./ContainerPhase"
 import Sequence from "./Sequence"
 import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent"
 import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent"
 import Phases from "../dictionaries/Phases"
+import GamePhase from "./GamePhase"
 
-class Turn extends ContainerPhase {
+class Turn extends GamePhase {
     parent: Game
     children: Sequence[]
     activeChild: Sequence
@@ -23,7 +23,7 @@ class Turn extends ContainerPhase {
         this.activePlayer = activePlayer
         this.nextActivePlayer = activePlayer.opponent
         this.turnNumber = turnNumber
-        this.turnLength = 25000
+        this.turnLength = 45000
         this.endPromise = this.endTurnPromise()
     }
 

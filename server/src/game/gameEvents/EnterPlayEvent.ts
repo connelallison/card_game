@@ -6,6 +6,7 @@ import Character from "../gameObjects/Character";
 import EnterPlayEventObject from "./EnterPlayEventObject";
 import PersistentCard from "../gameObjects/PersistentCard";
 import BoardSlot from "../gameObjects/BoardSlot";
+import Follower from "../gameObjects/Follower";
 
 class EnterPlayEvent extends GameEvent {
     controller: GamePlayer
@@ -19,8 +20,11 @@ class EnterPlayEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        // const source = this.objectSource === this.card ? '' : `'s ${this.objectSource.name}`
+        const slot = this.card instanceof Follower ? `in slot ${this.slot.index() + 1} ` : ''
+        // const controller = this.charSource === this.controller.leaderZone[0] ? '' : `under ${this.controller.name}'s control` 
+        this.log =  `${this.card.name} enters play ${slot}under ${this.controller.name}'s control.`
     }
 }
 

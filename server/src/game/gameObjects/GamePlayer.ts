@@ -42,7 +42,7 @@ class GamePlayer extends GameObject {
     this.socketID = socketID
     this.maxHealth = 20
     this.currentHealth = this.maxHealth
-    this.rawGrowth = 2
+    this.rawGrowth = 1
     this.growth = this.rawGrowth
     this.rawIncome = 2
     this.income = this.rawIncome
@@ -116,20 +116,20 @@ class GamePlayer extends GameObject {
 
   startOfTurn(event): void {
     if (this.myTurn()) {
-      this.refillMoney()
-      this.payDebt()
-    }
-  }
-
-  endOfTurn(event): void {
-    if (this.myTurn()) {
       const proposedDrawEvent = new ProposedDrawEvent(this.game, {
         player: this,
         number: 1,
         criteria: [],
       })
       this.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
+    }
+  }
+
+  endOfTurn(event): void {
+    if (this.myTurn()) {
       this.increaseIncome(this.growth)
+      this.refillMoney()
+      this.payDebt()
     }
   }
 
@@ -223,10 +223,12 @@ class GamePlayer extends GameObject {
 
   spendMoney(amount: number): void {
     this.rawMoney -= amount
+    this.money -= amount
   }
 
   gainMoney(amount: number): void {
     this.rawMoney += amount
+    this.money += amount
   }
 
   refillMoney(): void {
@@ -235,6 +237,7 @@ class GamePlayer extends GameObject {
 
   increaseIncome(number): void {
     this.rawIncome += number
+    this.income += number
   }
 
   decreaseIncome(number): void {

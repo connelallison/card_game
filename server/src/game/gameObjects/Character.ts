@@ -61,13 +61,13 @@ abstract class Character extends DestroyableCard {
     return this
   }
 
-  damaged(): boolean {
+  isDamaged(): boolean {
     return this.missingHealth() > 0
   }
 
   abstract updateValidTargets(): void
-  abstract takeDamage(damage: number): void
-  abstract receiveHealing(healing: number): void
+  abstract takeDamage(damage: number): number
+  abstract receiveHealing(healing: number): number
   abstract missingHealth(): number
 }
 

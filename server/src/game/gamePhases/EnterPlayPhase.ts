@@ -14,6 +14,7 @@ class EnterPlayPhase extends EventPhase {
     start(): void {
         const {event} = this
         this.putIntoPlay()
+        event.generateLog()
         this.cacheEvent(event, 'enterPlay')
         this.startChild(new Phases.AuraUpdatePhase(this))
         this.emit('onEnterPlay', event)
@@ -25,6 +26,7 @@ class EnterPlayPhase extends EventPhase {
         const event = this.event
         if (event.card instanceof Follower) {
             const index = event.slot ? event.slot.index() : event.controller.firstEmptySlotIndex()
+            if (!event.slot) event.slot = event.controller.board[index]
             event.card.putIntoPlay(index)
         } else {
             event.card.putIntoPlay()

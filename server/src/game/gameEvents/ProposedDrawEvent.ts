@@ -13,8 +13,8 @@ class ProposedDrawEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        this.log = `${this.player.name} draws ${this.number} cards.`
     }
 }
 

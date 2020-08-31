@@ -16,7 +16,7 @@ class ProposedDrawPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        this.emit('proposedDrawSequence', event)
+        this.emit('proposedDrawEvent', event)
         const { player } = event
         const drawQueue = event.criteria.reduce((queue, criterion) => queue.filter(criterion), player.deck)
         for (let i = 0; i < event.number; i++) {
@@ -29,6 +29,7 @@ class ProposedDrawPhase extends EventPhase {
                         player,
                         card,
                     })
+                    event.generateLog()
                     this.cacheEvent(event, 'draw')
                     this.emit('onDraw', event)
                     this.afterDrawQueue.push(event)

@@ -13,8 +13,8 @@ class AttackEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        this.log = `${this.attacker.name} attacks ${this.defender.name}.`
     }
 }
 

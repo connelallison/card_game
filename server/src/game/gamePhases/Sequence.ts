@@ -1,18 +1,20 @@
-import ContainerPhase from "./ContainerPhase";
 import Turn from "./Turn";
 import EventPhase from "./EventPhase";
 import DeathEvent from "../gameEvents/DeathEvent";
+import GamePhase from "./GamePhase";
 
-class Sequence extends ContainerPhase {
+class Sequence extends GamePhase {
     parent: Turn
     children: EventPhase[]
     activeChild: EventPhase
     queuedPhases: EventPhase[]
     deathQueue: DeathEvent[]
+    eventLogQueue: string[]
 
     constructor(parent: Turn) {
         super() 
         this.parent = parent
+        this.queuedPhases = []
         this.deathQueue = []
     }
 

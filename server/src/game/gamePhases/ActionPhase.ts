@@ -15,6 +15,7 @@ class ActionPhase extends EventPhase {
         const actionCard = event.card
         this.emit('beforeAction', event)
         if (actionCard instanceof TechniqueCreation) actionCard.loseCharge() 
+        event.generateLog()
         this.cacheEvent(event, 'action')
         actionCard.actions.forEach(action => {
             action(event.targets)

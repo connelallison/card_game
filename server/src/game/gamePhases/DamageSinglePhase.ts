@@ -1,7 +1,5 @@
 import EventPhase from "./EventPhase";
 import DamageEvent from "../gameEvents/DamageEvent";
-import HealingEvent from "../gameEvents/HealingEvent";
-import Phases from "../dictionaries/Phases";
 
 class DamageSinglePhase extends EventPhase {
     parent: EventPhase
@@ -12,11 +10,14 @@ class DamageSinglePhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        this.emit('beforeDamage', event)
-        event.target.takeDamage(event.damage)
-        this.game().activeChild.cacheEvent(event, 'damage')
-        this.emit('afterDamage', event)
-        this.queueSteps()
+        if (event.damage > 0) {
+            this.emit('beforeDamage', event)
+            event.target.takeDamage(event.damage)
+            event.generateLog()
+            this.cacheEvent(event, 'damage')
+            this.emit('afterDamage', event)
+            this.queueSteps()
+        }
         this.end()
     }
 }

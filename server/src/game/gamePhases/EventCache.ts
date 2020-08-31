@@ -7,6 +7,10 @@ import DamageEvent from "../gameEvents/DamageEvent";
 import HealingEvent from "../gameEvents/HealingEvent";
 import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
 import SummonEvent from "../gameEvents/SummonEvent";
+import UseEvent from "../gameEvents/UseEvent";
+import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
+import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
+import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
 
 interface EventCache { 
     all: GameEvent[],
@@ -19,6 +23,10 @@ interface EventCache {
     draw: DrawEvent[],
     enterPlay: EnterPlayEvent[],
     summon: SummonEvent[],
+    use: UseEvent[],
+    startOfTurn: StartOfTurnEvent[],
+    endOfTurn: EndOfTurnEvent[],
+    spendMoney: SpendMoneyEvent[],
 }
 
 export default EventCache

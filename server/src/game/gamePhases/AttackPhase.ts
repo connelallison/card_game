@@ -14,6 +14,9 @@ class AttackPhase extends EventPhase {
     start(): void {
         const event = this.event
         if (event.attacker.attack > 0) {
+            event.generateLog()
+            this.cacheEvent(event, 'attack')
+            
             this.emit('beforeAttack', event)
             const attackerDamageEvent = new DamageEvent(this.game(), {
                 objectSource: event.attacker,
@@ -52,7 +55,6 @@ class AttackPhase extends EventPhase {
                 this.startChild(new Phases.HealSinglePhase(this, healingEvent))
             }
 
-            this.cacheEvent(event, 'attack')
             event.attacker.ready = false
             this.emit('afterAttack', event)
             this.queueSteps()

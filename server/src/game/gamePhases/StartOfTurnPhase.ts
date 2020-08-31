@@ -10,7 +10,10 @@ class StartOfTurnPhase extends EventPhase {
     }
 
     start(): void {
-        this.emit('startOfTurn', this.event)
+        const event = this.event
+        event.generateLog()
+        this.cacheEvent(event, 'startOfTurn')
+        this.emit('startOfTurn', event)
         this.queueSteps()
         this.end()
     }

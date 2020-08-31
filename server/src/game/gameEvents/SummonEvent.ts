@@ -18,8 +18,10 @@ class SummonEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        const source = this.charSource === this.objectSource ? '' : `'s ${this.objectSource.name}`
+        const controller = this.charSource === this.controller.leaderZone[0] ? '' : `under ${this.controller.name}'s control` 
+        this.log =  `${this.charSource.name}${source} summons a ${this.cardID} ${controller}.`
     }
 }
 

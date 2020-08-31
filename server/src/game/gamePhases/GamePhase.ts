@@ -4,6 +4,8 @@ import Game from "./Game"
 import Turn from "./Turn"
 import Sequence from "./Sequence"
 import EventPhase from "./EventPhase"
+import TriggerTypeString from "../stringTypes/TriggerTypeString"
+import EventTypeString from "../stringTypes/EventTypeString"
 
 abstract class GamePhase {
     parent: GamePhase
@@ -19,9 +21,9 @@ abstract class GamePhase {
         this.ended = false
     }
 
-    cacheEvent(event: GameEvent, type: string): void {
-        this.parent.cacheEvent(event, type)
-        this.eventCache[type].push(event)
+    cacheEvent(event: GameEvent, type: EventTypeString): void {
+        this.parent.cacheEvent(event, type);
+        (this.eventCache[type] as GameEvent[]).push(event)
         this.eventCache.all.push(event)
     }
 
@@ -55,20 +57,16 @@ abstract class GamePhase {
         return this.currentOuterPhase().deepestChild()
     }
 
-    emit(event: string | symbol, ...args: any[]): void {
+    emit(event: TriggerTypeString, ...args: any[]): void {
         this.game().event.emit(event, ...args)
     }
 
-    start(): void {
+    abstract start(): void
 
-    }
-
-    end(): void {
-
-    }
+    abstract end(): void
 
     newEventCache(): EventCache {
-        return { 
+        return {
             all: [],
             death: [],
             play: [],
@@ -79,6 +77,10 @@ abstract class GamePhase {
             draw: [],
             enterPlay: [],
             summon: [],
+            use: [],
+            startOfTurn: [],
+            endOfTurn: [],
+            spendMoney: [],
         }
     }
 }

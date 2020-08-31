@@ -9,14 +9,16 @@ class HealingEvent extends GameEvent {
     charSource: Character
     target: Character
     healing: number
+    actualHealing: number
 
     constructor(game: Game, object: HealSingleEventObject) {
         super(game) 
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name}`
+        this.log = `${this.target.name} receives ${this.actualHealing} healing from ${this.charSource.name}${source}.`
     }
 }
 

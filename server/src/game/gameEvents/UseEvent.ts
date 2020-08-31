@@ -4,7 +4,7 @@ import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import ActionEventObject from "./ActionEventObject";
 
-class ActionEvent extends GameEvent {
+class UseEvent extends GameEvent {
     player: GamePlayer
     card: Card
     targets: Card[]
@@ -16,8 +16,8 @@ class ActionEvent extends GameEvent {
 
     generateLog() {
         const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
-        this.log = `${this.card.name}'s action activates${targets}.`
+        this.log = `${this.player.name} uses ${this.card.name}${targets}.`
     }
 }
 
-export default ActionEvent
+export default UseEvent 

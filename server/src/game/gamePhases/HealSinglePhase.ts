@@ -11,11 +11,15 @@ class HealSinglePhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        this.emit('beforeHealing', event)
-        event.target.receiveHealing(event.healing)
-        this.cacheEvent(event, 'healing')
-        this.emit('afterHealing', event)
-        this.queueSteps()
+        if (event.healing > 0 && event.target.isDamaged()) {
+            this.emit('beforeHealing', event)
+            const actualHealing = event.target.receiveHealing(event.healing)
+            event.actualHealing = actualHealing
+            event.generateLog()
+            this.cacheEvent(event, 'healing')
+            this.emit('afterHealing', event)
+            this.queueSteps()
+        }
         this.end()
     }
 }

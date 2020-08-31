@@ -10,7 +10,10 @@ class EndOfTurnPhase extends EventPhase {
     }
 
     start(): void {
-        this.emit('endOfTurn', this.event)
+        const event = this.event
+        event.generateLog()
+        this.cacheEvent(event, 'endOfTurn')
+        this.emit('endOfTurn', event)
         this.queueSteps()
         this.end()
     }

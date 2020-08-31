@@ -5,6 +5,7 @@ import PersistentCard from "../gameObjects/PersistentCard";
 import ActionEvent from "../gameEvents/ActionEvent";
 import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
 import Phases from "../dictionaries/Phases";
+import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
 
 class PlayPhase extends EventPhase {
     parent: Sequence
@@ -16,7 +17,8 @@ class PlayPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        event.player.spendMoney(event.card.cost)
+        this.spendMoneyPhase()
+        event.generateLog()
         this.cacheEvent(event, 'play')
         this.emit('onPlay', event)
         this.enterPlayPhase()
@@ -24,6 +26,18 @@ class PlayPhase extends EventPhase {
         this.emit('afterPlay', event)
         this.queueSteps()
         this.end()
+    }
+
+    spendMoneyPhase(): void {
+        const event = this.event
+        if (event.card.cost > 0) {
+            const spendMoneyEvent = new SpendMoneyEvent(this.game(), {
+                player: event.player,
+                card: event.card,
+                money: event.card.cost
+            })
+            this.startChild(new Phases.SpendMoneyPhase(this, spendMoneyEvent))
+        }
     }
 
     enterPlayPhase(): void {

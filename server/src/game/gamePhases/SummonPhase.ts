@@ -18,6 +18,7 @@ class SummonPhase extends EventPhase {
         const card = new Cards[cardID](this.game(), controller, 'setAsideZone')
         controller.setAsideZone.push(card)
         if (controller.canSummon(card)) {
+            event.generateLog()
             this.cacheEvent(event, 'summon')
             const enterPlayEvent = new EnterPlayEvent(this.game(), {
                 controller,

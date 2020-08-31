@@ -15,8 +15,9 @@ class DamageEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name}`
+        this.log = `${this.target.name} takes ${this.damage} damage from ${this.charSource.name}${source}.`
     }
 }
 

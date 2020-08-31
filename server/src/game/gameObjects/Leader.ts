@@ -62,23 +62,21 @@ abstract class Leader extends Character {
     }
   }
 
-  takeDamage(damage: number): void {
-    if (damage > 0) {
-      this.owner.currentHealth -= damage
-      this.update()
-      console.log(`${this.owner.name} takes ${damage} damage`)
-      console.log(`${this.owner.name} now has ${this.health} health`)
-    }
+  takeDamage(damage: number): number {
+    this.owner.currentHealth -= damage
+    this.update()
+    return damage
+    // console.log(`${this.owner.name} takes ${damage} damage`)
+    // console.log(`${this.owner.name} now has ${this.health} health`)
   }
 
-  receiveHealing(rawHealing: number): void {
-    if (rawHealing > 0) {
-      const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
-      this.owner.currentHealth += healing
-      this.update()
-      console.log(`${this.owner.name} receives ${healing} healing`)
-      console.log(`${this.owner.name} now has ${this.health} health`)
-    }
+  receiveHealing(rawHealing: number): number {
+    const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+    this.owner.currentHealth += healing
+    this.update()
+    return healing
+    // console.log(`${this.owner.name} receives ${healing} healing`)
+    // console.log(`${this.owner.name} now has ${this.health} health`)
   }
 
   missingHealth(): number {
@@ -105,7 +103,7 @@ abstract class Leader extends Character {
       return this.rawAttack
     }
   }
-  
+
   baseHealth(): number {
     if (this.inPlay()) {
       return this.owner.currentHealth
@@ -127,7 +125,7 @@ abstract class Leader extends Character {
   }
 
   setData(dataObj: GameObjectData): void {
-    this.toggleAttack(dataObj)    
+    this.toggleAttack(dataObj)
     Object.assign(this, dataObj)
   }
 

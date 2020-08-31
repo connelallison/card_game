@@ -13,8 +13,8 @@ class DeathEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        this.log = `${this.controller.name}'s ${this.died.name} is destroyed.`
     }
 }
 

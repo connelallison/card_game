@@ -1,8 +1,8 @@
-import ContainerPhase from './ContainerPhase'
+import GamePhase from './GamePhase'
 import GameObject from '../gameObjects/GameObject'
 GameObject // forces GameObject to load in properly
 
-class Game extends ContainerPhase {
+class Game extends GamePhase {
   event: EventEmitter
   botPlayer1: boolean
   botPlayer2: boolean
@@ -17,7 +17,6 @@ class Game extends ContainerPhase {
   player2socketID: string
   player1: GamePlayer
   player2: GamePlayer
-  // phases: PhaseManager
   targetRequirements: { [index: string]: TargetRequirementFactory }
   actions: { [index: string]: ActionOperation }
   effectOps: { [index: string]: EffectOperation }
@@ -31,6 +30,7 @@ class Game extends ContainerPhase {
   children: Turn[]
   queuedPhases: Turn[]
   turnNumber: number
+  unreportedEvents: GameEvent[]
   winner: string
 
   constructor(player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
@@ -54,7 +54,8 @@ class Game extends ContainerPhase {
     this.ended = false
     this.activeChild = null
     this.turnNumber = 0
-    // this.children = []
+    this.queuedPhases = []
+    this.unreportedEvents = []
     this.winner
   }
 
@@ -63,7 +64,6 @@ class Game extends ContainerPhase {
   }
 
   init() {
-    // this.phases = new PhaseManager(this)
     this.targetRequirements = TargetRequirements
     this.actions = ActionOperations
     this.effectOps = EffectOperations
@@ -77,26 +77,25 @@ class Game extends ContainerPhase {
 
   announceGameState() {
     if (!this.ended) {
-      // console.log(serverEvent);
-      let player1gameState
-      let player2gameState
+      const player1report: any = {}
+      const player2report: any = {}
       if (this.player1.socketID) {
-        player1gameState = this.prepareGameState(this.player1)
+        player1report.gameState = this.prepareGameState(this.player1)
+        player1report.eventsReport = this.prepareEventsReport(this.player1)
       }
       if (this.player2.socketID) {
-        player2gameState = this.prepareGameState(this.player2)
+        player2report.gameState = this.prepareGameState(this.player2)
+        player2report.eventsReport = this.prepareEventsReport(this.player2)
       }
-      // console.log(gameState);
-      // console.log(`game: newGameStatus:${this.socketID}`);
       if (this.player1.socketID) {
-        serverEvent.emit(`newGameStatus:${this.player1.socketID}`, player1gameState)
+        serverEvent.emit(`newGameStatus:${this.player1.socketID}`, player1report)
       }
       if (this.player2.socketID) {
-        serverEvent.emit(`newGameStatus:${this.player2.socketID}`, player2gameState)
+        serverEvent.emit(`newGameStatus:${this.player2.socketID}`, player2report)
       }
-      // if (!this.player1.socketID && !this.player2.socketID) {
-      //   serverEvent.emit("newGameStatus", gameState);
-      // }
+      this.unreportedEvents = []
+    } else {
+      // console.log('game ended - gamestate not being announced')
     }
   }
 
@@ -131,6 +130,9 @@ class Game extends ContainerPhase {
     return gameState
   }
 
+  prepareEventsReport(player: GamePlayer) {
+    return this.unreportedEvents.map(event => event.log)
+  }
 
   announceNewTurn() {
     if (this.player1.socketID) {
@@ -166,12 +168,12 @@ class Game extends ContainerPhase {
       // technique in play being used
       if (!selected.targeted || this.permissions.canTarget(selected, target)) {
         const targets = !selected.targeted ? [] : [target] // includes target if technique is targeted
-        const actionEvent = new ActionEvent(this, {
+        const useEvent = new UseEvent(this, {
           player: selected.owner,
           card: selected,
           targets,
         })
-        this.startSequence('UsePhase', actionEvent)
+        this.startSequence('UsePhase', useEvent)
       } 
     } else if (selected.zone === 'hand' && selected.canBePlayed()) {
       // card in hand being played
@@ -210,8 +212,8 @@ class Game extends ContainerPhase {
     } else {
       this.player2.bot = false
     }
-    this.player2.increaseIncome(1)
-    this.player2.refillMoney()
+    // this.player2.increaseIncome(1)
+    // this.player2.refillMoney()
     const player1deck = new Decks[this.player1deckID](this, this.player1) as Deck
     const player2deck = new Decks[this.player2deckID](this, this.player2) as Deck
     player1deck.leader.putIntoPlay()
@@ -275,9 +277,10 @@ class Game extends ContainerPhase {
     }
   }
 
-  cacheEvent(event: GameEvent, type: string): void {
-    this.eventCache[type].push(event)
-      this.eventCache.all.push(event)
+  cacheEvent(event: GameEvent, type: EventTypeString): void {
+    (this.eventCache[type] as GameEvent[]).push(event)
+    this.eventCache.all.push(event)
+    this.unreportedEvents.push(event)
   }
 
   firstTurn(): Turn {
@@ -327,12 +330,12 @@ class Game extends ContainerPhase {
     } else {
       throw new Error('endGame() has been called but neither player is dead')
     }
-    console.log('The game is over. The result is: ' + this.winner)
     this.announceGameState()
     this.ended = true
     this.removeListeners()
-    // console.log(this.eventCache.all)
-    // console.log(this.children)
+    // const logs = this.eventCache.all.map(event => event.log)
+    // logs.forEach(log => console.log(log))
+    console.log('The game is over. The result is: ' + this.winner)
   }
 }
 
@@ -361,9 +364,10 @@ import BoardSlot from '../gameObjects/BoardSlot'
 import Follower from '../gameObjects/Follower'
 import Sequence from './Sequence'
 import AttackEvent from '../gameEvents/AttackEvent'
-import ActionEvent from '../gameEvents/ActionEvent'
 import GameEvent from '../gameEvents/GameEvent'
 import Phases from '../dictionaries/Phases'
 import PlayEvent from '../gameEvents/PlayEvent'
 import TestBot from '../gameTests/TestBot'
+import UseEvent from '../gameEvents/UseEvent'
+import EventTypeString from '../stringTypes/EventTypeString'
 

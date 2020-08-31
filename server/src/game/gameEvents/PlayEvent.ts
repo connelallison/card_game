@@ -16,8 +16,10 @@ class PlayEvent extends GameEvent {
         Object.assign(this, object)
     }
 
-    provideReport() {
-
+    generateLog() {
+        const slot = this.slot ? ` in slot ${this.slot.index() + 1}` : ''
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
+        this.log = `${this.player.name} plays ${this.card.name}${slot}${targets}.`
     }
 }
 

@@ -15,23 +15,44 @@ abstract class AuraEnchantment extends Enchantment {
     subtype: 'Aura'
     priority: 1 | 2 | 3
     effects: EffectFunction[]
-    targetDomain: () => any[]
-    targetRequirements: TargetRequirement[]
+    targetDomain: () => GameObject[]
+    targetRequirements: TargetRequirementObject[]
     emit: any
 
-    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ActiveRequirementObject[], effectObjs: EffectFunctionObject[], targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[] = [], priority: 1 | 2 | 3) {
-        super(game, owner, id, name, 'Aura', activeZones, activeTypes, activeRequirements)
+    constructor(
+        game: Game,
+        owner: GameObject,
+        id: string,
+        name: string,
+        activeZones: ZoneString[],
+        activeTypes: ObjectTypeString[],
+        activeRequirements: ActiveRequirementObject[],
+        effectObjs: EffectFunctionObject[],
+        targetDomain: TargetsDomainString | TargetsDomainString[],
+        targetRequirements: TargetRequirementObject[] = [],
+        priority: 1 | 2 | 3
+    ) {
+        super(
+            game,
+            owner,
+            id,
+            name,
+            'Aura',
+            activeZones,
+            activeTypes,
+            activeRequirements
+        )
         this.priority = priority
         this.effects = this.wrappedEffects(effectObjs)
-        this.targetDomain = TargetDomains(this, targetDomain)
-        this.targetRequirements = targetRequirements ? targetRequirements.map(reqObj => this.wrapTargetRequirement(reqObj)) : null
+        this.targetDomain = () => this.targetDomains(targetDomain)
+        this.targetRequirements = targetRequirements 
         this.emit = (() => this.auraEmit())
     }
 
     active(): boolean {
-        const active = this.activeZones.includes(this.owner.zone) 
-                      && this.activeTypes.includes(this.owner.type) 
-                      && this.activeRequirements.every(requirement => requirement())
+        const active = this.activeZones.includes(this.owner.zone)
+            && this.activeTypes.includes(this.owner.type)
+            && this.activeRequirements.every(requirement => this.activeRequirement(requirement))
         if (!this.previousActive && active) {
             this.game.event.on(`auraEmit${this.priority}`, this.emit)
         } else if (this.previousActive && !active) {
@@ -44,7 +65,7 @@ abstract class AuraEnchantment extends Enchantment {
     auraEmit(): void {
         const targets = this.targetDomain()
         targets.forEach(target => {
-            if (this.targetRequirements.every(requirement => requirement(target))){
+            if (this.targetRequirements.every(requirement => this.targetRequirement(target, requirement))) {
                 this.effects.forEach(effect => target.auraEffects.push(effect))
             }
         })

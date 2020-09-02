@@ -17,11 +17,6 @@ class Game extends GamePhase {
   player2socketID: string
   player1: GamePlayer
   player2: GamePlayer
-  targetRequirements: { [index: string]: TargetRequirementFactory }
-  actions: { [index: string]: ActionOperation }
-  effectOps: { [index: string]: EffectOperation }
-  permissions: Permissions
-  utils: Utils
   inPlay: PersistentCard[]
   player1deckID: string
   player2deckID: string
@@ -64,11 +59,6 @@ class Game extends GamePhase {
   }
 
   init() {
-    this.targetRequirements = TargetRequirements
-    this.actions = ActionOperations
-    this.effectOps = EffectOperations
-    this.permissions = new Permissions(this)
-    this.utils = new Utils(this)
     this.initPlayers()
     this.initListeners()
     this.mulliganPhase()
@@ -156,7 +146,7 @@ class Game extends GamePhase {
     if (selected instanceof Character && selected.inPlay()) {
       // character in play attacking
       if (target instanceof Character && target.inPlay()) {
-        if (this.permissions.canAttack(selected, target)) {
+        if (Permissions.canAttack(selected, target)) {
           const attackEvent = new AttackEvent(this, {
             attacker: selected,
             defender: target,
@@ -166,7 +156,7 @@ class Game extends GamePhase {
       }
     } else if ((selected instanceof TechniqueCreation || selected instanceof LeaderTechnique) && selected.inPlay() && selected.canBeUsed()) {
       // technique in play being used
-      if (!selected.targeted || this.permissions.canTarget(selected, target)) {
+      if (!selected.targeted || Permissions.canTarget(selected, target)) {
         const targets = !selected.targeted ? [] : [target] // includes target if technique is targeted
         const useEvent = new UseEvent(this, {
           controller: selected.owner,
@@ -348,8 +338,7 @@ import Decks from '../dictionaries/Decks'
 import Turn from './Turn'
 import ActionOperations from '../dictionaries/ActionOperations'
 import EffectOperations from '../dictionaries/EffectOperations'
-import Permissions from '../gameSystems/Permissions'
-import Utils from '../gameSystems/Utils'
+import Permissions from '../dictionaries/Permissions'
 import serverEvent from '../../ServerEvent'
 import Card from '../gameObjects/Card'
 import Character from '../gameObjects/Character'

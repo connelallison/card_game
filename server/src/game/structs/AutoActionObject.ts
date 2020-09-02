@@ -12,7 +12,7 @@ interface AutoActionObject {
     operation: ActionOperationString,
     values?: ValuesObject,
     stored?: StoredValues,
-    targets?: TargetsDomainString | TargetsDomainString[] | DynamicTargetObject | DynamicTargetsObject,
+    targets?: DynamicTargetObject | DynamicTargetsObject,
 }
 
 export default AutoActionObject

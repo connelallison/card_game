@@ -1,5 +1,5 @@
 import EventPhase from "./EventPhase";
-import ActionEvent from "../gameEvents/ActionEvent";
+import ActionActionEvent from "../gameEvents/ActionActionEvent";
 import TechniqueCreation from "../gameObjects/TechniqueCreation";
 import TriggerTypeString from "../stringTypes/TriggerTypeString";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
@@ -24,7 +24,7 @@ class TriggerPhase extends EventPhase {
             controller: event.controller,
             objectSource: event.objectSource,
             targets: [],
-            actions: event.actions,
+            action: event.actions,
             event: event.event,
         })
         this.startChild(new Phases.TriggerActionPhase(this, triggerActionEvent))

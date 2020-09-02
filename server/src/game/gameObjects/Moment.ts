@@ -7,14 +7,52 @@ import TargetRequirementObject from '../structs/TargetRequirementObject'
 import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 import ActionObject from '../structs/ActionObject'
 import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
+import CardIDString from '../stringTypes/CardIDString'
+import ActionActionObject from '../structs/ActionActionObject'
+import EventActionObject from '../structs/EventActionObject'
 
 abstract class Moment extends Card {
   zone: MomentZoneString
   type: 'Moment'
   subtype: 'Event' | 'Action'
 
-  constructor (game: Game, owner: GamePlayer, zone: MomentZoneString, id: string, name: string, subtype: 'Event' | 'Action', collectable: boolean, rawCost: number, staticCardText: string, actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
-    super(game, owner, zone, id, name, 'Moment', subtype, collectable, rawCost, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
+  constructor(
+    game: Game,
+    owner: GamePlayer,
+    zone: MomentZoneString,
+    id: string,
+    name: string,
+    subtype: 'Event' | 'Action',
+    collectable: boolean,
+    rawCost: number,
+    staticCardText: string,
+    actions: ActionActionObject[][],
+    events: EventActionObject[][],
+    playRequirements: ActiveRequirementObject[],
+    enchantments: EnchantmentIDString[],
+    targeted: boolean,
+    targetDomain: TargetsDomainString | TargetsDomainString[],
+    targetRequirements: TargetRequirementObject[]
+  ) {
+    super(
+      game,
+      owner,
+      zone,
+      id,
+      name,
+      'Moment',
+      subtype,
+      collectable,
+      rawCost,
+      staticCardText,
+      actions,
+      events,
+      playRequirements,
+      enchantments,
+      targeted,
+      targetDomain,
+      targetRequirements
+    )
   }
 
   moveZone(destination: MomentZoneString): void {

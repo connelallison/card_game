@@ -1,7 +1,8 @@
 import GameEvent from "../gameEvents/GameEvent";
+import GameObject from "../gameObjects/GameObject";
 
 interface EventMod {
-    (event: GameEvent): void
+    (source: GameObject, event: GameEvent): void
 }
 
 export default EventMod

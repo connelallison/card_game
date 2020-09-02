@@ -14,7 +14,7 @@ class Fireburst extends ActionMoment {
       true,
       1, 
       'Deal 4 damage to a follower with 4 or more attack.',
-      [
+      [[
         {
           actionType: 'manualAction',
           operation: "damage",
@@ -22,7 +22,8 @@ class Fireburst extends ActionMoment {
             damage: 4,
           },
         }  
-      ],
+      ]],
+      [],
       [],
       [],
       true, 

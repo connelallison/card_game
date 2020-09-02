@@ -14,7 +14,7 @@ class Consume extends EventMoment {
       true,
       3,
       'Deal 3 damage to the weakest enemy follower and draw a card.',
-      [
+      [[
         {
           actionType: 'autoAction',
           operation: 'damage',
@@ -37,7 +37,7 @@ class Consume extends EventMoment {
           actionType: 'autoAction',
           operation: 'draw',
         },
-      ],
+      ]],
       [{
         playRequirement: 'minEnemyFollowers',
         values: {

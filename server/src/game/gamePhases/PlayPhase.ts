@@ -2,10 +2,13 @@ import Sequence from "./Sequence";
 import PlayEvent from "../gameEvents/PlayEvent";
 import EventPhase from "./EventPhase";
 import PersistentCard from "../gameObjects/PersistentCard";
-import ActionEvent from "../gameEvents/ActionEvent";
+import ActionActionEvent from "../gameEvents/ActionActionEvent";
 import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
 import Phases from "../dictionaries/Phases";
 import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
+import EventActionEvent from "../gameEvents/EventActionEvent";
+import Moment from "../gameObjects/Moment";
+import TechniqueCreation from "../gameObjects/TechniqueCreation";
 
 class PlayPhase extends EventPhase {
     parent: Sequence
@@ -23,6 +26,8 @@ class PlayPhase extends EventPhase {
         this.emit('onPlay', event)
         this.enterPlayPhase()
         this.actionPhase()
+        this.eventActionPhase()
+        if (event.card instanceof TechniqueCreation) event.card.loseCharge() 
         this.emit('afterPlay', event)
         this.queueSteps()
         this.end()
@@ -58,13 +63,29 @@ class PlayPhase extends EventPhase {
 
     actionPhase(): void {
         const event = this.event
-        if (event.card.actions.length > 0) {
-            const actionEvent = new ActionEvent(this.game(), {
+        event.card.actions.forEach(action => {
+            const actionEvent = new ActionActionEvent(this.game(), {
                 controller: event.player,
                 objectSource: event.card,
                 targets: event.targets,
+                action,
             })
-            this.startChild(new Phases.ActionPhase(this, actionEvent))
+            this.startChild(new Phases.ActionActionPhase(this, actionEvent))
+        })
+    }
+
+    eventActionPhase(): void {
+        const event = this.event
+        if (event.card instanceof Moment) {
+            event.card.events.forEach(eventAction => {
+                const eventActionEvent = new EventActionEvent(this.game(), {
+                    controller: event.player,
+                    objectSource: event.card,
+                    targets: event.targets,
+                    eventAction,
+                })
+                this.startChild(new Phases.EventActionPhase(this, eventActionEvent))
+            })
         }
     }
 }

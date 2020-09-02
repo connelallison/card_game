@@ -4,12 +4,13 @@ import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import BoardSlot from "../gameObjects/BoardSlot";
+import GameObject from "../gameObjects/GameObject";
 
 class PlayEvent extends GameEvent {
     player: GamePlayer
     card: Card
     slot?: BoardSlot
-    targets: Card[]
+    targets: GameObject[]
 
     constructor(game: Game, object: PlayEventObject) {
         super(game) 

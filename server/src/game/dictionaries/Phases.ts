@@ -1,10 +1,11 @@
-import ActionPhase from "../gamePhases/ActionPhase";
+import ActionActionPhase from "../gamePhases/ActionActionPhase";
 import AttackPhase from "../gamePhases/AttackPhase";
 import AuraUpdatePhase from "../gamePhases/AuraUpdatePhase";
 import DamageSinglePhase from "../gamePhases/DamageSinglePhase";
 import DeathPhase from "../gamePhases/DeathPhase";
 import EndOfTurnPhase from "../gamePhases/EndOfTurnPhase";
 import EnterPlayPhase from "../gamePhases/EnterPlayPhase";
+import EventActionPhase from "../gamePhases/EventActionPhase";
 import HealMultiplePhase from "../gamePhases/HealMultiplePhase";
 import HealSinglePhase from "../gamePhases/HealSinglePhase";
 import PlayPhase from "../gamePhases/PlayPhase";
@@ -18,13 +19,14 @@ import TriggerPhase from "../gamePhases/TriggerPhase";
 import TriggerActionPhase from "../gamePhases/TriggerActionPhase";
 
 const Phases = {
-    ActionPhase,
+    ActionActionPhase,
     AttackPhase,
     AuraUpdatePhase,
     DamageSinglePhase,
     DeathPhase,
     EndOfTurnPhase,
     EnterPlayPhase,
+    EventActionPhase,
     HealMultiplePhase,
     HealSinglePhase,
     PlayPhase,

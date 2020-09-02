@@ -3,6 +3,7 @@ import Character from "../gameObjects/Character"
 import Follower from "../gameObjects/Follower"
 import PlayEvent from "../gameEvents/PlayEvent"
 import AttackEvent from "../gameEvents/AttackEvent"
+import Permissions from "../dictionaries/Permissions"
 
 const TestBot = async (game: Game) => {
     if (!game.ended && game.activeChild.activePlayer.bot) {
@@ -26,7 +27,7 @@ const TestBot = async (game: Game) => {
         for (const follower of readyFollowers) {
             const targets = (follower.owner.opponent.boardFollowers() as Character[]).concat(follower.owner.opponent.leaderZone as Character[])
             for (const target of targets) {
-                if (game.permissions.canAttack(follower, target)) {
+                if (Permissions.canAttack(follower, target)) {
                     await game.sleep(1000)
                     const attackEvent = new AttackEvent(game, {
                         attacker: follower,

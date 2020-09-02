@@ -17,13 +17,11 @@ const DynamicEventReducers = {
     //     // const filtered = targetsObj.requirements.reduce((filtered, targetFilter) => (filtered.filter(target => targetFilter(object, target))), targets)
     //     return Reducers.min(targets(), map)
     // },
-    first: (events: DynamicEvents) => (): GameEvent[] => {
-        const array = events()
-        return array.length === 0 ? array : [array[0]]
+    first: (events: GameEvent[]) => {
+        return events.length === 0 ? events : [events[0]]
     },
-    last: (events: DynamicEvents) => (): GameEvent[] => {
-        const array = events()
-        return array.length === 0 ? array : [array[array.length - 1]]
+    last: (events: GameEvent[]) => {
+        return events.length === 0 ? events : [events[events.length - 1]]
     },
 }
 

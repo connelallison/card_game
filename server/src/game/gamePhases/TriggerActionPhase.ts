@@ -1,5 +1,5 @@
 import EventPhase from "./EventPhase";
-import TriggerActionEvent from "../gameEvents/TriggerActionEvent";
+import TriggerActionEvent from "../gameEvents/TriggerActionEvent"
 
 class TriggerActionPhase extends EventPhase {
     parent: EventPhase
@@ -13,8 +13,8 @@ class TriggerActionPhase extends EventPhase {
         const event = this.event
         event.generateLog()
         this.cacheEvent(event, 'action')
-        event.actions.forEach(action => {
-            action(event)
+        event.action.forEach(action => {
+            event.objectSource.triggerActionFunction(event, action)
         })
         this.queueSteps()
         this.end()

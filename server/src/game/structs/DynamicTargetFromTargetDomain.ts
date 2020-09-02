@@ -3,7 +3,7 @@ import TargetDomainString from "../stringTypes/TargetDomainString";
 interface DynamicTargetFromTargetDomain {
     valueType: 'target',
     from: 'targetDomain',
-    targetDomain: TargetDomainString | TargetDomainString[],
+    targetDomain: TargetDomainString,
 }
 
 export default DynamicTargetFromTargetDomain

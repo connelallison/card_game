@@ -24,7 +24,11 @@ class HolyBookTrigger extends TriggerEnchantment {
                     values: {
                         healing: 1,
                     },
-                    targets: ['friendlyBoard', 'friendlyLeader']
+                    targets: {
+                        valueType: 'targets',
+                        from: 'targetDomain',
+                        targetDomain: ['friendlyBoard', 'friendlyLeader']
+                    }
                 }],
             }],
             false,

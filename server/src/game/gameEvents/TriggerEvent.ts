@@ -6,12 +6,13 @@ import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import Card from "../gameObjects/Card";
 import TriggerEventObject from "./TriggerEventObject";
 import TriggerAction from "../functionTypes/TriggerAction";
+import TriggerActionObject from "../structs/TriggerActionObject";
 
 class TriggerEvent extends GameEvent {
     controller: GamePlayer
     event: GameEvent
     triggerType: TriggerTypeString
-    actions: TriggerAction[]
+    actions: TriggerActionObject[]
     objectSource: TriggerEnchantment
     cardSource: Card | GamePlayer
 

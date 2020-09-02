@@ -5,28 +5,43 @@ abstract class Enchantment extends GameObject {
     type: 'Enchantment'
     activeZones: ZoneString[]
     activeTypes: ObjectTypeString[]
-    activeRequirements: ActiveRequirement[]
+    activeRequirements: ActiveRequirementObject[]
     previousActive: boolean
 
-    constructor(game: Game, owner: GameObject, id: string, name: string, subtype: ObjectSubtypeString, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ActiveRequirementObject[]) {
-        super(game, id, name, 'Enchantment', subtype)
+    constructor(
+        game: Game,
+        owner: GameObject,
+        id: string,
+        name: string,
+        subtype: ObjectSubtypeString,
+        activeZones: ZoneString[],
+        activeTypes: ObjectTypeString[],
+        activeRequirements: ActiveRequirementObject[]
+    ) {
+        super(
+            game,
+            id,
+            name,
+            'Enchantment',
+            subtype
+        )
         this.owner = owner
         this.zone = this.owner.zone
         this.activeZones = activeZones
         this.activeTypes = activeTypes
-        this.activeRequirements = activeRequirements.map(reqObj => this.wrapActiveRequirement(reqObj))
+        this.activeRequirements = activeRequirements
         this.previousActive = false
     }
 
     wrappedEffects(effectObjs: EffectFunctionObject[]): EffectFunction[] {
-        return effectObjs.map(effectObj => (data: GameObjectData): void => (EffectOperations[effectObj.operation] as EffectOperation)(data, this.dynamicValue(effectObj.value) as DynamicNumber | DynamicBoolean))
+        return effectObjs.map(effectObj => (data: GameObjectData): void => (EffectOperations[effectObj.operation] as EffectOperation)(data, this.dynamicValue(effectObj.value) as number | boolean))
     }
-    
+
     active(): boolean {
         this.zone = this.owner.zone
-        const active = this.activeZones.includes(this.owner.zone) 
-                      && this.activeTypes.includes(this.owner.type) 
-                      && this.activeRequirements.every(requirement => requirement())
+        const active = this.activeZones.includes(this.owner.zone)
+            && this.activeTypes.includes(this.owner.type)
+            && this.activeRequirements.every(requirement => this.activeRequirement(requirement))
         this.previousActive = active
         this.updateEnchantments()
         return active

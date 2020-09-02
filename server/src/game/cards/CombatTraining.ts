@@ -17,6 +17,7 @@ class CombatTraining extends PermanentPassive {
             'Passive: Your Knights have +1 Attack.',
             [],
             [],
+            [],
             ['CombatTrainingAura'],
             false,
             null,

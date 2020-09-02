@@ -2,6 +2,7 @@ import EventPhase from "./EventPhase";
 import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
 import Follower from "../gameObjects/Follower";
 import Phases from "../dictionaries/Phases";
+import EventActionEvent from "../gameEvents/EventActionEvent";
 
 class EnterPlayPhase extends EventPhase {
     parent: EventPhase
@@ -17,6 +18,7 @@ class EnterPlayPhase extends EventPhase {
         event.generateLog()
         this.cacheEvent(event, 'enterPlay')
         this.startChild(new Phases.AuraUpdatePhase(this))
+        this.eventActionPhase()
         this.emit('onEnterPlay', event)
         this.queueSteps()
         this.end()
@@ -31,6 +33,18 @@ class EnterPlayPhase extends EventPhase {
         } else {
             event.card.putIntoPlay()
         }
+    }
+
+    eventActionPhase(): void {
+        const event = this.event
+        event.card.events.forEach(eventAction => {
+            const eventActionEvent = new EventActionEvent(this.game(), {
+                controller: event.controller,
+                objectSource: event.card,
+                eventAction,
+            })
+            this.startChild(new Phases.EventActionPhase(this, eventActionEvent))
+        })
     }
 }
 

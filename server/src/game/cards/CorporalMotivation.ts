@@ -15,7 +15,7 @@ class CorporalMotivation extends TechniqueCreation {
       1,
       3,
       'Deal 1 damage to a follower, then give it +3 Attack.',
-      [
+      [[
         {
           actionType: 'manualAction',
           operation: "damage",
@@ -30,7 +30,8 @@ class CorporalMotivation extends TechniqueCreation {
             attack: 3,
           }
         }
-      ],
+      ]],
+      [],
       [],
       [],
       true,

@@ -1,6 +1,7 @@
+import GameObject from "../gameObjects/GameObject";
 
 interface ActiveRequirement {
-    (): boolean
+    (source: GameObject): boolean
 }
 
 export default ActiveRequirement

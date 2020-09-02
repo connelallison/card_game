@@ -14,7 +14,7 @@ class DeathPhase extends EventPhase {
         const inPlay = this.game().inPlay
         const deathQueue = this.currentSequence().deathQueue
         inPlay.slice(0).forEach((card: DestroyableCard) => {
-            if (card.health <= 0) {
+            if (card.isDestroyed()) {
                 if (card instanceof Leader) {
                     // console.log('leader is dying')
                     inPlay.splice(inPlay.indexOf(card), 1)

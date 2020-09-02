@@ -3,16 +3,17 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
 import CreationZoneString from "../stringTypes/CreationZoneString";
-import TargetDomainString from "../stringTypes/TargetDomainString";
-import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetsDomainString from "../stringTypes/TargetsDomainString";
+import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
-import PlayRequirementObject from "../structs/PlayRequirementObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
 
 abstract class WorkCreation extends Creation {
     subtype: 'Work'
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-        super(game, owner, zone, id, name, 'Work', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
+        super(game, owner, zone, id, name, 'Work', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
         
         this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
     }

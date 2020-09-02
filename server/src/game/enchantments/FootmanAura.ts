@@ -1,12 +1,9 @@
 import Game from "../gamePhases/Game"
-import Card from "../gameObjects/Card"
-import Follower from "../gameObjects/Follower"
 import AuraEnchantment from "../gameObjects/AuraEnchantment"
+import GameObject from "../gameObjects/GameObject"
 
 class FootmanAura extends AuraEnchantment {
-    owner: Follower
-
-    constructor(game: Game, owner: Card) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,
@@ -14,7 +11,7 @@ class FootmanAura extends AuraEnchantment {
             'Footman Aura',
             ['board'],
             ['Follower'],
-            [(enchantment) => (enchantment.controller().myTurn())],
+            [{ playRequirement: 'isMyTurn' }],
             [{
                 operation: 'incrementAttack',
                 value: 2,

@@ -137,6 +137,10 @@ class GamePlayer extends GameObject {
     return this
   }
 
+  cardOwner(): GamePlayer {
+    return this
+  }
+
   baseMoney(): number {
     return this.rawMoney - this.currentDebt
   }

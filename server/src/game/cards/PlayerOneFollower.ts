@@ -18,6 +18,7 @@ class PlayerOneFollower extends NamelessFollower {
       '', 
       [], 
       [],
+      [],
       false, 
       null, 
       null

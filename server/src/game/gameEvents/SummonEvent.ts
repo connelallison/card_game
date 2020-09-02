@@ -5,10 +5,11 @@ import GameObject from "../gameObjects/GameObject";
 import Character from "../gameObjects/Character";
 import SummonEventObject from "./SummonEventObject";
 import BoardSlot from "../gameObjects/BoardSlot";
+import CardIDString from "../stringTypes/CardIDString";
 
 class SummonEvent extends GameEvent {
     controller: GamePlayer
-    cardID: string 
+    cardID: CardIDString 
     objectSource: GameObject
     charSource: Character
     slot?: BoardSlot

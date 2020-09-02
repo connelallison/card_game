@@ -14,6 +14,8 @@ import StartOfTurnPhase from "../gamePhases/StartOfTurnPhase";
 import SummonPhase from "../gamePhases/SummonPhase";
 import UsePhase from "../gamePhases/UsePhase";
 import SpendMoneyPhase from "../gamePhases/SpendMoneyPhase";
+import TriggerPhase from "../gamePhases/TriggerPhase";
+import TriggerActionPhase from "../gamePhases/TriggerActionPhase";
 
 const Phases = {
     ActionPhase,
@@ -32,6 +34,8 @@ const Phases = {
     SummonPhase,
     UsePhase,
     SpendMoneyPhase,
+    TriggerPhase,
+    TriggerActionPhase,
 }
 
 export default Phases

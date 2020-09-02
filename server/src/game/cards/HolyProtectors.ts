@@ -17,11 +17,11 @@ class HolyProtectors extends PermanentPassive {
             'Passive: Your leader gains (temporary) Health equal to the total Health of your followers.',
             [],
             [],
+            ['HolyProtectorsAura'],
             false,
             null,
             null,
         )
-        this.addEnchantment(new Enchantments.HolyProtectorsAura(this.game, this))
     }
 }
 

@@ -1,7 +1,7 @@
 import GameObject from "../gameObjects/GameObject"
-import TargetDomainString from "../stringTypes/TargetDomainString"
+import TargetsDomainString from "../stringTypes/TargetsDomainString"
 
-const TargetDomains = (object: GameObject, zones: TargetDomainString | TargetDomainString[]) => {
+const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsDomainString[]) => {
     return () => {
         const targetDomain = []
         if (typeof zones === 'string') zones = [zones]
@@ -39,12 +39,6 @@ const TargetDomains = (object: GameObject, zones: TargetDomainString | TargetDom
                     break
                 case 'friendlyCreations':
                     targetDomain.push(...object.controller().creationZone)
-                    break
-                case 'deathEvents':
-                    targetDomain.push(...object.game.eventCache.death)
-                    break
-                case 'enterPlayEvents':
-                    targetDomain.push(...object.game.eventCache.enterPlay)
                     break
                 default:
                     break

@@ -183,7 +183,7 @@ class GameContainer extends Component {
 
   handleChooseSelectedSlotNoTarget(object) {
     // console.log('selectedSlot chosen (no target required)')
-    console.log('selectedSlot: ', object)
+    // console.log('selectedSlot: ', object)
     this.announceMove(this.state.selected, null, object)
     this.setState({
       selected: null,

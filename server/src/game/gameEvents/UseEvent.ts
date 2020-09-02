@@ -5,8 +5,8 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import ActionEventObject from "./ActionEventObject";
 
 class UseEvent extends GameEvent {
-    player: GamePlayer
-    card: Card
+    controller: GamePlayer
+    objectSource: Card
     targets: Card[]
 
     constructor(game: Game, object: ActionEventObject) {
@@ -16,7 +16,7 @@ class UseEvent extends GameEvent {
 
     generateLog() {
         const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
-        this.log = `${this.player.name} uses ${this.card.name}${targets}.`
+        this.log = `${this.controller.name} uses ${this.objectSource.name}${targets}.`
     }
 }
 

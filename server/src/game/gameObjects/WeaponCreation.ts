@@ -3,19 +3,20 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import ObjectReport from "../structs/ObjectReport";
 import CreationZoneString from "../stringTypes/CreationZoneString";
-import TargetDomainString from "../stringTypes/TargetDomainString";
+import TargetsDomainString from "../stringTypes/TargetsDomainString";
 import GameObjectData from "../structs/GameObjectData";
-import ActionFunctionObject from "../structs/ActionFunctionObject";
+import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
-import PlayRequirementObject from "../structs/PlayRequirementObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
 
 abstract class WeaponCreation extends Creation {
     subtype: 'Weapon'
     rawAttack: number
     attack: number
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-        super(game, owner, zone, id, name, 'Weapon', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
+        super(game, owner, zone, id, name, 'Weapon', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
         this.rawAttack = rawAttack
         this.attack = this.rawAttack
 

@@ -18,11 +18,11 @@ class KnightAcademy extends WonderCreation {
             'After you draw a follower, summon a 2/2 Knight.',
             [],
             [],
+            ['KnightAcademyTrigger'],
             false,
             null,
             null
         )
-        this.addEnchantment(new Enchantments.KnightAcademyTrigger(this.game, this))
     }
 }
 

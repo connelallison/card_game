@@ -4,7 +4,7 @@ import EffectOperationString from "../stringTypes/EffectOperationString";
 
 interface EffectFunctionObject {
     operation: EffectOperationString,
-    value: boolean | number | DynamicNumberObject | CompoundDynamicNumberObject,
+    value: boolean | number | DynamicNumberObject,
   }
 
 export default EffectFunctionObject

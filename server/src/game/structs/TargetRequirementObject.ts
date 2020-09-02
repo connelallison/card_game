@@ -1,11 +1,9 @@
 import TargetRequirementString from "../stringTypes/TargetRequirementString";
-import DynamicNumberObject from "./DynamicNumberObject";
-import DynamicTargetObject from "./DynamicTargetObject";
+import ValuesObject from "./ValuesObject";
 
 interface TargetRequirementObject {
     targetRequirement: TargetRequirementString,
-    values?: {[index: string]: number | boolean | string | DynamicNumberObject | DynamicTargetObject},
-    targetMap?: (obj) => any,
+    values?: ValuesObject,
 }
 
 export default TargetRequirementObject

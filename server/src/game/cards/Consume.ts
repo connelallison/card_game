@@ -1,8 +1,6 @@
 import Game from '../gamePhases/Game'
 import GamePlayer from '../gameObjects/GamePlayer'
 import MomentZoneString from '../stringTypes/MomentZoneString'
-import ActionOperations from '../dictionaries/ActionOperations'
-import PlayRequirements from '../dictionaries/PlayRequirements'
 import EventMoment from '../gameObjects/EventMoment'
 
 class Consume extends EventMoment {
@@ -18,25 +16,35 @@ class Consume extends EventMoment {
       'Deal 3 damage to the weakest enemy follower and draw a card.',
       [
         {
+          actionType: 'autoAction',
           operation: 'damage',
           values: {
             damage: 3,
           },
           targets: {
             valueType: 'target',
+            from: 'targets',
             reducer: "min",
-            criterionMap: (obj) => obj.attack,
-            targetDomain: 'enemyBoard',
+            criterionMap: 'health',
+            targets: {
+              valueType: 'targets',
+              from: 'targetDomain',
+              targetDomain: 'enemyBoard',
+            },
           }
         },
-        { operation: 'draw' },
+        { 
+          actionType: 'autoAction',
+          operation: 'draw',
+        },
       ],
       [{
         playRequirement: 'minEnemyFollowers',
         values: {
           min: 1,
         }
-      }]
+      }],
+      [],
     )
   }
 }

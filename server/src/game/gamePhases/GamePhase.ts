@@ -1,3 +1,4 @@
+import GameObject from "../gameObjects/GameObject"
 import EventCache from "./EventCache"
 import GameEvent from "../gameEvents/GameEvent"
 import Game from "./Game"
@@ -6,6 +7,13 @@ import Sequence from "./Sequence"
 import EventPhase from "./EventPhase"
 import TriggerTypeString from "../stringTypes/TriggerTypeString"
 import EventTypeString from "../stringTypes/EventTypeString"
+import CardIDString from "../stringTypes/CardIDString"
+import GamePlayer from "../gameObjects/GamePlayer"
+import Cards from "../dictionaries/Cards"
+import Card from "../gameObjects/Card"
+import EnchantmentIDString from "../stringTypes/EnchantmentIDString"
+import Enchantment from "../gameObjects/Enchantment"
+import Enchantments from "../dictionaries/Enchantments"
 
 abstract class GamePhase {
     parent: GamePhase
@@ -35,6 +43,14 @@ abstract class GamePhase {
         this.activeChild = child
         this.children.push(this.activeChild)
         this.activeChild.start()
+    }
+
+    createCard(cardID: CardIDString, owner: GamePlayer): Card {
+        return new Cards[cardID](this.game(), owner, 'setAsideZone')
+    }
+
+    createEnchantment(enchantmentID: EnchantmentIDString, owner: GameObject, values?): Enchantment {
+        return new Enchantments[enchantmentID](this.game(), owner, values)
     }
 
     game(): Game {
@@ -81,6 +97,8 @@ abstract class GamePhase {
             startOfTurn: [],
             endOfTurn: [],
             spendMoney: [],
+            trigger: [],
+            triggerAction: [],
         }
     }
 }

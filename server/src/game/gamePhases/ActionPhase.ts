@@ -1,6 +1,7 @@
 import EventPhase from "./EventPhase";
 import ActionEvent from "../gameEvents/ActionEvent";
 import TechniqueCreation from "../gameObjects/TechniqueCreation";
+import Card from "../gameObjects/Card";
 
 class ActionPhase extends EventPhase {
     parent: EventPhase
@@ -12,13 +13,13 @@ class ActionPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        const actionCard = event.card
+        const actionCard = event.objectSource as Card
         this.emit('beforeAction', event)
         if (actionCard instanceof TechniqueCreation) actionCard.loseCharge() 
         event.generateLog()
         this.cacheEvent(event, 'action')
         actionCard.actions.forEach(action => {
-            action(event.targets)
+            action(event)
         })
         this.emit('afterAction', event)
         this.queueSteps()

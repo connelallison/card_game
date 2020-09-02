@@ -18,6 +18,7 @@ class KingFredTheSaintly extends Leader {
               '', 
               [], 
               [],
+              [],
               false, 
               null, 
               null,

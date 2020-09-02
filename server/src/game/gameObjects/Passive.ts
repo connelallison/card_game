@@ -4,10 +4,11 @@ import GamePlayer from "./GamePlayer";
 import ZoneString from "../stringTypes/ZoneString";
 import PassiveSubtypeString from "../stringTypes/PassiveSubtypeString";
 import PassiveZoneString from "../stringTypes/PassiveZoneString";
-import TargetDomainString from "../stringTypes/TargetDomainString";
-import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetsDomainString from "../stringTypes/TargetsDomainString";
+import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
-import PlayRequirementObject from "../structs/PlayRequirementObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
 
 abstract class Passive extends PersistentCard {
     zone: PassiveZoneString
@@ -15,8 +16,8 @@ abstract class Passive extends PersistentCard {
     inPlayZone: 'passiveZone'
     subtype: PassiveSubtypeString
 
-    constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, subtype: PassiveSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[],  targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-        super(game, owner, zone, id, name, 'Passive', subtype, collectable, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, subtype: PassiveSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
+        super(game, owner, zone, id, name, 'Passive', subtype, collectable, rawCost, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
         this.inPlayZone = 'passiveZone'
     }
 

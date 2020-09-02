@@ -4,10 +4,11 @@ import CreationSubtypeString from "../stringTypes/CreationSubtypeString";
 import CreationZoneString from "../stringTypes/CreationZoneString";
 import ObjectReport from "../structs/ObjectReport";
 import DestroyableCard from "./DestroyableCard";
-import TargetDomainString from "../stringTypes/TargetDomainString";
-import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetsDomainString from "../stringTypes/TargetsDomainString";
+import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
-import PlayRequirementObject from "../structs/PlayRequirementObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
 
 abstract class Creation extends DestroyableCard {
     zone: CreationZoneString
@@ -16,8 +17,8 @@ abstract class Creation extends DestroyableCard {
     subtype: CreationSubtypeString
     health: number
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, subtype: CreationSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-        super(game, owner, zone, id, name, 'Creation', subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, subtype: CreationSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[] = [], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
+        super(game, owner, zone, id, name, 'Creation', subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
         this.health = this.rawHealth
         this.inPlayZone = 'creationZone'
     }

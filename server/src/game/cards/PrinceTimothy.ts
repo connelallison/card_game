@@ -17,22 +17,35 @@ class PrinceTimothy extends FamousFollower {
       5,
       'Action: Give all followers in your hand +1/+1 for every Knight you control.',
       [{
+        actionType: 'autoAction',
         operation: 'buffCharacterAttackAndHealth',
         values: {
           stats: {
             valueType: 'number',
+            from: 'numbers',
             reducer: 'count',
-            requirements: [{
-              targetRequirement: 'isSpecificCardClass',
-              values: {
-                cardID: 'Knight',
+            numbers: {
+              valueType: 'numbers',
+              from: 'targets',
+              numberMap: 'count',
+              targets: {
+                valueType: 'targets',
+                from: 'targetDomain',
+                requirements: [{
+                  targetRequirement: 'isSpecificCardClass',
+                  values: {
+                    cardID: 'Knight',
+                  }
+                }],
+                targetDomain: 'friendlyBoard',
+
               }
-            }],
-            targetDomain: 'friendlyBoard',
+            }
           }
         },
         targets: {
-          valueType: 'target',
+          valueType: 'targets',
+          from: 'targetDomain',
           targetDomain: 'friendlyHand',
           requirements: [{
             targetRequirement: 'isType',
@@ -43,6 +56,7 @@ class PrinceTimothy extends FamousFollower {
           ],
         }
       }],
+      [],
       [],
       false,
       null,

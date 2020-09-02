@@ -1,8 +1,8 @@
 import EventPhase from "./EventPhase";
 import SummonEvent from "../gameEvents/SummonEvent";
-import Cards from "../dictionaries/Cards";
 import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
 import Phases from "../dictionaries/Phases";
+import PersistentCard from "../gameObjects/PersistentCard";
 
 class SummonPhase extends EventPhase {
     parent: EventPhase
@@ -15,7 +15,7 @@ class SummonPhase extends EventPhase {
     start(): void {
         const event = this.event
         const { controller, objectSource, charSource, cardID } = event
-        const card = new Cards[cardID](this.game(), controller, 'setAsideZone')
+        const card = this.createCard(cardID, controller) as PersistentCard
         controller.setAsideZone.push(card)
         if (controller.canSummon(card)) {
             event.generateLog()

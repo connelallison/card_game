@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Follower from './Follower.js'
 import BoardSlot from './BoardSlot.js'
 
 class BoardHalf extends Component {

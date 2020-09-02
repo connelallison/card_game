@@ -1,14 +1,9 @@
 import Game from "../gamePhases/Game";
-import Card from "../gameObjects/Card";
-import Follower from "../gameObjects/Follower";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import TriggerRequirements from "../dictionaries/TriggerRequirements";
-import DeathEvent from "../gameEvents/DeathEvent";
+import GameObject from "../gameObjects/GameObject";
 
 class SavageWolfTrigger extends TriggerEnchantment {
-    owner: Follower
-
-    constructor(game: Game, owner: Card) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,
@@ -26,14 +21,15 @@ class SavageWolfTrigger extends TriggerEnchantment {
                         values: {
                             type: 'Follower',
                         },
-                        eventMap: (event: DeathEvent) => event.died,
+                        targetMap: 'deathEventDestroyedTarget',
                     },
                     {
                         targetRequirement: 'isFriendly',
-                        eventMap: (event: DeathEvent) => event.died,
+                        targetMap: 'deathEventDestroyedTarget',
                     }
                 ],
                 actions: [{
+                    actionType: 'autoAction',
                     operation: 'buffCharacterAttack',
                     values: {
                         attack: 2,
@@ -41,13 +37,15 @@ class SavageWolfTrigger extends TriggerEnchantment {
                     targets: 'self',
                 },
                 {
+                    actionType: 'autoAction',
                     operation: 'buffCharacterHealth',
                     values: {
                         health: 1,
                     },
                     targets: 'self',
                 }]
-            }]
+            }],
+            false,
         )
     }
 }

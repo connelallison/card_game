@@ -20,11 +20,11 @@ class RoyalGuard extends NamelessFollower {
       'Guard', 
       [], 
       [],
+      ['Guard'],
       false, 
       null, 
       null
       )
-    this.addEnchantment(new Enchantments.Guard(this.game, this))
   }
 }
 export default RoyalGuard

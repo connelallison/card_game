@@ -1,11 +1,9 @@
 import Game from "../gamePhases/Game"
 import StaticEnchantment from "../gameObjects/StaticEnchantment"
-import Character from "../gameObjects/Character"
+import GameObject from "../gameObjects/GameObject"
 
 class AttackAndHealthBuff extends StaticEnchantment {
-    owner: Character
-
-    constructor(game: Game, owner: Character, values: { attack: number, health: number }) {
+    constructor(game: Game, owner: GameObject, values: { attack: number, health: number }) {
         super(
             game,
             owner,

@@ -1,11 +1,12 @@
 import Deck from '../gameObjects/Deck'
+import CardIDString from '../stringTypes/CardIDString'
+import OrkusTheOrkest from '../cards/OrkusTheOrkest'
 
 class OrcDeck extends Deck {
   constructor (game, owner) {
-    const deck = {
-      leader: 'OrkusTheOrkest',
-      passive: 'SingleMindedFury',
-      cards: [
+    const leader: CardIDString = 'OrkusTheOrkest'
+    const passive: CardIDString = 'SingleMindedFury'
+    const cards: CardIDString[] = [
       'JuniorOrc',
       'JuniorOrc',
       'JuniorOrc',
@@ -22,14 +23,13 @@ class OrcDeck extends Deck {
       'Consume',
       'Consume',
       'Consume',
-      'Consume',
       'ClubOfLooting',
       'ClubOfLooting',
       'CorporalMotivation',
-      'CorporalMotivation',
+      'BattleOfSuiyang',
+      'BattleOfSuiyang',
     ]
-  }
-    super(game, owner, 'OrcDeck', 'Orc Deck', deck)
+    super(game, owner, 'OrcDeck', 'Orc Deck', {leader, passive, cards})
   }
 }
 

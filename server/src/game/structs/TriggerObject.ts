@@ -1,11 +1,11 @@
 import TriggerTypeString from "../stringTypes/TriggerTypeString";
-import TriggerActionFunctionObject from "./TriggerActionFunctionObject";
 import TriggerRequirementObject from "./TriggerRequirementObject";
+import TriggerActionObject from "./TriggerActionObject";
 
 interface TriggerObject {
     eventType: TriggerTypeString,
     requirements: TriggerRequirementObject[],
-    actions: TriggerActionFunctionObject[],
+    actions: TriggerActionObject[],
 }
 
 export default TriggerObject

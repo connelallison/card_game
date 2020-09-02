@@ -1,15 +1,9 @@
 import Game from "../gamePhases/Game";
-import Card from "../gameObjects/Card";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import Passive from "../gameObjects/Passive";
-import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
-import DynamicTargetObject from "../structs/DynamicTargetObject";
-import DamageEvent from "../gameEvents/DamageEvent";
+import GameObject from "../gameObjects/GameObject";
 
 class SingleMindedFuryTrigger extends TriggerEnchantment {
-    owner: Passive
-
-    constructor(game: Game, owner: Card) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,
@@ -22,41 +16,50 @@ class SingleMindedFuryTrigger extends TriggerEnchantment {
             [{
                 eventType: 'beforeDamage',
                 requirements: [{
+                    targetMap: 'damageEventDamagedTarget',
                     targetRequirement: 'isDynamicTarget',
                     values: {
                         dynamicTarget: ({
                             valueType: 'target',
+                            from: 'targets',
                             reducer: 'last',
-                            requirements: [{
-                                targetRequirement: 'isEnemy',
-                                targetMap: (event: EnterPlayEvent) => event.card,
-                            }, {
-                                targetRequirement: 'isType',
-                                values: {
-                                    type: 'Follower',
-                                },
-                                targetMap: (event: EnterPlayEvent) => event.card
-                            }, {
-                                targetRequirement: 'inZone',
-                                values: {
-                                    zone: 'board',
-                                },
-                                targetMap: (event: EnterPlayEvent) => event.card
-                            }],
-                            targetDomain: 'enterPlayEvents',
-                            resultMap: (event) => event.card,
-                        } as DynamicTargetObject)
-                    },
-                    eventMap: (event: DamageEvent) => event.target
+                            targets: {
+                                valueType: 'targets',
+                                from: 'events',
+                                targetMap: 'enterPlayEventPlayedCard',
+                                requirements: [{
+                                    targetRequirement: 'isEnemy',
+                                }, {
+                                    targetRequirement: 'isType',
+                                    values: {
+                                        type: 'Follower',
+                                    },
+                                }, {
+                                    targetRequirement: 'inZone',
+                                    values: {
+                                        zone: 'board',
+                                    },
+                                }],
+                                events: {
+                                    valueType: 'events',
+                                    from: 'eventDomain',
+                                    eventDomain: 'enterPlayEvents',
+
+                                }
+                            }
+                        })
+                    }
                 }],
                 actions: [{
-                    operation: 'incrementEventParam',
+                    actionType: 'eventModAction',
+                    operation: 'incrementNumberParam',
                     values: {
                         param: 'damage',
                         value: 1,
                     }
                 }]
-            }]
+            }],
+            false,
         )
     }
 }

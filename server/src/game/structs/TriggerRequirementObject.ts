@@ -1,14 +1,13 @@
 import TargetRequirementString from "../stringTypes/TargetRequirementString";
-import DynamicNumberObject from "./DynamicNumberObject";
-import DynamicTargetObject from "./DynamicTargetObject";
-import GameEvent from "../gameEvents/GameEvent";
-import PlayRequirementString from "../stringTypes/PlayRequirementString";
+import ActiveRequirementString from "../stringTypes/ActiveRequirementString";
+import ValuesObject from "./ValuesObject";
+import EventToTargetMapString from "../stringTypes/EventToTargetMapString";
 
 interface TriggerRequirementObject {
     targetRequirement?: TargetRequirementString,
-    playRequirement?: PlayRequirementString,
-    values?: {[index: string]: number | boolean | string | DynamicNumberObject | DynamicTargetObject},
-    eventMap?: (event: GameEvent) => any,
+    playRequirement?: ActiveRequirementString,
+    values?: ValuesObject,
+    targetMap?: EventToTargetMapString,
 }
 
 export default TriggerRequirementObject

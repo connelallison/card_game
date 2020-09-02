@@ -24,10 +24,10 @@ class Deck {
     this.owner = owner
     this.id = deckID
     this.name = deckName
-    this.leader = new Cards[deck.leader](this.game, this.owner, 'setAsideZone')
-    this.leaderTechnique = new Cards[this.leader.leaderTechniqueID](this.game, this.owner, 'setAsideZone')
-    this.passive = new Cards[deck.passive](this.game, this.owner, 'setAsideZone')
-    this.cards = deck.cards.map(cardID => new Cards[cardID](this.game, this.owner, 'deck'))
+    this.leader = this.game.createCard(deck.leader, this.owner) as Leader
+    this.leaderTechnique = this.game.createCard(this.leader.leaderTechniqueID, this.owner) as LeaderTechnique
+    this.passive = this.game.createCard(deck.passive, this.owner) as Passive
+    this.cards = deck.cards.map(cardID => this.game.createCard(cardID, this.owner))
     this.shuffle()
   }
 

@@ -20,11 +20,11 @@ class Footman extends NamelessFollower {
       'Has +2 Attack during your turn.', 
       [], 
       [],
+      ['FootmanAura'],
       false, 
       null, 
       null
     )
-    this.addEnchantment(new Enchantments.FootmanAura(this.game, this))
   }
 }
 export default Footman

@@ -2,27 +2,29 @@ import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import Character from './Character'
 import FollowerZoneString from '../stringTypes/FollowerZoneString'
-import TargetDomainString from '../stringTypes/TargetDomainString'
-import ActionFunctionObject from '../structs/ActionFunctionObject'
+import TargetsDomainString from '../stringTypes/TargetsDomainString'
+import ActionObject from '../structs/ActionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
-import PlayRequirementObject from '../structs/PlayRequirementObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 import GameObjectData from '../structs/GameObjectData'
-import e = require('express')
 import BoardSlot from './BoardSlot'
 import ObjectReport from '../structs/ObjectReport'
+import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
 
 abstract class Follower extends Character {
   zone: FollowerZoneString
   inPlayZone: 'board'
   type: 'Follower'
   subtype: 'Nameless' | 'Famous'
+  slot: BoardSlot
   validSlots: BoardSlot[]
 
-  constructor(game: Game, owner: GamePlayer, zone: FollowerZoneString, id: string, name: string, subtype: 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-    super(game, owner, zone, id, name, 'Follower', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+  constructor(game: Game, owner: GamePlayer, zone: FollowerZoneString, id: string, name: string, subtype: 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
+    super(game, owner, zone, id, name, 'Follower', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
     this.health = this.rawHealth
     this.maxHealth = this.rawHealth
     this.inPlayZone = 'board'
+    this.slot = null
     this.validSlots = []
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
@@ -83,6 +85,7 @@ abstract class Follower extends Character {
 
   takeDamage(damage: number): number {
     this.rawHealth -= damage
+    this.health -= damage
     this.update()
     return damage
   }
@@ -90,6 +93,7 @@ abstract class Follower extends Character {
   receiveHealing(rawHealing: number): number {
     const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
     this.rawHealth += healing
+    this.health += healing
     this.update()
     return healing
   }
@@ -109,14 +113,18 @@ abstract class Follower extends Character {
 
   moveZone(destination: FollowerZoneString, index?: number): void {
     if (this.zone === 'board') {
-      this.controller().board[this.index()].follower = null
+      this.slot.follower = null
+      this.slot = null
     } else {
       this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
     }
 
     if (destination === 'board') {
       const slot = index ? this.controller().board[index] : this.controller().firstEmptySlot()
-      if (slot instanceof BoardSlot) slot.follower = this
+      if (slot instanceof BoardSlot) {
+        slot.follower = this
+        this.slot = slot
+      }
     } else {
       this.owner[destination].push(this)
     }
@@ -131,9 +139,86 @@ abstract class Follower extends Character {
 
   index(): number {
     if (this.zone === 'board') {
-      return this.controller().board.findIndex(slot => slot.follower === this)
+      return this.slot.index()
     }
     return this.controller()[this.zone].indexOf(this)
+  }
+
+  leftSlot(): BoardSlot {
+    if (this.zone === 'board') {
+      const slot = this.controller().board[this.index() - 1]
+      return slot !== undefined ? slot : null 
+    }
+    return null
+  }
+
+  rightSlot(): BoardSlot {
+    if (this.zone === 'board') {
+      const slot = this.controller().board[this.index() + 1]
+      return slot !== undefined ? slot : null 
+    }
+    return null
+  }
+
+  oppositeSlot(): BoardSlot {
+    if (this.zone === 'board') {
+      const slot = this.controller().opponent.board[this.index()]
+      return slot !== undefined ? slot : null 
+    }
+    return null
+  }
+
+  adjacentSlots(): BoardSlot[] {
+    const adjacentSlots = []
+    const leftSlot = this.leftSlot()
+    if (leftSlot) adjacentSlots.push(leftSlot)
+    const rightSlot = this.rightSlot()
+    if (rightSlot) adjacentSlots.push(rightSlot)
+    return adjacentSlots
+  }
+
+  neighbouringSlots(): BoardSlot[] {
+    const neighbouringSlots = this.adjacentSlots()
+    const oppositeSlot = this.oppositeSlot()
+    if (oppositeSlot) neighbouringSlots.push(oppositeSlot)
+    return neighbouringSlots
+  }
+
+  leftFollower(): Follower {
+    if (this.zone === 'board') {
+      return this.leftSlot() && this.leftSlot().follower
+    }
+    return null
+  }
+
+  rightFollower(): Follower {
+    if (this.zone === 'board') {
+      return this.rightSlot() && this.rightSlot().follower
+    }
+    return null
+  }
+
+  oppositeFollower(): Follower {
+    if (this.zone === 'board') {
+      return this.oppositeSlot() && this.oppositeSlot().follower
+    }
+    return null
+  }
+
+  adjacentFollowers(): Follower[] {
+    const adjacentFollowers = []
+    const leftFollower = this.leftFollower()
+    if (leftFollower) adjacentFollowers.push(leftFollower)
+    const rightFollower = this.rightFollower()
+    if (rightFollower) adjacentFollowers.push(rightFollower)
+    return adjacentFollowers
+  }
+
+  neighbouringFollowers(): Follower[] {
+    const neighbouringFollowers = this.adjacentFollowers()
+    const oppositeFollower = this.oppositeFollower()
+    if (oppositeFollower) neighbouringFollowers.push(oppositeFollower)
+    return neighbouringFollowers
   }
 }
 

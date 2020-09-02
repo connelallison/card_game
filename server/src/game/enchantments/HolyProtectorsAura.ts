@@ -1,13 +1,9 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import Passive from "../gameObjects/Passive";
 import Game from "../gamePhases/Game";
-import Card from "../gameObjects/Card";
-import TargetRequirements from "../dictionaries/TargetRequirements";
+import GameObject from "../gameObjects/GameObject";
 
 class HolyProtectorsAura extends AuraEnchantment {
-    owner: Passive
-
-    constructor(game: Game, owner: Card) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,
@@ -20,9 +16,18 @@ class HolyProtectorsAura extends AuraEnchantment {
                 operation: 'incrementHealth',
                 value: {
                     valueType: 'number',
+                    from: 'numbers',
                     reducer: 'sum',
-                    numberMap: (obj) => obj.health,
-                    targetDomain: 'friendlyBoard',
+                    numbers: {
+                        valueType: 'numbers',
+                        from: 'targets',
+                        numberMap: 'health',
+                        targets: {
+                            valueType: 'targets',
+                            from: 'targetDomain',
+                            targetDomain: 'friendlyBoard',
+                        }
+                    }
                 },
             }],
             'friendlyLeader',

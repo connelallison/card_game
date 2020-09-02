@@ -19,11 +19,11 @@ class JuniorOrc extends NamelessFollower {
       'Your other followers have +1 Attack.', 
       [], 
       [],
+      ["JuniorOrcAura"],
       false, 
       null, 
       null
       )
-    this.addEnchantment(new Enchantments.JuniorOrcAura(this.game, this))
   }
 }
 

@@ -4,10 +4,11 @@ import PersistentCard from "./PersistentCard";
 import LeaderTechniqueSubtypeString from "../stringTypes/LeaderTechniqueSubtypeString";
 import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
 import ObjectReport from "../structs/ObjectReport";
-import TargetDomainString from "../stringTypes/TargetDomainString";
-import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetsDomainString from "../stringTypes/TargetsDomainString";
+import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
-import PlayRequirementObject from "../structs/PlayRequirementObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
 
 abstract class LeaderTechnique extends PersistentCard {
     collectable: false
@@ -18,8 +19,8 @@ abstract class LeaderTechnique extends PersistentCard {
     subtype: LeaderTechniqueSubtypeString
     zone: LeaderTechniqueZoneString
 
-    constructor(game: Game, owner: GamePlayer, zone: LeaderTechniqueZoneString, id: string, name: string, subtype: LeaderTechniqueSubtypeString, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
-        super(game, owner, zone, id, name, 'LeaderTechnique', subtype, false, rawCost, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: LeaderTechniqueZoneString, id: string, name: string, subtype: LeaderTechniqueSubtypeString, rawCost: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
+        super(game, owner, zone, id, name, 'LeaderTechnique', subtype, false, rawCost, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
         this.repeatable = repeatable
         this.ready = false
         this.inPlayZone = 'leaderTechniqueZone'

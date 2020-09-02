@@ -1,13 +1,6 @@
-import NumberReducerString from "../stringTypes/NumberReducerString";
-import TargetDomainString from "../stringTypes/TargetDomainString";
-import TargetRequirementObject from "./TargetRequirementObject";
+import DynamicNumberFromTarget from "./DynamicNumberFromTarget";
+import DynamicNumberFromNumbers from "./DynamicNumberFromNumbers";
 
-interface DynamicNumberObject {
-    valueType: 'number',
-    reducer: NumberReducerString,
-    numberMap?: (obj) => number,
-    requirements?: TargetRequirementObject[],
-    targetDomain: TargetDomainString | TargetDomainString[],
-}
+type DynamicNumberObject = DynamicNumberFromTarget | DynamicNumberFromNumbers
 
 export default DynamicNumberObject

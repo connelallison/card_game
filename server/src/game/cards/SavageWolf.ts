@@ -20,11 +20,11 @@ class SavageWolf extends NamelessFollower {
       'Whenever a friendly follower dies, gain +2/+1.', 
       [], 
       [],
+      ['SavageWolfTrigger'],
       false, 
       null, 
       null
       )
-    this.addEnchantment(new Enchantments.SavageWolfTrigger(this.game, this))
   }
 }
 export default SavageWolf

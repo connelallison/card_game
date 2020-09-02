@@ -1,19 +1,23 @@
+import GameObject from './GameObject'
 import Enchantment from './Enchantment'
+
 abstract class TriggerEnchantment extends Enchantment {
     subtype: 'Trigger'
     repeatable: boolean
+    wonderTrigger: boolean
     triggers: Trigger[]
 
-    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: any[], repeatable: boolean, triggerObjs: TriggerObject[]) {
+    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ActiveRequirementObject[], repeatable: boolean, triggerObjs: TriggerObject[], wonderTrigger: boolean = false) {
         super(game, owner, id, name, 'Trigger', activeZones, activeTypes, activeRequirements = [])
         this.repeatable = repeatable
+        this.wonderTrigger = wonderTrigger
         this.triggers = this.wrapTriggers(triggerObjs)
     }
 
     active(): boolean {
         const active = this.activeZones.includes(this.owner.zone) 
                       && this.activeTypes.includes(this.owner.type) 
-                      && this.activeRequirements.every(requirement => requirement(this) === true)
+                      && this.activeRequirements.every(requirement => requirement() === true)
         if (!this.previousActive && active) {
             this.enableListeners()
         } else if (this.previousActive && !active) {
@@ -40,12 +44,19 @@ abstract class TriggerEnchantment extends Enchantment {
     }
 
     wrapTrigger(triggerObj: TriggerObject): Trigger {
-        const actionFunctions = triggerObj.actions.map(obj => this.wrapTriggerActionFunction(obj))
+        const actions = triggerObj.actions.map(obj => this.wrapTriggerActionFunction(obj))
         const requirements = triggerObj.requirements.map(obj => this.wrapTriggerRequirement(obj))
         const action = (event: GameEvent) => {
             if (requirements.every(requirement => requirement(event))) {
-                actionFunctions.forEach(action => action(event))
-                if (!this.repeatable) this.owner.removeEnchantment(this)
+                const triggerEvent = new TriggerEvent(this.game, {
+                    controller: this.controller(),
+                    event,
+                    triggerType: triggerObj.eventType,
+                    actions,
+                    objectSource: this,
+                    cardSource: this.cardOwner()
+                })
+                this.game.startNewDeepestPhase('TriggerPhase', triggerEvent)
             }
         }
         return {
@@ -54,17 +65,37 @@ abstract class TriggerEnchantment extends Enchantment {
         }
     }
 
-    wrapTriggerActionFunction(obj: TriggerActionFunctionObject): TriggerAction {
+    wrapTriggerActionFunction(obj: TriggerActionObject): TriggerAction {
+        if (obj.actionType === 'eventModAction') return this.wrapEventMod(obj)
+
         const action = this.wrapActionFunction(obj)
-        if (obj.eventMap) return (event: GameEvent) => action(obj.eventMap(event))
-        return (event: GameEvent) => action(event)
+        if (obj.actionType === 'eventMapAction') {
+            const eventMapAction = (triggerActionEvent: TriggerActionEvent) => {
+                const targets = obj.eventMap(triggerActionEvent.event)
+                const targetedEvent = Object.assign({}, triggerActionEvent, { targets })
+                action(targetedEvent)
+            }
+            return eventMapAction
+        }
+        return action
+    }
+    
+    wrapEventMod(obj: EventModActionObject): TriggerAction {
+        const values: any = {}
+        for (let property in obj.values) {
+            values[property] = this.dynamicValue(obj.values[property])
+        }
+        if (obj.stored) values['stored'] = obj.stored
+        const eventMod = EventModOperations[obj.operation](this, values)
+        return (triggerActionEvent: TriggerActionEvent) => eventMod(triggerActionEvent.event)
     }
 
     wrapTriggerRequirement(obj: TriggerRequirementObject): TriggerRequirement {
         const requirement = obj.targetRequirement !== undefined 
                             ? this.wrapTargetRequirement(obj as TargetRequirementObject)
-                            : this.wrapPlayRequirement(obj as PlayRequirementObject)
-        if (obj.eventMap) return (event: GameEvent) => requirement(obj.eventMap(event))
+                            : this.wrapActiveRequirement(obj as ActiveRequirementObject)
+        // if (obj.targetMap) return (event: GameEvent) => requirement(obj.targetMap(event))
+        if (obj.targetMap) return (event: GameEvent) => requirement((EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event))
         return requirement
     }
 }
@@ -77,11 +108,16 @@ import GameEvent from '../gameEvents/GameEvent'
 import ZoneString from '../stringTypes/ZoneString'
 import ObjectTypeString from '../stringTypes/ObjectTypeString'
 import TriggerAction from '../functionTypes/TriggerAction'
-import GameObject from './GameObject'
 import TriggerObject from '../structs/TriggerObject'
-import TriggerActionFunctionObject from '../structs/TriggerActionFunctionObject'
 import TriggerRequirement from '../functionTypes/TriggerRequirement'
 import TriggerRequirementObject from '../structs/TriggerRequirementObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
-import PlayRequirementObject from '../structs/PlayRequirementObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import TriggerEvent from '../gameEvents/TriggerEvent'
+import TriggerActionEvent from '../gameEvents/TriggerActionEvent'
+import TriggerActionObject from '../structs/TriggerActionObject'
+import EventModActionObject from '../structs/EventModActionObject'
+import EventModOperations from '../dictionaries/EventModOperations'
+import EventToTargetMaps from '../dictionaries/EventToTargetMaps'
+import EventToTargetMap from '../functionTypes/EventToTargetMap'
 

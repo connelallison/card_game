@@ -1,14 +1,13 @@
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
-import ObjectReport from '../structs/ObjectReport'
 import ZoneString from '../stringTypes/ZoneString'
 import DestroyableCard from './DestroyableCard'
 import StartOfTurnEvent from '../gameEvents/StartOfTurnEvent'
-import TargetDomainString from '../stringTypes/TargetDomainString'
-import GameObjectData from '../structs/GameObjectData'
-import ActionFunctionObject from '../structs/ActionFunctionObject'
+import TargetsDomainString from '../stringTypes/TargetsDomainString'
+import ActionObject from '../structs/ActionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
-import PlayRequirementObject from '../structs/PlayRequirementObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
 
 abstract class Character extends DestroyableCard {
   type: 'Leader' | 'Follower'
@@ -18,8 +17,8 @@ abstract class Character extends DestroyableCard {
   ready: boolean
   attack: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Follower', subtype: 'Leader' | 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
-    super(game, owner, zone, id, name, type, subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Follower', subtype: 'Leader' | 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
+    super(game, owner, zone, id, name, type, subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
     this.ready = false
     this.rawAttack = rawAttack
     this.attack = this.rawAttack
@@ -65,7 +64,7 @@ abstract class Character extends DestroyableCard {
     return this.missingHealth() > 0
   }
 
-  abstract updateValidTargets(): void
+    abstract updateValidTargets(): void
   abstract takeDamage(damage: number): number
   abstract receiveHealing(healing: number): number
   abstract missingHealth(): number

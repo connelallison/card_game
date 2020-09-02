@@ -18,6 +18,7 @@ class Knight extends NamelessFollower {
       '', 
       [], 
       [],
+      [],
       false, 
       null, 
       null

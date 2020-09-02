@@ -206,19 +206,19 @@ class GamePlayer extends GameObject {
   }
 
   canPlay(card: Card): boolean {
-    return this.game.permissions.canPlay(this, card)
+    return Permissions.canPlay(this, card)
   }
 
   canUse(card: TechniqueCreation | LeaderTechnique): boolean {
-    return this.game.permissions.canUse(this, card)
+    return Permissions.canUse(this, card)
   }
 
   canSummon(card: PersistentCard): boolean {
-    return this.game.permissions.canSummon(this, card)
+    return Permissions.canSummon(this, card)
   }
 
   canSummonType(cardType: PersistentCardTypeString): boolean {
-    return this.game.permissions.canSummonType(this, cardType)
+    return Permissions.canSummonType(this, cardType)
   }
 
   alive(): boolean {
@@ -282,4 +282,5 @@ import BoardSlot from './BoardSlot'
 import BoardSlotReport from '../structs/BoardSlotReport'
 import ProposedDrawPhase from '../gamePhases/ProposedDrawPhase'
 import ProposedDrawEvent from '../gameEvents/ProposedDrawEvent'
+import Permissions from '../dictionaries/Permissions'
 

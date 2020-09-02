@@ -13,26 +13,10 @@ import DynamicNumbers from "../functionTypes/DynamicNumbers"
 // }
 
 const DynamicNumberReducers = {
-    count: (numbers: DynamicNumbers) => (): number => {
-        const array = numbers()
-        return array.reduce(accumulator => accumulator + 1, 0)
-        // return Reducers.count(numbers())
-    },
-    sum: (numbers: DynamicNumbers) => (): number => {
-        const array = numbers()
-        return array.reduce((accumulator, val) => accumulator + val, 0)
-        // return Reducers.sum(numbers(), map)
-    },
-    max: (numbers: DynamicNumbers) => (): number => {
-        const array = numbers()
-        return array.length === 0 ? null : array.reduce((accumulator, val) => accumulator < val ? val : accumulator)
-        // return Reducers.max(numbers(), map)
-    },
-    min: (numbers: DynamicNumbers) => (): number => {
-        const array = numbers()
-        return array.length === 0 ? null : array.reduce((accumulator, val) => accumulator > val ? val : accumulator)
-        // return Reducers.min(numbers(), map)
-    },
+    count: (numbers: number[]) => numbers.reduce(accumulator => accumulator + 1, 0),
+    sum: (numbers: number[]) => numbers.reduce((accumulator, val) => accumulator + val, 0),
+    max: (numbers: number[]) => numbers.length === 0 ? null : numbers.reduce((accumulator, val) => accumulator < val ? val : accumulator),
+    min: (numbers: number[]) => numbers.length === 0 ? null : numbers.reduce((accumulator, val) => accumulator > val ? val : accumulator),
 }
 
 export default DynamicNumberReducers

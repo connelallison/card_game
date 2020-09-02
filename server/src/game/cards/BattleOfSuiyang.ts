@@ -14,7 +14,7 @@ class BattleOfSuiyang extends EventMoment {
             true,
             2,
             'Event: Destroy all friendly followers. For each destroyed, give followers in your hand +1/+1.',
-            [
+            [[
                 {
                     actionType: 'autoAction',
                     operation: 'storeValue',
@@ -40,7 +40,11 @@ class BattleOfSuiyang extends EventMoment {
                 {
                     actionType: 'autoAction',
                     operation: 'markDestroyed',
-                    targets: 'friendlyBoard',
+                    targets: {
+                        valueType: 'targets',
+                        from: 'targetDomain',
+                        targetDomain: 'friendlyBoard',
+                    },
                 },
                 {
                     actionType: 'autoAction',
@@ -52,9 +56,13 @@ class BattleOfSuiyang extends EventMoment {
                     stored: {
                         'stats': 'targetCount'
                     },
-                    targets: 'friendlyHand',
+                    targets: {
+                        valueType: 'targets',
+                        from: 'targetDomain',
+                        targetDomain: 'friendlyHand',
+                    },
                 }
-            ],
+            ]],
             [{
                 playRequirement: 'minFriendlyFollowers',
                 values: {

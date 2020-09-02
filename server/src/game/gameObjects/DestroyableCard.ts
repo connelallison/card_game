@@ -10,14 +10,54 @@ import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
 import ActiveRequirementObject from "../structs/ActiveRequirementObject";
 import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
+import ActionActionObject from "../structs/ActionActionObject";
+import EventActionObject from "../structs/EventActionObject";
 
 abstract class DestroyableCard extends PersistentCard {
+    // death: ActionObject[]
     rawHealth: number
     health: number
     maxHealth: number
 
-    constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: PersistentCardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[],  targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
-        super(game, owner, zone, id, name, type, subtype, collectable, rawCost, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
+    constructor(
+        game: Game, 
+        owner: GamePlayer, 
+        zone: ZoneString, 
+        id: string, 
+        name: string, 
+        type: PersistentCardTypeString, 
+        subtype: CardSubtypeString, 
+        collectable: boolean, 
+        rawCost: number, 
+        rawHealth: number, 
+        staticCardText: string = '', 
+        actions: ActionActionObject[][], 
+        events: EventActionObject[][],
+        playRequirements: ActiveRequirementObject[], 
+        enchantments: EnchantmentIDString[],  
+        targeted: boolean = false, 
+        targetDomain: TargetsDomainString | TargetsDomainString[], 
+        targetRequirements: TargetRequirementObject[]
+        ) {
+        super(
+            game, 
+            owner, 
+            zone, 
+            id, 
+            name, 
+            type, 
+            subtype, 
+            collectable, 
+            rawCost, 
+            staticCardText, 
+            actions, 
+            events,
+            playRequirements, 
+            enchantments, 
+            targeted, 
+            targetDomain, 
+            targetRequirements
+            )
         this.rawHealth = rawHealth
     }
 
@@ -31,7 +71,7 @@ abstract class DestroyableCard extends PersistentCard {
 
     isDestroyed(): boolean { 
         return this.health <= 0 || this.pendingDestroy
-      }
+    }
 }
 
 export default DestroyableCard

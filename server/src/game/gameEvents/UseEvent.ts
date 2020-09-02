@@ -2,14 +2,14 @@ import GameEvent from "./GameEvent";
 import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
-import ActionEventObject from "./ActionEventObject";
+import UseEventObject from "./UseEventObject";
 
 class UseEvent extends GameEvent {
     controller: GamePlayer
     objectSource: Card
     targets: Card[]
 
-    constructor(game: Game, object: ActionEventObject) {
+    constructor(game: Game, object: UseEventObject) {
         super(game) 
         Object.assign(this, object)
     }

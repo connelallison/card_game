@@ -13,12 +13,14 @@ class Orcissimus extends FamousFollower {
       zone,
       'Orcissimus',
       'Orcissimus',
+      [],
       true,
       4,
       4,
       5,
-      'Action: Summon the last friendly minion that died.',
-      [{
+      'Event: Summon the last friendly minion that died.',
+      [],
+      [[{
         actionType: 'autoAction',
         operation: "summonCard",
         values: {
@@ -53,7 +55,7 @@ class Orcissimus extends FamousFollower {
           }
         }
       }
-      ],
+      ]],
       [],
       [],
       false,

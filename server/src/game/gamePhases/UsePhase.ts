@@ -4,8 +4,9 @@ import TechniqueCreation from "../gameObjects/TechniqueCreation";
 import LeaderTechnique from "../gameObjects/LeaderTechnique";
 import Phases from "../dictionaries/Phases";
 import UseEvent from "../gameEvents/UseEvent";
-import ActionEvent from "../gameEvents/ActionEvent";
+import ActionActionEvent from "../gameEvents/ActionActionEvent";
 import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
+import EventActionEvent from "../gameEvents/EventActionEvent";
 
 class UsePhase extends EventPhase {
     parent: Sequence
@@ -22,12 +23,9 @@ class UsePhase extends EventPhase {
         event.generateLog()
         this.cacheEvent(event, 'use')
         if (!card.repeatable) card.ready = false
-        const actionEvent = new ActionEvent(this.game(), {
-            controller: event.controller,
-            objectSource: event.objectSource,
-            targets: event.targets
-        })
-        this.startChild(new Phases.ActionPhase(this, actionEvent))
+        this.actionPhase()
+        this.eventActionPhase()
+        if (event.objectSource instanceof TechniqueCreation) event.objectSource.loseCharge() 
         this.queueSteps()
         this.end()
     }
@@ -42,6 +40,32 @@ class UsePhase extends EventPhase {
             })
             this.startChild(new Phases.SpendMoneyPhase(this, spendMoneyEvent))
         }
+    }
+
+    actionPhase(): void {
+        const event = this.event
+        event.objectSource.actions.forEach(action => {
+            const actionEvent = new ActionActionEvent(this.game(), {
+                controller: event.controller,
+                objectSource: event.objectSource,
+                targets: event.targets,
+                action,
+            })
+            this.startChild(new Phases.ActionActionPhase(this, actionEvent))
+        })
+    }
+
+    eventActionPhase(): void {
+        const event = this.event
+        event.objectSource.events.forEach(eventAction => {
+            const eventActionEvent = new EventActionEvent(this.game(), {
+                controller: event.controller,
+                objectSource: event.objectSource,
+                targets: event.targets,
+                eventAction,
+            })
+            this.startChild(new Phases.EventActionPhase(this, eventActionEvent))
+        })
     }
 }
 

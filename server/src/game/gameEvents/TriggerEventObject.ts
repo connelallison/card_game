@@ -4,12 +4,13 @@ import TriggerTypeString from "../stringTypes/TriggerTypeString";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import Card from "../gameObjects/Card";
 import TriggerAction from "../functionTypes/TriggerAction";
+import TriggerActionObject from "../structs/TriggerActionObject";
 
 interface TriggerEventObject {
     controller: GamePlayer
     event: GameEvent
     triggerType: TriggerTypeString
-    actions: TriggerAction[]
+    actions: TriggerActionObject[]
     objectSource: TriggerEnchantment
     cardSource: Card | GamePlayer
 }

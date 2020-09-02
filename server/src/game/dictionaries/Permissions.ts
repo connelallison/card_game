@@ -1,35 +1,28 @@
-import Game from "../gamePhases/Game"
-
-class Permissions {
-    game: Game
-    constructor(game: Game) {
-        this.game = game
-    }
-
-    canAttack (attacker: Character , defender: Character): boolean {
+const Permissions = {
+    canAttack: (attacker: Character , defender: Character): boolean => {
         return (
             attacker.canAttack()
             && defender.inPlay()
             && defender.controller() === attacker.controller().opponent
-            && this.game.utils.notBehindGuard(defender)
+            && defender.notBehindGuard()
         )
-    }
+    },
 
-    canTarget (card: Card, target: Card): boolean {
+    canTarget: (card: Card, target: Card): boolean => {
         return (
             card.targeted 
             && card.targetDomain().includes(target)
-            && card.targetRequirements.every(requirement => requirement(target))
+            && card.targetRequirements.every(requirement => card.targetRequirement(target, requirement))
         )
-    }
+    },
 
-    canSummon (player: GamePlayer, card: PersistentCard): boolean {
+    canSummon: (player: GamePlayer, card: PersistentCard): boolean => {
         return (
-            this.canSummonType(player, card.type)
+            Permissions.canSummonType(player, card.type)
         )
-    }
+    },
 
-    canSummonType (player: GamePlayer, cardType: PersistentCardTypeString): boolean {
+    canSummonType: (player: GamePlayer, cardType: PersistentCardTypeString): boolean => {
         switch (cardType) {
             case 'Leader':
             case 'LeaderTechnique':
@@ -41,9 +34,9 @@ class Permissions {
             default:
                 return false
         }
-    }
+    },
 
-    canPlay (player: GamePlayer, card: Card): boolean {
+    canPlay: (player: GamePlayer, card: Card): boolean => {
         return (
             player === card.controller()
             && player.myTurn()
@@ -51,20 +44,20 @@ class Permissions {
             && card.cost <= player.money
             && (card.targeted ? card.validTargets.length > 0 : true )
             && (card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true)
-            && card.playRequirements.every(requirement => requirement())
+            && card.playRequirements.every(requirement => card.activeRequirement(requirement))
         )
-    }
+    },
 
-    canUse (player: GamePlayer, card: TechniqueCreation | LeaderTechnique): boolean {
+    canUse: (player: GamePlayer, card: TechniqueCreation | LeaderTechnique): boolean => {
         return (
             player === card.controller()
             && player.myTurn()
             && card.inPlay()
             && card.cost <= player.money
             && (card.targeted ? card.validTargets.length > 0 : true)
-            && card.playRequirements.every(requirement => requirement())
+            && card.playRequirements.every(requirement => card.activeRequirement(requirement))
         )
-    }
+    },
 }
 
 export default Permissions

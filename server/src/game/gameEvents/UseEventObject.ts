@@ -1,11 +1,10 @@
 import GamePlayer from "../gameObjects/GamePlayer";
-import Card from "../gameObjects/Card";
 import GameObject from "../gameObjects/GameObject";
 
-interface ActionEventObject {
+interface UseEventObject {
     controller: GamePlayer,
     objectSource: GameObject,
-    targets: Card[],
+    targets: GameObject[],
 }
 
-export default ActionEventObject
+export default UseEventObject

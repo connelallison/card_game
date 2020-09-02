@@ -34,7 +34,11 @@ class SavageWolfTrigger extends TriggerEnchantment {
                     values: {
                         attack: 2,
                     },
-                    targets: 'self',
+                    targets: {
+                        valueType: 'target',
+                        from: 'targetDomain',
+                        targetDomain: 'self'
+                    },
                 },
                 {
                     actionType: 'autoAction',
@@ -42,7 +46,11 @@ class SavageWolfTrigger extends TriggerEnchantment {
                     values: {
                         health: 1,
                     },
-                    targets: 'self',
+                    targets: {
+                        valueType: 'target',
+                        from: 'targetDomain',
+                        targetDomain: 'self'
+                    },
                 }]
             }],
             false,

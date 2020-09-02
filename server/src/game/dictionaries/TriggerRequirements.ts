@@ -7,14 +7,14 @@ import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString"
 import DynamicTargets from "../functionTypes/DynamicTargets"
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment"
 
-const TriggerRequirements: {[index: string]: TriggerRequirementFactory} = {
-    isType: (enchantment: TriggerEnchantment, requiredType: CardTypeString, property: string) => (event: GameEvent) => (event[property].type === requiredType),
-    isSubtype: (enchantment: TriggerEnchantment, requiredSubtype: CardSubtypeString, property: string) => (event: GameEvent) => (event[property].subtype === requiredSubtype),
-    isFriendly: (enchantment: TriggerEnchantment, property: string) => (event: GameEvent) => (event[property].controller() === enchantment.controller()),
-    isMyTurn: (enchantment: TriggerEnchantment) => (event: GameEvent) => (event.turn.activePlayer === enchantment.controller()),
-    myLeaderAttacks: (enchantment: TriggerEnchantment) => (event: AttackEvent) => (event.attacker === enchantment.controller().leaderZone[0]),
-    canSummonType: (enchantment: TriggerEnchantment, cardType: PersistentCardTypeString) => (event: GameEvent) => (enchantment.controller().canSummonType(cardType)),
-    isDynamicTarget: (enchantment: TriggerEnchantment, map, target: DynamicTargets) => (event: GameEvent) => (map(event) === target())
-}
+// const TriggerRequirements = {
+//     isType: (enchantment: TriggerEnchantment, requiredType: CardTypeString, property: string) => (event: GameEvent) => (event[property].type === requiredType),
+//     isSubtype: (enchantment: TriggerEnchantment, requiredSubtype: CardSubtypeString, property: string) => (event: GameEvent) => (event[property].subtype === requiredSubtype),
+//     isFriendly: (enchantment: TriggerEnchantment, property: string) => (event: GameEvent) => (event[property].controller() === enchantment.controller()),
+//     isMyTurn: (enchantment: TriggerEnchantment) => (event: GameEvent) => (event.turn.activePlayer === enchantment.controller()),
+//     myLeaderAttacks: (enchantment: TriggerEnchantment) => (event: AttackEvent) => (event.attacker === enchantment.controller().leaderZone[0]),
+//     canSummonType: (enchantment: TriggerEnchantment, cardType: PersistentCardTypeString) => (event: GameEvent) => (enchantment.controller().canSummonType(cardType)),
+//     isDynamicTarget: (enchantment: TriggerEnchantment, map, target: DynamicTargets) => (event: GameEvent) => (map(event) === target())
+// }
 
-export default TriggerRequirements
+// export default TriggerRequirements

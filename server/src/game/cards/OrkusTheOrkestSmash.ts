@@ -14,13 +14,14 @@ class OrkusTheOrkestSmash extends ActiveLeaderTechnique {
             'Smash',
             2,
             'Deal 2 damage to a follower.',
-            [{
+            [[{
                 actionType: 'manualAction',
                 operation: 'damage',
                 values: {
                     damage: 2,
                 },
-            }],
+            }]],
+            [],
             [{
                 playRequirement: "minAllFollowers",
                 values: {

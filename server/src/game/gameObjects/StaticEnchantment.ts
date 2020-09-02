@@ -10,8 +10,26 @@ import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 abstract class StaticEnchantment extends Enchantment {
     subtype: 'Static'
     effects: EffectFunction[]
-    constructor(game: Game, owner: GameObject, id: string, name: string, activeZones: ZoneString[], activeTypes: ObjectTypeString[], activeRequirements: ActiveRequirementObject[], effectObjs: EffectFunctionObject[]) {
-        super(game, owner, id, name, 'Static', activeZones, activeTypes, activeRequirements)
+    constructor(
+        game: Game,
+        owner: GameObject,
+        id: string,
+        name: string,
+        activeZones: ZoneString[],
+        activeTypes: ObjectTypeString[],
+        activeRequirements: ActiveRequirementObject[],
+        effectObjs: EffectFunctionObject[]
+    ) {
+        super(
+            game,
+            owner,
+            id,
+            name,
+            'Static',
+            activeZones,
+            activeTypes,
+            activeRequirements
+        )
         this.effects = this.wrappedEffects(effectObjs)
     }
 }

@@ -13,13 +13,14 @@ class KingFredTheSaintlyRecruit extends ActiveLeaderTechnique {
             'Recruit',
             2,
             'Summon a 2/2 Knight.',
-            [{
+            [],
+            [[{
                 actionType: 'autoAction',
                 operation: 'summonCard',
                 values: {
                     cardID: 'Knight',
                 }
-            }],
+            }]],
             [{
                 playRequirement: 'canSummonType',
                 values: {

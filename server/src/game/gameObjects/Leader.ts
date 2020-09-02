@@ -13,6 +13,9 @@ import ObjectReport from '../structs/ObjectReport'
 import SummonEvent from '../gameEvents/SummonEvent'
 import CardIDString from '../stringTypes/CardIDString'
 import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
+import Permissions from '../dictionaries/Permissions'
+import ActionActionObject from '../structs/ActionActionObject'
+import EventActionObject from '../structs/EventActionObject'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
@@ -21,8 +24,47 @@ abstract class Leader extends Character {
   subtype: 'Leader'
   leaderTechniqueID: CardIDString
 
-  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[], leaderPowerID: CardIDString) {
-    super(game, owner, zone, id, name, 'Leader', 'Leader', collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
+  constructor(
+    game: Game,
+    owner: GamePlayer,
+    zone: LeaderZoneString,
+    id: string,
+    name: string,
+    collectable: boolean,
+    rawCost: number,
+    rawAttack: number,
+    rawHealth: number,
+    staticCardText: string,
+    actions: ActionActionObject[][],
+    events: EventActionObject[][],
+    playRequirements: ActiveRequirementObject[],
+    enchantments: EnchantmentIDString[],
+    targeted: boolean,
+    targetDomain: TargetsDomainString | TargetsDomainString[],
+    targetRequirements: TargetRequirementObject[],
+    leaderPowerID: CardIDString
+  ) {
+    super(
+      game,
+      owner,
+      zone,
+      id,
+      name,
+      'Leader',
+      'Leader',
+      collectable,
+      rawCost,
+      rawAttack,
+      rawHealth,
+      staticCardText,
+      actions,
+      events,
+      playRequirements,
+      enchantments,
+      targeted,
+      targetDomain,
+      targetRequirements
+    )
     this.inPlayZone = 'leaderZone'
     this.health = this.rawHealth
     this.leaderTechniqueID = leaderPowerID
@@ -55,10 +97,10 @@ abstract class Leader extends Character {
   updateValidTargets(): void {
     if (this.inPlay()) {
       this.validTargets = this.owner.opponent.boardFollowers().filter(defender => {
-        return this.game.permissions.canAttack(this, defender)
+        return Permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
+      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(target, requirement)), this.targetDomain())
     } else {
       this.validTargets = []
     }

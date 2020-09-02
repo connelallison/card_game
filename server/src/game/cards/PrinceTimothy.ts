@@ -11,12 +11,14 @@ class PrinceTimothy extends FamousFollower {
       zone,
       'PrinceTimothy',
       'Prince Timothy',
+      [],
       true,
       3,
       3,
       5,
-      'Action: Give all followers in your hand +1/+1 for every Knight you control.',
-      [{
+      'Event: Give all followers in your hand +1/+1 for every Knight you control.',
+      [],
+      [[{
         actionType: 'autoAction',
         operation: 'buffCharacterAttackAndHealth',
         values: {
@@ -55,7 +57,7 @@ class PrinceTimothy extends FamousFollower {
           }
           ],
         }
-      }],
+      }]],
       [],
       [],
       false,

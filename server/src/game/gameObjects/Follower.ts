@@ -10,6 +10,10 @@ import GameObjectData from '../structs/GameObjectData'
 import BoardSlot from './BoardSlot'
 import ObjectReport from '../structs/ObjectReport'
 import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
+import Permissions from '../dictionaries/Permissions'
+import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
+import ActionActionObject from '../structs/ActionActionObject'
+import EventActionObject from '../structs/EventActionObject'
 
 abstract class Follower extends Character {
   zone: FollowerZoneString
@@ -19,12 +23,53 @@ abstract class Follower extends Character {
   slot: BoardSlot
   validSlots: BoardSlot[]
 
-  constructor(game: Game, owner: GamePlayer, zone: FollowerZoneString, id: string, name: string, subtype: 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
-    super(game, owner, zone, id, name, 'Follower', subtype, collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
+  constructor(
+    game: Game,
+    owner: GamePlayer,
+    zone: FollowerZoneString,
+    id: string,
+    name: string,
+    subtype: 'Nameless' | 'Famous',
+    categories: FollowerCategoryString[],
+    collectable: boolean,
+    rawCost: number,
+    rawAttack: number,
+    rawHealth: number,
+    staticCardText: string = '',
+    actions: ActionActionObject[][],
+    events: EventActionObject[][],
+    playRequirements: ActiveRequirementObject[],
+    enchantments: EnchantmentIDString[],
+    targeted: boolean,
+    targetDomain: TargetsDomainString | TargetsDomainString[],
+    targetRequirements: TargetRequirementObject[]
+  ) {
+    super(
+      game,
+      owner,
+      zone,
+      id,
+      name,
+      'Follower',
+      subtype,
+      collectable,
+      rawCost,
+      rawAttack,
+      rawHealth,
+      staticCardText,
+      actions,
+      events, 
+      playRequirements,
+      enchantments,
+      targeted,
+      targetDomain,
+      targetRequirements
+    )
     this.health = this.rawHealth
     this.maxHealth = this.rawHealth
     this.inPlayZone = 'board'
     this.slot = null
+    // categories
     this.validSlots = []
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
@@ -62,10 +107,10 @@ abstract class Follower extends Character {
   updateValidTargets(): void {
     if (this.inPlay()) {
       this.validTargets = (this.owner.opponent.leaderZone as Character[]).concat(this.owner.opponent.boardFollowers()).filter(defender => {
-        return this.game.permissions.canAttack(this, defender)
+        return Permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
+      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(target, requirement)), this.targetDomain())
     } else {
       this.validTargets = []
     }
@@ -147,7 +192,7 @@ abstract class Follower extends Character {
   leftSlot(): BoardSlot {
     if (this.zone === 'board') {
       const slot = this.controller().board[this.index() - 1]
-      return slot !== undefined ? slot : null 
+      return slot !== undefined ? slot : null
     }
     return null
   }
@@ -155,7 +200,7 @@ abstract class Follower extends Character {
   rightSlot(): BoardSlot {
     if (this.zone === 'board') {
       const slot = this.controller().board[this.index() + 1]
-      return slot !== undefined ? slot : null 
+      return slot !== undefined ? slot : null
     }
     return null
   }
@@ -163,7 +208,7 @@ abstract class Follower extends Character {
   oppositeSlot(): BoardSlot {
     if (this.zone === 'board') {
       const slot = this.controller().opponent.board[this.index()]
-      return slot !== undefined ? slot : null 
+      return slot !== undefined ? slot : null
     }
     return null
   }

@@ -8,6 +8,8 @@ import ActionObject from '../structs/ActionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
 import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
+import ActionActionObject from '../structs/ActionActionObject'
+import EventActionObject from '../structs/EventActionObject'
 
 abstract class Character extends DestroyableCard {
   type: 'Leader' | 'Follower'
@@ -17,8 +19,47 @@ abstract class Character extends DestroyableCard {
   ready: boolean
   attack: number
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: 'Leader' | 'Follower', subtype: 'Leader' | 'Nameless' | 'Famous', collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
-    super(game, owner, zone, id, name, type, subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
+  constructor(
+    game: Game, 
+    owner: GamePlayer, 
+    zone: ZoneString, 
+    id: string, 
+    name: string, 
+    type: 'Leader' | 'Follower', 
+    subtype: 'Leader' | 'Nameless' | 'Famous', 
+    collectable: boolean, 
+    rawCost: number, 
+    rawAttack: number, 
+    rawHealth: number, 
+    staticCardText: string, 
+    actions: ActionActionObject[][], 
+    events: EventActionObject[][],
+    playRequirements: ActiveRequirementObject[], 
+    enchantments: EnchantmentIDString[], 
+    targeted: boolean, 
+    targetDomain: TargetsDomainString | TargetsDomainString[], 
+    targetRequirements: TargetRequirementObject[]
+  ) {
+    super(
+      game, 
+      owner, 
+      zone, 
+      id, 
+      name, 
+      type, 
+      subtype, 
+      collectable, 
+      rawCost, 
+      rawHealth, 
+      staticCardText, 
+      actions, 
+      events, 
+      playRequirements, 
+      enchantments, 
+      targeted, 
+      targetDomain, 
+      targetRequirements
+      )
     this.ready = false
     this.rawAttack = rawAttack
     this.attack = this.rawAttack
@@ -63,8 +104,12 @@ abstract class Character extends DestroyableCard {
   isDamaged(): boolean {
     return this.missingHealth() > 0
   }
+  
+  notBehindGuard() {
+    return this.flags.guard || this.controller().boardFollowers().every(follower => follower.flags.guard !== true)
+}
 
-    abstract updateValidTargets(): void
+  abstract updateValidTargets(): void
   abstract takeDamage(damage: number): number
   abstract receiveHealing(healing: number): number
   abstract missingHealth(): number

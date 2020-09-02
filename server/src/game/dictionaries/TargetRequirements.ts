@@ -1,24 +1,20 @@
 const TargetRequirements = {
-    minVal: (source: GameObject, values: {minVal: DynamicNumber, param: DynamicString}) => (target: Character) => (target[values.param()] >= values.minVal()),
-    maxVal: (source: GameObject, values: {maxVal: DynamicNumber, param: DynamicString}) => (target: Character) => (target[values.param()] <= values.maxVal()),
-    isFriendly: (source: GameObject) => (target: Character) => (source.controller() === target.controller()),
-    isEnemy: (source: GameObject) => (target: Character) => (source.controller() !== target.controller()),
-    notSelf: (source: GameObject) => (target: Character) => (source.charOwner() !== target),
-    isSelf: (source: GameObject) => (target: Character) => (source.charOwner() === target),
-    isSpecificCardClass: (source: GameObject, values: {cardID: DynamicString}) => (target: Character) => (target.id === values.cardID()),
-    isNotSpecificCardClass: (source: GameObject, values: {cardID: DynamicString}) => (target: Character) => (target.id !== values.cardID()),
-    isType: (source: GameObject, values: {type: DynamicString}) => (target: Character) => (target.type === values.type()),
-    isNotType: (source: GameObject, values: {type: DynamicString}) => (target: Character) => (target.type !== values.type()),
-    isDynamicTarget: (source: GameObject, values: {dynamicTarget: DynamicTargets}) => (target: Character) => (target === values.dynamicTarget()[0]),
-    isNotDynamicTarget: (source: GameObject, values: {dynamicTarget: DynamicTargets}) => (target: Character) => (target !== values.dynamicTarget()[0]),
-    inZone: (source: GameObject, values: {zone: DynamicString}) => (target: Character) => (target.zone === values.zone()),
-    notInZone: (source: GameObject, values: {zone: DynamicString}) => (target: Character) => (target.zone !== values.zone()),
+    minVal: (source: GameObject, target: GameObject, values: {minVal: number, param: string}) => (target[values.param] >= values.minVal),
+    maxVal: (source: GameObject, target: GameObject, values: {maxVal: number, param: string}) => (target[values.param] <= values.maxVal),
+    isFriendly: (source: GameObject, target: GameObject) => (source.controller() === target.controller()),
+    isEnemy: (source: GameObject, target: GameObject) => (source.controller() !== target.controller()),
+    notSelf: (source: GameObject, target: GameObject) => (source.charOwner() !== target),
+    isSelf: (source: GameObject, target: GameObject) => (source.charOwner() === target),
+    isSpecificCardClass: (source: GameObject, target: GameObject, values: {cardID: string}) => (target.id === values.cardID),
+    isNotSpecificCardClass: (source: GameObject, target: GameObject, values: {cardID: string}) => (target.id !== values.cardID),
+    isType: (source: GameObject, target: GameObject, values: {type: string}) => (target.type === values.type),
+    isNotType: (source: GameObject, target: GameObject, values: {type: string}) => (target.type !== values.type),
+    isDynamicTarget: (source: GameObject, target: GameObject, values: {dynamicTarget: GameObject[]}) => (target === values.dynamicTarget[0]),
+    isNotDynamicTarget: (source: GameObject, target: GameObject, values: {dynamicTarget: GameObject[]}) => (target !== values.dynamicTarget[0]),
+    inZone: (source: GameObject, target: GameObject, values: {zone: string}) => (target.zone === values.zone),
+    notInZone: (source: GameObject, target: GameObject, values: {zone: string}) => (target.zone !== values.zone),
 }
 
 export default TargetRequirements
 
 import GameObject from "../gameObjects/GameObject"
-import Character from "../gameObjects/Character"
-import DynamicTargets from "../functionTypes/DynamicTargets"
-import DynamicNumber from "../functionTypes/DynamicNumber"
-import DynamicString from "../functionTypes/DynamicString"

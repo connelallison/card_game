@@ -8,12 +8,15 @@ import AutoActionObject from "./AutoActionObject";
 import ManualActionObject from "./ManualActionObject";
 import EventModActionObject from "./EventModActionObject";
 import EventMapActionObject from "./EventMapActionObject";
+import ActionActionObject from "./ActionActionObject";
+import TriggerActionObject from "./TriggerActionObject";
+import EventActionObject from "./EventActionObject";
 
 // interface ActionObject {
 //     actionType: 'manualAction' | 'autoAction' | 'eventModAction' | 'eventMapAction'
 //     operation: ActionOperationString | EventModOperationString,
 // }
 
-type ActionObject = AutoActionObject | ManualActionObject | EventMapActionObject
+type ActionObject = ActionActionObject | EventActionObject | TriggerActionObject
 
 export default ActionObject

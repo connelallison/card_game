@@ -13,13 +13,13 @@ import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent";
 import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
 import TriggerEvent from "../gameEvents/TriggerEvent";
 import TriggerActionEvent from "../gameEvents/TriggerActionEvent";
-import ActionEvent from "../gameEvents/ActionEvent";
+import ActionActionEvent from "../gameEvents/ActionActionEvent";
 
 interface EventCache { 
     all: GameEvent[],
     death: DeathEvent[],
     play: PlayEvent[],
-    action: ActionEvent[],
+    action: ActionActionEvent[],
     attack: AttackEvent[],
     damage: DamageEvent[],
     healing: HealingEvent[],

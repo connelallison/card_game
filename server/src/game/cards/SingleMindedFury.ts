@@ -17,6 +17,7 @@ class SingleMindedFury extends PermanentPassive {
             `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources.   `,
             [],
             [],
+            [],
             ['SingleMindedFuryTrigger'],
             false,
             null,

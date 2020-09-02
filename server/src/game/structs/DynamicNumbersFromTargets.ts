@@ -1,5 +1,6 @@
 import DynamicTargetsObject from "./DynamicTargetsObject";
 import TargetToNumberMapString from "../stringTypes/TargetToNumberMapString";
+import TargetsDomainString from "../stringTypes/TargetsDomainString";
 
 interface DynamicNumbersFromTargets {
     valueType: 'numbers',

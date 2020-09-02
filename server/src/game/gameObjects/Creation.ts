@@ -9,6 +9,8 @@ import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
 import ActiveRequirementObject from "../structs/ActiveRequirementObject";
 import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
+import ActionActionObject from "../structs/ActionActionObject";
+import EventActionObject from "../structs/EventActionObject";
 
 abstract class Creation extends DestroyableCard {
     zone: CreationZoneString
@@ -17,18 +19,50 @@ abstract class Creation extends DestroyableCard {
     subtype: CreationSubtypeString
     health: number
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, subtype: CreationSubtypeString, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[] = [], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
-        super(game, owner, zone, id, name, 'Creation', subtype, collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
+    constructor(
+        game: Game,
+        owner: GamePlayer,
+        zone: CreationZoneString,
+        id: string,
+        name: string,
+        subtype: CreationSubtypeString,
+        collectable: boolean,
+        rawCost: number,
+        rawHealth: number,
+        staticCardText: string = '',
+        actions: ActionActionObject[][],
+        events: EventActionObject[][],
+        playRequirements: ActiveRequirementObject[],
+        enchantments: EnchantmentIDString[],
+        targeted: boolean = false,
+        targetDomain: TargetsDomainString | TargetsDomainString[],
+        targetRequirements: TargetRequirementObject[]
+    ) {
+        super(
+            game,
+            owner,
+            zone,
+            id,
+            name,
+            'Creation',
+            subtype,
+            collectable,
+            rawCost,
+            rawHealth,
+            staticCardText,
+            actions,
+            events,
+            playRequirements,
+            enchantments,
+            targeted,
+            targetDomain,
+            targetRequirements
+        )
         this.health = this.rawHealth
         this.inPlayZone = 'creationZone'
     }
 
     provideReport(): ObjectReport {
-        // this.updateValidTargets()
-        // console.log(this.validTargets.length)
-
-        // console.log(this.canBeSelected())
-
         return {
             name: this.name,
             id: this.id,

@@ -18,6 +18,7 @@ class HolyBook extends WorkCreation {
             'At the end of your turn, restore 1 Health to all friendly characters.',
             [],
             [],
+            [],
             ['HolyBookTrigger'],
             false,
             null,

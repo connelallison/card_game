@@ -97,135 +97,122 @@ abstract class GameObject {
         return this.game.createEnchantment(enchantmentID, owner)
     }
 
-    dynamicTargets(targets: TargetsDomainString | TargetsDomainString[] | DynamicTargetObject | DynamicTargetsObject) {
-        return typeof targets === 'string' || targets.hasOwnProperty('length')
-            ? TargetDomains(this, targets as TargetsDomainString | TargetsDomainString[])
-            : targets.hasOwnProperty('reducer')
-                ? this.wrapDynamicTarget(targets as DynamicTargetObject)
-                : this.wrapDynamicTargets(targets as DynamicTargetsObject)
+    targetDomains(targetDomain: TargetsDomainString | TargetsDomainString[]): GameObject[] {
+        return TargetDomains(this, targetDomain)
     }
 
-    dynamicValue(value: string | boolean | number | DynamicValue | DynamicValueObject): DynamicValue {
-        if (typeof value === 'number') return () => value
-        if (typeof value === 'string') return () => value
-        if (typeof value === 'boolean') return () => value
-        if (typeof value === 'function') return value
-        if (typeof value === 'object') {
-            if (value.valueType === 'string') return this.wrapDynamicString(value)
-            if (value.valueType === 'number') return this.wrapDynamicNumber(value)
-            if (value.valueType === 'numbers') return this.wrapDynamicNumbers(value)
-            if (value.valueType === 'target') return this.wrapDynamicTarget(value)
-            if (value.valueType === 'targets') return this.wrapDynamicTargets(value)
-            if (value.valueType === 'event') return this.wrapDynamicEvent(value)
-            if (value.valueType === 'events') return this.wrapDynamicEvents(value)
-        }
-
+    eventDomains(eventDomain: EventsDomainString | EventsDomainString[]): GameEvent[] {
+        return EventDomains(this, eventDomain)
     }
 
-    wrapDynamicString(obj: DynamicStringObject): DynamicString {
+    dynamicValue(value: string | boolean | number | DynamicValueObject): string | boolean | number | number[] | GameObject | GameObject[] | GameEvent | GameEvent[] {
+        if (typeof value === 'number') return value
+        if (typeof value === 'string') return value
+        if (typeof value === 'boolean') return value
+        if (value.valueType === 'string') return this.dynamicString(value)
+        if (value.valueType === 'number') return this.dynamicNumber(value)
+        if (value.valueType === 'numbers') return this.dynamicNumbers(value)
+        if (value.valueType === 'target') return this.dynamicTarget(value)
+        if (value.valueType === 'targets') return this.dynamicTargets(value)
+        if (value.valueType === 'event') return this.dynamicEvent(value)
+        if (value.valueType === 'events') return this.dynamicEvents(value)
+    }
+
+    dynamicString(obj: DynamicStringObject): string {
         if (obj.from === 'target') {
-            const target = this.wrapDynamicTarget(obj.target)
-            return () => (TargetToStringMaps[obj.stringMap] as TargetToStringMap)(target()[0])
+            const target = this.dynamicTarget(obj.target)[0]
+            return (TargetToStringMaps[obj.stringMap] as TargetToStringMap)(target)
         }
     }
 
-    wrapDynamicTarget(obj: DynamicTargetObject): DynamicTargets {
-        if (obj.from === 'targetDomain') return TargetDomains(this, obj.targetDomain)
-        if (obj.from === 'targets') return DynamicTargetReducers[obj.reducer](this.wrapDynamicTargets(obj.targets), obj.criterionMap)
+    dynamicTarget(obj: DynamicTargetObject): GameObject[] {
+        if (obj.from === 'targetDomain') return this.targetDomains(obj.targetDomain)
+        if (obj.from === 'targets') return DynamicTargetReducers[obj.reducer](this.dynamicTargets(obj.targets), TargetToNumberMaps[obj.criterionMap])
         if (obj.from === 'event') {
-            const event = this.wrapDynamicEvent(obj.event)
-            return () => [(EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event()[0])]
+            const event = this.dynamicEvent(obj.event)[0]
+            return [(EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event)]
         }
     }
 
-    wrapDynamicTargets(obj: DynamicTargetsObject): DynamicTargets {
+    dynamicTargets(obj: DynamicTargetsObject): GameObject[] {
         if (obj.from === 'targetDomain') {
-            const unfiltered = TargetDomains(this, obj.targetDomain)
+            const unfiltered = this.targetDomains(obj.targetDomain)
             if (obj.requirements) {
-                const requirements = obj.requirements.map(requirement => this.wrapTargetRequirement(requirement))
-                return () => requirements.reduce((filtered, targetFilter) => (filtered.filter(target => targetFilter(target))), unfiltered())
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(target, requirement))), unfiltered)
             }
             return unfiltered
         }
         if (obj.from === 'events') {
-            const events = this.wrapDynamicEvents(obj.events)
-            const unfiltered = () => events().map(event => (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event))
+            const events = this.dynamicEvents(obj.events)
+            const unfiltered = events.map(event => (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event))
             if (obj.requirements) {
-                const requirements = obj.requirements.map(requirement => this.wrapTargetRequirement(requirement))
-                return () => requirements.reduce((filtered, targetFilter) => (filtered.filter(target => targetFilter(target))), unfiltered())
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(target, requirement))), unfiltered)
             }
             return unfiltered
         }
     }
 
-    wrapDynamicEvent(obj: DynamicEventObject): DynamicEvents {
-        if (obj.from === 'events') return DynamicEventReducers[obj.reducer](this.wrapDynamicEvents(obj.events))
+    dynamicEvent(obj: DynamicEventObject): GameEvent[] {
+        if (obj.from === 'events') return DynamicEventReducers[obj.reducer](this.dynamicEvents(obj.events))
     }
 
-    wrapDynamicEvents(obj: DynamicEventsObject): DynamicEvents {
-        if (obj.from === 'eventDomain') return EventDomains(this, obj.eventDomain)
+    dynamicEvents(obj: DynamicEventsObject): GameEvent[] {
+        if (obj.from === 'eventDomain') return this.eventDomains(obj.eventDomain)
     }
 
-    wrapDynamicNumber(obj: DynamicNumberObject): DynamicNumber {
-        if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.wrapDynamicNumbers(obj.numbers))
+    dynamicNumber(obj: DynamicNumberObject): number {
+        if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.dynamicNumbers(obj.numbers))
         if (obj.from === 'target') {
-            const target = this.wrapDynamicTarget(obj.target)
-            return () => (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target()[0])
+            const target = this.dynamicTarget(obj.target)[0]
+            return (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)
         }
     }
 
-    wrapDynamicNumbers(obj: DynamicNumbersObject): DynamicNumbers {
+    dynamicNumbers(obj: DynamicNumbersObject): number[] {
         if (obj.from === 'targets') {
-            const targets = this.wrapDynamicTargets(obj.targets)
-            return () => targets().map(target => (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target))
+            const targets = this.dynamicTargets(obj.targets)
+            return targets.map(target => (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target))
         }
     }
 
-    wrapCompoundDynamicNumber(object: CompoundDynamicNumberObject): DynamicNumber {
-        const baseValue = object.baseValue
-        const numberMods = object.numberMods.map(obj => this.wrapNumberMod(obj))
-        return () => numberMods.reduce((accumulator, valueMod) => valueMod(accumulator), baseValue)
-    }
+    // wrapCompoundDynamicNumber(object: CompoundDynamicNumberObject): DynamicNumber {
+    //     const baseValue = object.baseValue
+    //     const numberMods = object.numberMods.map(obj => this.wrapNumberMod(obj))
+    //     return () => numberMods.reduce((accumulator, valueMod) => valueMod(accumulator), baseValue)
+    // }
 
-    wrapNumberMod(obj: NumberModObject): DynamicNumberOperator {
-        if (obj.hasOwnProperty('value')) {
-            return DynamicNumberOperators[obj.operator](obj.value)
-        } else {
-            return DynamicNumberOperators[obj.operator](this.wrapDynamicNumber(obj.valueObj as DynamicNumberObject))
-        }
-    }
+    // wrapNumberMod(obj: NumberModObject): DynamicNumberOperator {
+    //     if (obj.hasOwnProperty('value')) {
+    //         return DynamicNumberOperators[obj.operator](obj.value)
+    //     } else {
+    //         return DynamicNumberOperators[obj.operator](this.dynamicNumber(obj.valueObj as DynamicNumberObject))
+    //     }
+    // }
 
-    wrapActionFunction(obj: ActionObject): ActionFunction {
+    actionFunction(actionEvent: ActionEvent, obj: ActionObject): void {
         const values: any = {}
         for (let property in obj.values) {
             values[property] = this.dynamicValue(obj.values[property])
         }
         if (obj.stored) values['stored'] = obj.stored
-        const manualAction = ActionOperations[obj.operation](this, values)
+        const actionOperation = ActionOperations[obj.operation]
         if (obj.actionType === 'autoAction' && obj.targets) {
-            const targets = this.dynamicTargets(obj.targets)
-            const autoAction = (actionEvent: ActionEvent) => {
-                const targetedEvent = Object.assign({}, actionEvent, { targets: targets() })
-                manualAction(targetedEvent)
-            }
-            return autoAction
+            const targets = this.dynamicValue(obj.targets) as GameObject[]
+            const targetedEvent = Object.assign({}, actionEvent, { targets })
+            return actionOperation(this, targetedEvent, values)
         }
-        return manualAction
+        return actionOperation(this, actionEvent, values)
     }
 
-    wrapTargetRequirement(obj: TargetRequirementObject): TargetRequirement {
+    targetRequirement(target: GameObject, obj: TargetRequirementObject): boolean {
         const values: any = {}
         for (let property in obj.values) {
             values[property] = this.dynamicValue(obj.values[property])
         }
-        const req = TargetRequirements[obj.targetRequirement](this, values)
-        // if (obj.targetMap) {
-        //     return (target) => req(obj.targetMap(target))
-        // }
-        return req
+        return TargetRequirements[obj.targetRequirement](this, target, values)
     }
 
-    wrapActiveRequirement(obj: ActiveRequirementObject): ActiveRequirement {
+    activeRequirement(obj: ActiveRequirementObject): boolean {
         const values: any = {}
         for (let property in obj.values) {
             values[property] = this.dynamicValue(obj.values[property])
@@ -272,7 +259,7 @@ import ActiveRequirementObject from "../structs/ActiveRequirementObject"
 import ActiveRequirement from "../functionTypes/ActiveRequirement"
 import ActiveRequirements from "../dictionaries/ActiveRequirements"
 import Turn from "../gamePhases/Turn"
-import ActionEvent from "../gameEvents/ActionEvent"
+import ActionActionEvent from "../gameEvents/ActionActionEvent"
 import ActionObject from "../structs/ActionObject"
 import AutoActionObject from "../structs/AutoActionObject"
 import EventModActionObject from "../structs/EventModActionObject"
@@ -299,4 +286,7 @@ import TargetToNumberMap from "../functionTypes/TargetToNumberMap"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import TargetToStringMap from "../functionTypes/TargetToStringMap"
 import EnchantmentIDString from "../stringTypes/EnchantmentIDString"
+import TargetDomainString from "../stringTypes/TargetDomainString"
+import EventsDomainString from "../stringTypes/EventsDomainString"
+import ActionEvent from "../gameEvents/ActionEvent"
 

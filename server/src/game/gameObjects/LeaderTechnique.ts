@@ -9,6 +9,8 @@ import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
 import ActiveRequirementObject from "../structs/ActiveRequirementObject";
 import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
+import ActionActionObject from "../structs/ActionActionObject";
+import EventActionObject from "../structs/EventActionObject";
 
 abstract class LeaderTechnique extends PersistentCard {
     collectable: false
@@ -19,8 +21,43 @@ abstract class LeaderTechnique extends PersistentCard {
     subtype: LeaderTechniqueSubtypeString
     zone: LeaderTechniqueZoneString
 
-    constructor(game: Game, owner: GamePlayer, zone: LeaderTechniqueZoneString, id: string, name: string, subtype: LeaderTechniqueSubtypeString, rawCost: number, staticCardText: string = '', actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
-        super(game, owner, zone, id, name, 'LeaderTechnique', subtype, false, rawCost, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
+    constructor(
+        game: Game,
+        owner: GamePlayer,
+        zone: LeaderTechniqueZoneString,
+        id: string,
+        name: string,
+        subtype: LeaderTechniqueSubtypeString,
+        rawCost: number,
+        staticCardText: string = '',
+        actions: ActionActionObject[][],
+        events: EventActionObject[][], 
+        playRequirements: ActiveRequirementObject[],
+        enchantments: EnchantmentIDString[],
+        targeted: boolean = false,
+        targetDomain: TargetsDomainString | TargetsDomainString[],
+        targetRequirements: TargetRequirementObject[],
+        repeatable: boolean
+    ) {
+        super(
+            game,
+            owner,
+            zone,
+            id,
+            name,
+            'LeaderTechnique',
+            subtype,
+            false,
+            rawCost,
+            staticCardText,
+            actions,
+            events, 
+            playRequirements,
+            enchantments,
+            targeted,
+            targetDomain,
+            targetRequirements
+        )
         this.repeatable = repeatable
         this.ready = false
         this.inPlayZone = 'leaderTechniqueZone'
@@ -54,16 +91,11 @@ abstract class LeaderTechnique extends PersistentCard {
 
     updateValidTargets(): void {
         if (this.inPlay() && this.targeted) {
-        //   let newTargets = this.targetDomain(this.owner)
-        //   this.targetRequirements.forEach(requirement => {
-        //     newTargets = newTargets.filter(target => requirement(this, target))
-        //   })
-        //   this.validTargets = newTargets
-        this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(target)), this.targetDomain())
+            this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(target, requirement)), this.targetDomain())
         } else {
-          this.validTargets = []
+            this.validTargets = []
         }
-      }
+    }
 
     moveZone(destination: LeaderTechniqueZoneString): void {
         if (destination === 'leaderTechniqueZone' && this.owner.leaderTechniqueZone[0]) this.owner.leaderTechniqueZone[0].moveZone('graveyard')
@@ -75,7 +107,7 @@ abstract class LeaderTechnique extends PersistentCard {
 
     canBeSelected(): boolean {
         return this.inPlay() && this.canBeUsed()
-      }
+    }
 
     canBeUsed(): boolean {
         return this.ready && this.controller().canUse(this)

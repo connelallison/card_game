@@ -1,12 +1,9 @@
 import Game from "../gamePhases/Game";
-import WorkCreation from "../gameObjects/WorkCreation";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import TriggerRequirements from "../dictionaries/TriggerRequirements";
-import ActionOperations from "../dictionaries/ActionOperations";
+import GameObject from "../gameObjects/GameObject";
 
 class HolyBookTrigger extends TriggerEnchantment {
-    owner: WorkCreation
-    constructor(game: Game, owner: WorkCreation) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,
@@ -22,13 +19,15 @@ class HolyBookTrigger extends TriggerEnchantment {
                     playRequirement: "isMyTurn"
                 }],
                 actions: [{
+                    actionType: 'autoAction',
                     operation: 'heal',
                     values: {
                         healing: 1,
                     },
                     targets: ['friendlyBoard', 'friendlyLeader']
                 }],
-            }]
+            }],
+            false,
         )
     }
 }

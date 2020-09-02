@@ -17,14 +17,14 @@ class UsePhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        const card = event.card as TechniqueCreation | LeaderTechnique
+        const card = event.objectSource as TechniqueCreation | LeaderTechnique
         this.spendMoneyPhase()
         event.generateLog()
         this.cacheEvent(event, 'use')
         if (!card.repeatable) card.ready = false
         const actionEvent = new ActionEvent(this.game(), {
-            player: event.player,
-            card: event.card,
+            controller: event.controller,
+            objectSource: event.objectSource,
             targets: event.targets
         })
         this.startChild(new Phases.ActionPhase(this, actionEvent))
@@ -34,11 +34,11 @@ class UsePhase extends EventPhase {
 
     spendMoneyPhase(): void {
         const event = this.event
-        if (event.card.cost > 0) {
+        if (event.objectSource.cost > 0) {
             const spendMoneyEvent = new SpendMoneyEvent(this.game(), {
-                player: event.player,
-                card: event.card,
-                money: event.card.cost
+                player: event.controller,
+                card: event.objectSource,
+                money: event.objectSource.cost
             })
             this.startChild(new Phases.SpendMoneyPhase(this, spendMoneyEvent))
         }

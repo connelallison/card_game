@@ -2,18 +2,19 @@ import Creation from "./Creation";
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import CreationZoneString from "../stringTypes/CreationZoneString";
-import TargetDomainString from "../stringTypes/TargetDomainString";
-import ActionFunctionObject from "../structs/ActionFunctionObject";
+import TargetsDomainString from "../stringTypes/TargetsDomainString";
+import ActionObject from "../structs/ActionObject";
 import TargetRequirementObject from "../structs/TargetRequirementObject";
-import PlayRequirementObject from "../structs/PlayRequirementObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
 
 abstract class TechniqueCreation extends Creation {
     subtype: 'Technique'
     ready: boolean
     repeatable: boolean
 
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[], targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
-        super(game, owner, zone, id, name, 'Technique', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawHealth: number, staticCardText: string = '', actions: ActionObject[] = [], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[], repeatable: boolean) {
+        super(game, owner, zone, id, name, 'Technique', collectable, rawCost, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
         this.repeatable = repeatable
         this.ready = false
 

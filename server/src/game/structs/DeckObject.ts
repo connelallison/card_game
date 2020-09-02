@@ -1,7 +1,9 @@
+import CardIDString from "../stringTypes/CardIDString";
+
 interface DeckObject {
-    leader: string
-    passive: string
-    cards: string[]
+    leader: CardIDString
+    passive: CardIDString
+    cards: CardIDString[]
 }
 
 export default DeckObject

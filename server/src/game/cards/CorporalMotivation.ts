@@ -17,18 +17,21 @@ class CorporalMotivation extends TechniqueCreation {
       'Deal 1 damage to a follower, then give it +3 Attack.',
       [
         {
+          actionType: 'manualAction',
           operation: "damage",
           values: {
             damage: 1,
           },
         },
         {
+          actionType: 'manualAction',
           operation: 'buffCharacterAttack',
           values: {
             attack: 3,
           }
         }
       ],
+      [],
       [],
       true,
       ['enemyBoard', 'friendlyBoard'],

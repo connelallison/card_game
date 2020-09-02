@@ -19,11 +19,11 @@ class ClubOfLooting extends WeaponCreation {
             'Your Leader has Pillage.',
             [],
             [],
+            ['Pillage'],
             false,
             null,
             null
         )
-        this.addEnchantment(new Enchantments.Pillage(this.game, this))
     }
 }
 

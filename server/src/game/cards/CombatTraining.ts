@@ -17,11 +17,11 @@ class CombatTraining extends PermanentPassive {
             'Passive: Your Knights have +1 Attack.',
             [],
             [],
+            ['CombatTrainingAura'],
             false,
             null,
             null,
         )
-        this.addEnchantment(new Enchantments.CombatTrainingAura(this.game, this))
     }
 }
 

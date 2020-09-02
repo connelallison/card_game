@@ -1,10 +1,10 @@
-import PlayRequirementString from "../stringTypes/PlayRequirementString";
+import ActiveRequirementString from "../stringTypes/ActiveRequirementString";
 import DynamicNumberObject from "./DynamicNumberObject";
 import DynamicTargetObject from "./DynamicTargetObject";
 
-interface PlayRequirementObject {
-    playRequirement: PlayRequirementString,
+interface ActiveRequirementObject {
+    playRequirement: ActiveRequirementString,
     values?: {[index: string]: number | boolean | string | DynamicNumberObject | DynamicTargetObject}
 }
 
-export default PlayRequirementObject
+export default ActiveRequirementObject

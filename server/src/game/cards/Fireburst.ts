@@ -16,12 +16,14 @@ class Fireburst extends ActionMoment {
       'Deal 4 damage to a follower with 4 or more attack.',
       [
         {
+          actionType: 'manualAction',
           operation: "damage",
           values: {
             damage: 4,
           },
         }  
       ],
+      [],
       [],
       true, 
       ['enemyBoard', 'friendlyBoard'],

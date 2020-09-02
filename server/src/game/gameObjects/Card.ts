@@ -6,14 +6,16 @@ import ZoneString from '../stringTypes/ZoneString'
 import CardTypeString from '../stringTypes/CardTypeString'
 import ActionFunction from '../functionTypes/ActionFunction'
 import TargetRequirement from '../functionTypes/TargetRequirement'
-import PlayRequirement from '../functionTypes/PlayRequirement'
+import ActiveRequirement from '../functionTypes/ActiveRequirement'
 import CardSubtypeString from '../stringTypes/CardSubtypeString'
-import TargetDomainString from '../stringTypes/TargetDomainString'
+import TargetsDomainString from '../stringTypes/TargetsDomainString'
 import TargetDomains from '../dictionaries/TargetDomains'
 import GameObjectData from '../structs/GameObjectData'
-import ActionFunctionObject from '../structs/ActionFunctionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
-import PlayRequirementObject from '../structs/PlayRequirementObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import ActionObject from '../structs/ActionObject'
+import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
+import Enchantments from '../dictionaries/Enchantments'
 
 abstract class Card extends GameObject {
   owner: GamePlayer
@@ -24,13 +26,13 @@ abstract class Card extends GameObject {
   cost: number
   staticCardText: string
   actions: ActionFunction[]
-  playRequirements: PlayRequirement[]
+  playRequirements: ActiveRequirement[]
   targeted: boolean
   targetDomain: () => any[]
   targetRequirements: TargetRequirement[]
   validTargets: any
 
-  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: ActionFunctionObject[] = [], playRequirements: PlayRequirementObject[],  targeted: boolean = false, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[]) {
+  constructor(game: Game, owner: GamePlayer, zone: ZoneString, id: string, name: string, type: CardTypeString, subtype: CardSubtypeString, collectable: boolean, rawCost: number, staticCardText: string = '', actions: ActionObject[] = [], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean = false, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[]) {
     super(game, id, name, type, subtype)
     this.owner = owner
     this.zone = zone
@@ -39,11 +41,12 @@ abstract class Card extends GameObject {
     this.cost = rawCost
     this.staticCardText = staticCardText
     this.actions = actions.map(actionObj => this.wrapActionFunction(actionObj))
-    this.playRequirements = playRequirements ? playRequirements.map(reqObj => this.wrapPlayRequirement(reqObj)) : null
+    this.playRequirements = playRequirements ? playRequirements.map(reqObj => this.wrapActiveRequirement(reqObj)) : null
     this.targeted = targeted
     this.targetDomain = TargetDomains(this, targetDomain)
     this.targetRequirements = targetRequirements ? targetRequirements.map(reqObj => this.wrapTargetRequirement(reqObj)) : null
     this.validTargets = []
+    this.addBaseEnchantments(enchantments)
   }
 
   provideReport (): ObjectReport {
@@ -104,6 +107,14 @@ abstract class Card extends GameObject {
 
   index(): number {
     return (this.controller()[this.zone] as Card[]).indexOf(this)
+  }
+
+  cardOwner(): Card {
+    return this
+  }
+
+  addBaseEnchantments(enchantments: EnchantmentIDString[]): void {
+    enchantments.forEach(enchantment => this.addEnchantment(this.createEnchantment(enchantment, this)))
   }
 
   abstract moveZone(destination: ZoneString): void 

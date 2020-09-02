@@ -60,8 +60,8 @@ class PlayPhase extends EventPhase {
         const event = this.event
         if (event.card.actions.length > 0) {
             const actionEvent = new ActionEvent(this.game(), {
-                player: event.player,
-                card: event.card,
+                controller: event.player,
+                objectSource: event.card,
                 targets: event.targets,
             })
             this.startChild(new Phases.ActionPhase(this, actionEvent))

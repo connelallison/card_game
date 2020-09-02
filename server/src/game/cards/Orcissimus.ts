@@ -19,27 +19,42 @@ class Orcissimus extends FamousFollower {
       5,
       'Action: Summon the last friendly minion that died.',
       [{
+        actionType: 'autoAction',
         operation: "summonCard",
         values: {
           cardID: {
-            valueType: 'target',
-            reducer: 'last',
-            targetDomain: 'deathEvents',
-            requirements: [{
-              targetRequirement: 'isFriendly',
-              targetMap: (event: DeathEvent) => event.died,
-            }, {
-              targetRequirement: 'isType',
-              values: {
-                type: 'Follower',
-              },
-              targetMap: (event: DeathEvent) => event.died
-            }],
-            resultMap: (event) => event.died.id
-          } as DynamicTargetObject
+            valueType: 'string',
+            from: 'target',
+            stringMap: 'classID',
+            target: {
+              valueType: 'target',
+              from: 'targets',
+              reducer: 'last',
+              targets: {
+                valueType: 'targets',
+                from: 'events',
+                targetMap: 'deathEventDestroyedTarget',
+                requirements: [{
+                  targetRequirement: 'isFriendly',
+                }, {
+                  targetRequirement: 'isType',
+                  values: {
+                    type: 'Follower',
+                  },
+                }],
+                events: {
+                  valueType: 'events',
+                  from: 'eventDomain',
+                  eventDomain: 'deathEvents',
+                }
+              }
+            }
+
+          }
         }
       }
       ],
+      [],
       [],
       false,
       null,

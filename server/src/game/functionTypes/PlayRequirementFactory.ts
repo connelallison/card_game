@@ -1,7 +1,7 @@
-import PlayRequirement from "./PlayRequirement";
+import ActiveRequirement from "./ActiveRequirement";
 
 interface PlayRequirementFactory {
-    (...args): PlayRequirement
+    (...args): ActiveRequirement
 }
 
 export default PlayRequirementFactory

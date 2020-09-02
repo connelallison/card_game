@@ -1,3 +1,3 @@
-type TargetDomainString = 'self' | 'enemyLeader' | 'friendlyLeader' | 'enemyBoard' | 'friendlyBoard' | 'enemyCreations' | 'friendlyCreations' | 'enemyHand' | 'friendlyHand' | 'enemyDeck' | 'friendlyDeck' | 'deathEvents' | 'enterPlayEvents'
+type TargetDomainString = 'self' | 'enemyLeader' | 'friendlyLeader'
 
 export default TargetDomainString

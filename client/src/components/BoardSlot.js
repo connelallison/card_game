@@ -23,8 +23,6 @@ class BoardSlot extends Component {
             this.props.interactivity.clearSelectedSlot();
         } else if (this.canBeSelected()) {
             if (!this.props.selected.targeted) {
-                console.log(this.props.interactivity)
-                // console.log(this.props.interactivity.map(fun => fun.toString()))
                 this.props.interactivity.chooseSelectedSlotNoTarget(this.props.object)
             } else {
                 this.props.interactivity.chooseSelectedSlot(this.props.object)

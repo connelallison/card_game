@@ -1,13 +1,10 @@
 import Game from "../gamePhases/Game";
-import WonderTriggerEnchantment from "../gameObjects/WonderTriggerEnchantment";
-import TriggerRequirements from "../dictionaries/TriggerRequirements";
-import WonderCreation from "../gameObjects/WonderCreation";
 import DrawEvent from "../gameEvents/DrawEvent";
+import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
+import GameObject from "../gameObjects/GameObject";
 
-class KnightAcademyTrigger extends WonderTriggerEnchantment {
-    owner: WonderCreation
-
-    constructor(game: Game, owner: WonderCreation) {
+class KnightAcademyTrigger extends TriggerEnchantment {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,
@@ -31,20 +28,22 @@ class KnightAcademyTrigger extends WonderTriggerEnchantment {
                         values: {
                             type: 'Follower',
                         },
-                        eventMap: (event: DrawEvent) => event.card
+                        targetMap: 'drawEventDrawnCard'
                     },
                     {
                         targetRequirement: 'isFriendly',
-                        eventMap: (event: DrawEvent) => event.card
+                        targetMap: 'drawEventDrawnCard'
                     }
                 ],
                 actions: [{
+                    actionType: 'autoAction',
                     operation: 'summonCard',
                     values: {
                         cardID: 'Knight'
                     }
                 }]
-            }]
+            }],
+            true,
         )
     }
 }

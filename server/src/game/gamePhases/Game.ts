@@ -1,6 +1,6 @@
-import GamePhase from './GamePhase'
 import GameObject from '../gameObjects/GameObject'
-GameObject // forces GameObject to load in properly
+// GameObject // forces GameObject to load in properly
+import GamePhase from './GamePhase'
 
 class Game extends GamePhase {
   event: EventEmitter
@@ -169,8 +169,8 @@ class Game extends GamePhase {
       if (!selected.targeted || this.permissions.canTarget(selected, target)) {
         const targets = !selected.targeted ? [] : [target] // includes target if technique is targeted
         const useEvent = new UseEvent(this, {
-          player: selected.owner,
-          card: selected,
+          controller: selected.owner,
+          objectSource: selected,
           targets,
         })
         this.startSequence('UsePhase', useEvent)
@@ -222,8 +222,10 @@ class Game extends GamePhase {
     player2deck.leaderTechnique.putIntoPlay()
     player1deck.passive.putIntoPlay()
     player2deck.passive.putIntoPlay()
-    this.player1.deck = player1deck.cards
-    this.player2.deck = player2deck.cards
+    player1deck.cards.forEach(card => card.moveZone('deck'))
+    player2deck.cards.forEach(card => card.moveZone('deck'))
+    // this.player1.deck = player1deck.cards
+    // this.player2.deck = player2deck.cards
   }
 
   initListeners() {

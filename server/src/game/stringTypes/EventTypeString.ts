@@ -11,5 +11,10 @@ type EventTypeString = 'death'
                         | 'startOfTurn' 
                         | 'endOfTurn' 
                         | 'spendMoney'
+                        | 'trigger'
+
+// import EventCache from "../gamePhases/EventCache"
+
+// type EventTypeString = keyof typeof EventCache
 
 export default EventTypeString

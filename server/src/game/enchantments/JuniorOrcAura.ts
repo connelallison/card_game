@@ -1,13 +1,9 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
 import Game from "../gamePhases/Game";
-import Card from "../gameObjects/Card";
-import Follower from "../gameObjects/Follower";
-import TargetRequirements from "../dictionaries/TargetRequirements";
+import GameObject from "../gameObjects/GameObject";
 
 class JuniorOrcAura extends AuraEnchantment {
-    owner: Follower
-
-    constructor(game: Game, owner: Card) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,

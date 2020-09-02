@@ -14,6 +14,7 @@ class KingFredTheSaintlyRecruit extends ActiveLeaderTechnique {
             2,
             'Summon a 2/2 Knight.',
             [{
+                actionType: 'autoAction',
                 operation: 'summonCard',
                 values: {
                     cardID: 'Knight',
@@ -25,6 +26,7 @@ class KingFredTheSaintlyRecruit extends ActiveLeaderTechnique {
                     type: 'Follower',
                 }
             }],
+            [],
             false,
             null,
             null,

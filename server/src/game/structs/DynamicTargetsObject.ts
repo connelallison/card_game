@@ -1,10 +1,6 @@
-import TargetDomainString from "../stringTypes/TargetDomainString";
-import TargetRequirementObject from "./TargetRequirementObject";
+import DynamicTargetsFromEvents from "./DynamicTargetsFromEvents";
+import DynamicTargetsFromTargetDomain from "./DynamicTargetsFromTargetDomain";
 
-interface DynamicTargetsObject {
-    valueType: 'target',
-    requirements?: TargetRequirementObject[],
-    targetDomain: TargetDomainString | TargetDomainString[],
-}
+type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFromTargetDomain
 
 export default DynamicTargetsObject

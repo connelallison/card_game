@@ -4,7 +4,7 @@ import AttackEvent from "../gameEvents/AttackEvent"
 import CardTypeString from "../stringTypes/CardTypeString"
 import CardSubtypeString from "../stringTypes/CardSubtypeString"
 import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString"
-import DynamicTarget from "../functionTypes/DynamicTarget"
+import DynamicTargets from "../functionTypes/DynamicTargets"
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment"
 
 const TriggerRequirements: {[index: string]: TriggerRequirementFactory} = {
@@ -14,7 +14,7 @@ const TriggerRequirements: {[index: string]: TriggerRequirementFactory} = {
     isMyTurn: (enchantment: TriggerEnchantment) => (event: GameEvent) => (event.turn.activePlayer === enchantment.controller()),
     myLeaderAttacks: (enchantment: TriggerEnchantment) => (event: AttackEvent) => (event.attacker === enchantment.controller().leaderZone[0]),
     canSummonType: (enchantment: TriggerEnchantment, cardType: PersistentCardTypeString) => (event: GameEvent) => (enchantment.controller().canSummonType(cardType)),
-    isDynamicTarget: (enchantment: TriggerEnchantment, map, target: DynamicTarget) => (event: GameEvent) => (map(event) === target())
+    isDynamicTarget: (enchantment: TriggerEnchantment, map, target: DynamicTargets) => (event: GameEvent) => (map(event) === target())
 }
 
 export default TriggerRequirements

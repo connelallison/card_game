@@ -3,10 +3,11 @@ import Game from "../gamePhases/Game";
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import ActionEventObject from "./ActionEventObject";
+import GameObject from "../gameObjects/GameObject";
 
 class ActionEvent extends GameEvent {
-    player: GamePlayer
-    card: Card
+    controller: GamePlayer
+    objectSource: GameObject
     targets: Card[]
 
     constructor(game: Game, object: ActionEventObject) {
@@ -16,7 +17,7 @@ class ActionEvent extends GameEvent {
 
     generateLog() {
         const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
-        this.log = `${this.card.name}'s action activates${targets}.`
+        this.log = `${this.objectSource.name}'s action activates${targets}.`
     }
 }
 

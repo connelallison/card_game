@@ -3,24 +3,26 @@ import GamePlayer from './GamePlayer'
 import Character from './Character'
 import LeaderZoneString from '../stringTypes/LeaderZoneString'
 import WeaponCreation from './WeaponCreation'
-import TargetDomainString from '../stringTypes/TargetDomainString'
+import TargetsDomainString from '../stringTypes/TargetsDomainString'
 import GameObjectData from '../structs/GameObjectData'
 import FlagsObject from '../structs/FlagsObject'
-import ActionFunctionObject from '../structs/ActionFunctionObject'
+import ActionObject from '../structs/ActionObject'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
-import PlayRequirementObject from '../structs/PlayRequirementObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 import ObjectReport from '../structs/ObjectReport'
 import SummonEvent from '../gameEvents/SummonEvent'
+import CardIDString from '../stringTypes/CardIDString'
+import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
   inPlayZone: 'leaderZone'
   type: 'Leader'
   subtype: 'Leader'
-  leaderTechniqueID: string
+  leaderTechniqueID: CardIDString
 
-  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionFunctionObject[], playRequirements: PlayRequirementObject[], targeted: boolean, targetDomain: TargetDomainString | TargetDomainString[], targetRequirements: TargetRequirementObject[], leaderPowerID: string) {
-    super(game, owner, zone, id, name, 'Leader', 'Leader', collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, targeted, targetDomain, targetRequirements)
+  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString, id: string, name: string, collectable: boolean, rawCost: number, rawAttack: number, rawHealth: number, staticCardText: string, actions: ActionObject[], playRequirements: ActiveRequirementObject[], enchantments: EnchantmentIDString[], targeted: boolean, targetDomain: TargetsDomainString | TargetsDomainString[], targetRequirements: TargetRequirementObject[], leaderPowerID: CardIDString) {
+    super(game, owner, zone, id, name, 'Leader', 'Leader', collectable, rawCost, rawAttack, rawHealth, staticCardText, actions, playRequirements, enchantments, targeted, targetDomain, targetRequirements)
     this.inPlayZone = 'leaderZone'
     this.health = this.rawHealth
     this.leaderTechniqueID = leaderPowerID

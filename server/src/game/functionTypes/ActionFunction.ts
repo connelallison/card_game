@@ -1,8 +1,7 @@
-import Card from "../gameObjects/Card";
-import GameObject from "../gameObjects/GameObject";
+import ActionEvent from "../gameEvents/ActionEvent";
 
 interface ActionFunction {
-    (targets?): void
+    (event: ActionEvent): void
 }
 
 export default ActionFunction

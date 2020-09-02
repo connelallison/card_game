@@ -1,36 +1,37 @@
 import TargetRequirement from "../functionTypes/TargetRequirement"
 import GameObject from "../gameObjects/GameObject"
 import TargetDomains from "./TargetDomains"
-import TargetDomainString from "../stringTypes/TargetDomainString"
+import TargetsDomainString from "../stringTypes/TargetsDomainString"
 import DynamicTargetsObject from "../structs/DynamicTargetsObject"
+import DynamicNumbers from "../functionTypes/DynamicNumbers"
 
-const Reducers = {
-    count: (array: any[]) => array.reduce(accumulator => accumulator + 1, 0),
-    sum: (array: any[], map) => array.map(obj => map(obj)).reduce((accumulator, val) => accumulator + val, 0),
-    max: (array: any[], map) => array.length === 0 ? null : array.map(obj => map(obj)).reduce((accumulator, val) => accumulator < val ? val : accumulator),
-    min: (array: any[], map) => array.length === 0 ? null : array.map(obj => map(obj)).reduce((accumulator, val) => accumulator > val ? val : accumulator),
-}
+// const Reducers = {
+//     count: (array: number[]) => array.reduce(accumulator => accumulator + 1, 0),
+//     sum: (array: number[], map) => array.map(obj => map(obj)).reduce((accumulator, val) => accumulator + val, 0),
+//     max: (array: number[], map) => array.length === 0 ? null : array.map(obj => map(obj)).reduce((accumulator, val) => accumulator < val ? val : accumulator),
+//     min: (array: number[], map) => array.length === 0 ? null : array.map(obj => map(obj)).reduce((accumulator, val) => accumulator > val ? val : accumulator),
+// }
 
 const DynamicNumberReducers = {
-    count: (targets) => (): number => {
-        // const targets = TargetDomains(object, targetsObj.domain)()
-        // const filtered = targetsObj.requirements.reduce((filtered, targetFilter) => (filtered.filter(target => targetFilter(object, target))), targets)
-        return Reducers.count(targets())
+    count: (numbers: DynamicNumbers) => (): number => {
+        const array = numbers()
+        return array.reduce(accumulator => accumulator + 1, 0)
+        // return Reducers.count(numbers())
     },
-    sum: (targets, map) => (): number => {
-        // const targets = TargetDomains(object, targetsObj.domain)()
-        // const filtered = targetsObj.requirements.reduce((filtered, targetFilter) => (filtered.filter(target => targetFilter(object, target))), targets)
-        return Reducers.sum(targets(), map)
+    sum: (numbers: DynamicNumbers) => (): number => {
+        const array = numbers()
+        return array.reduce((accumulator, val) => accumulator + val, 0)
+        // return Reducers.sum(numbers(), map)
     },
-    max: (targets, map) => (): number => {
-        // const targets = TargetDomains(object, targetsObj.domain)()
-        // const filtered = targetsObj.requirements.reduce((filtered, targetFilter) => (filtered.filter(target => targetFilter(object, target))), targets)
-        return Reducers.max(targets(), map)
+    max: (numbers: DynamicNumbers) => (): number => {
+        const array = numbers()
+        return array.length === 0 ? null : array.reduce((accumulator, val) => accumulator < val ? val : accumulator)
+        // return Reducers.max(numbers(), map)
     },
-    min: (targets, map) => (): number => {
-        // const targets = TargetDomains(object, targetsObj.domain)()
-        // const filtered = targetsObj.requirements.reduce((filtered, targetFilter) => (filtered.filter(target => targetFilter(object, target))), targets)
-        return Reducers.min(targets(), map)
+    min: (numbers: DynamicNumbers) => (): number => {
+        const array = numbers()
+        return array.length === 0 ? null : array.reduce((accumulator, val) => accumulator > val ? val : accumulator)
+        // return Reducers.min(numbers(), map)
     },
 }
 

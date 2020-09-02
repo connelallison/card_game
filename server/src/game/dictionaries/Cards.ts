@@ -20,6 +20,7 @@ import PrinceTimothy from '../cards/PrinceTimothy'
 import HolyProtectors from '../cards/HolyProtectors'
 import SingleMindedFury from '../cards/SingleMindedFury'
 import CombatTraining from '../cards/CombatTraining'
+import BattleOfSuiyang from '../cards/BattleOfSuiyang'
 
 const Cards = {
   PlayerOneFollower,
@@ -44,6 +45,7 @@ const Cards = {
   HolyProtectors,
   SingleMindedFury,
   CombatTraining,
+  BattleOfSuiyang,
 }
 
 export default Cards

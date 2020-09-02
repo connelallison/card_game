@@ -1,11 +1,9 @@
 import StaticEnchantment from "../gameObjects/StaticEnchantment";
 import Game from "../gamePhases/Game";
-import DestroyableCard from "../gameObjects/DestroyableCard";
+import GameObject from "../gameObjects/GameObject";
 
 class Pillage extends StaticEnchantment {
-    owner: DestroyableCard
-    
-    constructor(game: Game, owner: DestroyableCard) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,

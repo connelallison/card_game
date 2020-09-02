@@ -1,12 +1,9 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
 import Game from "../gamePhases/Game";
-import Card from "../gameObjects/Card";
-import Passive from "../gameObjects/Passive";
+import GameObject from "../gameObjects/GameObject";
 
 class CombatTrainingAura extends AuraEnchantment {
-    owner: Passive
-
-    constructor(game: Game, owner: Card) {
+    constructor(game: Game, owner: GameObject) {
         super(
             game,
             owner,

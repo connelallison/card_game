@@ -1,7 +1,8 @@
 import GameEvent from "../gameEvents/GameEvent";
+import TriggerActionEvent from "../gameEvents/TriggerActionEvent";
 
 interface TriggerAction {
-    (event: GameEvent): void
+    (event: TriggerActionEvent): void
 }
 
 export default TriggerAction

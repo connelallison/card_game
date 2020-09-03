@@ -1,44 +1,46 @@
-import Game from "../gamePhases/Game";
 import Moment from "./Moment";
-import GamePlayer from "./GamePlayer";
-import MomentZoneString from "../stringTypes/MomentZoneString";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
+
+export interface ActionMomentData {
+  id: string
+  name: string
+  type: 'Moment'
+  subtype: 'Action'
+  collectable: boolean
+  cost: number
+  staticCardText: string
+  actions: ActionActionObject[][]
+  events?: EventActionObject[][]
+  playRequirements?: ActiveRequirementObject[]
+  enchantments?: EnchantmentIDString[]
+  targeted: boolean
+  targetDomain?: TargetsDomainString | TargetsDomainString[]
+  targetRequirements?: TargetRequirementObject[]
+}
 
 abstract class ActionMoment extends Moment {
+  static readonly data: ActionMomentData
+  readonly data: ActionMomentData
   subtype: 'Action'
 
   constructor(
     game: Game,
     owner: GamePlayer,
-    zone: MomentZoneString,
-    id: string,
-    name: string,
-    collectable: boolean,
-    rawCost: number,
-    staticCardText: string,
-    actions: ActionActionObject[][],
-    events: EventActionObject[][],
-    playRequirements: ActiveRequirementObject[],
-    enchantments: EnchantmentIDString[],
-    targeted: boolean,
-    targetDomain: TargetsDomainString | TargetsDomainString[],
-    targetRequirements: TargetRequirementObject[]
+    data: ActionMomentData,
   ) {
+    const { id, name, collectable, cost, staticCardText, actions, targeted } = data 
+    const targetDomain = data.targetDomain || []
+    const targetRequirements = data.targetRequirements || []
+    const events = data.events || []
+    const enchantments = data.enchantments || []
+    const playRequirements = data.playRequirements || []
     super(
       game,
       owner,
-      zone,
       id,
       name,
       'Action',
       collectable,
-      rawCost,
+      cost,
       staticCardText,
       actions,
       events,
@@ -48,7 +50,16 @@ abstract class ActionMoment extends Moment {
       targetDomain,
       targetRequirements
     )
+    this.data = data
   }
 }
 
 export default ActionMoment
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";

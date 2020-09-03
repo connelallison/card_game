@@ -1,8 +1,3 @@
-import TargetRequirementString from "../stringTypes/TargetRequirementString";
-import ActiveRequirementString from "../stringTypes/ActiveRequirementString";
-import ValuesObject from "./ValuesObject";
-import EventToTargetMapString from "../stringTypes/EventToTargetMapString";
-
 interface TriggerRequirementObject {
     targetRequirement?: TargetRequirementString,
     playRequirement?: ActiveRequirementString,
@@ -11,3 +6,6 @@ interface TriggerRequirementObject {
 }
 
 export default TriggerRequirementObject
+
+import { TargetRequirementString, ActiveRequirementString, EventToTargetMapString } from "../stringTypes/DictionaryKeyString";
+import ValuesObject from "./ValuesObject";

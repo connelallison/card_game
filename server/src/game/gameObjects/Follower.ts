@@ -1,35 +1,19 @@
-import Game from '../gamePhases/Game'
-import GamePlayer from './GamePlayer'
 import Character from './Character'
-import FollowerZoneString from '../stringTypes/FollowerZoneString'
-import TargetsDomainString from '../stringTypes/TargetsDomainString'
-import ActionObject from '../structs/ActionObject'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import GameObjectData from '../structs/GameObjectData'
-import BoardSlot from './BoardSlot'
-import ObjectReport from '../structs/ObjectReport'
-import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
-import Permissions from '../dictionaries/Permissions'
-import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
-import ActionActionObject from '../structs/ActionActionObject'
-import EventActionObject from '../structs/EventActionObject'
 
 abstract class Follower extends Character {
   zone: FollowerZoneString
   inPlayZone: 'board'
   type: 'Follower'
-  subtype: 'Nameless' | 'Famous'
+  subtype: FollowerSubtypeString
   slot: BoardSlot
   validSlots: BoardSlot[]
 
   constructor(
     game: Game,
     owner: GamePlayer,
-    zone: FollowerZoneString,
     id: string,
     name: string,
-    subtype: 'Nameless' | 'Famous',
+    subtype: FollowerSubtypeString,
     categories: FollowerCategoryString[],
     collectable: boolean,
     rawCost: number,
@@ -47,7 +31,6 @@ abstract class Follower extends Character {
     super(
       game,
       owner,
-      zone,
       id,
       name,
       'Follower',
@@ -268,3 +251,18 @@ abstract class Follower extends Character {
 }
 
 export default Follower
+
+import Game from '../gamePhases/Game'
+import GamePlayer from './GamePlayer'
+import { FollowerZoneString } from '../stringTypes/ZoneString'
+import BoardSlot from './BoardSlot'
+import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
+import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
+import { TargetsDomainString } from '../stringTypes/DomainString'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { ObjectReport } from '../structs/ObjectReport'
+import GameObjectData from '../structs/GameObjectData'
+import { FollowerSubtypeString } from '../stringTypes/ObjectSubtypeString'
+import Permissions from '../dictionaries/Permissions'

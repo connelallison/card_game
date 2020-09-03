@@ -32,7 +32,7 @@ abstract class GameObject {
     }
 
     update(): void {
-        const statics = this.enchantments.filter((enchantment => enchantment instanceof StaticEnchantment && enchantment.active())) as StaticEnchantment[]
+        const statics = this.enchantments.filter((enchantment => enchantment.subtype === 'Static' && enchantment.active())) as StaticEnchantment[]
         const dataObj = statics.reduce((data, enchantment) => {
             enchantment.effects.forEach(effect => effect(data))
             return data
@@ -64,7 +64,7 @@ abstract class GameObject {
     }
 
     removeEnchantment(enchantment: Enchantment): void {
-        if (enchantment instanceof TriggerEnchantment) enchantment.disableListeners()
+        if (enchantment.subtype === 'Trigger') (enchantment as TriggerEnchantment).disableListeners()
         this.enchantments = this.enchantments.filter(item => item !== enchantment)
         this.updateEnchantments()
     }
@@ -105,10 +105,11 @@ abstract class GameObject {
         return EventDomains(this, eventDomain)
     }
 
-    dynamicValue(value: string | boolean | number | DynamicValueObject): string | boolean | number | number[] | GameObject | GameObject[] | GameEvent | GameEvent[] {
+    dynamicValue(value: DynamicValue): string | boolean | number | number[] | GameObject[] | GameEvent[] {
         if (typeof value === 'number') return value
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
+        if (value instanceof Array) return value
         if (value.valueType === 'string') return this.dynamicString(value)
         if (value.valueType === 'number') return this.dynamicNumber(value)
         if (value.valueType === 'numbers') return this.dynamicNumbers(value)
@@ -196,10 +197,13 @@ abstract class GameObject {
         }
         if (obj.stored) values['stored'] = obj.stored
         const actionOperation = ActionOperations[obj.operation]
-        if (obj.actionType === 'autoAction' && obj.targets) {
-            const targets = this.dynamicValue(obj.targets) as GameObject[]
-            const targetedEvent = Object.assign({}, actionEvent, { targets })
-            return actionOperation(this, targetedEvent, values)
+        if (obj.actionType === 'autoAction') {
+            const targetObj = obj.target ? obj.target : obj.targets ? obj.targets : null
+            if (targetObj) {
+                const targets = this.dynamicValue(targetObj) as GameObject[]
+                const targetedEvent = Object.assign({}, actionEvent, { targets })
+                return actionOperation(this, targetedEvent, values)
+            }
         }
         return actionOperation(this, actionEvent, values)
     }
@@ -223,70 +227,43 @@ abstract class GameObject {
 
 export default GameObject
 
+import Phases from "../dictionaries/Phases"
+Phases
+import GameEvent from "../gamePhases/GameEvent"
 import Game from "../gamePhases/Game"
 import GamePlayer from "./GamePlayer"
-import TriggerEnchantment from "./TriggerEnchantment"
 import Enchantment from "./Enchantment"
-import ObjectTypeString from "../stringTypes/ObjectTypeString"
-import Character from "./Character"
-import ObjectSubtypeString from "../stringTypes/ObjectSubtypeString"
-import StaticEnchantment from "./StaticEnchantment"
-import ZoneString from "../stringTypes/ZoneString"
-import DynamicNumber from "../functionTypes/DynamicNumber"
-import GameObjectData from "../structs/GameObjectData"
-import DynamicValue from "../functionTypes/DynamicValue"
+import Card from "./Card"
+import { ZoneString } from "../stringTypes/ZoneString"
+import { ObjectTypeString } from "../stringTypes/ObjectTypeString"
+import { ObjectSubtypeString } from "../stringTypes/ObjectSubtypeString"
 import FlagsObject from "../structs/FlagsObject"
 import EffectFunction from "../functionTypes/EffectFunction"
-import NumberModObject from "../structs/NumberModObject"
-import DynamicNumberOperators from "../dictionaries/DynamicNumberOperators"
-import DynamicNumberReducers from "../dictionaries/DynamicNumberReducers"
-import DynamicNumberOperator from "../functionTypes/DynamicNumberOperator"
-import CompoundDynamicNumberObject from "../structs/CompoundDynamicNumberObject"
-import DynamicNumberObject from "../structs/DynamicNumberObject"
-import DynamicTargetReducers from "../dictionaries/DynamicTargetReducer"
-import DynamicTargetObject from "../structs/DynamicTargetObject"
-import DynamicTargets from "../functionTypes/DynamicTargets"
-import ManualActionObject from "../structs/ManualActionObject"
-import DynamicTargetsObject from "../structs/DynamicTargetsObject"
-import ActionFunction from "../functionTypes/ActionFunction"
-import TargetsDomainString from "../stringTypes/TargetsDomainString"
-import TargetDomains from "../dictionaries/TargetDomains"
-import ActionOperations from "../dictionaries/ActionOperations"
-import TargetRequirementObject from "../structs/TargetRequirementObject"
-import TargetRequirement from "../functionTypes/TargetRequirement"
-import TargetRequirements from "../dictionaries/TargetRequirements"
-import ActiveRequirementObject from "../structs/ActiveRequirementObject"
-import ActiveRequirement from "../functionTypes/ActiveRequirement"
-import ActiveRequirements from "../dictionaries/ActiveRequirements"
+import StaticEnchantment from "./StaticEnchantment"
+import GameObjectData from "../structs/GameObjectData"
+import Character from "./Character"
 import Turn from "../gamePhases/Turn"
-import ActionActionEvent from "../gameEvents/ActionActionEvent"
-import ActionObject from "../structs/ActionObject"
-import AutoActionObject from "../structs/AutoActionObject"
-import EventModActionObject from "../structs/EventModActionObject"
-import EventMod from "../functionTypes/EventMod"
-import EventModOperations from "../dictionaries/EventModOperations"
-import EventMapActionObject from "../structs/EventMapActionObject"
-import GameEvent from "../gameEvents/GameEvent"
-import Card from "./Card"
-import CardIDString from "../stringTypes/CardIDString"
-import DynamicValueObject from "../structs/DynamicValueObject"
-import DynamicEventsObject from "../structs/DynamicEventsObject"
-import DynamicEvents from "../functionTypes/DynamicEvents"
-import DynamicEventObject from "../structs/DynamicEventObject"
-import DynamicEventReducers from "../dictionaries/DynamicEventReducers"
+import { CardIDString, EnchantmentIDString } from "../stringTypes/DictionaryKeyString"
+import { TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
+import TargetDomains from "../dictionaries/TargetDomains"
 import EventDomains from "../dictionaries/EventDomains"
-import DynamicNumbersObject from "../structs/DynamicNumbersObject"
-import DynamicNumbers from "../functionTypes/DynamicNumbers"
-import DynamicStringObject from "../structs/DynamicStringObject"
-import DynamicString from "../functionTypes/DynamicString"
-import EventToTargetMaps from "../dictionaries/EventToTargetMaps"
-import EventToTargetMap from "../functionTypes/EventToTargetMap"
-import TargetToNumberMaps from "../dictionaries/TargetToNumberMaps"
-import TargetToNumberMap from "../functionTypes/TargetToNumberMap"
+import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject } from "../structs/DynamicValueObject"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import TargetToStringMap from "../functionTypes/TargetToStringMap"
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString"
-import TargetDomainString from "../stringTypes/TargetDomainString"
-import EventsDomainString from "../stringTypes/EventsDomainString"
-import ActionEvent from "../gameEvents/ActionEvent"
+import DynamicTargetReducers from "../dictionaries/DynamicTargetReducers"
+import TargetToNumberMaps from "../dictionaries/TargetToNumberMaps"
+import EventToTargetMaps from "../dictionaries/EventToTargetMaps"
+import EventToTargetMap from "../functionTypes/EventToTargetMap"
+import DynamicEventReducers from "../dictionaries/DynamicEventReducers"
+import DynamicNumberReducers from "../dictionaries/DynamicNumberReducers"
+import TargetToNumberMap from "../functionTypes/TargetToNumberMap"
+import ActionEvent from "../gamePhases/ActionEvent"
+import { ActionObject } from "../structs/ActionObject"
+import ActionOperations from "../dictionaries/ActionOperations"
+import TargetRequirementObject from "../structs/TargetRequirementObject"
+import TargetRequirements from "../dictionaries/TargetRequirements"
+import ActiveRequirementObject from "../structs/ActiveRequirementObject"
+import ActiveRequirements from "../dictionaries/ActiveRequirements"
+import { DynamicValue } from "../structs/DynamicValue"
+import TriggerEnchantment from "./TriggerEnchantment"
 

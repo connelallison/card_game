@@ -1,7 +1,4 @@
 import EventPhase from "./EventPhase";
-import Sequence from "./Sequence";
-import AttackEvent from "../gameEvents/AttackEvent";
-import Phases from "../dictionaries/Phases";
 
 class ProposedAttackPhase extends EventPhase {
     parent: Sequence
@@ -23,3 +20,7 @@ class ProposedAttackPhase extends EventPhase {
 }
 
 export default ProposedAttackPhase
+
+import Sequence from "./Sequence";
+import Phases from "../dictionaries/Phases";
+import { AttackEvent } from "./AttackPhase";

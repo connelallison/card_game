@@ -1,5 +1,29 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import DamageEvent from "../gameEvents/DamageEvent";
+
+interface DamageEventObject {
+    objectSource: GameObject,
+    charSource: Character,
+    target: Character,
+    damage: number 
+}
+
+export class DamageEvent extends GameEvent {
+    objectSource: GameObject
+    charSource: Character
+    target: Character
+    damage: number
+
+    constructor(game: Game, object: DamageEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name}`
+        this.log = `${this.target.name} takes ${this.damage} damage from ${this.charSource.name}${source}.`
+    }
+}
 
 class DamageSinglePhase extends EventPhase {
     parent: EventPhase
@@ -23,3 +47,7 @@ class DamageSinglePhase extends EventPhase {
 }
 
 export default DamageSinglePhase
+
+import GameObject from "../gameObjects/GameObject";
+import Character from "../gameObjects/Character";
+import Game from "./Game";

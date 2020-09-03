@@ -1,6 +1,4 @@
-import Game from "../gamePhases/Game";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import GameObject from "../gameObjects/GameObject";
 
 class SingleMindedFuryTrigger extends TriggerEnchantment {
     constructor(game: Game, owner: GameObject) {
@@ -65,3 +63,6 @@ class SingleMindedFuryTrigger extends TriggerEnchantment {
 }
 
 export default SingleMindedFuryTrigger
+
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";

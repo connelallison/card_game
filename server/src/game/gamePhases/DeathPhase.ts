@@ -1,8 +1,24 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import Sequence from "./Sequence";
-import DestroyableCard from "../gameObjects/DestroyableCard";
-import Leader from "../gameObjects/Leader";
-import DeathEvent from "../gameEvents/DeathEvent";
+
+interface DeathEventObject {
+    died: DestroyableCard
+    controller: GamePlayer
+}
+
+export class DeathEvent extends GameEvent {
+    died: DestroyableCard
+    controller: GamePlayer
+
+    constructor(game: Game, object: DeathEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        this.log = `${this.controller.name}'s ${this.died.name} is destroyed.`
+    }
+}
 
 class DeathPhase extends EventPhase {
 
@@ -42,3 +58,10 @@ class DeathPhase extends EventPhase {
 }
 
 export default DeathPhase
+
+import Sequence from "./Sequence";
+import DestroyableCard from "../gameObjects/DestroyableCard";
+import Leader from "../gameObjects/Leader";
+import GamePlayer from "../gameObjects/GamePlayer";
+import Game from "./Game";
+// import DeathEvent from "../gameEvents/DeathEvent";s

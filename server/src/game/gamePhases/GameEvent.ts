@@ -1,6 +1,3 @@
-import Game from "../gamePhases/Game";
-import Turn from "../gamePhases/Turn";
-
 abstract class GameEvent {
     turn: Turn
     log: string
@@ -14,3 +11,6 @@ abstract class GameEvent {
 }
 
 export default GameEvent
+
+import Game from "./Game";
+import Turn from "./Turn";

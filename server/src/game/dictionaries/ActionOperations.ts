@@ -1,16 +1,3 @@
-import GameObject from '../gameObjects/GameObject'
-import Character from '../gameObjects/Character'
-import Enchantments from './Enchantments'
-import TargetRequirement from '../functionTypes/TargetRequirement'
-import PersistentCard from '../gameObjects/PersistentCard'
-import DamageEvent from '../gameEvents/DamageEvent'
-import HealingEvent from '../gameEvents/HealingEvent'
-import ProposedDrawEvent from '../gameEvents/ProposedDrawEvent'
-import SummonEvent from '../gameEvents/SummonEvent'
-import EnterPlayEvent from '../gameEvents/EnterPlayEvent'
-import ActionEvent from '../gameEvents/ActionEvent'
-import CardIDString from '../stringTypes/CardIDString'
-
 const accessStored = (event: ActionEvent, values): void => {
     if (values && values.stored) {
         for (const param in values.stored) {
@@ -64,7 +51,7 @@ const ActionOperations = {
             }
     },
 
-    draw: (source: GameObject, event: ActionEvent, values?: { stored: { [index: string]: string }, number?: number, criteria?: TargetRequirement[] }) => {
+    draw: (source: GameObject, event: ActionEvent, values?: { stored: { [index: string]: string }, number?: number, criteria?: TargetRequirementObject[] }) => {
             accessStored(event, values)
             const number = values.number === undefined ? 1 : values.number
             const criteria = values.criteria === undefined ? [] : values.criteria
@@ -149,3 +136,16 @@ const ActionOperations = {
 }
 
 export default ActionOperations
+
+import GameObject from '../gameObjects/GameObject'
+import Character from '../gameObjects/Character'
+import Enchantments from './Enchantments'
+import PersistentCard from '../gameObjects/PersistentCard'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import ActionEvent from '../gamePhases/ActionEvent'
+import { DamageEvent } from '../gamePhases/DamageSinglePhase'
+import { HealingEvent } from '../gamePhases/HealSinglePhase'
+import { ProposedDrawEvent } from '../gamePhases/ProposedDrawPhase'
+import { CardIDString } from '../stringTypes/DictionaryKeyString'
+import { SummonEvent } from '../gamePhases/SummonPhase'
+import { EnterPlayEvent } from '../gamePhases/EnterPlayPhase'

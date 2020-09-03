@@ -1,12 +1,27 @@
-import Sequence from "./Sequence";
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import TechniqueCreation from "../gameObjects/TechniqueCreation";
-import LeaderTechnique from "../gameObjects/LeaderTechnique";
-import Phases from "../dictionaries/Phases";
-import UseEvent from "../gameEvents/UseEvent";
-import ActionActionEvent from "../gameEvents/ActionActionEvent";
-import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
-import EventActionEvent from "../gameEvents/EventActionEvent";
+
+interface UseEventObject {
+    controller: GamePlayer,
+    objectSource: Card,
+    targets: GameObject[],
+}
+
+export class UseEvent extends GameEvent {
+    controller: GamePlayer
+    objectSource: Card
+    targets: GameObject[]
+
+    constructor(game: Game, object: UseEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
+        this.log = `${this.controller.name} uses ${this.objectSource.name}${targets}.`
+    }
+}
 
 class UsePhase extends EventPhase {
     parent: Sequence
@@ -70,3 +85,15 @@ class UsePhase extends EventPhase {
 }
 
 export default UsePhase
+
+import Sequence from "./Sequence";
+import TechniqueCreation from "../gameObjects/TechniqueCreation";
+import LeaderTechnique from "../gameObjects/LeaderTechnique";
+import Phases from "../dictionaries/Phases";
+import GamePlayer from "../gameObjects/GamePlayer";
+import Card from "../gameObjects/Card";
+import GameObject from "../gameObjects/GameObject";
+import Game from "./Game";
+import { SpendMoneyEvent } from "./SpendMoneyPhase";
+import { ActionActionEvent } from "./ActionActionPhase";
+import { EventActionEvent } from "./EventActionPhase";

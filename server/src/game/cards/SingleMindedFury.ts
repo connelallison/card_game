@@ -1,20 +1,15 @@
 import PermanentPassive from "../gameObjects/PermanentPassive";
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
-import PassiveZoneString from "../stringTypes/PassiveZoneString";
-import SingleMindedFuryTrigger from "../enchantments/SingleMindedFuryTrigger";
 
 class SingleMindedFury extends PermanentPassive {
-    constructor(game: Game, owner: GamePlayer, zone: PassiveZoneString){
+    constructor(game: Game, owner: GamePlayer){
         super(
             game,
             owner,
-            zone,
             'SingleMindedFury',
             'Single-Minded Fury',
             true,
             4,
-            `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources.   `,
+            `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources.`,
             [],
             [],
             [],
@@ -27,3 +22,6 @@ class SingleMindedFury extends PermanentPassive {
 }
 
 export default SingleMindedFury
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

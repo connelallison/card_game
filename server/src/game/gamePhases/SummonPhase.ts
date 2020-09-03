@@ -1,8 +1,32 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import SummonEvent from "../gameEvents/SummonEvent";
-import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
-import Phases from "../dictionaries/Phases";
-import PersistentCard from "../gameObjects/PersistentCard";
+
+interface SummonEventObject {
+    controller: GamePlayer,
+    cardID: CardIDString,
+    objectSource: GameObject,
+    charSource: Character,
+    slot?: BoardSlot,
+}
+
+export class SummonEvent extends GameEvent {
+    controller: GamePlayer
+    cardID: CardIDString 
+    objectSource: GameObject
+    charSource: Character
+    slot?: BoardSlot
+
+    constructor(game: Game, object: SummonEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const source = this.charSource === this.objectSource ? '' : `'s ${this.objectSource.name}`
+        const controller = this.charSource === this.controller.leaderZone[0] ? '' : ` under ${this.controller.name}'s control` 
+        this.log =  `${this.charSource.name}${source} summons a ${this.cardID}${controller}.`
+    }
+}
 
 class SummonPhase extends EventPhase {
     parent: EventPhase
@@ -34,3 +58,13 @@ class SummonPhase extends EventPhase {
 }
 
 export default SummonPhase
+
+import Phases from "../dictionaries/Phases";
+import PersistentCard from "../gameObjects/PersistentCard";
+import GamePlayer from "../gameObjects/GamePlayer";
+import { CardIDString } from "../stringTypes/DictionaryKeyString";
+import GameObject from "../gameObjects/GameObject";
+import Character from "../gameObjects/Character";
+import BoardSlot from "../gameObjects/BoardSlot";
+import Game from "./Game";
+import { EnterPlayEvent } from "./EnterPlayPhase";

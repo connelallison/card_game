@@ -1,68 +1,112 @@
 import FamousFollower from "../gameObjects/FamousFollower";
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
-import FollowerZoneString from "../stringTypes/FollowerZoneString";
-import DynamicTargetObject from "../structs/DynamicTargetObject";
-import DeathEvent from "../gameEvents/DeathEvent";
 
 class Orcissimus extends FamousFollower {
-  constructor(game: Game, owner: GamePlayer, zone: FollowerZoneString) {
+  static readonly data: {
+    'id': 'Orcissimus',
+    'name': 'Orcissimus',
+    'type': 'Follower',
+    'subtype': 'Famous',
+    'categories': [],
+    'collectable': true,
+    'cost': 4,
+    'attack': 4,
+    'health': 5,
+    'staticCardText': 'Event: Summon the last friendly minion that died.',
+    'events': [[{
+      actionType: 'autoAction',
+      operation: "summonCard",
+      values: {
+        cardID: {
+          valueType: 'string',
+          from: 'target',
+          stringMap: 'classID',
+          target: {
+            valueType: 'target',
+            from: 'targets',
+            reducer: 'last',
+            targets: {
+              valueType: 'targets',
+              from: 'events',
+              targetMap: 'deathEventDestroyedTarget',
+              requirements: [{
+                targetRequirement: 'isFriendly',
+              }, {
+                targetRequirement: 'isType',
+                values: {
+                  type: 'Follower',
+                },
+              }],
+              events: {
+                valueType: 'events',
+                from: 'eventDomain',
+                eventDomain: 'deathEvents',
+              }
+            }
+          }
+
+        }
+      }
+    }]],
+    'targeted': false,
+  }
+
+  constructor(game: Game, owner: GamePlayer) {
     super(
       game,
       owner,
-      zone,
-      'Orcissimus',
-      'Orcissimus',
-      [],
-      true,
-      4,
-      4,
-      5,
-      'Event: Summon the last friendly minion that died.',
-      [],
-      [[{
-        actionType: 'autoAction',
-        operation: "summonCard",
-        values: {
-          cardID: {
-            valueType: 'string',
-            from: 'target',
-            stringMap: 'classID',
-            target: {
-              valueType: 'target',
-              from: 'targets',
-              reducer: 'last',
-              targets: {
-                valueType: 'targets',
-                from: 'events',
-                targetMap: 'deathEventDestroyedTarget',
-                requirements: [{
-                  targetRequirement: 'isFriendly',
-                }, {
-                  targetRequirement: 'isType',
-                  values: {
-                    type: 'Follower',
-                  },
-                }],
-                events: {
-                  valueType: 'events',
-                  from: 'eventDomain',
-                  eventDomain: 'deathEvents',
+      {
+        'id': 'Orcissimus',
+        'name': 'Orcissimus',
+        'type': 'Follower',
+        'subtype': 'Famous',
+        'categories': [],
+        'collectable': true,
+        'cost': 4,
+        'attack': 4,
+        'health': 5,
+        'staticCardText': 'Event: Summon the last friendly minion that died.',
+        'events': [[{
+          actionType: 'autoAction',
+          operation: "summonCard",
+          values: {
+            cardID: {
+              valueType: 'string',
+              from: 'target',
+              stringMap: 'classID',
+              target: {
+                valueType: 'target',
+                from: 'targets',
+                reducer: 'last',
+                targets: {
+                  valueType: 'targets',
+                  from: 'events',
+                  targetMap: 'deathEventDestroyedTarget',
+                  requirements: [{
+                    targetRequirement: 'isFriendly',
+                  }, {
+                    targetRequirement: 'isType',
+                    values: {
+                      type: 'Follower',
+                    },
+                  }],
+                  events: {
+                    valueType: 'events',
+                    from: 'eventDomain',
+                    eventDomain: 'deathEvents',
+                  }
                 }
               }
+    
             }
-
           }
-        }
+        }]],
+        'targeted': false,
       }
-      ]],
-      [],
-      [],
-      false,
-      null,
-      null
     )
   }
 }
 
 export default Orcissimus
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

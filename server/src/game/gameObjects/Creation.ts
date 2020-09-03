@@ -1,16 +1,4 @@
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
-import CreationSubtypeString from "../stringTypes/CreationSubtypeString";
-import CreationZoneString from "../stringTypes/CreationZoneString";
-import ObjectReport from "../structs/ObjectReport";
 import DestroyableCard from "./DestroyableCard";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
 
 abstract class Creation extends DestroyableCard {
     zone: CreationZoneString
@@ -22,7 +10,6 @@ abstract class Creation extends DestroyableCard {
     constructor(
         game: Game,
         owner: GamePlayer,
-        zone: CreationZoneString,
         id: string,
         name: string,
         subtype: CreationSubtypeString,
@@ -41,7 +28,6 @@ abstract class Creation extends DestroyableCard {
         super(
             game,
             owner,
-            zone,
             id,
             name,
             'Creation',
@@ -95,3 +81,14 @@ abstract class Creation extends DestroyableCard {
 }
 
 export default Creation
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { CreationZoneString } from "../stringTypes/ZoneString";
+import { CreationSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import { ObjectReport } from "../structs/ObjectReport";

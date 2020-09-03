@@ -1,6 +1,4 @@
 import Deck from '../gameObjects/Deck'
-import CardIDString from '../stringTypes/CardIDString'
-import OrkusTheOrkest from '../cards/OrkusTheOrkest'
 
 class OrcDeck extends Deck {
   constructor (game, owner) {
@@ -34,3 +32,5 @@ class OrcDeck extends Deck {
 }
 
 export default OrcDeck
+
+import { CardIDString } from '../stringTypes/DictionaryKeyString'

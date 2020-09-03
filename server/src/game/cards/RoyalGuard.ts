@@ -1,32 +1,43 @@
-import Follower from '../gameObjects/Follower'
-import Game from '../gamePhases/Game'
-import GamePlayer from '../gameObjects/GamePlayer'
-import Enchantments from '../dictionaries/Enchantments'
-import FollowerZoneString from '../stringTypes/FollowerZoneString'
 import NamelessFollower from '../gameObjects/NamelessFollower'
 
 class RoyalGuard extends NamelessFollower {
-  constructor (game: Game, owner: GamePlayer, zone: FollowerZoneString) {
+  static readonly data: {
+    'id': 'RoyalGuard',
+    'name': 'Royal Guard',
+    'type': 'Follower',
+    'subtype': 'Nameless',
+    'categories': [],
+    'collectable': true,
+    'cost': 3,
+    'attack': 3,
+    'health': 4,
+    'staticCardText': 'Guard',
+    'enchantments': ['Guard'],
+    'targeted': false
+  }
+  
+  constructor(game: Game, owner: GamePlayer) {
     super(
-      game, 
-      owner, 
-      zone, 
-      'RoyalGuard', 
-      'Royal Guard', 
-      [],
-      true,
-      3, 
-      3, 
-      4, 
-      'Guard', 
-      [], 
-      [],
-      [],
-      ['Guard'],
-      false, 
-      null, 
-      null
-      )
+      game,
+      owner,
+      {
+        'id': 'RoyalGuard',
+        'name': 'Royal Guard',
+        'type': 'Follower',
+        'subtype': 'Nameless',
+        'categories': [],
+        'collectable': true,
+        'cost': 3,
+        'attack': 3,
+        'health': 4,
+        'staticCardText': 'Guard',
+        'enchantments': ['Guard'],
+        'targeted': false
+      }
+    )
   }
 }
 export default RoyalGuard
+
+import Game from '../gamePhases/Game'
+import GamePlayer from '../gameObjects/GamePlayer'

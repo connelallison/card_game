@@ -1,15 +1,10 @@
 import WonderCreation from "../gameObjects/WonderCreation"
-import Game from "../gamePhases/Game"
-import GamePlayer from "../gameObjects/GamePlayer"
-import CreationZoneString from "../stringTypes/CreationZoneString"
-import Enchantments from "../dictionaries/Enchantments"
 
 class KnightAcademy extends WonderCreation {
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString) {
+    constructor(game: Game, owner: GamePlayer) {
         super(
             game,
             owner,
-            zone,
             'KnightAcademy',
             'Knight Academy',
             true,
@@ -28,3 +23,6 @@ class KnightAcademy extends WonderCreation {
 }
 
 export default KnightAcademy
+
+import Game from "../gamePhases/Game"
+import GamePlayer from "../gameObjects/GamePlayer"

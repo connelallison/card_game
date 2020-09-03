@@ -1,5 +1,5 @@
 import GameObject from '../gameObjects/GameObject'
-// GameObject // forces GameObject to load in properly
+GameObject // Load GameObject first to avoid circular dependency hell
 import GamePhase from './GamePhase'
 
 class Game extends GamePhase {
@@ -302,6 +302,7 @@ class Game extends GamePhase {
 
   startNewDeepestPhase(phaseType: string, event?: GameEvent | GameEvent[]): void {
     const bottomPhase = this.currentBottomPhase()
+    // console.log(Phases)
     const newPhase = new Phases[phaseType](bottomPhase, event)
     bottomPhase.startChild(newPhase)
   }
@@ -336,17 +337,11 @@ export default Game
 import GamePlayer from '../gameObjects/GamePlayer'
 import Decks from '../dictionaries/Decks'
 import Turn from './Turn'
-import ActionOperations from '../dictionaries/ActionOperations'
-import EffectOperations from '../dictionaries/EffectOperations'
 import Permissions from '../dictionaries/Permissions'
 import serverEvent from '../../ServerEvent'
 import Card from '../gameObjects/Card'
 import Character from '../gameObjects/Character'
 import { EventEmitter } from 'events'
-import EffectOperation from '../functionTypes/EffectOperation'
-import ActionOperation from '../functionTypes/ActionOperation'
-import TargetRequirementFactory from '../functionTypes/TargetRequirementFactory'
-import TargetRequirements from '../dictionaries/TargetRequirements'
 import PersistentCard from '../gameObjects/PersistentCard'
 import TechniqueCreation from '../gameObjects/TechniqueCreation'
 import LeaderTechnique from '../gameObjects/LeaderTechnique'
@@ -354,11 +349,10 @@ import Deck from '../gameObjects/Deck'
 import BoardSlot from '../gameObjects/BoardSlot'
 import Follower from '../gameObjects/Follower'
 import Sequence from './Sequence'
-import AttackEvent from '../gameEvents/AttackEvent'
-import GameEvent from '../gameEvents/GameEvent'
-import Phases from '../dictionaries/Phases'
-import PlayEvent from '../gameEvents/PlayEvent'
-import TestBot from '../gameTests/TestBot'
-import UseEvent from '../gameEvents/UseEvent'
 import EventTypeString from '../stringTypes/EventTypeString'
-
+import GameEvent from './GameEvent'
+import { AttackEvent } from './AttackPhase'
+import { UseEvent } from './UsePhase'
+import { PlayEvent } from './PlayPhase'
+import TestBot from '../gameTests/TestBot'
+import Phases from '../dictionaries/Phases'

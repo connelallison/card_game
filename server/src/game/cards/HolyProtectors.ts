@@ -1,15 +1,10 @@
 import PermanentPassive from "../gameObjects/PermanentPassive";
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
-import PassiveZoneString from "../stringTypes/PassiveZoneString";
-import Enchantments from "../dictionaries/Enchantments";
 
 class HolyProtectors extends PermanentPassive {
-    constructor(game: Game, owner: GamePlayer, zone: PassiveZoneString){
+    constructor(game: Game, owner: GamePlayer){
         super(
             game,
             owner,
-            zone,
             'HolyProtectors',
             'Holy Protectors',
             true,
@@ -27,3 +22,6 @@ class HolyProtectors extends PermanentPassive {
 }
 
 export default HolyProtectors
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

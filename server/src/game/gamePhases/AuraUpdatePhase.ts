@@ -1,11 +1,10 @@
 import EventPhase from "./EventPhase";
-import Sequence from "./Sequence";
 
 class AuraUpdatePhase extends EventPhase {
     constructor(parent: Sequence | EventPhase) {
         super(parent)
     }
-
+    
     start(): void {
         this.emit('auraReset')
         this.emit('auraEmit1')
@@ -17,3 +16,5 @@ class AuraUpdatePhase extends EventPhase {
 }
 
 export default AuraUpdatePhase
+
+import Sequence from "./Sequence";

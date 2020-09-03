@@ -1,31 +1,42 @@
-import Game from '../gamePhases/Game'
-import GamePlayer from '../gameObjects/GamePlayer'
-import FollowerZoneString from '../stringTypes/FollowerZoneString'
 import NamelessFollower from '../gameObjects/NamelessFollower'
 
 class PlayerTwoFollower extends NamelessFollower {
-  constructor (game: Game, owner: GamePlayer, zone: FollowerZoneString) {
+  static readonly data: {
+    'id': 'PlayerTwoFollower',
+    'name': 'Player 2 Follower',
+    'type': 'Follower',
+    'subtype': 'Nameless',
+    'categories': [],
+    'collectable': false,
+    'cost': 3,
+    'attack': 3,
+    'health': 4,
+    'staticCardText': '',
+    'targeted': false
+  }
+
+  constructor(game: Game, owner: GamePlayer) {
     super(
-      game, 
-      owner, 
-      zone, 
-      'PlayerTwoFollower', 
-      'Player 2 Follower', 
-      [],
-      false,
-      3, 
-      3, 
-      4, 
-      '', 
-      [], 
-      [],
-      [],
-      [],
-      false, 
-      null, 
-      null
-      )
+      game,
+      owner,
+      {
+        'id': 'PlayerTwoFollower',
+        'name': 'Player 2 Follower',
+        'type': 'Follower',
+        'subtype': 'Nameless',
+        'categories': [],
+        'collectable': false,
+        'cost': 3,
+        'attack': 3,
+        'health': 4,
+        'staticCardText': '',
+        'targeted': false
+      }
+    )
   }
 }
 
 export default PlayerTwoFollower
+
+import Game from '../gamePhases/Game'
+import GamePlayer from '../gameObjects/GamePlayer'

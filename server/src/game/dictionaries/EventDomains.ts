@@ -1,6 +1,3 @@
-import GameObject from "../gameObjects/GameObject"
-import EventsDomainString from "../stringTypes/EventsDomainString"
-
 const EventDomains = (object: GameObject, cache: EventsDomainString | EventsDomainString[]) => {
     const eventDomain = []
     if (typeof cache === 'string') cache = [cache]
@@ -20,3 +17,6 @@ const EventDomains = (object: GameObject, cache: EventsDomainString | EventsDoma
 }
 
 export default EventDomains
+
+import GameObject from "../gameObjects/GameObject"
+import { EventsDomainString } from "../stringTypes/DomainString"

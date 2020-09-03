@@ -3,6 +3,7 @@ import GameObject from './GameObject'
 abstract class Enchantment extends GameObject {
     owner: GameObject
     type: 'Enchantment'
+    subtype: EnchantmentSubtypeString
     activeZones: ZoneString[]
     activeTypes: ObjectTypeString[]
     activeRequirements: ActiveRequirementObject[]
@@ -13,7 +14,7 @@ abstract class Enchantment extends GameObject {
         owner: GameObject,
         id: string,
         name: string,
-        subtype: ObjectSubtypeString,
+        subtype: EnchantmentSubtypeString,
         activeZones: ZoneString[],
         activeTypes: ObjectTypeString[],
         activeRequirements: ActiveRequirementObject[]
@@ -61,18 +62,15 @@ abstract class Enchantment extends GameObject {
 export default Enchantment
 
 import Game from '../gamePhases/Game'
-import ZoneString from '../stringTypes/ZoneString'
-import ObjectTypeString from '../stringTypes/ObjectTypeString'
-import Character from './Character'
-import ObjectSubtypeString from '../stringTypes/ObjectSubtypeString'
+import { ZoneString } from '../stringTypes/ZoneString'
+import { ObjectTypeString } from '../stringTypes/ObjectTypeString'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import { ObjectSubtypeString, EnchantmentSubtypeString } from '../stringTypes/ObjectSubtypeString'
 import EffectFunctionObject from '../structs/EffectFunctionObject'
 import EffectFunction from '../functionTypes/EffectFunction'
 import GameObjectData from '../structs/GameObjectData'
 import EffectOperations from '../dictionaries/EffectOperations'
-import DynamicNumbers from '../functionTypes/DynamicNumbers'
-import DynamicBoolean from '../functionTypes/DynamicBoolean'
-import DynamicNumber from '../functionTypes/DynamicNumber'
 import EffectOperation from '../functionTypes/EffectOperation'
-import ActiveRequirement from '../functionTypes/ActiveRequirement'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import Character from './Character'
+
 

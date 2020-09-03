@@ -1,3 +1,11 @@
-type ObjectSubtypeString = 'Player' | 'Leader' | 'Nameless' | 'Famous' | 'Action' | 'Event' | 'Work' | 'Wonder'  | 'Weapon' | 'Technique' | 'Static' | 'Aura' | 'Trigger' | 'Active' | 'Passive' | 'Auto' | 'Permanent' | 'BoardSlot'
-
-export default ObjectSubtypeString
+export type ObjectSubtypeString = CardSubtypeString | EnchantmentSubtypeString | 'Player' | 'BoardSlot'
+export type EnchantmentSubtypeString = 'Static' | 'Aura' | 'Trigger'
+export type CardSubtypeString = PersistentCardSubtypeString | MomentSubtypeString
+export type MomentSubtypeString = 'Action' | 'Event'
+export type PersistentCardSubtypeString = DestroyableCardSubtypeString | LeaderTechniqueSubtypeString | PassiveSubtypeString
+export type LeaderTechniqueSubtypeString = 'Active' | 'Passive' | 'Auto'
+export type PassiveSubtypeString = 'Permanent'
+export type DestroyableCardSubtypeString = CharacterSubtypeString | CreationSubtypeString
+export type CreationSubtypeString = 'Work' | 'Wonder' | 'Weapon' | 'Technique'
+export type CharacterSubtypeString = FollowerSubtypeString | 'Leader' 
+export type FollowerSubtypeString = 'Nameless' | 'Famous'

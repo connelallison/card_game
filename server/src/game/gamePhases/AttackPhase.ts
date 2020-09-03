@@ -1,9 +1,25 @@
-import Sequence from "./Sequence";
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import AttackEvent from "../gameEvents/AttackEvent";
-import DamageEvent from "../gameEvents/DamageEvent";
-import Phases from "../dictionaries/Phases";
-import HealingEvent from "../gameEvents/HealingEvent";
+
+interface AttackEventObject {
+    attacker: Character,
+    defender: Character,
+}
+
+export class AttackEvent extends GameEvent {
+    attacker: Character
+    defender: Character
+    cancelled: boolean = false
+
+    constructor(game: Game, object: AttackEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        this.log = `${this.attacker.name} attacks ${this.defender.name}.`
+    }
+}
 
 class AttackPhase extends EventPhase {
     event: AttackEvent
@@ -64,3 +80,10 @@ class AttackPhase extends EventPhase {
 }
 
 export default AttackPhase
+
+import Sequence from "./Sequence";
+import Phases from "../dictionaries/Phases";
+import Character from "../gameObjects/Character";
+import Game from "./Game";
+import { DamageEvent } from "./DamageSinglePhase";
+import { HealingEvent } from "./HealSinglePhase";

@@ -1,11 +1,4 @@
-import GameObject from './GameObject'
 import Enchantment from './Enchantment'
-import Game from '../gamePhases/Game'
-import ZoneString from '../stringTypes/ZoneString'
-import ObjectTypeString from '../stringTypes/ObjectTypeString'
-import EffectFunction from '../functionTypes/EffectFunction'
-import EffectFunctionObject from '../structs/EffectFunctionObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 
 abstract class StaticEnchantment extends Enchantment {
     subtype: 'Static'
@@ -35,3 +28,11 @@ abstract class StaticEnchantment extends Enchantment {
 }
 
 export default StaticEnchantment
+
+import GameObject from './GameObject'
+import Game from '../gamePhases/Game'
+import EffectFunction from '../functionTypes/EffectFunction'
+import { ZoneString } from '../stringTypes/ZoneString'
+import { ObjectTypeString } from '../stringTypes/ObjectTypeString'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import EffectFunctionObject from '../structs/EffectFunctionObject'

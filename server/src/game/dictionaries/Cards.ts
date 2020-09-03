@@ -1,3 +1,54 @@
+import GameObject from '../gameObjects/GameObject'
+import Enchantment from '../gameObjects/Enchantment'
+import Card from '../gameObjects/Card'
+import PersistentCard from '../gameObjects/PersistentCard'
+import DestroyableCard from '../gameObjects/DestroyableCard'
+import Character from '../gameObjects/Character'
+import Follower from '../gameObjects/Follower'
+import Moment from '../gameObjects/Moment'
+import LeaderTechnique from '../gameObjects/LeaderTechnique'
+import Passive from '../gameObjects/Passive'
+import Creation from '../gameObjects/Creation'
+import StaticEnchantment from '../gameObjects/StaticEnchantment'
+import AuraEnchantment from '../gameObjects/AuraEnchantment'
+import TriggerEnchantment from '../gameObjects/TriggerEnchantment'
+import NamelessFollower from '../gameObjects/NamelessFollower'
+import FamousFollower from '../gameObjects/FamousFollower'
+import PermanentPassive from '../gameObjects/PermanentPassive'
+import ActiveLeaderTechnique from '../gameObjects/ActiveLeaderTechnique'
+import TechniqueCreation from '../gameObjects/TechniqueCreation'
+import WonderCreation from '../gameObjects/WonderCreation'
+import WeaponCreation from '../gameObjects/WeaponCreation'
+import WorkCreation from '../gameObjects/WorkCreation'
+import Leader from '../gameObjects/Leader'
+import ActionMoment from '../gameObjects/ActionMoment'
+import EventMoment from '../gameObjects/EventMoment'
+GameObject
+Card
+Enchantment
+StaticEnchantment
+AuraEnchantment
+TriggerEnchantment
+PersistentCard
+DestroyableCard
+Creation
+Character
+Follower
+Moment
+LeaderTechnique
+Passive
+NamelessFollower
+FamousFollower
+PermanentPassive
+ActiveLeaderTechnique
+TechniqueCreation
+WeaponCreation
+WonderCreation
+WorkCreation
+ActionMoment
+EventMoment
+Leader
+
 import PlayerOneFollower from '../cards/PlayerOneFollower'
 import PlayerTwoFollower from '../cards/PlayerTwoFollower'
 import Footman from '../cards/Footman'

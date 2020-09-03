@@ -1,7 +1,3 @@
-import TriggerTypeString from "../stringTypes/TriggerTypeString";
-import TriggerRequirementObject from "./TriggerRequirementObject";
-import TriggerActionObject from "./TriggerActionObject";
-
 interface TriggerObject {
     eventType: TriggerTypeString,
     requirements: TriggerRequirementObject[],
@@ -9,3 +5,7 @@ interface TriggerObject {
 }
 
 export default TriggerObject
+
+import TriggerTypeString from "../stringTypes/TriggerTypeString";
+import TriggerRequirementObject from "./TriggerRequirementObject";
+import { TriggerActionObject } from "./ActionObject";

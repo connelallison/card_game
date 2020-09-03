@@ -1,9 +1,3 @@
-import Game from "./Game"
-import GamePlayer from "../gameObjects/GamePlayer"
-import Sequence from "./Sequence"
-import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent"
-import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent"
-import Phases from "../dictionaries/Phases"
 import GamePhase from "./GamePhase"
 
 class Turn extends GamePhase {
@@ -91,3 +85,10 @@ class Turn extends GamePhase {
 }
 
 export default Turn
+
+import Game from "./Game"
+import GamePlayer from "../gameObjects/GamePlayer"
+import Sequence from "./Sequence"
+import Phases from "../dictionaries/Phases"
+import { StartOfTurnEvent } from "./StartOfTurnPhase"
+import { EndOfTurnEvent } from "./EndOfTurnPhase"

@@ -1,10 +1,3 @@
-import Game from "../gamePhases/Game"
-import Character from "../gameObjects/Character"
-import Follower from "../gameObjects/Follower"
-import PlayEvent from "../gameEvents/PlayEvent"
-import AttackEvent from "../gameEvents/AttackEvent"
-import Permissions from "../dictionaries/Permissions"
-
 const TestBot = async (game: Game) => {
     if (!game.ended && game.activeChild.activePlayer.bot) {
         await game.sleep(2500)
@@ -47,3 +40,10 @@ const TestBot = async (game: Game) => {
 }
 
 export default TestBot
+
+import Game from "../gamePhases/Game"
+import Character from "../gameObjects/Character"
+import Follower from "../gameObjects/Follower"
+import Permissions from "../dictionaries/Permissions"
+import { PlayEvent } from "../gamePhases/PlayPhase"
+import { AttackEvent } from "../gamePhases/AttackPhase"

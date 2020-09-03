@@ -1,6 +1,4 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";
 
 class CombatTrainingAura extends AuraEnchantment {
     constructor(game: Game, owner: GameObject) {
@@ -29,3 +27,6 @@ class CombatTrainingAura extends AuraEnchantment {
 }
 
 export default CombatTrainingAura
+
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";

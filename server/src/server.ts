@@ -4,8 +4,11 @@ import * as path from 'path'
 import ServerPlayer from './ServerPlayer'
 import serverEvent from './ServerEvent'
 // const { Deck, deck1, deck2 } = require("./game/Deck");
-// import GameObject from './game/gameObjects/GameObject'
-// GameObject
+// To avoid dependency hell, load in GameObject first. Cards also works, as the first thing it does is load in GameObject.
+import GameObject from './game/gameObjects/GameObject'
+GameObject
+// import Cards from './game/dictionaries/Cards'
+// Cards
 import Game from './game/gamePhases/Game'
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 

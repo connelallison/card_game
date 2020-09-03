@@ -1,7 +1,29 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import TechniqueCreation from "../gameObjects/TechniqueCreation";
-import Card from "../gameObjects/Card";
-import EventActionEvent from "../gameEvents/EventActionEvent";
+
+interface EventActionEventObject {
+    controller: GamePlayer,
+    objectSource: GameObject,
+    targets?: GameObject[],
+    eventAction: EventActionObject[],
+}
+
+export class EventActionEvent extends GameEvent {
+    controller: GamePlayer
+    objectSource: GameObject
+    targets?: GameObject[]
+    eventAction: EventActionObject[]
+
+    constructor(game: Game, object: EventActionEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const targets = this.targets && this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
+        this.log = `${this.objectSource.name}'s event activates${targets}.`
+    }
+}
 
 class EventActionPhase extends EventPhase {
     parent: EventPhase
@@ -16,7 +38,7 @@ class EventActionPhase extends EventPhase {
         const actionCard = event.objectSource as Card
         this.emit('beforeAction', event)
         event.generateLog()
-        this.cacheEvent(event, 'action')
+        this.cacheEvent(event, 'eventAction')
         event.eventAction.forEach(actionObj => {
             actionCard.actionFunction(event, actionObj)
         })
@@ -27,3 +49,9 @@ class EventActionPhase extends EventPhase {
 }
 
 export default EventActionPhase
+
+import Card from "../gameObjects/Card";
+import GamePlayer from "../gameObjects/GamePlayer";
+import GameObject from "../gameObjects/GameObject";
+import { EventActionObject } from "../structs/ActionObject";
+import Game from "./Game";

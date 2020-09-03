@@ -1,52 +1,53 @@
 import Follower from "./Follower";
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
-import FollowerZoneString from "../stringTypes/FollowerZoneString";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import CardIDString from "../stringTypes/CardIDString";
-import FollowerCategoryString from "../stringTypes/FollowerCategoryString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
+
+export interface NamelessFollowerData {
+    id: string
+    name: string
+    type: 'Follower'
+    subtype: 'Nameless'
+    categories: FollowerCategoryString[]
+    collectable: boolean
+    cost: number
+    attack: number
+    health: number
+    staticCardText: string
+    actions?: ActionActionObject[][]
+    events?: EventActionObject[][]
+    playRequirements?: ActiveRequirementObject[]
+    enchantments?: EnchantmentIDString[]
+    targeted: boolean
+    targetDomain?: TargetsDomainString | TargetsDomainString[]
+    targetRequirements?: TargetRequirementObject[]
+}
 
 abstract class NamelessFollower extends Follower {
+    static readonly data: NamelessFollowerData
+    readonly data: NamelessFollowerData
     subtype: 'Nameless'
 
     constructor(
         game: Game,
         owner: GamePlayer,
-        zone: FollowerZoneString,
-        id: CardIDString,
-        name: string,
-        categories: FollowerCategoryString[],
-        collectable: boolean,
-        rawCost: number,
-        rawAttack: number,
-        rawHealth: number,
-        staticCardText: string = '',
-        actions: ActionActionObject[][],
-        events: EventActionObject[][], 
-        playRequirements: ActiveRequirementObject[],
-        enchantments: EnchantmentIDString[],
-        targeted: boolean,
-        targetDomain: TargetsDomainString | TargetsDomainString[],
-        targetRequirements: TargetRequirementObject[]
+        data: NamelessFollowerData
     ) {
+        const { id, name, cost, attack, health, categories, collectable, staticCardText, targeted} = data
+        const targetDomain = data.targetDomain || []
+        const targetRequirements = data.targetRequirements || []
+        const actions = data.actions || []
+        const events = data.events || []
+        const enchantments = data.enchantments || []
+        const playRequirements = data.playRequirements || []
         super(
             game,
             owner,
-            zone,
             id,
             name,
             'Nameless',
             categories,
             collectable,
-            rawCost,
-            rawAttack,
-            rawHealth,
+            cost,
+            attack,
+            health,
             staticCardText,
             actions,
             events, 
@@ -56,7 +57,17 @@ abstract class NamelessFollower extends Follower {
             targetDomain,
             targetRequirements
         )
+        this.data = data
     }
 }
 
 export default NamelessFollower
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import FollowerCategoryString from "../stringTypes/FollowerCategoryString";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";

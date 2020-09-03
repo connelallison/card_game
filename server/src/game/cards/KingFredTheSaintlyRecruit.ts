@@ -1,39 +1,65 @@
 import ActiveLeaderTechnique from "../gameObjects/ActiveLeaderTechnique";
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
-import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
 
 class KingFredTheSaintlyRecruit extends ActiveLeaderTechnique {
-    constructor(game: Game, owner: GamePlayer, zone: LeaderTechniqueZoneString) {
+    static data: {
+        'id': 'KingFredTheSaintlyRecruit',
+        'name': 'Recruit',
+        'type': 'LeaderTechnique',
+        'subtype': 'Active',
+        'collectable': false,
+        'cost': 2,
+        'staticCardText': 'Event: Summon a 2/2 Knight.',
+        'events': [[{
+            actionType: 'autoAction',
+            operation: 'summonCard',
+            values: {
+                cardID: 'Knight',
+            }
+        }]],
+        'playRequirements': [{
+            playRequirement: 'canSummonType',
+            values: {
+                type: 'Follower',
+            }
+        }],
+        'targeted': false,
+        'repeatable': false,
+
+    }
+
+    constructor(game: Game, owner: GamePlayer) {
         super(
             game,
             owner,
-            zone,
-            'KingFredTheSaintlyRecruit',
-            'Recruit',
-            2,
-            'Summon a 2/2 Knight.',
-            [],
-            [[{
-                actionType: 'autoAction',
-                operation: 'summonCard',
-                values: {
-                    cardID: 'Knight',
-                }
-            }]],
-            [{
-                playRequirement: 'canSummonType',
-                values: {
-                    type: 'Follower',
-                }
-            }],
-            [],
-            false,
-            null,
-            null,
-            false,
+            {
+                'id': 'KingFredTheSaintlyRecruit',
+                'name': 'Recruit',
+                'type': 'LeaderTechnique',
+                'subtype': 'Active',
+                'collectable': false,
+                'cost': 2,
+                'staticCardText': 'Event: Summon a 2/2 Knight.',
+                'events': [[{
+                    actionType: 'autoAction',
+                    operation: 'summonCard',
+                    values: {
+                        cardID: 'Knight',
+                    }
+                }]],
+                'playRequirements': [{
+                    playRequirement: 'canSummonType',
+                    values: {
+                        type: 'Follower',
+                    }
+                }],
+                'targeted': false,
+                'repeatable': false,
+            }
         )
     }
 }
 
 export default KingFredTheSaintlyRecruit
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

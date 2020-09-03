@@ -1,5 +1,3 @@
-import CardIDString from "../stringTypes/CardIDString";
-
 interface DeckObject {
     leader: CardIDString
     passive: CardIDString
@@ -7,3 +5,5 @@ interface DeckObject {
 }
 
 export default DeckObject
+
+import { CardIDString } from "../stringTypes/DictionaryKeyString";

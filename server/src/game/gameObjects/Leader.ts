@@ -1,21 +1,4 @@
-import Game from '../gamePhases/Game'
-import GamePlayer from './GamePlayer'
 import Character from './Character'
-import LeaderZoneString from '../stringTypes/LeaderZoneString'
-import WeaponCreation from './WeaponCreation'
-import TargetsDomainString from '../stringTypes/TargetsDomainString'
-import GameObjectData from '../structs/GameObjectData'
-import FlagsObject from '../structs/FlagsObject'
-import ActionObject from '../structs/ActionObject'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import ObjectReport from '../structs/ObjectReport'
-import SummonEvent from '../gameEvents/SummonEvent'
-import CardIDString from '../stringTypes/CardIDString'
-import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
-import Permissions from '../dictionaries/Permissions'
-import ActionActionObject from '../structs/ActionActionObject'
-import EventActionObject from '../structs/EventActionObject'
 
 abstract class Leader extends Character {
   zone: LeaderZoneString
@@ -27,7 +10,6 @@ abstract class Leader extends Character {
   constructor(
     game: Game,
     owner: GamePlayer,
-    zone: LeaderZoneString,
     id: string,
     name: string,
     collectable: boolean,
@@ -47,7 +29,6 @@ abstract class Leader extends Character {
     super(
       game,
       owner,
-      zone,
       id,
       name,
       'Leader',
@@ -200,3 +181,18 @@ abstract class Leader extends Character {
 }
 
 export default Leader
+
+import Game from '../gamePhases/Game'
+import GamePlayer from './GamePlayer'
+import { LeaderZoneString } from '../stringTypes/ZoneString'
+import { CardIDString, EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
+import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import { TargetsDomainString } from '../stringTypes/DomainString'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { ObjectReport } from '../structs/ObjectReport'
+import GameObjectData from '../structs/GameObjectData'
+import WeaponCreation from './WeaponCreation'
+import FlagsObject from '../structs/FlagsObject'
+import Permissions from '../dictionaries/Permissions'
+import { SummonEvent } from '../gamePhases/SummonPhase'

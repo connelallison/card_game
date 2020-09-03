@@ -1,6 +1,4 @@
 import AuraEnchantment from "../gameObjects/AuraEnchantment";
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";
 
 class HolyProtectorsAura extends AuraEnchantment {
     constructor(game: Game, owner: GameObject) {
@@ -40,3 +38,6 @@ class HolyProtectorsAura extends AuraEnchantment {
 }
 
 export default HolyProtectorsAura
+
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";

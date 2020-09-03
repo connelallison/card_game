@@ -1,6 +1,3 @@
-import GameEvent from "../gameEvents/GameEvent"
-import DynamicEvents from "../functionTypes/DynamicEvents"
-
 // const Reducers = {
 //     // max: (array: any[], map) => array.length === 0 ? array : [array.reduce((accumulator, val) => map(accumulator) < map(val) ? val : accumulator)],
 //     // min: (array: any[], map) => array.length === 0 ? array : [array.reduce((accumulator, val) => map(accumulator) > map(val) ? val : accumulator)],
@@ -26,3 +23,5 @@ const DynamicEventReducers = {
 }
 
 export default DynamicEventReducers
+
+import GameEvent from "../gamePhases/GameEvent"

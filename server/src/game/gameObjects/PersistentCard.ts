@@ -1,17 +1,4 @@
 import Card from "./Card";
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
-import ZoneString from "../stringTypes/ZoneString";
-import CardSubtypeString from "../stringTypes/CardSubtypeString";
-import PlayZoneString from "../stringTypes/PlayZoneString";
-import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
 
 abstract class PersistentCard extends Card {
     inPlayZone: PlayZoneString
@@ -21,7 +8,6 @@ abstract class PersistentCard extends Card {
     constructor(
         game: Game,
         owner: GamePlayer,
-        zone: ZoneString,
         id: string,
         name: string,
         type: PersistentCardTypeString,
@@ -40,7 +26,6 @@ abstract class PersistentCard extends Card {
         super(
             game,
             owner,
-            zone,
             id,
             name,
             type,
@@ -74,3 +59,14 @@ abstract class PersistentCard extends Card {
 }
 
 export default PersistentCard
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { PlayZoneString } from "../stringTypes/ZoneString";
+import { PersistentCardTypeString } from "../stringTypes/ObjectTypeString";
+import { CardSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";

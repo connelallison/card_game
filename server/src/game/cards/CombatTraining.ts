@@ -1,15 +1,10 @@
 import PermanentPassive from "../gameObjects/PermanentPassive";
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
-import PassiveZoneString from "../stringTypes/PassiveZoneString";
-import Enchantments from "../dictionaries/Enchantments";
 
 class CombatTraining extends PermanentPassive {
-    constructor(game: Game, owner: GamePlayer, zone: PassiveZoneString){
+    constructor(game: Game, owner: GamePlayer){
         super(
             game,
             owner,
-            zone,
             'CombatTraining',
             'Combat Training',
             true,
@@ -27,3 +22,6 @@ class CombatTraining extends PermanentPassive {
 }
 
 export default CombatTraining
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

@@ -1,6 +1,4 @@
-import Game from "../gamePhases/Game";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import GameObject from "../gameObjects/GameObject";
 
 class SavageWolfTrigger extends TriggerEnchantment {
     constructor(game: Game, owner: GameObject) {
@@ -34,7 +32,7 @@ class SavageWolfTrigger extends TriggerEnchantment {
                     values: {
                         attack: 2,
                     },
-                    targets: {
+                    target: {
                         valueType: 'target',
                         from: 'targetDomain',
                         targetDomain: 'self'
@@ -46,7 +44,7 @@ class SavageWolfTrigger extends TriggerEnchantment {
                     values: {
                         health: 1,
                     },
-                    targets: {
+                    target: {
                         valueType: 'target',
                         from: 'targetDomain',
                         targetDomain: 'self'
@@ -59,3 +57,6 @@ class SavageWolfTrigger extends TriggerEnchantment {
 }
 
 export default SavageWolfTrigger
+
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";

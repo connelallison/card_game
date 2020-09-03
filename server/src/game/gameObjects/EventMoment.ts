@@ -1,50 +1,59 @@
-import Game from "../gamePhases/Game";
 import Moment from "./Moment";
-import GamePlayer from "./GamePlayer";
-import MomentZoneString from "../stringTypes/MomentZoneString";
-import ActionObject from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import CardIDString from "../stringTypes/CardIDString";
-import EventActionObject from "../structs/EventActionObject";
+
+export interface EventMomentData {
+  id: string
+  name: string
+  type: 'Moment'
+  subtype: 'Event'
+  collectable: boolean
+  cost: number
+  staticCardText: string
+  events: EventActionObject[][]
+  playRequirements?: ActiveRequirementObject[]
+  enchantments?: EnchantmentIDString[]
+}
 
 abstract class EventMoment extends Moment {
-    subtype: 'Event'
-    targeted: false
-    targetDomain: null
-    targetRequirements: null
+  static readonly data: EventMomentData
+  readonly data: EventMomentData
+  subtype: 'Event'
+  targeted: false
+  targetDomain: null
+  targetRequirements: null
 
-    constructor(
-      game: Game, 
-      owner: GamePlayer, 
-      zone: MomentZoneString, 
-      id: string, 
-      name: string, 
-      collectable: boolean, 
-      rawCost: number, 
-      staticCardText: string, 
-      events: EventActionObject[][], 
-      playRequirements: ActiveRequirementObject[], 
-      enchantments: EnchantmentIDString[]
-      ) {
-        super(
-          game, 
-          owner, 
-          zone, 
-          id, 
-          name, 
-          'Event', 
-          collectable, 
-          rawCost, 
-          staticCardText, 
-          [[]], 
-          events,
-          playRequirements, 
-          enchantments, 
-          false, 
-          null, 
-          null)
-      }
+  constructor(
+    game: Game,
+    owner: GamePlayer,
+    data: EventMomentData
+  ) {
+    const { id, name, collectable, cost, staticCardText, events } = data
+    const enchantments = data.enchantments || []
+    const playRequirements = data.playRequirements || []
+    super (
+      game,
+      owner,
+      id,
+      name,
+      'Event',
+      collectable,
+      cost,
+      staticCardText,
+      [[]],
+      events,
+      playRequirements,
+      enchantments,
+      false,
+      null,
+      null
+    )
+    this.data = data
+  }
 }
 
 export default EventMoment
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";

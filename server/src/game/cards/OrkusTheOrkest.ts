@@ -1,14 +1,10 @@
 import Leader from '../gameObjects/Leader'
-import Game from '../gamePhases/Game'
-import GamePlayer from '../gameObjects/GamePlayer'
-import LeaderZoneString from '../stringTypes/LeaderZoneString'
 
 class OrkusTheOrkest extends Leader {
-  constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString) {
+  constructor(game: Game, owner: GamePlayer) {
         super(
             game, 
             owner, 
-            zone, 
             'OrkusTheOrkest', 
             'Orkus The Orkest', 
             true,
@@ -29,3 +25,6 @@ class OrkusTheOrkest extends Leader {
 }
 
 export default OrkusTheOrkest
+
+import Game from '../gamePhases/Game'
+import GamePlayer from '../gameObjects/GamePlayer'

@@ -1,6 +1,20 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import Sequence from "./Sequence";
-import EndOfTurnEvent from "../gameEvents/EndOfTurnEvent";
+
+export class EndOfTurnEvent extends GameEvent {
+    activePlayer: GamePlayer
+    turnNumber: number
+
+    constructor(game) {
+        super(game)
+        this.activePlayer = this.turn.activePlayer
+        this.turnNumber = this.turn.turnNumber
+    }
+
+    generateLog() {
+        this.log = `${this.activePlayer.name}'s turn ends.`
+    }
+}
 
 class EndOfTurnPhase extends EventPhase {
     event: EndOfTurnEvent
@@ -20,3 +34,6 @@ class EndOfTurnPhase extends EventPhase {
 }
 
 export default EndOfTurnPhase
+
+import Sequence from "./Sequence";
+import GamePlayer from "../gameObjects/GamePlayer";

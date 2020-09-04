@@ -1,6 +1,20 @@
+import GameEvent from "./GameEvent"
 import EventPhase from "./EventPhase"
-import StartOfTurnEvent from "../gameEvents/StartOfTurnEvent"
-import Sequence from "./Sequence"
+
+export class StartOfTurnEvent extends GameEvent {
+    activePlayer: GamePlayer
+    turnNumber: number
+
+    constructor(game) {
+        super(game)
+        this.activePlayer = this.turn.activePlayer
+        this.turnNumber = this.turn.turnNumber
+    }
+
+    generateLog() {
+        this.log = `${this.activePlayer.name}'s turn begins.`
+    }
+}
 
 class StartOfTurnPhase extends EventPhase {
     event: StartOfTurnEvent
@@ -20,3 +34,6 @@ class StartOfTurnPhase extends EventPhase {
 }
 
 export default StartOfTurnPhase
+
+import Sequence from "./Sequence"
+import GamePlayer from "../gameObjects/GamePlayer"

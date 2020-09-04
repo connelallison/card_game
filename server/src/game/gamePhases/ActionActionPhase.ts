@@ -1,7 +1,29 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import ActionActionEvent from "../gameEvents/ActionActionEvent";
-import TechniqueCreation from "../gameObjects/TechniqueCreation";
-import Card from "../gameObjects/Card";
+
+interface ActionActionEventObject {
+    controller: GamePlayer,
+    objectSource: GameObject,
+    targets: GameObject[],
+    action: ActionActionObject[],
+}
+
+export class ActionActionEvent extends GameEvent {
+    controller: GamePlayer
+    objectSource: GameObject
+    targets: GameObject[]
+    action: ActionActionObject[]
+
+    constructor(game: Game, object: ActionActionEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
+        this.log = `${this.objectSource.name}'s action activates${targets}.`
+    }
+}
 
 class ActionActionPhase extends EventPhase {
     parent: EventPhase
@@ -27,3 +49,9 @@ class ActionActionPhase extends EventPhase {
 }
 
 export default ActionActionPhase
+
+import Card from "../gameObjects/Card";
+import GamePlayer from "../gameObjects/GamePlayer";
+import GameObject from "../gameObjects/GameObject";
+import { ActionActionObject } from "../structs/ActionObject";
+import Game from "./Game";

@@ -1,19 +1,8 @@
-import Game from '../gamePhases/Game'
-import GamePlayer from './GamePlayer'
-import ZoneString from '../stringTypes/ZoneString'
 import DestroyableCard from './DestroyableCard'
-import StartOfTurnEvent from '../gameEvents/StartOfTurnEvent'
-import TargetsDomainString from '../stringTypes/TargetsDomainString'
-import ActionObject from '../structs/ActionObject'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
-import ActionActionObject from '../structs/ActionActionObject'
-import EventActionObject from '../structs/EventActionObject'
 
 abstract class Character extends DestroyableCard {
-  type: 'Leader' | 'Follower'
-  subtype: 'Leader' | 'Nameless' | 'Famous'
+  type: CharacterTypeString
+  subtype: CharacterSubtypeString
   rawAttack: number
   rawHealth: number
   ready: boolean
@@ -22,7 +11,6 @@ abstract class Character extends DestroyableCard {
   constructor(
     game: Game, 
     owner: GamePlayer, 
-    zone: ZoneString, 
     id: string, 
     name: string, 
     type: 'Leader' | 'Follower', 
@@ -43,7 +31,6 @@ abstract class Character extends DestroyableCard {
     super(
       game, 
       owner, 
-      zone, 
       id, 
       name, 
       type, 
@@ -116,3 +103,14 @@ abstract class Character extends DestroyableCard {
 }
 
 export default Character
+
+import Game from '../gamePhases/Game'
+import GamePlayer from './GamePlayer'
+import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
+import { TargetsDomainString } from '../stringTypes/DomainString'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { CharacterSubtypeString } from '../stringTypes/ObjectSubtypeString'
+import { CharacterTypeString } from '../stringTypes/ObjectTypeString'
+import { StartOfTurnEvent } from '../gamePhases/StartOfTurnPhase'

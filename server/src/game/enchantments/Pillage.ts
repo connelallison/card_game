@@ -1,6 +1,4 @@
 import StaticEnchantment from "../gameObjects/StaticEnchantment";
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";
 
 class Pillage extends StaticEnchantment {
     constructor(game: Game, owner: GameObject) {
@@ -21,3 +19,5 @@ class Pillage extends StaticEnchantment {
 }
 
 export default Pillage
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";

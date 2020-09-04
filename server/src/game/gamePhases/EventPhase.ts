@@ -1,7 +1,4 @@
 import GamePhase from "./GamePhase";
-import GameEvent from "../gameEvents/GameEvent";
-import Sequence from "./Sequence";
-import Phases from "../dictionaries/Phases";
 
 abstract class EventPhase extends GamePhase {
     parent: Sequence | EventPhase
@@ -42,3 +39,7 @@ abstract class EventPhase extends GamePhase {
 }
 
 export default EventPhase
+
+import GameEvent from "./GameEvent";
+import Sequence from "./Sequence";
+import Phases from "../dictionaries/Phases";

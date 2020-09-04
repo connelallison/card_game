@@ -1,17 +1,4 @@
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
-import ZoneString from "../stringTypes/ZoneString";
-import CardSubtypeString from "../stringTypes/CardSubtypeString";
 import PersistentCard from "./PersistentCard";
-import PersistentCardTypeString from "../stringTypes/PersistentCardTypeString";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import GameObjectData from "../structs/GameObjectData";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
 
 abstract class DestroyableCard extends PersistentCard {
     // death: ActionObject[]
@@ -22,7 +9,6 @@ abstract class DestroyableCard extends PersistentCard {
     constructor(
         game: Game, 
         owner: GamePlayer, 
-        zone: ZoneString, 
         id: string, 
         name: string, 
         type: PersistentCardTypeString, 
@@ -42,7 +28,6 @@ abstract class DestroyableCard extends PersistentCard {
         super(
             game, 
             owner, 
-            zone, 
             id, 
             name, 
             type, 
@@ -75,3 +60,14 @@ abstract class DestroyableCard extends PersistentCard {
 }
 
 export default DestroyableCard
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { PersistentCardTypeString } from "../stringTypes/ObjectTypeString";
+import { CardSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import GameObjectData from "../structs/GameObjectData";

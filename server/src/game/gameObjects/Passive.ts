@@ -1,16 +1,4 @@
 import PersistentCard from "./PersistentCard";
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
-import ZoneString from "../stringTypes/ZoneString";
-import PassiveSubtypeString from "../stringTypes/PassiveSubtypeString";
-import PassiveZoneString from "../stringTypes/PassiveZoneString";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
 
 abstract class Passive extends PersistentCard {
     zone: PassiveZoneString
@@ -21,7 +9,6 @@ abstract class Passive extends PersistentCard {
     constructor(
         game: Game,
         owner: GamePlayer,
-        zone: ZoneString,
         id: string,
         name: string,
         subtype: PassiveSubtypeString,
@@ -39,7 +26,6 @@ abstract class Passive extends PersistentCard {
         super(
             game,
             owner,
-            zone,
             id,
             name,
             'Passive',
@@ -67,3 +53,13 @@ abstract class Passive extends PersistentCard {
 }
 
 export default Passive
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { PassiveZoneString, ZoneString } from "../stringTypes/ZoneString";
+import { PassiveSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";

@@ -1,7 +1,4 @@
-import Game from "../gamePhases/Game";
-import DrawEvent from "../gameEvents/DrawEvent";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import GameObject from "../gameObjects/GameObject";
 
 class KnightAcademyTrigger extends TriggerEnchantment {
     constructor(game: Game, owner: GameObject) {
@@ -49,3 +46,6 @@ class KnightAcademyTrigger extends TriggerEnchantment {
 }
 
 export default KnightAcademyTrigger
+
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";

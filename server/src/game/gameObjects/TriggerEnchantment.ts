@@ -1,4 +1,3 @@
-import GameObject from './GameObject'
 import Enchantment from './Enchantment'
 
 abstract class TriggerEnchantment extends Enchantment {
@@ -88,10 +87,10 @@ abstract class TriggerEnchantment extends Enchantment {
         if (obj.actionType === 'eventModAction') return this.eventMod(triggerActionEvent, obj)
 
         if (obj.actionType === 'eventMapAction') {
-                const targets = obj.eventMap(triggerActionEvent.event)
-                const targetedEvent = Object.assign({}, triggerActionEvent, { targets })
-                // action(source, targetedEvent)
-                this.actionFunction(targetedEvent as ActionActionEvent, obj as ActionObject)
+            const targets = obj.eventMap(triggerActionEvent.event)
+            const targetedEvent = Object.assign({}, triggerActionEvent, { targets })
+            // action(source, targetedEvent)
+            this.actionFunction(targetedEvent as ActionActionEvent, obj as ActionObject)
         }
         return this.actionFunction(triggerActionEvent as ActionActionEvent, obj as ActionObject)
     }
@@ -107,12 +106,6 @@ abstract class TriggerEnchantment extends Enchantment {
     }
 
     triggerRequirement(event: GameEvent, obj: TriggerRequirementObject): boolean {
-        // const requirement = obj.targetRequirement !== undefined
-        //     ? this.targetRequirement(obj as TargetRequirementObject)
-        //     : this.activeRequirement(obj as ActiveRequirementObject)
-        // // if (obj.targetMap) return (event: GameEvent) => requirement(obj.targetMap(event))
-        // if (obj.targetMap) return (source: GameObject, event: GameEvent) => requirement(source, (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event))
-        // return requirement as ActiveRequirement
         if (obj.targetRequirement) {
             return this.targetRequirement((EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event), obj as TargetRequirementObject)
         } else {
@@ -123,25 +116,21 @@ abstract class TriggerEnchantment extends Enchantment {
 
 export default TriggerEnchantment
 
+import GameObject from './GameObject'
 import Game from '../gamePhases/Game'
 import Trigger from '../structs/Trigger'
-import GameEvent from '../gameEvents/GameEvent'
-import ZoneString from '../stringTypes/ZoneString'
-import ObjectTypeString from '../stringTypes/ObjectTypeString'
-import TriggerAction from '../functionTypes/TriggerAction'
-import TriggerObject from '../structs/TriggerObject'
-import TriggerRequirement from '../functionTypes/TriggerRequirement'
-import TriggerRequirementObject from '../structs/TriggerRequirementObject'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
+import GameEvent from '../gamePhases/GameEvent'
+import { ZoneString } from '../stringTypes/ZoneString'
+import { ObjectTypeString } from '../stringTypes/ObjectTypeString'
 import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import TriggerEvent from '../gameEvents/TriggerEvent'
-import TriggerActionEvent from '../gameEvents/TriggerActionEvent'
-import TriggerActionObject from '../structs/TriggerActionObject'
-import EventModActionObject from '../structs/EventModActionObject'
+import TriggerObject from '../structs/TriggerObject'
+import TriggerAction from '../functionTypes/TriggerAction'
 import EventModOperations from '../dictionaries/EventModOperations'
+import TriggerRequirementObject from '../structs/TriggerRequirementObject'
 import EventToTargetMaps from '../dictionaries/EventToTargetMaps'
 import EventToTargetMap from '../functionTypes/EventToTargetMap'
-import ActiveRequirement from '../functionTypes/ActiveRequirement'
-import ActionObject from '../structs/ActionObject'
-import ActionActionEvent from '../gameEvents/ActionActionEvent'
-
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { TriggerEvent } from '../gamePhases/TriggerPhase'
+import { TriggerActionEvent } from '../gamePhases/TriggerActionPhase'
+import { TriggerActionObject, ActionObject, EventModActionObject } from '../structs/ActionObject'
+import { ActionActionEvent } from '../gamePhases/ActionActionPhase'

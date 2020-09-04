@@ -1,16 +1,4 @@
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
 import PersistentCard from "./PersistentCard";
-import LeaderTechniqueSubtypeString from "../stringTypes/LeaderTechniqueSubtypeString";
-import LeaderTechniqueZoneString from "../stringTypes/LeaderTechniqueZoneString";
-import ObjectReport from "../structs/ObjectReport";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
 
 abstract class LeaderTechnique extends PersistentCard {
     collectable: false
@@ -24,7 +12,6 @@ abstract class LeaderTechnique extends PersistentCard {
     constructor(
         game: Game,
         owner: GamePlayer,
-        zone: LeaderTechniqueZoneString,
         id: string,
         name: string,
         subtype: LeaderTechniqueSubtypeString,
@@ -42,7 +29,6 @@ abstract class LeaderTechnique extends PersistentCard {
         super(
             game,
             owner,
-            zone,
             id,
             name,
             'LeaderTechnique',
@@ -115,3 +101,14 @@ abstract class LeaderTechnique extends PersistentCard {
 }
 
 export default LeaderTechnique
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { LeaderTechniqueSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { LeaderTechniqueZoneString } from "../stringTypes/ZoneString";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import { ObjectReport } from "../structs/ObjectReport";

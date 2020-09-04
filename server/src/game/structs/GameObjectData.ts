@@ -1,5 +1,3 @@
-import FlagsObject from "./FlagsObject";
-
 interface GameObjectData {
     attack?: number
     health?: number
@@ -9,3 +7,5 @@ interface GameObjectData {
 }
 
 export default GameObjectData
+
+import FlagsObject from "./FlagsObject";

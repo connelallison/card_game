@@ -1,14 +1,4 @@
 import Creation from "./Creation";
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
-import CreationZoneString from "../stringTypes/CreationZoneString";
-import TargetsDomainString from "../stringTypes/TargetsDomainString";
-import ActionObject from "../structs/ActionObject";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString";
-import ActionActionObject from "../structs/ActionActionObject";
-import EventActionObject from "../structs/EventActionObject";
 
 abstract class TechniqueCreation extends Creation {
   subtype: 'Technique'
@@ -18,7 +8,6 @@ abstract class TechniqueCreation extends Creation {
   constructor(
     game: Game,
     owner: GamePlayer,
-    zone: CreationZoneString,
     id: string,
     name: string,
     collectable: boolean,
@@ -37,7 +26,6 @@ abstract class TechniqueCreation extends Creation {
     super(
       game,
       owner,
-      zone,
       id,
       name,
       'Technique',
@@ -85,3 +73,12 @@ abstract class TechniqueCreation extends Creation {
 }
 
 export default TechniqueCreation
+
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
+import ActiveRequirementObject from "../structs/ActiveRequirementObject";
+import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
+import { TargetsDomainString } from "../stringTypes/DomainString";
+import TargetRequirementObject from "../structs/TargetRequirementObject";

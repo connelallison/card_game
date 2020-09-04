@@ -1,7 +1,4 @@
-import ObjectSubtypeString from "../stringTypes/ObjectSubtypeString";
-import ObjectTypeString from "../stringTypes/ObjectTypeString";
-
-interface ObjectReport {
+export interface ObjectReport {
   name: string,
   id: string,
   objectID: string,
@@ -20,4 +17,19 @@ interface ObjectReport {
   validSlots?: string[]
 }
 
-export default ObjectReport
+export interface BoardSlotReport {
+  name: string,
+  id: string,
+  objectID: string,
+  attack: number,
+  health: number,
+  type: ObjectTypeString,
+  subtype: ObjectSubtypeString
+  zone: string,
+  ownerName: string,
+  playerID: string,
+  follower: ObjectReport,
+}
+
+import { ObjectTypeString } from "../stringTypes/ObjectTypeString";
+import { ObjectSubtypeString } from "../stringTypes/ObjectSubtypeString";

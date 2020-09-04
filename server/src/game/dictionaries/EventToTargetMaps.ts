@@ -1,8 +1,3 @@
-import DeathEvent from "../gameEvents/DeathEvent";
-import DrawEvent from "../gameEvents/DrawEvent";
-import DamageEvent from "../gameEvents/DamageEvent";
-import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
-
 const EventToTargetMaps = {
     deathEventDestroyedTarget: (event: DeathEvent) => event.died,
     drawEventDrawnCard: (event: DrawEvent) => event.card,
@@ -11,3 +6,8 @@ const EventToTargetMaps = {
 }
 
 export default EventToTargetMaps
+
+import { DeathEvent } from "../gamePhases/DeathPhase"
+import { DrawEvent } from "../gamePhases/ProposedDrawPhase"
+import { DamageEvent } from "../gamePhases/DamageSinglePhase"
+import { EnterPlayEvent } from "../gamePhases/EnterPlayPhase"

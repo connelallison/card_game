@@ -1,15 +1,10 @@
 import WeaponCreation from "../gameObjects/WeaponCreation";
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
-import CreationZoneString from "../stringTypes/CreationZoneString";
-import Enchantments from "../dictionaries/Enchantments";
 
 class ClubOfLooting extends WeaponCreation {
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString) {
+    constructor(game: Game, owner: GamePlayer) {
         super(
             game,
             owner,
-            zone,
             'ClubOfLooting',
             'Club of Looting',
             true,
@@ -29,3 +24,6 @@ class ClubOfLooting extends WeaponCreation {
 }
 
 export default ClubOfLooting
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

@@ -1,15 +1,4 @@
 import Card from './Card'
-import Game from '../gamePhases/Game'
-import GamePlayer from './GamePlayer'
-import MomentZoneString from '../stringTypes/MomentZoneString'
-import TargetsDomainString from '../stringTypes/TargetsDomainString'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import ActionObject from '../structs/ActionObject'
-import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
-import CardIDString from '../stringTypes/CardIDString'
-import ActionActionObject from '../structs/ActionActionObject'
-import EventActionObject from '../structs/EventActionObject'
 
 abstract class Moment extends Card {
   zone: MomentZoneString
@@ -19,7 +8,6 @@ abstract class Moment extends Card {
   constructor(
     game: Game,
     owner: GamePlayer,
-    zone: MomentZoneString,
     id: string,
     name: string,
     subtype: 'Event' | 'Action',
@@ -37,7 +25,6 @@ abstract class Moment extends Card {
     super(
       game,
       owner,
-      zone,
       id,
       name,
       'Moment',
@@ -64,3 +51,12 @@ abstract class Moment extends Card {
 }
 
 export default Moment
+
+import Game from '../gamePhases/Game'
+import GamePlayer from './GamePlayer'
+import { MomentZoneString } from '../stringTypes/ZoneString'
+import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
+import { TargetsDomainString } from '../stringTypes/DomainString'
+import TargetRequirementObject from '../structs/TargetRequirementObject'

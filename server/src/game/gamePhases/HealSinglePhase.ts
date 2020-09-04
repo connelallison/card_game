@@ -1,5 +1,30 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import HealingEvent from "../gameEvents/HealingEvent";
+
+interface HealingEventObject {
+    objectSource: GameObject,
+    charSource: Character,
+    target: Character,
+    healing: number 
+}
+
+export class HealingEvent extends GameEvent {
+    objectSource: GameObject
+    charSource: Character
+    target: Character
+    healing: number
+    actualHealing: number
+
+    constructor(game: Game, object: HealingEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name}`
+        this.log = `${this.target.name} receives ${this.actualHealing} healing from ${this.charSource.name}${source}.`
+    }
+}
 
 class HealSinglePhase extends EventPhase {
     parent: EventPhase
@@ -25,3 +50,7 @@ class HealSinglePhase extends EventPhase {
 }
 
 export default HealSinglePhase
+
+import GameObject from "../gameObjects/GameObject";
+import Character from "../gameObjects/Character";
+import Game from "./Game";

@@ -1,6 +1,3 @@
-import GameObject from "../gameObjects/GameObject"
-import TargetsDomainString from "../stringTypes/TargetsDomainString"
-
 const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsDomainString[]) => {
     const targetDomain: GameObject[] = []
     if (typeof zones === 'string') zones = [zones]
@@ -47,3 +44,6 @@ const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsD
 }
 
 export default TargetDomains
+
+import GameObject from "../gameObjects/GameObject"
+import { TargetsDomainString } from "../stringTypes/DomainString"

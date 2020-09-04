@@ -1,6 +1,4 @@
-import Game from "../gamePhases/Game";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import GameObject from "../gameObjects/GameObject";
 
 class HolyBookTrigger extends TriggerEnchantment {
     constructor(game: Game, owner: GameObject) {
@@ -37,3 +35,6 @@ class HolyBookTrigger extends TriggerEnchantment {
 }
 
 export default HolyBookTrigger
+
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";

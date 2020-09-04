@@ -1,14 +1,10 @@
-import Game from "../gamePhases/Game";
 import Leader from "../gameObjects/Leader";
-import GamePlayer from "../gameObjects/GamePlayer";
-import LeaderZoneString from "../stringTypes/LeaderZoneString";
 
 class KingFredTheSaintly extends Leader {
-    constructor(game: Game, owner: GamePlayer, zone: LeaderZoneString) {
+    constructor(game: Game, owner: GamePlayer) {
           super(
               game, 
               owner, 
-              zone, 
               'KingFredTheSaintly', 
               'King Fred, the Saintly', 
               true,
@@ -29,3 +25,6 @@ class KingFredTheSaintly extends Leader {
   }
 
 export default KingFredTheSaintly
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

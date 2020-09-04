@@ -1,3 +1,9 @@
+import GameEvent from "../gamePhases/GameEvent";
+import GamePhase from "../gamePhases/GamePhase";
+import EventPhase from "../gamePhases/EventPhase";
+GameEvent
+GamePhase
+EventPhase
 import ActionActionPhase from "../gamePhases/ActionActionPhase";
 import AttackPhase from "../gamePhases/AttackPhase";
 import AuraUpdatePhase from "../gamePhases/AuraUpdatePhase";
@@ -36,7 +42,7 @@ const Phases = {
     SummonPhase,
     UsePhase,
     SpendMoneyPhase,
-    TriggerPhase,
+    TriggerPhase: TriggerPhase,
     TriggerActionPhase,
 }
 

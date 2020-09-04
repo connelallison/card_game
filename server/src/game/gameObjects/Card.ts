@@ -1,24 +1,4 @@
 import GameObject from './GameObject'
-import Game from '../gamePhases/Game'
-import GamePlayer from './GamePlayer'
-import ObjectReport from '../structs/ObjectReport'
-import ZoneString from '../stringTypes/ZoneString'
-import CardTypeString from '../stringTypes/CardTypeString'
-import ActionFunction from '../functionTypes/ActionFunction'
-import TargetRequirement from '../functionTypes/TargetRequirement'
-import ActiveRequirement from '../functionTypes/ActiveRequirement'
-import CardSubtypeString from '../stringTypes/CardSubtypeString'
-import TargetsDomainString from '../stringTypes/TargetsDomainString'
-import TargetDomains from '../dictionaries/TargetDomains'
-import GameObjectData from '../structs/GameObjectData'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import ActionObject from '../structs/ActionObject'
-import EnchantmentIDString from '../stringTypes/EnchantmentIDString'
-import CardIDString from '../stringTypes/CardIDString'
-import CardTagString from '../stringTypes/CardTagString'
-import ActionActionObject from '../structs/ActionActionObject'
-import EventActionObject from '../structs/EventActionObject'
 
 abstract class Card extends GameObject {
   id: CardIDString
@@ -45,7 +25,6 @@ abstract class Card extends GameObject {
   constructor(
     game: Game,
     owner: GamePlayer,
-    zone: ZoneString,
     id: string,
     name: string,
     type: CardTypeString,
@@ -66,7 +45,7 @@ abstract class Card extends GameObject {
     this.originalName = this.name
     this.owner = owner
     this.originalOwner = owner
-    this.zone = zone
+    this.zone = 'setAsideZone'
     this.collectable = collectable
     this.rawCost = rawCost
     this.cost = rawCost
@@ -82,8 +61,6 @@ abstract class Card extends GameObject {
   }
 
   provideReport(): ObjectReport {
-    // this.updateArrays()
-
     return {
       name: this.name,
       id: this.id,
@@ -151,4 +128,18 @@ abstract class Card extends GameObject {
 
   abstract moveZone(destination: ZoneString): void
 }
+
 export default Card
+
+import Game from '../gamePhases/Game'
+import GamePlayer from './GamePlayer'
+import { CardIDString, EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
+import { CardTypeString } from '../stringTypes/ObjectTypeString'
+import { CardSubtypeString } from '../stringTypes/ObjectSubtypeString'
+import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { TargetsDomainString } from '../stringTypes/DomainString'
+import { ObjectReport } from '../structs/ObjectReport'
+import GameObjectData from '../structs/GameObjectData'
+import { ZoneString } from '../stringTypes/ZoneString'

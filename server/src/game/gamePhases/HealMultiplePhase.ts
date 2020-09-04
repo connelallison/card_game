@@ -1,5 +1,4 @@
 import EventPhase from "./EventPhase";
-import HealingEvent from "../gameEvents/HealingEvent";
 
 class HealMultiplePhase extends EventPhase {
     parent: EventPhase
@@ -31,3 +30,5 @@ class HealMultiplePhase extends EventPhase {
 }
 
 export default HealMultiplePhase
+
+import { HealingEvent } from "./HealSinglePhase";

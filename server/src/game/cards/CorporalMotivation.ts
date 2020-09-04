@@ -1,20 +1,16 @@
-import Game from '../gamePhases/Game'
-import GamePlayer from '../gameObjects/GamePlayer'
-import CreationZoneString from '../stringTypes/CreationZoneString'
 import TechniqueCreation from '../gameObjects/TechniqueCreation'
 
 class CorporalMotivation extends TechniqueCreation {
-  constructor(game: Game, owner: GamePlayer, zone: CreationZoneString) {
+  constructor(game: Game, owner: GamePlayer) {
     super(
       game,
       owner,
-      zone,
       'CorporalMotivation',
       'Corporal Motivation',
       true,
       1,
       3,
-      'Deal 1 damage to a follower, then give it +3 Attack.',
+      'Action: Deal 1 damage to a follower, then give it +3 Attack.',
       [[
         {
           actionType: 'manualAction',
@@ -42,3 +38,6 @@ class CorporalMotivation extends TechniqueCreation {
   }
 }
 export default CorporalMotivation
+
+import Game from '../gamePhases/Game'
+import GamePlayer from '../gameObjects/GamePlayer'

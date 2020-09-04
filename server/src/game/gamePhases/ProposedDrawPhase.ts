@@ -1,8 +1,45 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import ProposedDrawEvent from "../gameEvents/ProposedDrawEvent";
-import DrawEvent from "../gameEvents/DrawEvent";
-import DamageEvent from "../gameEvents/DamageEvent";
-import Phases from "../dictionaries/Phases";
+
+interface ProposedDrawEventObject {
+    player: GamePlayer,
+    number?: number,
+    criteria?: TargetRequirementObject[]
+}
+
+export class ProposedDrawEvent extends GameEvent {
+    player: GamePlayer
+    number?: number = 1
+    criteria?: TargetRequirementObject[]
+    
+    constructor(game: Game, object: ProposedDrawEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        this.log = `${this.player.name} draws ${this.number} cards.`
+    }
+}
+
+interface DrawEventObject {
+    player: GamePlayer,
+    card: Card
+}
+
+export class DrawEvent extends GameEvent {
+    player: GamePlayer
+    card: Card
+    
+    constructor(game: Game, object: DrawEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        this.log = `${this.player.name} draws ${this.card.name}.`
+    }
+}
 
 class ProposedDrawPhase extends EventPhase {
     parent: EventPhase
@@ -18,7 +55,7 @@ class ProposedDrawPhase extends EventPhase {
         const event = this.event
         this.emit('proposedDrawEvent', event)
         const { player } = event
-        const drawQueue = event.criteria.reduce((queue, criterion) => queue.filter(criterion), player.deck)
+        const drawQueue = event.criteria.reduce((queue, criterion) => queue.filter(card => player.targetRequirement(card, criterion)), player.deck)
         for (let i = 0; i < event.number; i++) {
             if (i < drawQueue.length) {
                 if (player.hand.length < player.max.hand) {
@@ -64,3 +101,10 @@ class ProposedDrawPhase extends EventPhase {
 }
 
 export default ProposedDrawPhase
+
+import Phases from "../dictionaries/Phases";
+import GamePlayer from "../gameObjects/GamePlayer";
+import TargetRequirementObject from "../structs/TargetRequirementObject";
+import Game from "./Game";
+import { DamageEvent } from "./DamageSinglePhase";
+import Card from "../gameObjects/Card";

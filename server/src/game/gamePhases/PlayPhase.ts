@@ -1,14 +1,30 @@
-import Sequence from "./Sequence";
-import PlayEvent from "../gameEvents/PlayEvent";
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import PersistentCard from "../gameObjects/PersistentCard";
-import ActionActionEvent from "../gameEvents/ActionActionEvent";
-import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
-import Phases from "../dictionaries/Phases";
-import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
-import EventActionEvent from "../gameEvents/EventActionEvent";
-import Moment from "../gameObjects/Moment";
-import TechniqueCreation from "../gameObjects/TechniqueCreation";
+
+interface PlayEventObject {
+    player: GamePlayer,
+    card: Card,
+    slot?: BoardSlot,
+    targets: GameObject[],
+}
+
+export class PlayEvent extends GameEvent {
+    player: GamePlayer
+    card: Card
+    slot?: BoardSlot
+    targets: GameObject[]
+
+    constructor(game: Game, object: PlayEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const slot = this.slot ? ` in slot ${this.slot.index() + 1}` : ''
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
+        this.log = `${this.player.name} plays ${this.card.name}${slot}${targets}.`
+    }
+}
 
 class PlayPhase extends EventPhase {
     parent: Sequence
@@ -91,3 +107,18 @@ class PlayPhase extends EventPhase {
 }
 
 export default PlayPhase
+
+import Sequence from "./Sequence";
+import Moment from "../gameObjects/Moment";
+import TechniqueCreation from "../gameObjects/TechniqueCreation";
+import GamePlayer from "../gameObjects/GamePlayer";
+import Card from "../gameObjects/Card";
+import BoardSlot from "../gameObjects/BoardSlot";
+import GameObject from "../gameObjects/GameObject";
+import Game from "./Game";
+import Phases from "../dictionaries/Phases";
+import PersistentCard from "../gameObjects/PersistentCard";
+import { EnterPlayEvent } from "./EnterPlayPhase";
+import { ActionActionEvent } from "./ActionActionPhase";
+import { EventActionEvent } from "./EventActionPhase";
+import { SpendMoneyEvent } from "./SpendMoneyPhase";

@@ -1,6 +1,3 @@
-import Turn from "./Turn";
-import EventPhase from "./EventPhase";
-import DeathEvent from "../gameEvents/DeathEvent";
 import GamePhase from "./GamePhase";
 
 class Sequence extends GamePhase {
@@ -32,3 +29,7 @@ class Sequence extends GamePhase {
 }
 
 export default Sequence
+
+import Turn from "./Turn";
+import EventPhase from "./EventPhase";
+import { DeathEvent } from "./DeathPhase";

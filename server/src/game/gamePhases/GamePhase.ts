@@ -1,20 +1,3 @@
-import GameObject from "../gameObjects/GameObject"
-import EventCache from "./EventCache"
-import GameEvent from "../gameEvents/GameEvent"
-import Game from "./Game"
-import Turn from "./Turn"
-import Sequence from "./Sequence"
-import EventPhase from "./EventPhase"
-import TriggerTypeString from "../stringTypes/TriggerTypeString"
-import EventTypeString from "../stringTypes/EventTypeString"
-import CardIDString from "../stringTypes/CardIDString"
-import GamePlayer from "../gameObjects/GamePlayer"
-import Cards from "../dictionaries/Cards"
-import Card from "../gameObjects/Card"
-import EnchantmentIDString from "../stringTypes/EnchantmentIDString"
-import Enchantment from "../gameObjects/Enchantment"
-import Enchantments from "../dictionaries/Enchantments"
-
 abstract class GamePhase {
     parent: GamePhase
     children: GamePhase[]
@@ -46,7 +29,7 @@ abstract class GamePhase {
     }
 
     createCard(cardID: CardIDString, owner: GamePlayer): Card {
-        return new Cards[cardID](this.game(), owner, 'setAsideZone')
+        return new Cards[cardID](this.game(), owner)
     }
 
     createEnchantment(enchantmentID: EnchantmentIDString, owner: GameObject, values?): Enchantment {
@@ -87,6 +70,8 @@ abstract class GamePhase {
             death: [],
             play: [],
             action: [],
+            eventAction: [],
+            deathAction: [],
             attack: [],
             damage: [],
             healing: [],
@@ -104,3 +89,19 @@ abstract class GamePhase {
 }
 
 export default GamePhase
+
+import GameEvent from "./GameEvent"
+import GameObject from "../gameObjects/GameObject"
+import EventCache from "./EventCache"
+import Game from "./Game"
+import Turn from "./Turn"
+import Sequence from "./Sequence"
+import EventPhase from "./EventPhase"
+import EventTypeString from "../stringTypes/EventTypeString"
+import { CardIDString, EnchantmentIDString } from "../stringTypes/DictionaryKeyString"
+import GamePlayer from "../gameObjects/GamePlayer"
+import Card from "../gameObjects/Card"
+import Cards from "../dictionaries/Cards"
+import Enchantment from "../gameObjects/Enchantment"
+import Enchantments from "../dictionaries/Enchantments"
+import TriggerTypeString from "../stringTypes/TriggerTypeString"

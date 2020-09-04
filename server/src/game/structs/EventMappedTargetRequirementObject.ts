@@ -1,7 +1,3 @@
-import TargetRequirementString from "../stringTypes/TargetRequirementString";
-import ValuesObject from "./ValuesObject";
-import EventToTargetMapString from "../stringTypes/EventToTargetMapString";
-
 interface EventMappedTargetRequirementObject {
     targetRequirement: TargetRequirementString,
     values?: ValuesObject,
@@ -9,3 +5,6 @@ interface EventMappedTargetRequirementObject {
 }
 
 export default EventMappedTargetRequirementObject
+
+import ValuesObject from "./ValuesObject";
+import { TargetRequirementString, EventToTargetMapString } from "../stringTypes/DictionaryKeyString";

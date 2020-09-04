@@ -1,6 +1,4 @@
-import Game from "../gamePhases/Game"
 import StaticEnchantment from "../gameObjects/StaticEnchantment"
-import GameObject from "../gameObjects/GameObject"
 
 class AttackBuff extends StaticEnchantment {
     constructor(game: Game, owner: GameObject, values: any = { attack: 0 }) {
@@ -21,3 +19,6 @@ class AttackBuff extends StaticEnchantment {
 }
 
 export default AttackBuff
+
+import Game from "../gamePhases/Game"
+import GameObject from "../gameObjects/GameObject"

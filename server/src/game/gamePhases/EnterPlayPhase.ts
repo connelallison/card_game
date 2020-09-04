@@ -1,9 +1,31 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import EnterPlayEvent from "../gameEvents/EnterPlayEvent";
-import Follower from "../gameObjects/Follower";
-import Phases from "../dictionaries/Phases";
-import EventActionEvent from "../gameEvents/EventActionEvent";
 
+interface EnterPlayEventObject {
+    controller: GamePlayer,
+    card: PersistentCard,
+    objectSource: GameObject,
+    charSource: Character,
+    slot?: BoardSlot,
+}
+
+export class EnterPlayEvent extends GameEvent {
+    controller: GamePlayer
+    card: PersistentCard
+    objectSource: GameObject
+    charSource: Character
+    slot?: BoardSlot
+
+    constructor(game: Game, object: EnterPlayEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        const slot = this.card instanceof Follower ? `in slot ${this.slot.index() + 1} ` : ''
+        this.log =  `${this.card.name} enters play ${slot}under ${this.controller.name}'s control.`
+    }
+}
 class EnterPlayPhase extends EventPhase {
     parent: EventPhase
     event: EnterPlayEvent
@@ -49,3 +71,13 @@ class EnterPlayPhase extends EventPhase {
 }
 
 export default EnterPlayPhase
+
+import Follower from "../gameObjects/Follower";
+import Phases from "../dictionaries/Phases";
+import GamePlayer from "../gameObjects/GamePlayer";
+import PersistentCard from "../gameObjects/PersistentCard";
+import GameObject from "../gameObjects/GameObject";
+import Character from "../gameObjects/Character";
+import BoardSlot from "../gameObjects/BoardSlot";
+import Game from "./Game";
+import { EventActionEvent } from "./EventActionPhase";

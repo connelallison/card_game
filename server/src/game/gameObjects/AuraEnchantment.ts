@@ -1,15 +1,4 @@
-import GameObject from './GameObject'
 import Enchantment from './Enchantment'
-import Game from '../gamePhases/Game'
-import ZoneString from '../stringTypes/ZoneString'
-import ObjectTypeString from '../stringTypes/ObjectTypeString'
-import EffectFunction from '../functionTypes/EffectFunction'
-import TargetRequirement from '../functionTypes/TargetRequirement'
-import TargetsDomainString from '../stringTypes/TargetsDomainString'
-import TargetDomains from '../dictionaries/TargetDomains'
-import EffectFunctionObject from '../structs/EffectFunctionObject'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 
 abstract class AuraEnchantment extends Enchantment {
     subtype: 'Aura'
@@ -73,3 +62,13 @@ abstract class AuraEnchantment extends Enchantment {
 }
 
 export default AuraEnchantment
+
+import GameObject from './GameObject'
+import Game from '../gamePhases/Game'
+import EffectFunction from '../functionTypes/EffectFunction'
+import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { ZoneString } from '../stringTypes/ZoneString'
+import { ObjectTypeString } from '../stringTypes/ObjectTypeString'
+import ActiveRequirementObject from '../structs/ActiveRequirementObject'
+import EffectFunctionObject from '../structs/EffectFunctionObject'
+import { TargetsDomainString } from '../stringTypes/DomainString'

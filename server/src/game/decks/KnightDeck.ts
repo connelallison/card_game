@@ -1,5 +1,4 @@
 import Deck from '../gameObjects/Deck'
-import CardIDString from '../stringTypes/CardIDString'
 
 class KnightDeck extends Deck {
   constructor(game, owner) {
@@ -33,3 +32,5 @@ class KnightDeck extends Deck {
 }
 
 export default KnightDeck
+
+import { CardIDString } from '../stringTypes/DictionaryKeyString'

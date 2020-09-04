@@ -1,14 +1,3 @@
-// const Card = require("./Card");
-// const Follower = require("./Follower");
-import Cards from '../dictionaries/Cards'
-import Game from '../gamePhases/Game'
-import GamePlayer from './GamePlayer'
-import Card from './Card'
-import DeckObject from '../structs/DeckObject'
-import Leader from './Leader'
-import Passive from './Passive'
-import LeaderTechnique from './LeaderTechnique'
-
 class Deck {
   game: Game
   owner: GamePlayer
@@ -40,3 +29,11 @@ class Deck {
 }
 
 export default Deck
+
+import Game from '../gamePhases/Game'
+import GamePlayer from './GamePlayer'
+import Card from './Card'
+import DeckObject from '../structs/DeckObject'
+import Leader from './Leader'
+import Passive from './Passive'
+import LeaderTechnique from './LeaderTechnique'

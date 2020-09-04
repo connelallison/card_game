@@ -1,7 +1,26 @@
+import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
-import SpendMoneyEvent from "../gameEvents/SpendMoneyEvent";
-import DamageEvent from "../gameEvents/DamageEvent";
-import Phases from "../dictionaries/Phases";
+
+interface SpendMoneyEventObject {
+    player: GamePlayer,
+    money: number,
+    card: Card,
+}
+
+export class SpendMoneyEvent extends GameEvent {
+    player: GamePlayer
+    money: number
+    card: Card
+
+    constructor(game: Game, object: SpendMoneyEventObject) {
+        super(game) 
+        Object.assign(this, object)
+    }
+
+    generateLog() {
+        this.log = `${this.player.name} spends ${this.money} money on ${this.card.name}.`
+    }
+}
 
 class SpendMoneyPhase extends EventPhase {
     parent: EventPhase
@@ -41,3 +60,9 @@ class SpendMoneyPhase extends EventPhase {
 }
 
 export default SpendMoneyPhase
+
+import GamePlayer from "../gameObjects/GamePlayer";
+import Card from "../gameObjects/Card";
+import Game from "./Game";
+import { DamageEvent } from "./DamageSinglePhase";
+import Phases from "../dictionaries/Phases";

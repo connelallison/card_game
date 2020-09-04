@@ -1,9 +1,4 @@
 import GameObject from "./GameObject";
-import Game from "../gamePhases/Game";
-import GamePlayer from "./GamePlayer";
-import GameObjectData from "../structs/GameObjectData";
-import Follower from "./Follower";
-import BoardSlotReport from "../structs/BoardSlotReport";
 
 class BoardSlot extends GameObject {
     game: Game
@@ -54,3 +49,9 @@ class BoardSlot extends GameObject {
 }
 
 export default BoardSlot
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "./GamePlayer";
+import GameObjectData from "../structs/GameObjectData";
+import Follower from "./Follower";
+import { BoardSlotReport } from "../structs/ObjectReport";

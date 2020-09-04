@@ -1,15 +1,10 @@
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";
 import WorkCreation from "../gameObjects/WorkCreation";
-import CreationZoneString from "../stringTypes/CreationZoneString";
-import Enchantments from "../dictionaries/Enchantments";
 
 class HolyBook extends WorkCreation {
-    constructor(game: Game, owner: GamePlayer, zone: CreationZoneString) {
+    constructor(game: Game, owner: GamePlayer) {
         super(
             game,
             owner,
-            zone,
             'HolyBook',
             'Holy Book',
             true,
@@ -28,3 +23,6 @@ class HolyBook extends WorkCreation {
 }
 
 export default HolyBook
+
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";

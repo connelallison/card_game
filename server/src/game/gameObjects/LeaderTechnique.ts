@@ -1,6 +1,15 @@
-import PersistentCard from "./PersistentCard";
+import PersistentCard, { PersistentCardData } from "./PersistentCard";
+
+export interface LeaderTechniqueData extends PersistentCardData {
+    type: 'LeaderTechnique'
+    subtype: LeaderTechniqueSubtypeString
+    collectable: false
+    repeatable: boolean
+}
 
 abstract class LeaderTechnique extends PersistentCard {
+    static readonly data: LeaderTechniqueData
+    readonly data: LeaderTechniqueData
     collectable: false
     inPlayZone: 'leaderTechniqueZone'
     ready: boolean
@@ -9,42 +18,9 @@ abstract class LeaderTechnique extends PersistentCard {
     subtype: LeaderTechniqueSubtypeString
     zone: LeaderTechniqueZoneString
 
-    constructor(
-        game: Game,
-        owner: GamePlayer,
-        id: string,
-        name: string,
-        subtype: LeaderTechniqueSubtypeString,
-        rawCost: number,
-        staticCardText: string = '',
-        actions: ActionActionObject[][],
-        events: EventActionObject[][], 
-        playRequirements: ActiveRequirementObject[],
-        enchantments: EnchantmentIDString[],
-        targeted: boolean = false,
-        targetDomain: TargetsDomainString | TargetsDomainString[],
-        targetRequirements: TargetRequirementObject[],
-        repeatable: boolean
-    ) {
-        super(
-            game,
-            owner,
-            id,
-            name,
-            'LeaderTechnique',
-            subtype,
-            false,
-            rawCost,
-            staticCardText,
-            actions,
-            events, 
-            playRequirements,
-            enchantments,
-            targeted,
-            targetDomain,
-            targetRequirements
-        )
-        this.repeatable = repeatable
+    constructor(game: Game, owner: GamePlayer, data: LeaderTechniqueData) {
+        super(game, owner, data)
+        this.repeatable = data.repeatable
         this.ready = false
         this.inPlayZone = 'leaderTechniqueZone'
 
@@ -106,9 +82,4 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { LeaderTechniqueSubtypeString } from "../stringTypes/ObjectSubtypeString";
 import { LeaderTechniqueZoneString } from "../stringTypes/ZoneString";
-import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
-import { TargetsDomainString } from "../stringTypes/DomainString";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
 import { ObjectReport } from "../structs/ObjectReport";

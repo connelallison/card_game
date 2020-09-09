@@ -105,7 +105,19 @@ abstract class GameObject {
         return EventDomains(this, eventDomain)
     }
 
+    dynamicOrStoredValue(value: DynamicOrStoredValue, actionEvent: ActionEvent): string | boolean | number | number[] | GameObject[] | GameEvent[] {
+        if (typeof value === 'object' && (value as DynamicOrStoredValueObject).from === 'stored') {
+            return this.storedValue(value as StoredValueObject, actionEvent)
+        }
+        return this.dynamicValue(value as DynamicValue)
+    }
+
+    storedValue(value: StoredValueObject, actionEvent: ActionEvent): string | boolean | number | number[] | GameObject[] | GameEvent[] {
+        return actionEvent[(value as StoredValueObject).param]
+    }
+
     dynamicValue(value: DynamicValue): string | boolean | number | number[] | GameObject[] | GameEvent[] {
+        // console.log(value)
         if (typeof value === 'number') return value
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
@@ -119,10 +131,12 @@ abstract class GameObject {
         if (value.valueType === 'events') return this.dynamicEvents(value)
     }
 
+
     dynamicString(obj: DynamicStringObject): string {
         if (obj.from === 'target') {
             const target = this.dynamicTarget(obj.target)[0]
-            return (TargetToStringMaps[obj.stringMap] as TargetToStringMap)(target)
+            if (target) return (TargetToStringMaps[obj.stringMap] as TargetToStringMap)(target)
+            return ''
         }
     }
 
@@ -165,7 +179,8 @@ abstract class GameObject {
         if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.dynamicNumbers(obj.numbers))
         if (obj.from === 'target') {
             const target = this.dynamicTarget(obj.target)[0]
-            return (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)
+            if (target) return (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)
+            return null
         }
     }
 
@@ -193,19 +208,22 @@ abstract class GameObject {
     actionFunction(actionEvent: ActionEvent, obj: ActionObject): void {
         const values: any = {}
         for (let property in obj.values) {
-            values[property] = this.dynamicValue(obj.values[property])
+            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent)
         }
-        if (obj.stored) values['stored'] = obj.stored
-        const actionOperation = ActionOperations[obj.operation]
-        if (obj.actionType === 'autoAction') {
+        let targets
+        if (obj.actionType === 'autoAction' && (obj.target || obj.targets)) {
             const targetObj = obj.target ? obj.target : obj.targets ? obj.targets : null
-            if (targetObj) {
-                const targets = this.dynamicValue(targetObj) as GameObject[]
-                const targetedEvent = Object.assign({}, actionEvent, { targets })
-                return actionOperation(this, targetedEvent, values)
-            }
+            // if (targetObj) {
+            targets = this.dynamicValue(targetObj) as GameObject[]
+            // console.log(targets)
+            // }
+        } else if (actionEvent.targets) {
+            targets = [...actionEvent.targets]
         }
-        return actionOperation(this, actionEvent, values)
+        if (obj.actionType !== 'eventModAction' && targets && targets[0] && obj.extraTargets) targets.push(...targets[0].targetDomains(obj.extraTargets.targetDomain))
+        // console.log(values)
+        return ActionOperations[obj.operation](this, actionEvent, targets, values)
+        // return ActionOperations[obj.operation](this, actionEvent, values)
     }
 
     targetRequirement(target: GameObject, obj: TargetRequirementObject): boolean {
@@ -221,7 +239,7 @@ abstract class GameObject {
         for (let property in obj.values) {
             values[property] = this.dynamicValue(obj.values[property])
         }
-        return ActiveRequirements[obj.playRequirement](this, values)
+        return ActiveRequirements[obj.activeRequirement](this, values)
     }
 }
 
@@ -247,7 +265,7 @@ import { CardIDString, EnchantmentIDString } from "../stringTypes/DictionaryKeyS
 import { TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
 import TargetDomains from "../dictionaries/TargetDomains"
 import EventDomains from "../dictionaries/EventDomains"
-import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject } from "../structs/DynamicValueObject"
+import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject } from "../structs/DynamicValueObject"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import TargetToStringMap from "../functionTypes/TargetToStringMap"
 import DynamicTargetReducers from "../dictionaries/DynamicTargetReducers"
@@ -264,6 +282,6 @@ import TargetRequirementObject from "../structs/TargetRequirementObject"
 import TargetRequirements from "../dictionaries/TargetRequirements"
 import ActiveRequirementObject from "../structs/ActiveRequirementObject"
 import ActiveRequirements from "../dictionaries/ActiveRequirements"
-import { DynamicValue } from "../structs/DynamicValue"
+import { DynamicValue, DynamicOrStoredValue } from "../structs/DynamicValue"
 import TriggerEnchantment from "./TriggerEnchantment"
 

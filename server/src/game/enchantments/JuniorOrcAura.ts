@@ -1,23 +1,29 @@
-import AuraEnchantment from "../gameObjects/AuraEnchantment";
+import AuraEnchantment, { AuraEnchantmentData } from "../gameObjects/AuraEnchantment";
+
+const data: AuraEnchantmentData = {
+    'id': 'JuniorOrcAura',
+    'name': 'Junior Orc Aura',
+    'type': 'Enchantment',
+    'subtype': 'Aura',
+    'activeZones': ['board'],
+    'activeTypes': ['Follower'],
+    'targetDomain': ['friendlyBoard'],
+    'targetRequirements': [
+        { 'targetRequirement': 'isFriendly' },
+        { 'targetRequirement': 'notSelf' }
+    ],
+    'effectObjs': [{
+        'operation': 'incrementAttack',
+        'value': 1
+    }],
+    'priority': 1
+}
 
 class JuniorOrcAura extends AuraEnchantment {
+    static readonly data: AuraEnchantmentData = data
+
     constructor(game: Game, owner: GameObject) {
-        super(
-            game,
-            owner,
-            'JuniorOrcAura',
-            'Junior Orc Aura',
-            ['board'],
-            ['Follower'],
-            [],
-            [{
-                operation: 'incrementAttack',
-                value: 1,
-            }],
-            'friendlyBoard',
-            [{ targetRequirement: 'isFriendly' }, { targetRequirement: 'notSelf' }],
-            1,
-        )
+        super(game, owner, data)
     }
 }
 

@@ -2,10 +2,11 @@ import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
 
 interface HealingEventObject {
-    objectSource: GameObject,
-    charSource: Character,
-    target: Character,
-    healing: number 
+    objectSource: GameObject
+    charSource: Character
+    target: Character
+    healing: number
+    split?: boolean
 }
 
 export class HealingEvent extends GameEvent {
@@ -14,6 +15,7 @@ export class HealingEvent extends GameEvent {
     target: Character
     healing: number
     actualHealing: number
+    split?: boolean
 
     constructor(game: Game, object: HealingEventObject) {
         super(game) 

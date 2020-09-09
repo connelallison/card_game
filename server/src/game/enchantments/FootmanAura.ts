@@ -1,23 +1,30 @@
-import AuraEnchantment from "../gameObjects/AuraEnchantment"
+import AuraEnchantment, { AuraEnchantmentData } from "../gameObjects/AuraEnchantment"
+
+const data: AuraEnchantmentData = {
+    'id': 'FootmanAura',
+    'name': 'Footman Aura',
+    'type': 'Enchantment',
+    'subtype': 'Aura',
+    'activeZones': ['board'],
+    'activeTypes': ['Follower'],
+    'activeRequirements': [{
+        'activeRequirement': 'isMyTurn'
+    }],
+    'targetDomain': ['self'],
+    'effectObjs': [
+        {
+            'operation': 'incrementAttack',
+            'value': 2
+        }
+    ],
+    'priority': 1,
+}
 
 class FootmanAura extends AuraEnchantment {
+    static readonly data: AuraEnchantmentData = data
+
     constructor(game: Game, owner: GameObject) {
-        super(
-            game,
-            owner,
-            'FootmanAura',
-            'Footman Aura',
-            ['board'],
-            ['Follower'],
-            [{ playRequirement: 'isMyTurn' }],
-            [{
-                operation: 'incrementAttack',
-                value: 2,
-            }],
-            'friendlyBoard',
-            [{targetRequirement: 'isSelf'}],
-            1,
-        )
+        super(game, owner, data)
     }
 }
 

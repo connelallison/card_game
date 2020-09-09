@@ -37,7 +37,7 @@ class Passive extends Component {
     const styleClasses = outlineStatus + " passive card"
     const handInfo = this.props.object.zone === 'hand' ? (
       <div className="multicolour-line text-medium">
-        <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+        <p className='cost-label stat-label'>{this.props.object.cost}M</p>
         <p>{this.props.object.type}</p>
       </div>
     ) : null

@@ -1,55 +1,30 @@
-import DestroyableCard from './DestroyableCard'
+import DestroyableCard, { DestroyableCardData } from './DestroyableCard'
+
+export interface CharacterData extends DestroyableCardData {
+  type: CharacterTypeString
+  subtype: CharacterSubtypeString
+  attack: number
+  health: number
+}
 
 abstract class Character extends DestroyableCard {
+  static readonly data: CharacterData
+  readonly data: CharacterData
   type: CharacterTypeString
   subtype: CharacterSubtypeString
   rawAttack: number
-  rawHealth: number
-  ready: boolean
   attack: number
+  rawHealth: number
+  health: number
+  ready: boolean
 
-  constructor(
-    game: Game, 
-    owner: GamePlayer, 
-    id: string, 
-    name: string, 
-    type: 'Leader' | 'Follower', 
-    subtype: 'Leader' | 'Nameless' | 'Famous', 
-    collectable: boolean, 
-    rawCost: number, 
-    rawAttack: number, 
-    rawHealth: number, 
-    staticCardText: string, 
-    actions: ActionActionObject[][], 
-    events: EventActionObject[][],
-    playRequirements: ActiveRequirementObject[], 
-    enchantments: EnchantmentIDString[], 
-    targeted: boolean, 
-    targetDomain: TargetsDomainString | TargetsDomainString[], 
-    targetRequirements: TargetRequirementObject[]
-  ) {
-    super(
-      game, 
-      owner, 
-      id, 
-      name, 
-      type, 
-      subtype, 
-      collectable, 
-      rawCost, 
-      rawHealth, 
-      staticCardText, 
-      actions, 
-      events, 
-      playRequirements, 
-      enchantments, 
-      targeted, 
-      targetDomain, 
-      targetRequirements
-      )
+  constructor(game: Game, owner: GamePlayer, data: CharacterData) {
+    super(game, owner, data)
     this.ready = false
-    this.rawAttack = rawAttack
+    this.rawAttack = data.attack
     this.attack = this.rawAttack
+    this.rawHealth = data.health
+    this.health = this.rawHealth
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
@@ -91,10 +66,33 @@ abstract class Character extends DestroyableCard {
   isDamaged(): boolean {
     return this.missingHealth() > 0
   }
-  
+
+  isDestroyed(): boolean {
+    return this.health <= 0 || this.pendingDestroy
+  }
+
   notBehindGuard() {
     return this.flags.guard || this.controller().boardFollowers().every(follower => follower.flags.guard !== true)
-}
+  }
+
+  cloneData(clone) {
+    return {
+      clonedFrom: this,
+      pendingDestroy: this.pendingDestroy,
+      rawCost: this.rawCost,
+      cost: this.cost,
+      ready: this.ready,
+      rawAttack: this.rawAttack,
+      attack: this.attack,
+      rawHealth: this.rawHealth,
+      health: this.health,
+      actions: JSON.parse(JSON.stringify(this.actions)),
+      events: JSON.parse(JSON.stringify(this.events)),
+      enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
+      auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
+      flags: JSON.parse(JSON.stringify(this.flags)),
+    }
+  }
 
   abstract updateValidTargets(): void
   abstract takeDamage(damage: number): number
@@ -106,11 +104,6 @@ export default Character
 
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
-import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
-import { TargetsDomainString } from '../stringTypes/DomainString'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
 import { CharacterSubtypeString } from '../stringTypes/ObjectSubtypeString'
 import { CharacterTypeString } from '../stringTypes/ObjectTypeString'
 import { StartOfTurnEvent } from '../gamePhases/StartOfTurnPhase'

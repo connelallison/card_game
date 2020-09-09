@@ -1,20 +1,23 @@
-import StaticEnchantment from "../gameObjects/StaticEnchantment";
+import StaticEnchantment, { StaticEnchantmentData } from "../gameObjects/StaticEnchantment";
+
+const data: StaticEnchantmentData = {
+    'id': 'Guard',
+    'name': 'Guard',
+    'type': 'Enchantment',
+    'subtype': 'Static',
+    'activeZones': ['board'],
+    'activeTypes': ['Follower'],
+    'effectObjs': [{
+        operation: 'guard',
+        value: true
+    }]
+}
 
 class Guard extends StaticEnchantment {
+    static readonly data: StaticEnchantmentData = data
+
     constructor(game: Game, owner: GameObject) {
-        super(
-            game,
-            owner,
-            'Guard', 
-            'Guard', 
-            ['board'],
-            ['Follower'],
-            [],
-            [{
-              operation: 'guard',
-              value: true
-            }]
-        )
+        super(game, owner, data)
     }
 }
 

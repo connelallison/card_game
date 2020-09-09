@@ -8,5 +8,6 @@ export type PassiveZoneString = 'hand' | 'deck' | 'graveyard' |'passiveZone' | '
 export type LeaderTechniqueZoneString = 'leaderTechniqueZone' | 'setAsideZone' | 'graveyard'
 
 export type DynamicZoneString = ZoneString | DynamicStringObject
+export type DynamicOrStoredZoneString = ZoneString | DynamicOrStoredStringObject
 
-import { DynamicStringObject } from "../structs/DynamicValueObject"
+import { DynamicStringObject, DynamicOrStoredStringObject } from "../structs/DynamicValueObject"

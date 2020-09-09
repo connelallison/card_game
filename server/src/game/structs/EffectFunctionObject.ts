@@ -1,9 +1,9 @@
 interface EffectFunctionObject {
     operation: EffectOperationString,
-    value: boolean | number | DynamicNumberObject,
+    value: DynamicBoolean | DynamicNumber,
   }
 
 export default EffectFunctionObject
 
-import { DynamicNumberObject } from "./DynamicValueObject";
 import { EffectOperationString } from "../stringTypes/DictionaryKeyString";
+import { DynamicNumber, DynamicBoolean } from "./DynamicValue";

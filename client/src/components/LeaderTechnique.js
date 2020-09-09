@@ -43,7 +43,7 @@ class LeaderTechnique extends Component {
                     <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
                     <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
                     <div className="multicolour-line">
-                        <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+                        <p className='cost-label stat-label'>{this.props.object.cost}M</p>
                     </div>
                 </div>
             )

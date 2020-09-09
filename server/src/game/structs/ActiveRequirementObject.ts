@@ -1,5 +1,5 @@
 interface ActiveRequirementObject {
-    playRequirement: ActiveRequirementString,
+    activeRequirement: ActiveRequirementString,
     values?: ValuesObject
 }
 

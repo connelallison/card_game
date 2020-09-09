@@ -1,47 +1,24 @@
-import PersistentCard from "./PersistentCard";
+import PersistentCard, { PersistentCardData } from "./PersistentCard";
+
+export interface PassiveData extends PersistentCardData {
+    type: 'Passive'
+    subtype: PassiveSubtypeString
+    ethos: boolean
+}
 
 abstract class Passive extends PersistentCard {
+    static readonly data: PassiveData
+    readonly data: PassiveData
+    readonly ethos: boolean
     zone: PassiveZoneString
     type: 'Passive'
     inPlayZone: 'passiveZone'
     subtype: PassiveSubtypeString
 
-    constructor(
-        game: Game,
-        owner: GamePlayer,
-        id: string,
-        name: string,
-        subtype: PassiveSubtypeString,
-        collectable: boolean,
-        rawCost: number,
-        staticCardText: string = '',
-        actions: ActionActionObject[][],
-        events: EventActionObject[][], 
-        playRequirements: ActiveRequirementObject[],
-        enchantments: EnchantmentIDString[],
-        targeted: boolean = false,
-        targetDomain: TargetsDomainString | TargetsDomainString[],
-        targetRequirements: TargetRequirementObject[]
-    ) {
-        super(
-            game,
-            owner,
-            id,
-            name,
-            'Passive',
-            subtype,
-            collectable,
-            rawCost,
-            staticCardText,
-            actions,
-            events, 
-            playRequirements,
-            enchantments,
-            targeted,
-            targetDomain,
-            targetRequirements
-        )
+    constructor(game: Game, owner: GamePlayer, data: PassiveData) {
+        super(game, owner, data)
         this.inPlayZone = 'passiveZone'
+        this.ethos = data.ethos
     }
 
     moveZone(destination: PassiveZoneString): void {
@@ -56,10 +33,5 @@ export default Passive
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { PassiveZoneString, ZoneString } from "../stringTypes/ZoneString";
+import { PassiveZoneString } from "../stringTypes/ZoneString";
 import { PassiveSubtypeString } from "../stringTypes/ObjectSubtypeString";
-import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
-import { TargetsDomainString } from "../stringTypes/DomainString";
-import TargetRequirementObject from "../structs/TargetRequirementObject";

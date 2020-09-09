@@ -6,6 +6,21 @@ const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsD
             case 'self':
                 targetDomain.push(object.charOwner())
                 break
+            case 'leftFollower':
+                if (object instanceof Follower && object.leftFollower()) targetDomain.push(object.leftFollower())
+                break
+            case 'rightFollower':
+                if (object instanceof Follower && object.rightFollower()) targetDomain.push(object.rightFollower())
+                break
+            case 'oppositeFollower':
+                if (object instanceof Follower && object.oppositeFollower()) targetDomain.push(object.oppositeFollower())
+                break
+            case 'adjacentFollowers':
+                if (object instanceof Follower && object.adjacentFollowers()) targetDomain.push(...object.adjacentFollowers())
+                break
+            case 'neighbouringFollowers':
+                if (object instanceof Follower && object.neighbouringFollowers()) targetDomain.push(...object.neighbouringFollowers())
+                break
             case 'enemyBoard':
                 targetDomain.push(...object.controller().opponent.boardFollowers())
                 break
@@ -47,3 +62,4 @@ export default TargetDomains
 
 import GameObject from "../gameObjects/GameObject"
 import { TargetsDomainString } from "../stringTypes/DomainString"
+import Follower from "../gameObjects/Follower"

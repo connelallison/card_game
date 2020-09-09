@@ -1,40 +1,26 @@
-import NamelessFollower from '../gameObjects/NamelessFollower'
+import NamelessFollower, { NamelessFollowerData } from '../gameObjects/NamelessFollower'
+
+const data: NamelessFollowerData = {
+  'id': 'SavageWolf',
+  'name': 'Savage Wolf',
+  'type': 'Follower',
+  'subtype': 'Nameless',
+  'categories': [],
+  'collectable': true,
+  'cost': 3,
+  'attack': 4,
+  'health': 3,
+  'charges': 3,
+  'staticCardText': 'After a friendly follower dies, gain +2/+1.',
+  'enchantments': ['SavageWolfTrigger'],
+  'targeted': false
+}
 
 class SavageWolf extends NamelessFollower {
-  static readonly data: {
-    'id': 'SavageWolf',
-    'name': 'Savage Wolf',
-    'type': 'Follower',
-    'subtype': 'Nameless',
-    'categories': [],
-    'collectable': true,
-    'cost': 3,
-    'attack': 4,
-    'health': 3,
-    'staticCardText': 'After a friendly follower dies, gain +2/+1.',
-    'enchantments': ['SavageWolfTrigger'],
-    'targeted': false
-  }
+  static readonly data: NamelessFollowerData = data
     
   constructor(game: Game, owner: GamePlayer) {
-    super(
-      game,
-      owner,
-      {
-        'id': 'SavageWolf',
-        'name': 'Savage Wolf',
-        'type': 'Follower',
-        'subtype': 'Nameless',
-        'categories': [],
-        'collectable': true,
-        'cost': 3,
-        'attack': 4,
-        'health': 3,
-        'staticCardText': 'After a friendly follower dies, gain +2/+1.',
-        'enchantments': ['SavageWolfTrigger'],
-        'targeted': false
-      }
-    )
+    super(game, owner, data)
   }
 }
 

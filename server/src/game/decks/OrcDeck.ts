@@ -7,25 +7,20 @@ class OrcDeck extends Deck {
     const cards: CardIDString[] = [
       'JuniorOrc',
       'JuniorOrc',
-      'JuniorOrc',
-      'JuniorOrc',
-      'JuniorOrc',
-      'JuniorOrc',
-      'JuniorOrc',
-      'SavageWolf',
-      'SavageWolf',
       'SavageWolf',
       'SavageWolf',
       'Orcissimus',
       'Orcissimus',
-      'Consume',
       'Consume',
       'Consume',
       'ClubOfLooting',
       'ClubOfLooting',
       'CorporalMotivation',
+      'CorporalMotivation',
       'BattleOfSuiyang',
       'BattleOfSuiyang',
+      'NapalmStrike',
+      'NapalmStrike',
     ]
     super(game, owner, 'OrcDeck', 'Orc Deck', {leader, passive, cards})
   }

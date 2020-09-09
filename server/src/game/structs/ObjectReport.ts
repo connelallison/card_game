@@ -5,6 +5,7 @@ export interface ObjectReport {
   cost: number,
   attack?: number,
   health?: number,
+  charges?: number,
   type: ObjectTypeString,
   subtype: ObjectSubtypeString
   zone: string,

@@ -1,47 +1,20 @@
-import Creation from "./Creation";
+import Creation, { CreationData } from "./Creation";
+
+export interface WeaponCreationData extends CreationData {
+    subtype: 'Weapon'
+    attack: number
+}
 
 abstract class WeaponCreation extends Creation {
+    static readonly data: WeaponCreationData
+    readonly data: WeaponCreationData
     subtype: 'Weapon'
     rawAttack: number
     attack: number
 
-    constructor(
-        game: Game,
-        owner: GamePlayer,
-        id: string,
-        name: string,
-        collectable: boolean,
-        rawCost: number,
-        rawAttack: number,
-        rawHealth: number,
-        staticCardText: string = '',
-        actions: ActionActionObject[][],
-        events: EventActionObject[][], 
-        playRequirements: ActiveRequirementObject[],
-        enchantments: EnchantmentIDString[],
-        targeted: boolean = false,
-        targetDomain: TargetsDomainString | TargetsDomainString[],
-        targetRequirements: TargetRequirementObject[]
-    ) {
-        super(
-            game,
-            owner,
-            id,
-            name,
-            'Weapon',
-            collectable,
-            rawCost,
-            rawHealth,
-            staticCardText,
-            actions,
-            events, 
-            playRequirements,
-            enchantments,
-            targeted,
-            targetDomain,
-            targetRequirements
-        )
-        this.rawAttack = rawAttack
+    constructor(game: Game, owner: GamePlayer, data: WeaponCreationData) {
+        super(game, owner, data)
+        this.rawAttack = data.attack
         this.attack = this.rawAttack
 
         this.game.event.on('afterAttack', (event) => this.afterAttack(event))
@@ -54,15 +27,13 @@ abstract class WeaponCreation extends Creation {
     }
 
     provideReport(): ObjectReport {
-        // this.updateValidTargets()
-
         return {
             name: this.name,
             id: this.id,
             objectID: this.objectID,
             cost: this.cost,
             attack: this.attack,
-            health: this.health,
+            charges: this.charges,
             type: this.type,
             subtype: this.subtype,
             zone: this.zone,
@@ -77,8 +48,10 @@ abstract class WeaponCreation extends Creation {
 
     baseData(): GameObjectData {
         return {
+            id: this.originalID,
+            name: this.originalName,
             attack: this.rawAttack,
-            health: this.rawHealth,
+            charges: this.charges,
             cost: this.rawCost,
             flags: this.baseFlags(),
         }
@@ -89,10 +62,5 @@ export default WeaponCreation
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
-import { TargetsDomainString } from "../stringTypes/DomainString";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
 import { ObjectReport } from "../structs/ObjectReport";
 import GameObjectData from "../structs/GameObjectData";

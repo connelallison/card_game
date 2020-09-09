@@ -1,73 +1,41 @@
-import PersistentCard from "./PersistentCard";
+import PersistentCard, { PersistentCardData } from "./PersistentCard";
+
+export interface DestroyableCardData extends PersistentCardData {
+    type: DestroyableCardTypeString
+    subtype: DestroyableCardSubtypeString
+}
 
 abstract class DestroyableCard extends PersistentCard {
+    static readonly data: DestroyableCardData
+    readonly data: DestroyableCardData
     // death: ActionObject[]
-    rawHealth: number
-    health: number
-    maxHealth: number
+    pendingDestroy: boolean
 
-    constructor(
-        game: Game, 
-        owner: GamePlayer, 
-        id: string, 
-        name: string, 
-        type: PersistentCardTypeString, 
-        subtype: CardSubtypeString, 
-        collectable: boolean, 
-        rawCost: number, 
-        rawHealth: number, 
-        staticCardText: string = '', 
-        actions: ActionActionObject[][], 
-        events: EventActionObject[][],
-        playRequirements: ActiveRequirementObject[], 
-        enchantments: EnchantmentIDString[],  
-        targeted: boolean = false, 
-        targetDomain: TargetsDomainString | TargetsDomainString[], 
-        targetRequirements: TargetRequirementObject[]
-        ) {
-        super(
-            game, 
-            owner, 
-            id, 
-            name, 
-            type, 
-            subtype, 
-            collectable, 
-            rawCost, 
-            staticCardText, 
-            actions, 
-            events,
-            playRequirements, 
-            enchantments, 
-            targeted, 
-            targetDomain, 
-            targetRequirements
-            )
-        this.rawHealth = rawHealth
+    constructor(game: Game, owner: GamePlayer, data: DestroyableCardData) {
+        super(game, owner, data)
+        this.pendingDestroy = false
     }
 
-    baseData(): GameObjectData {
+    cloneData(clone) {
         return {
-            health: this.rawHealth,
-            cost: this.rawCost,
-            flags: this.baseFlags(),
+            clonedFrom: this,
+            pendingDestroy: this.pendingDestroy,
+            rawCost: this.rawCost,
+            cost: this.cost,
+            actions: JSON.parse(JSON.stringify(this.actions)),
+            events: JSON.parse(JSON.stringify(this.events)),
+            enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
+            auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
+            flags: JSON.parse(JSON.stringify(this.flags)),
         }
     }
-
-    isDestroyed(): boolean { 
-        return this.health <= 0 || this.pendingDestroy
-    }
+    
+    abstract isDestroyed(): boolean 
 }
 
 export default DestroyableCard
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { PersistentCardTypeString } from "../stringTypes/ObjectTypeString";
-import { CardSubtypeString } from "../stringTypes/ObjectSubtypeString";
-import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
-import { TargetsDomainString } from "../stringTypes/DomainString";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
-import GameObjectData from "../structs/GameObjectData";
+import { DestroyableCardTypeString } from "../stringTypes/ObjectTypeString";
+import { DestroyableCardSubtypeString } from "../stringTypes/ObjectSubtypeString";

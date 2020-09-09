@@ -1,47 +1,50 @@
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
+import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+
+const data: TriggerEnchantmentData = {
+    'id': 'KnightAcademyTrigger',
+    'name': 'Knight Academy Trigger',
+    'type': 'Enchantment',
+    'subtype': 'Trigger',
+    'repeatable': true,
+    'wonderTrigger': true,
+    'activeZones': ['creationZone'],
+    'activeTypes': ['Creation'],
+    'triggerObjs': [{
+        'eventType': 'afterDraw',
+        'requirements': [
+            {
+                'activeRequirement': 'canSummonType',
+                'values': {
+                    'type': 'Follower',
+                }
+            },
+            {
+                'targetRequirement': 'isType',
+                'values': {
+                    'type': 'Follower'
+                },
+                'targetMap': 'drawEventDrawnCard'
+            },
+            {
+                'targetRequirement': 'isFriendly',
+                'targetMap': 'drawEventDrawnCard'
+            }
+        ],
+        'actions': [{
+            actionType: 'autoAction',
+            operation: 'summonCard',
+            values: {
+                'cardID': 'Knight'
+            }
+        }]
+    }]
+}
 
 class KnightAcademyTrigger extends TriggerEnchantment {
+    static readonly data: TriggerEnchantmentData = data
+
     constructor(game: Game, owner: GameObject) {
-        super(
-            game,
-            owner,
-            'KnightAcademyTrigger',
-            'Knight Academy Trigger',
-            ['creationZone'],
-            ['Creation'],
-            [],
-            true,
-            [{
-                eventType: 'afterDraw',
-                requirements: [
-                    {
-                        playRequirement: 'canSummonType',
-                        values: {
-                            type: 'Follower',
-                        }
-                    },
-                    {
-                        targetRequirement: 'isType',
-                        values: {
-                            type: 'Follower',
-                        },
-                        targetMap: 'drawEventDrawnCard'
-                    },
-                    {
-                        targetRequirement: 'isFriendly',
-                        targetMap: 'drawEventDrawnCard'
-                    }
-                ],
-                actions: [{
-                    actionType: 'autoAction',
-                    operation: 'summonCard',
-                    values: {
-                        cardID: 'Knight'
-                    }
-                }]
-            }],
-            true,
-        )
+        super(game, owner, data)
     }
 }
 

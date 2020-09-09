@@ -213,6 +213,11 @@ input {
   background-color: rgb(201, 81, 81);
 }
 
+.charges-label {
+  /* color: red; */
+  background-color: saddlebrown;
+}
+
 .canBeSelected {
   outline: solid green 2px;
 }

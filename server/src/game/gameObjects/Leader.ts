@@ -1,61 +1,32 @@
-import Character from './Character'
+import Character, { CharacterData } from './Character'
+
+export interface LeaderData extends CharacterData {
+  type: 'Leader'
+  subtype: 'Leader'
+  starter: boolean
+  leaderTechniqueID: CardIDString
+}
 
 abstract class Leader extends Character {
+  static readonly data: LeaderData
+  readonly data: LeaderData
   zone: LeaderZoneString
   inPlayZone: 'leaderZone'
   type: 'Leader'
   subtype: 'Leader'
   leaderTechniqueID: CardIDString
+  starter: boolean
 
-  constructor(
-    game: Game,
-    owner: GamePlayer,
-    id: string,
-    name: string,
-    collectable: boolean,
-    rawCost: number,
-    rawAttack: number,
-    rawHealth: number,
-    staticCardText: string,
-    actions: ActionActionObject[][],
-    events: EventActionObject[][],
-    playRequirements: ActiveRequirementObject[],
-    enchantments: EnchantmentIDString[],
-    targeted: boolean,
-    targetDomain: TargetsDomainString | TargetsDomainString[],
-    targetRequirements: TargetRequirementObject[],
-    leaderPowerID: CardIDString
-  ) {
-    super(
-      game,
-      owner,
-      id,
-      name,
-      'Leader',
-      'Leader',
-      collectable,
-      rawCost,
-      rawAttack,
-      rawHealth,
-      staticCardText,
-      actions,
-      events,
-      playRequirements,
-      enchantments,
-      targeted,
-      targetDomain,
-      targetRequirements
-    )
+  constructor(game: Game, owner: GamePlayer, data: LeaderData) {
+    super(game, owner, data)
     this.inPlayZone = 'leaderZone'
-    this.health = this.rawHealth
-    this.leaderTechniqueID = leaderPowerID
+    this.leaderTechniqueID = data.leaderTechniqueID
+    this.starter = data.starter
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
   provideReport(): ObjectReport {
-    // this.updateValidTargets()
-
     return {
       name: this.name,
       id: this.id,
@@ -110,6 +81,8 @@ abstract class Leader extends Character {
 
   baseData(): GameObjectData {
     return {
+      id: this.originalID,
+      name: this.originalName,
       attack: this.baseAttack(),
       health: this.baseHealth(),
       cost: this.rawCost,
@@ -185,11 +158,7 @@ export default Leader
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { LeaderZoneString } from '../stringTypes/ZoneString'
-import { CardIDString, EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
-import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import { TargetsDomainString } from '../stringTypes/DomainString'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { CardIDString } from '../stringTypes/DictionaryKeyString'
 import { ObjectReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import WeaponCreation from './WeaponCreation'

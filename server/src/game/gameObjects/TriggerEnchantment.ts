@@ -1,35 +1,25 @@
-import Enchantment from './Enchantment'
+import Enchantment, { EnchantmentData } from './Enchantment'
+
+export interface TriggerEnchantmentData extends EnchantmentData {
+    subtype: 'Trigger'
+    triggerObjs: TriggerObject[]
+    repeatable: boolean
+    wonderTrigger: boolean
+}
 
 abstract class TriggerEnchantment extends Enchantment {
+    static readonly data: TriggerEnchantmentData
+    readonly data: TriggerEnchantmentData
     subtype: 'Trigger'
     repeatable: boolean
     wonderTrigger: boolean
     triggers: Trigger[]
 
-    constructor(
-        game: Game,
-        owner: GameObject,
-        id: string,
-        name: string,
-        activeZones: ZoneString[],
-        activeTypes: ObjectTypeString[],
-        activeRequirements: ActiveRequirementObject[],
-        repeatable: boolean,
-        triggerObjs: TriggerObject[],
-        wonderTrigger: boolean = false
-    ) {
-        super(
-            game,
-            owner,
-            id, name,
-            'Trigger',
-            activeZones,
-            activeTypes,
-            activeRequirements = []
-        )
-        this.repeatable = repeatable
-        this.wonderTrigger = wonderTrigger
-        this.triggers = this.wrapTriggers(triggerObjs)
+    constructor(game: Game, owner: GameObject, data: TriggerEnchantmentData) {
+        super(game, owner, data)
+        this.repeatable = data.repeatable
+        this.wonderTrigger = data.wonderTrigger
+        this.triggers = this.wrapTriggers(data.triggerObjs)
     }
 
     active(): boolean {
@@ -89,7 +79,6 @@ abstract class TriggerEnchantment extends Enchantment {
         if (obj.actionType === 'eventMapAction') {
             const targets = obj.eventMap(triggerActionEvent.event)
             const targetedEvent = Object.assign({}, triggerActionEvent, { targets })
-            // action(source, targetedEvent)
             this.actionFunction(targetedEvent as ActionActionEvent, obj as ActionObject)
         }
         return this.actionFunction(triggerActionEvent as ActionActionEvent, obj as ActionObject)
@@ -98,11 +87,9 @@ abstract class TriggerEnchantment extends Enchantment {
     eventMod(triggerActionEvent: TriggerActionEvent, obj: EventModActionObject): void {
         const values: any = {}
         for (let property in obj.values) {
-            values[property] = this.dynamicValue(obj.values[property])
+            values[property] = this.dynamicOrStoredValue(obj.values[property], triggerActionEvent as ActionEvent)
         }
-        if (obj.stored) values['stored'] = obj.stored
         return EventModOperations[obj.operation](this, triggerActionEvent.event, values)
-        // return (source: GameObject, triggerActionEvent: TriggerActionEvent) => eventMod(triggerActionEvent.event)
     }
 
     triggerRequirement(event: GameEvent, obj: TriggerRequirementObject): boolean {
@@ -112,6 +99,13 @@ abstract class TriggerEnchantment extends Enchantment {
             return this.activeRequirement(obj as ActiveRequirementObject)
         }
     }
+
+    clone(newOwner): TriggerEnchantment {
+        const clone = new Enchantments[this.id](this.game, newOwner) as TriggerEnchantment
+        clone.data.triggerObjs = JSON.parse(JSON.stringify(this.data.triggerObjs))
+        clone.triggers = clone.wrapTriggers(clone.data.triggerObjs)
+        return clone
+    }
 }
 
 export default TriggerEnchantment
@@ -120,8 +114,6 @@ import GameObject from './GameObject'
 import Game from '../gamePhases/Game'
 import Trigger from '../structs/Trigger'
 import GameEvent from '../gamePhases/GameEvent'
-import { ZoneString } from '../stringTypes/ZoneString'
-import { ObjectTypeString } from '../stringTypes/ObjectTypeString'
 import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 import TriggerObject from '../structs/TriggerObject'
 import TriggerAction from '../functionTypes/TriggerAction'
@@ -134,3 +126,5 @@ import { TriggerEvent } from '../gamePhases/TriggerPhase'
 import { TriggerActionEvent } from '../gamePhases/TriggerActionPhase'
 import { TriggerActionObject, ActionObject, EventModActionObject } from '../structs/ActionObject'
 import { ActionActionEvent } from '../gamePhases/ActionActionPhase'
+import ActionEvent from '../gamePhases/ActionEvent'
+import Enchantments from '../dictionaries/Enchantments'

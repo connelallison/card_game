@@ -5,40 +5,44 @@ export type EventActionObject = AutoActionObject
 export type DeathActionObject = AutoActionObject
 export type TriggerActionObject = EventModActionObject | AutoActionObject | EventMapActionObject
 
-export interface AutoActionObject {
+export interface BaseActionObject {
+    actionType: 'autoAction' | 'manualAction' | 'eventMapAction' | 'eventModAction'
+    operation: ActionOperationString | EventModOperationString
+    values?: ValuesObject
+}
+
+export interface AutoActionObject extends BaseActionObject {
     actionType: 'autoAction',
     operation: ActionOperationString,
     values?: ValuesObject,
-    stored?: StoredValues,
     target?: DynamicTargetObject,
     targets?: DynamicTargetsObject,
+    extraTargets?: DynamicTargetsFromTargetDomain,
 }
 
-export interface ManualActionObject {
+export interface ManualActionObject extends BaseActionObject {
     actionType: 'manualAction',
     operation: ActionOperationString,
     values?: ValuesObject,
-    stored?: StoredValues,
+    extraTargets?: DynamicTargetsFromTargetDomain,
 }
 
-export interface EventMapActionObject {
+export interface EventMapActionObject extends BaseActionObject {
     actionType: 'eventMapAction'
     operation: ActionOperationString,
     values: ValuesObject,
-    stored?: StoredValues,
     eventMap: (event: GameEvent) => Card | Card[],
+    extraTargets?: DynamicTargetsFromTargetDomain,
 }
 
-export interface EventModActionObject {
+export interface EventModActionObject extends BaseActionObject {
     actionType: 'eventModAction'
     operation: EventModOperationString,
     values: ValuesObject,
-    stored?: StoredValues,
 }
 
 import ValuesObject from "./ValuesObject"
-import StoredValues from "./StoredValues"
 import GameEvent from "../gamePhases/GameEvent"
 import Card from "../gameObjects/Card"
-import { DynamicTargetObject, DynamicTargetsObject } from "./DynamicValueObject"
+import { DynamicTargetObject, DynamicTargetsObject, DynamicTargetsFromTargetDomain } from "./DynamicValueObject"
 import { ActionOperationString, EventModOperationString } from "../stringTypes/DictionaryKeyString"

@@ -7,6 +7,7 @@ EventPhase
 import ActionActionPhase from "../gamePhases/ActionActionPhase";
 import AttackPhase from "../gamePhases/AttackPhase";
 import AuraUpdatePhase from "../gamePhases/AuraUpdatePhase";
+import DamageMultiplePhase from "../gamePhases/DamageMultiplePhase";
 import DamageSinglePhase from "../gamePhases/DamageSinglePhase";
 import DeathPhase from "../gamePhases/DeathPhase";
 import EndOfTurnPhase from "../gamePhases/EndOfTurnPhase";
@@ -28,6 +29,7 @@ const Phases = {
     ActionActionPhase,
     AttackPhase,
     AuraUpdatePhase,
+    DamageMultiplePhase,
     DamageSinglePhase,
     DeathPhase,
     EndOfTurnPhase,

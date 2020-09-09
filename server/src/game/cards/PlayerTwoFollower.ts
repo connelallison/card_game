@@ -1,38 +1,25 @@
-import NamelessFollower from '../gameObjects/NamelessFollower'
+import NamelessFollower, { NamelessFollowerData } from '../gameObjects/NamelessFollower'
+
+const data: NamelessFollowerData = {
+  'id': 'PlayerTwoFollower',
+  'name': 'Player 2 Follower',
+  'type': 'Follower',
+  'subtype': 'Nameless',
+  'categories': [],
+  'collectable': false,
+  'cost': 3,
+  'attack': 3,
+  'health': 4,
+  'charges': 1,
+  'staticCardText': '',
+  'targeted': false
+}
 
 class PlayerTwoFollower extends NamelessFollower {
-  static readonly data: {
-    'id': 'PlayerTwoFollower',
-    'name': 'Player 2 Follower',
-    'type': 'Follower',
-    'subtype': 'Nameless',
-    'categories': [],
-    'collectable': false,
-    'cost': 3,
-    'attack': 3,
-    'health': 4,
-    'staticCardText': '',
-    'targeted': false
-  }
+  static readonly data: NamelessFollowerData = data
 
   constructor(game: Game, owner: GamePlayer) {
-    super(
-      game,
-      owner,
-      {
-        'id': 'PlayerTwoFollower',
-        'name': 'Player 2 Follower',
-        'type': 'Follower',
-        'subtype': 'Nameless',
-        'categories': [],
-        'collectable': false,
-        'cost': 3,
-        'attack': 3,
-        'health': 4,
-        'staticCardText': '',
-        'targeted': false
-      }
-    )
+    super(game, owner, data)
   }
 }
 

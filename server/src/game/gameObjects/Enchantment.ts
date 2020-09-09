@@ -1,6 +1,19 @@
 import GameObject from './GameObject'
 
+export interface EnchantmentData {
+    id: string
+    name: string
+    type: 'Enchantment'
+    subtype: EnchantmentSubtypeString
+    activeZones: ZoneString[]
+    activeTypes: ObjectTypeString[]
+    activeRequirements?: ActiveRequirementObject[]
+}
+
 abstract class Enchantment extends GameObject {
+    static readonly data: EnchantmentData
+    readonly data: EnchantmentData
+    id: EnchantmentIDString
     owner: GameObject
     type: 'Enchantment'
     subtype: EnchantmentSubtypeString
@@ -9,29 +22,15 @@ abstract class Enchantment extends GameObject {
     activeRequirements: ActiveRequirementObject[]
     previousActive: boolean
 
-    constructor(
-        game: Game,
-        owner: GameObject,
-        id: string,
-        name: string,
-        subtype: EnchantmentSubtypeString,
-        activeZones: ZoneString[],
-        activeTypes: ObjectTypeString[],
-        activeRequirements: ActiveRequirementObject[]
-    ) {
-        super(
-            game,
-            id,
-            name,
-            'Enchantment',
-            subtype
-        )
+    constructor(game: Game, owner: GameObject, data: EnchantmentData) {
+        super(game, data.id, data.name, 'Enchantment', data.subtype)
         this.owner = owner
         this.zone = this.owner.zone
-        this.activeZones = activeZones
-        this.activeTypes = activeTypes
-        this.activeRequirements = activeRequirements
+        this.activeZones = data.activeZones
+        this.activeTypes = data.activeTypes
+        this.activeRequirements = data.activeRequirements || []
         this.previousActive = false
+        this.data = data
     }
 
     wrappedEffects(effectObjs: EffectFunctionObject[]): EffectFunction[] {
@@ -57,6 +56,8 @@ abstract class Enchantment extends GameObject {
             flags: this.baseFlags()
         }
     }
+
+    abstract clone(newOwner): Enchantment 
 }
 
 export default Enchantment
@@ -65,12 +66,14 @@ import Game from '../gamePhases/Game'
 import { ZoneString } from '../stringTypes/ZoneString'
 import { ObjectTypeString } from '../stringTypes/ObjectTypeString'
 import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import { ObjectSubtypeString, EnchantmentSubtypeString } from '../stringTypes/ObjectSubtypeString'
+import { EnchantmentSubtypeString } from '../stringTypes/ObjectSubtypeString'
 import EffectFunctionObject from '../structs/EffectFunctionObject'
 import EffectFunction from '../functionTypes/EffectFunction'
 import GameObjectData from '../structs/GameObjectData'
 import EffectOperations from '../dictionaries/EffectOperations'
 import EffectOperation from '../functionTypes/EffectOperation'
 import Character from './Character'
+import Enchantments from '../dictionaries/Enchantments'
+import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
 
 

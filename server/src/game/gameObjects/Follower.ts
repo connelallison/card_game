@@ -1,67 +1,35 @@
-import Character from './Character'
+import Character, { CharacterData } from './Character'
+
+export interface FollowerData extends CharacterData {
+  type: 'Follower'
+  subtype: FollowerSubtypeString,
+  categories: FollowerCategoryString[]
+}
 
 abstract class Follower extends Character {
+  static readonly data: FollowerData
+  readonly data: FollowerData
+  maxHealth: number
   zone: FollowerZoneString
   inPlayZone: 'board'
   type: 'Follower'
   subtype: FollowerSubtypeString
   slot: BoardSlot
+  categories: FollowerCategoryString[]
   validSlots: BoardSlot[]
 
-  constructor(
-    game: Game,
-    owner: GamePlayer,
-    id: string,
-    name: string,
-    subtype: FollowerSubtypeString,
-    categories: FollowerCategoryString[],
-    collectable: boolean,
-    rawCost: number,
-    rawAttack: number,
-    rawHealth: number,
-    staticCardText: string = '',
-    actions: ActionActionObject[][],
-    events: EventActionObject[][],
-    playRequirements: ActiveRequirementObject[],
-    enchantments: EnchantmentIDString[],
-    targeted: boolean,
-    targetDomain: TargetsDomainString | TargetsDomainString[],
-    targetRequirements: TargetRequirementObject[]
-  ) {
-    super(
-      game,
-      owner,
-      id,
-      name,
-      'Follower',
-      subtype,
-      collectable,
-      rawCost,
-      rawAttack,
-      rawHealth,
-      staticCardText,
-      actions,
-      events, 
-      playRequirements,
-      enchantments,
-      targeted,
-      targetDomain,
-      targetRequirements
-    )
-    this.health = this.rawHealth
+  constructor(game: Game, owner: GamePlayer, data: FollowerData) {
+    super(game, owner, data)
     this.maxHealth = this.rawHealth
     this.inPlayZone = 'board'
     this.slot = null
-    // categories
+    this.categories = data.categories
     this.validSlots = []
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
   provideReport(): ObjectReport {
-    // this.updateValidSlots()
-    // this.updateValidTargets()
-
     return {
       name: this.name,
       id: this.id,
@@ -132,10 +100,32 @@ abstract class Follower extends Character {
 
   baseData(): GameObjectData {
     return {
+      id: this.originalID,
+      name: this.originalName,
       attack: this.rawAttack,
       health: this.rawHealth,
       cost: this.rawCost,
       flags: this.baseFlags(),
+    }
+  }
+
+  cloneData(clone) {
+    return {
+      clonedFrom: this,
+      pendingDestroy: this.pendingDestroy,
+      rawCost: this.rawCost,
+      cost: this.cost,
+      ready: this.ready,
+      rawAttack: this.rawAttack,
+      attack: this.attack,
+      rawHealth: this.rawHealth,
+      health: this.health,
+      maxHealth: this.maxHealth,
+      actions: JSON.parse(JSON.stringify(this.actions)),
+      events: JSON.parse(JSON.stringify(this.events)),
+      enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
+      auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
+      flags: JSON.parse(JSON.stringify(this.flags)),
     }
   }
 
@@ -257,11 +247,6 @@ import GamePlayer from './GamePlayer'
 import { FollowerZoneString } from '../stringTypes/ZoneString'
 import BoardSlot from './BoardSlot'
 import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
-import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
-import { TargetsDomainString } from '../stringTypes/DomainString'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
 import { ObjectReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import { FollowerSubtypeString } from '../stringTypes/ObjectSubtypeString'

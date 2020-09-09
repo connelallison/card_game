@@ -2,10 +2,11 @@ import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
 
 interface DamageEventObject {
-    objectSource: GameObject,
-    charSource: Character,
-    target: Character,
-    damage: number 
+    objectSource: GameObject
+    charSource: Character
+    target: Character
+    damage: number
+    split?: boolean
 }
 
 export class DamageEvent extends GameEvent {
@@ -13,6 +14,7 @@ export class DamageEvent extends GameEvent {
     charSource: Character
     target: Character
     damage: number
+    split?: boolean
 
     constructor(game: Game, object: DamageEventObject) {
         super(game) 

@@ -44,7 +44,7 @@ const Permissions = {
             && card.cost <= player.money
             && (card.targeted ? card.validTargets.length > 0 : true )
             && (card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true)
-            && card.playRequirements.every(requirement => card.activeRequirement(requirement))
+            && card.activeRequirements.every(requirement => card.activeRequirement(requirement))
         )
     },
 
@@ -55,7 +55,7 @@ const Permissions = {
             && card.inPlay()
             && card.cost <= player.money
             && (card.targeted ? card.validTargets.length > 0 : true)
-            && card.playRequirements.every(requirement => card.activeRequirement(requirement))
+            && card.activeRequirements.every(requirement => card.activeRequirement(requirement))
         )
     },
 }

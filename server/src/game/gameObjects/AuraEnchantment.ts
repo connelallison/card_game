@@ -1,40 +1,29 @@
-import Enchantment from './Enchantment'
+import Enchantment, { EnchantmentData } from './Enchantment'
+
+export interface AuraEnchantmentData extends EnchantmentData {
+    subtype: 'Aura'
+    effectObjs: EffectFunctionObject[]
+    targetDomain: TargetsDomainString | TargetsDomainString[]
+    targetRequirements?: TargetRequirementObject[]
+    priority: 1 | 2 | 3
+}
 
 abstract class AuraEnchantment extends Enchantment {
+    static readonly data: AuraEnchantmentData
+    readonly data: AuraEnchantmentData
     subtype: 'Aura'
     priority: 1 | 2 | 3
     effects: EffectFunction[]
     targetDomain: () => GameObject[]
     targetRequirements: TargetRequirementObject[]
-    emit: any
+    emit: () => void
 
-    constructor(
-        game: Game,
-        owner: GameObject,
-        id: string,
-        name: string,
-        activeZones: ZoneString[],
-        activeTypes: ObjectTypeString[],
-        activeRequirements: ActiveRequirementObject[],
-        effectObjs: EffectFunctionObject[],
-        targetDomain: TargetsDomainString | TargetsDomainString[],
-        targetRequirements: TargetRequirementObject[] = [],
-        priority: 1 | 2 | 3
-    ) {
-        super(
-            game,
-            owner,
-            id,
-            name,
-            'Aura',
-            activeZones,
-            activeTypes,
-            activeRequirements
-        )
-        this.priority = priority
-        this.effects = this.wrappedEffects(effectObjs)
-        this.targetDomain = () => this.targetDomains(targetDomain)
-        this.targetRequirements = targetRequirements 
+    constructor(game: Game, owner: GameObject, data: AuraEnchantmentData) {
+        super(game, owner, data)
+        this.priority = data.priority
+        this.effects = this.wrappedEffects(data.effectObjs)
+        this.targetDomain = () => this.targetDomains(data.targetDomain)
+        this.targetRequirements = data.targetRequirements || []
         this.emit = (() => this.auraEmit())
     }
 
@@ -59,6 +48,13 @@ abstract class AuraEnchantment extends Enchantment {
             }
         })
     }
+
+    clone(newOwner): AuraEnchantment {
+        const clone = new Enchantments[this.id](this.game, newOwner) as AuraEnchantment
+        clone.data.effectObjs = JSON.parse(JSON.stringify(this.data.effectObjs))
+        clone.effects = clone.wrappedEffects(clone.data.effectObjs)
+        return clone
+    }
 }
 
 export default AuraEnchantment
@@ -67,8 +63,6 @@ import GameObject from './GameObject'
 import Game from '../gamePhases/Game'
 import EffectFunction from '../functionTypes/EffectFunction'
 import TargetRequirementObject from '../structs/TargetRequirementObject'
-import { ZoneString } from '../stringTypes/ZoneString'
-import { ObjectTypeString } from '../stringTypes/ObjectTypeString'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
 import EffectFunctionObject from '../structs/EffectFunctionObject'
 import { TargetsDomainString } from '../stringTypes/DomainString'
+import Enchantments from '../dictionaries/Enchantments'

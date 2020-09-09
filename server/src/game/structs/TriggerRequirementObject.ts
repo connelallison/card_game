@@ -1,6 +1,6 @@
 interface TriggerRequirementObject {
     targetRequirement?: TargetRequirementString,
-    playRequirement?: ActiveRequirementString,
+    activeRequirement?: ActiveRequirementString,
     values?: ValuesObject,
     targetMap?: EventToTargetMapString,
 }

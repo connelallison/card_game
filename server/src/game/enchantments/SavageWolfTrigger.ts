@@ -1,58 +1,50 @@
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
+import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+
+const data: TriggerEnchantmentData = {
+    'id': 'SavageWolfTrigger',
+    'name': 'Savage Wolf Trigger',
+    'type': 'Enchantment',
+    'subtype': 'Trigger',
+    activeTypes: ['Follower'],
+    activeZones: ['board'],
+    repeatable: true,
+    wonderTrigger: false,
+    triggerObjs: [{
+        eventType: 'afterDeath',
+        requirements: [
+            {
+                targetRequirement: 'isType',
+                values: {
+                    type: 'Follower'
+                },
+                targetMap: 'deathEventDestroyedTarget'
+            },
+            {
+                targetRequirement: 'isFriendly',
+                targetMap: 'deathEventDestroyedTarget'
+            }
+        ],
+        actions: [{
+            actionType: 'autoAction',
+            operation: 'buffAttackAndHealth',
+            values: {
+                attack: 2,
+                health: 1,
+            },
+            target: {
+                valueType: 'target',
+                from: 'targetDomain',
+                targetDomain: 'self'
+            }
+        }]
+    }]
+}
 
 class SavageWolfTrigger extends TriggerEnchantment {
+    static readonly data: TriggerEnchantmentData = data
+
     constructor(game: Game, owner: GameObject) {
-        super(
-            game,
-            owner,
-            'SavageWolfTrigger',
-            'Savage Wolf Trigger',
-            ['board'],
-            ['Follower'],
-            [],
-            true,
-            [{
-                eventType: 'afterDeath',
-                requirements: [
-                    {
-                        targetRequirement: 'isType',
-                        values: {
-                            type: 'Follower',
-                        },
-                        targetMap: 'deathEventDestroyedTarget',
-                    },
-                    {
-                        targetRequirement: 'isFriendly',
-                        targetMap: 'deathEventDestroyedTarget',
-                    }
-                ],
-                actions: [{
-                    actionType: 'autoAction',
-                    operation: 'buffCharacterAttack',
-                    values: {
-                        attack: 2,
-                    },
-                    target: {
-                        valueType: 'target',
-                        from: 'targetDomain',
-                        targetDomain: 'self'
-                    },
-                },
-                {
-                    actionType: 'autoAction',
-                    operation: 'buffCharacterHealth',
-                    values: {
-                        health: 1,
-                    },
-                    target: {
-                        valueType: 'target',
-                        from: 'targetDomain',
-                        targetDomain: 'self'
-                    },
-                }]
-            }],
-            false,
-        )
+        super(game, owner, data)
     }
 }
 

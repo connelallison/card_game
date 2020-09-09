@@ -1,11 +1,30 @@
 import GameObject from './GameObject'
 
+export interface CardData {
+  id: string
+  name: string
+  type: CardTypeString
+  subtype: CardSubtypeString
+  collectable: boolean
+  cost: number
+  staticCardText: string
+  actions?: ActionActionObject[][]
+  events?: EventActionObject[][]
+  activeRequirements?: ActiveRequirementObject[]
+  enchantments?: EnchantmentIDString[]
+  targeted: boolean
+  targetDomain?: TargetsDomainString | TargetsDomainString[]
+  targetRequirements?: TargetRequirementObject[]
+}
+
 abstract class Card extends GameObject {
+  static readonly data: CardData
+  readonly data: CardData
+  readonly originalID: CardIDString
+  readonly originalName: string
+  readonly originalOwner: GamePlayer
   id: CardIDString
-  originalID: CardIDString
-  originalName: string
   owner: GamePlayer
-  originalOwner: GamePlayer
   type: CardTypeString
   subtype: CardSubtypeString
   collectable: boolean
@@ -16,48 +35,33 @@ abstract class Card extends GameObject {
   events: EventActionObject[][]
   // tags: CardTagString[]
   // option: []
-  playRequirements: ActiveRequirementObject[]
+  activeRequirements: ActiveRequirementObject[]
   targeted: boolean
   targetDomain: () => GameObject[]
   targetRequirements: TargetRequirementObject[]
   validTargets: GameObject[]
+  clonedFrom: Card
 
-  constructor(
-    game: Game,
-    owner: GamePlayer,
-    id: string,
-    name: string,
-    type: CardTypeString,
-    subtype: CardSubtypeString,
-    collectable: boolean,
-    rawCost: number,
-    staticCardText: string = '',
-    actions: ActionActionObject[][] = [],
-    events: EventActionObject[][] = [],
-    playRequirements: ActiveRequirementObject[],
-    enchantments: EnchantmentIDString[],
-    targeted: boolean = false,
-    targetDomain: TargetsDomainString | TargetsDomainString[],
-    targetRequirements: TargetRequirementObject[]
-  ) {
-    super(game, id, name, type, subtype)
+  constructor(game: Game, owner: GamePlayer, data: CardData) {
+    super(game, data.id, data.name, data.type, data.subtype)
     this.originalID = this.id
     this.originalName = this.name
     this.owner = owner
     this.originalOwner = owner
     this.zone = 'setAsideZone'
-    this.collectable = collectable
-    this.rawCost = rawCost
-    this.cost = rawCost
-    this.staticCardText = staticCardText
-    this.actions = actions
-    this.events = events
-    this.playRequirements = playRequirements 
-    this.targeted = targeted
-    this.targetDomain = () => this.targetDomains(targetDomain)
-    this.targetRequirements = targetRequirements 
+    this.collectable = data.collectable
+    this.rawCost = data.cost
+    this.cost = data.cost
+    this.staticCardText = data.staticCardText
+    this.actions = data.actions || []
+    this.events = data.events || []
+    this.activeRequirements = data.activeRequirements || []
+    this.targeted = data.targeted
+    this.targetDomain = () => this.targetDomains(data.targetDomain || [])
+    this.targetRequirements = data.targetRequirements || []
     this.validTargets = []
-    this.addBaseEnchantments(enchantments)
+    this.addBaseEnchantments(data.enchantments || [])
+    this.data = data
   }
 
   provideReport(): ObjectReport {
@@ -109,6 +113,8 @@ abstract class Card extends GameObject {
 
   baseData(): GameObjectData {
     return {
+      id: this.originalID,
+      name: this.originalName,
       cost: this.rawCost,
       flags: this.baseFlags(),
     }
@@ -124,6 +130,26 @@ abstract class Card extends GameObject {
 
   addBaseEnchantments(enchantments: EnchantmentIDString[]): void {
     enchantments.forEach(enchantment => this.addEnchantment(this.createEnchantment(enchantment, this)))
+  }
+
+  cloneData(clone) {
+    return {
+      clonedFrom: this,
+      rawCost: this.rawCost,
+      cost: this.cost,
+      actions: JSON.parse(JSON.stringify(this.actions)),
+      events: JSON.parse(JSON.stringify(this.events)),
+      enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
+      auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
+      flags: JSON.parse(JSON.stringify(this.flags)),
+    }
+  }
+
+  clone(): Card {
+    const clone = new Cards[this.originalID](this.game, this.owner)
+    Object.assign(clone, this.cloneData(clone))
+    
+    return clone
   }
 
   abstract moveZone(destination: ZoneString): void
@@ -143,3 +169,4 @@ import { TargetsDomainString } from '../stringTypes/DomainString'
 import { ObjectReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import { ZoneString } from '../stringTypes/ZoneString'
+import Cards from '../dictionaries/Cards'

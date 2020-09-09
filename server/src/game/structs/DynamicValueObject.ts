@@ -8,11 +8,33 @@ export type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFrom
 export type DynamicEventObject = DynamicEventFromEvents
 export type DynamicEventsObject = DynamicEventsFromEventDomain
 
+export type DynamicOrStoredStringObject = DynamicStringObject | DynamicStringFromStored
+export type DynamicOrStoredNumberObject = DynamicNumberObject | DynamicNumberFromStored
+export type DynamicOrStoredNumbersObject = DynamicNumbersObject | DynamicNumbersFromStored
+export type DynamicOrStoredTargetObject = DynamicTargetObject | DynamicTargetFromStored
+export type DynamicOrStoredTargetsObject = DynamicTargetsObject | DynamicTargetsFromStored
+export type DynamicOrStoredEventObject = DynamicEventObject | DynamicEventFromStored
+export type DynamicOrStoredEventsObject = DynamicEventsObject | DynamicEventsFromStored
+export type StoredValueObject = DynamicStringFromStored
+                            | DynamicNumberFromStored
+                            | DynamicNumbersFromStored
+                            | DynamicTargetFromStored
+                            | DynamicTargetsFromStored
+                            | DynamicEventFromStored
+                            | DynamicEventsFromStored
+export type DynamicOrStoredValueObject = DynamicOrStoredStringObject | DynamicOrStoredNumberObject | DynamicOrStoredNumbersObject | DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject | DynamicOrStoredEventObject | DynamicOrStoredEventsObject
+
 export interface DynamicStringFromTarget {
     valueType: 'string',
     from: 'target',
     stringMap: TargetToStringMapString,
     target: DynamicTargetObject,
+}
+
+export interface DynamicStringFromStored {
+    valueType: 'string',
+    from: 'stored',
+    param: string,
 }
 
 export interface DynamicNumberFromTarget {
@@ -29,11 +51,23 @@ export interface DynamicNumberFromNumbers {
     numbers: DynamicNumbersObject
 }
 
+export interface DynamicNumberFromStored {
+    valueType: 'number',
+    from: 'stored',
+    param: string,
+}
+
 export interface DynamicNumbersFromTargets {
     valueType: 'numbers',
     from: 'targets',
     numberMap: TargetToNumberMapString,
     targets: DynamicTargetsObject
+}
+
+export interface DynamicNumbersFromStored {
+    valueType: 'numbers',
+    from: 'stored',
+    param: string,
 }
 
 export interface DynamicTargetFromEvent {
@@ -57,6 +91,12 @@ export interface DynamicTargetFromTargetDomain {
     targetDomain: TargetDomainString,
 }
 
+export interface DynamicTargetFromStored {
+    valueType: 'target',
+    from: 'stored',
+    param: string,
+}
+
 export interface DynamicTargetsFromEvents {
     valueType: 'targets',
     from: 'events',
@@ -72,6 +112,12 @@ export interface DynamicTargetsFromTargetDomain {
     targetDomain: TargetsDomainString | TargetsDomainString[],
 }
 
+export interface DynamicTargetsFromStored {
+    valueType: 'targets',
+    from: 'stored',
+    param: string,
+}
+
 export interface DynamicEventFromEvents {
     valueType: 'event',
     from: 'events',
@@ -80,11 +126,23 @@ export interface DynamicEventFromEvents {
     events: DynamicEventsObject,
 }
 
+export interface DynamicEventFromStored {
+    valueType: 'event',
+    from: 'stored',
+    param: string,
+}
+
 export interface DynamicEventsFromEventDomain {
     valueType: 'events',
     from: 'eventDomain',
     // requirements?: EventRequirementObject[],
     eventDomain: EventsDomainString | EventsDomainString[],
+}
+
+export interface DynamicEventsFromStored {
+    valueType: 'events',
+    from: 'stored',
+    param: string,
 }
 
 // export interface CompoundDynamicNumberObject {

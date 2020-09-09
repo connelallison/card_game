@@ -1,41 +1,16 @@
-import Passive from "./Passive";
+import Passive, { PassiveData } from "./Passive";
+
+export interface PermanentPassiveData extends PassiveData {
+    subtype: 'Permanent'
+}
 
 abstract class PermanentPassive extends Passive {
+    static readonly data: PermanentPassiveData
+    readonly data: PermanentPassiveData
     subtype: 'Permanent'
 
-    constructor(
-        game: Game,
-        owner: GamePlayer,
-        id: string,
-        name: string,
-        collectable: boolean,
-        rawCost: number,
-        staticCardText: string = '',
-        actions: ActionActionObject[][],
-        events: EventActionObject[][], 
-        playRequirements: ActiveRequirementObject[],
-        enchantments: EnchantmentIDString[],
-        targeted: boolean = false,
-        targetDomain: TargetsDomainString | TargetsDomainString[],
-        targetRequirements: TargetRequirementObject[]
-    ) {
-        super(
-            game,
-            owner,
-            id,
-            name,
-            'Permanent',
-            collectable,
-            rawCost,
-            staticCardText,
-            actions,
-            events, 
-            playRequirements,
-            enchantments,
-            targeted,
-            targetDomain,
-            targetRequirements
-        )
+    constructor(game: Game, owner: GamePlayer, data: PermanentPassiveData) {
+        super(game, owner, data)
     }
 }
 
@@ -43,8 +18,3 @@ export default PermanentPassive
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
-import { TargetsDomainString } from "../stringTypes/DomainString";
-import TargetRequirementObject from "../structs/TargetRequirementObject";

@@ -1,47 +1,20 @@
-import Creation from "./Creation";
+import Creation, { CreationData } from "./Creation";
+
+export interface TechniqueCreationData extends CreationData {
+  subtype: 'Technique'
+  repeatable: boolean
+}
 
 abstract class TechniqueCreation extends Creation {
+  static readonly data: TechniqueCreationData
+  readonly data: TechniqueCreationData
   subtype: 'Technique'
   ready: boolean
   repeatable: boolean
 
-  constructor(
-    game: Game,
-    owner: GamePlayer,
-    id: string,
-    name: string,
-    collectable: boolean,
-    rawCost: number,
-    rawHealth: number,
-    staticCardText: string = '',
-    actions: ActionActionObject[][],
-    events: EventActionObject[][], 
-    playRequirements: ActiveRequirementObject[],
-    enchantments: EnchantmentIDString[],
-    targeted: boolean = false,
-    targetDomain: TargetsDomainString | TargetsDomainString[],
-    targetRequirements: TargetRequirementObject[],
-    repeatable: boolean
-  ) {
-    super(
-      game,
-      owner,
-      id,
-      name,
-      'Technique',
-      collectable,
-      rawCost,
-      rawHealth,
-      staticCardText,
-      actions,
-      events, 
-      playRequirements,
-      enchantments,
-      targeted,
-      targetDomain,
-      targetRequirements
-    )
-    this.repeatable = repeatable
+  constructor(game: Game, owner: GamePlayer, data: TechniqueCreationData) {
+    super(game, owner, data)
+    this.repeatable = data.repeatable
     this.ready = false
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
@@ -74,11 +47,5 @@ abstract class TechniqueCreation extends Creation {
 
 export default TechniqueCreation
 
-
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
-import { TargetsDomainString } from "../stringTypes/DomainString";
-import TargetRequirementObject from "../structs/TargetRequirementObject";

@@ -1,45 +1,19 @@
-import Card from './Card'
+import Card, { CardData } from './Card'
+
+export interface MomentData extends CardData {
+  type: 'Moment'
+  subtype: MomentSubtypeString,
+}
 
 abstract class Moment extends Card {
+  static readonly data: MomentData
+  readonly data: MomentData
   zone: MomentZoneString
   type: 'Moment'
-  subtype: 'Event' | 'Action'
+  subtype: MomentSubtypeString
 
-  constructor(
-    game: Game,
-    owner: GamePlayer,
-    id: string,
-    name: string,
-    subtype: 'Event' | 'Action',
-    collectable: boolean,
-    rawCost: number,
-    staticCardText: string,
-    actions: ActionActionObject[][],
-    events: EventActionObject[][],
-    playRequirements: ActiveRequirementObject[],
-    enchantments: EnchantmentIDString[],
-    targeted: boolean,
-    targetDomain: TargetsDomainString | TargetsDomainString[],
-    targetRequirements: TargetRequirementObject[]
-  ) {
-    super(
-      game,
-      owner,
-      id,
-      name,
-      'Moment',
-      subtype,
-      collectable,
-      rawCost,
-      staticCardText,
-      actions,
-      events,
-      playRequirements,
-      enchantments,
-      targeted,
-      targetDomain,
-      targetRequirements
-    )
+  constructor(game: Game, owner: GamePlayer, data: MomentData) {
+    super(game, owner, data)
   }
 
   moveZone(destination: MomentZoneString): void {
@@ -55,8 +29,4 @@ export default Moment
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { MomentZoneString } from '../stringTypes/ZoneString'
-import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
-import { TargetsDomainString } from '../stringTypes/DomainString'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { MomentSubtypeString } from '../stringTypes/ObjectSubtypeString'

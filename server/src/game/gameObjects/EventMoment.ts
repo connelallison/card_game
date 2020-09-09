@@ -1,16 +1,11 @@
-import Moment from "./Moment";
+import Moment, { MomentData } from "./Moment";
 
-export interface EventMomentData {
-  id: string
-  name: string
-  type: 'Moment'
-  subtype: 'Event'
-  collectable: boolean
-  cost: number
-  staticCardText: string
+export interface EventMomentData extends MomentData {
   events: EventActionObject[][]
-  playRequirements?: ActiveRequirementObject[]
-  enchantments?: EnchantmentIDString[]
+  targeted: false
+  actions?: []
+  targetDomain?: null
+  targetRequirements?: null
 }
 
 abstract class EventMoment extends Moment {
@@ -18,35 +13,12 @@ abstract class EventMoment extends Moment {
   readonly data: EventMomentData
   subtype: 'Event'
   targeted: false
+  actions: []
   targetDomain: null
   targetRequirements: null
 
-  constructor(
-    game: Game,
-    owner: GamePlayer,
-    data: EventMomentData
-  ) {
-    const { id, name, collectable, cost, staticCardText, events } = data
-    const enchantments = data.enchantments || []
-    const playRequirements = data.playRequirements || []
-    super (
-      game,
-      owner,
-      id,
-      name,
-      'Event',
-      collectable,
-      cost,
-      staticCardText,
-      [[]],
-      events,
-      playRequirements,
-      enchantments,
-      false,
-      null,
-      null
-    )
-    this.data = data
+  constructor(game: Game, owner: GamePlayer, data: EventMomentData) {
+    super(game, owner, data)
   }
 }
 
@@ -55,5 +27,3 @@ export default EventMoment
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";

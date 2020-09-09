@@ -300,7 +300,7 @@ class Game extends GamePhase {
     this.activeChild.startChild(sequence)
   }
 
-  startNewDeepestPhase(phaseType: string, event?: GameEvent | GameEvent[]): void {
+  startNewDeepestPhase(phaseType: PhaseString | 'Sequence', event?: GameEvent | GameEvent[]): void {
     const bottomPhase = this.currentBottomPhase()
     // console.log(Phases)
     const newPhase = new Phases[phaseType](bottomPhase, event)
@@ -356,3 +356,4 @@ import { UseEvent } from './UsePhase'
 import { PlayEvent } from './PlayPhase'
 import TestBot from '../gameTests/TestBot'
 import Phases from '../dictionaries/Phases'
+import { PhaseString } from '../stringTypes/DictionaryKeyString'

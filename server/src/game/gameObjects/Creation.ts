@@ -1,51 +1,24 @@
-import DestroyableCard from "./DestroyableCard";
+import DestroyableCard, { DestroyableCardData } from "./DestroyableCard";
+
+export interface CreationData extends DestroyableCardData {
+    type: 'Creation'
+    subtype: CreationSubtypeString
+    charges: number
+}
 
 abstract class Creation extends DestroyableCard {
+    static readonly data: CreationData
+    readonly data: CreationData
     zone: CreationZoneString
     inPlayZone: 'creationZone'
     type: 'Creation'
     subtype: CreationSubtypeString
-    health: number
+    charges: number
 
-    constructor(
-        game: Game,
-        owner: GamePlayer,
-        id: string,
-        name: string,
-        subtype: CreationSubtypeString,
-        collectable: boolean,
-        rawCost: number,
-        rawHealth: number,
-        staticCardText: string = '',
-        actions: ActionActionObject[][],
-        events: EventActionObject[][],
-        playRequirements: ActiveRequirementObject[],
-        enchantments: EnchantmentIDString[],
-        targeted: boolean = false,
-        targetDomain: TargetsDomainString | TargetsDomainString[],
-        targetRequirements: TargetRequirementObject[]
-    ) {
-        super(
-            game,
-            owner,
-            id,
-            name,
-            'Creation',
-            subtype,
-            collectable,
-            rawCost,
-            rawHealth,
-            staticCardText,
-            actions,
-            events,
-            playRequirements,
-            enchantments,
-            targeted,
-            targetDomain,
-            targetRequirements
-        )
-        this.health = this.rawHealth
+    constructor(game: Game, owner: GamePlayer, data: CreationData) {
+        super(game, owner, data)
         this.inPlayZone = 'creationZone'
+        this.charges = data.charges
     }
 
     provideReport(): ObjectReport {
@@ -54,7 +27,7 @@ abstract class Creation extends DestroyableCard {
             id: this.id,
             objectID: this.objectID,
             cost: this.cost,
-            health: this.health,
+            charges: this.charges,
             type: this.type,
             subtype: this.subtype,
             zone: this.zone,
@@ -68,8 +41,23 @@ abstract class Creation extends DestroyableCard {
     }
 
     loseCharge() {
-        this.rawHealth--
+        this.charges--
+        if (this.charges <= 0) this.pendingDestroy = true
         this.update()
+    }
+
+    isDestroyed(): boolean {
+        return this.charges <= 0 || this.pendingDestroy
+    }
+
+    baseData(): GameObjectData {
+        return {
+            id: this.originalID,
+            name: this.originalName,
+            charges: this.charges,
+            cost: this.rawCost,
+            flags: this.baseFlags(),
+        }
     }
 
     moveZone(destination: CreationZoneString): void {
@@ -86,9 +74,5 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { CreationZoneString } from "../stringTypes/ZoneString";
 import { CreationSubtypeString } from "../stringTypes/ObjectSubtypeString";
-import { ActionActionObject, EventActionObject } from "../structs/ActionObject";
-import ActiveRequirementObject from "../structs/ActiveRequirementObject";
-import { EnchantmentIDString } from "../stringTypes/DictionaryKeyString";
-import { TargetsDomainString } from "../stringTypes/DomainString";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
 import { ObjectReport } from "../structs/ObjectReport";
+import GameObjectData from "../structs/GameObjectData";

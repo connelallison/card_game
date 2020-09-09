@@ -33,10 +33,14 @@ class Follower extends Component {
       this.props.selected !== null && this.props.selected !== this.props.object && this.canBeTargeted() ? "canBeTargeted" :
         this.props.selected === null && this.props.object.canBeSelected ? "canBeSelected" : ""
     const styleClasses = outlineStatus + " follower card"
+    const chargeInfo = this.props.object.subtype === 'Nameless' ? (
+      <p className='charges-label stat-label'>{this.props.object.charges}C</p>
+    ) : null
     const handInfo = this.props.object.zone === 'hand' ? (
       <div className="multicolour-line text-medium">
-        <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+        <p className='cost-label stat-label'>{this.props.object.cost}M</p>
         <p>{this.props.object.subtype} {this.props.object.type}</p>
+        {chargeInfo}
       </div>
     ) : null
     return (

@@ -72,6 +72,7 @@ import HolyProtectors from '../cards/HolyProtectors'
 import SingleMindedFury from '../cards/SingleMindedFury'
 import CombatTraining from '../cards/CombatTraining'
 import BattleOfSuiyang from '../cards/BattleOfSuiyang'
+import NapalmStrike from '../cards/NapalmStrike'
 
 const Cards = {
   PlayerOneFollower,
@@ -97,6 +98,7 @@ const Cards = {
   SingleMindedFury,
   CombatTraining,
   BattleOfSuiyang,
+  NapalmStrike,
 }
 
 export default Cards

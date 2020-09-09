@@ -43,7 +43,7 @@ class Creation extends Component {
         <p className='attack-label stat-label'>{this.props.object.attack}A</p>
       ) : null
     const costLabel = this.props.object.subtype === 'Technique' && this.props.object.zone === 'creationZone' ? (
-        <p className='cost-label stat-label'>{this.props.object.cost}C</p>
+        <p className='cost-label stat-label'>{this.props.object.cost}M</p>
     ) : null
     const handInfo = this.props.object.zone === 'hand' ? (
       <div className="multicolour-line text-medium">
@@ -60,7 +60,7 @@ class Creation extends Component {
         <div className="multicolour-line">
             {costLabel}
             {attackLabel}
-          <p className='health-label stat-label'>{this.props.object.health}H</p>
+          <p className='charges-label stat-label'>{this.props.object.charges}C</p>
         </div>
       </div>
     )

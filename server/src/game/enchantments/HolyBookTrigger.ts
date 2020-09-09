@@ -1,36 +1,39 @@
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
+import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+
+const data: TriggerEnchantmentData = {
+    'id': 'HolyBookTrigger',
+    'name': 'Holy Book Trigger',
+    'type': 'Enchantment',
+    'subtype': 'Trigger',
+    'repeatable': true,
+    'wonderTrigger': false,
+    'activeZones': ['creationZone'],
+    'activeTypes': ['Creation'],
+    'triggerObjs': [{
+        'eventType': 'endOfTurn',
+        'requirements': [{
+            'activeRequirement': 'isMyTurn'
+        }],
+        'actions': [{
+            actionType: 'autoAction',
+            operation: 'heal',
+            values: {
+                'healing': 2,
+            },
+            targets: {
+                valueType: 'targets',
+                from: 'targetDomain',
+                targetDomain: ['friendlyBoard', 'friendlyLeader']
+            }
+        }]
+    }]
+}
 
 class HolyBookTrigger extends TriggerEnchantment {
+    static readonly data: TriggerEnchantmentData = data
+
     constructor(game: Game, owner: GameObject) {
-        super(
-            game,
-            owner,
-            'HolyBookTrigger',
-            'Holy Book Trigger',
-            ['creationZone'],
-            ['Creation'],
-            [],
-            true,
-            [{
-                eventType: 'endOfTurn',
-                requirements: [{
-                    playRequirement: "isMyTurn"
-                }],
-                actions: [{
-                    actionType: 'autoAction',
-                    operation: 'heal',
-                    values: {
-                        healing: 1,
-                    },
-                    targets: {
-                        valueType: 'targets',
-                        from: 'targetDomain',
-                        targetDomain: ['friendlyBoard', 'friendlyLeader']
-                    }
-                }],
-            }],
-            false,
-        )
+        super(game, owner, data)
     }
 }
 

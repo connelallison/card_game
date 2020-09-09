@@ -36,13 +36,15 @@ class ActionActionPhase extends EventPhase {
     start(): void {
         const event = this.event
         const actionCard = event.objectSource as Card
-        this.emit('beforeAction', event)
-        event.generateLog()
-        this.cacheEvent(event, 'action')
-        event.action.forEach(actionObj => {
-            actionCard.actionFunction(event, actionObj)
-        })
-        this.emit('afterAction', event)
+        if (event.action.length > 0) {
+            this.emit('beforeAction', event)
+            event.generateLog()
+            this.cacheEvent(event, 'action')
+            event.action.forEach(actionObj => {
+                actionCard.actionFunction(event, actionObj)
+            })
+            this.emit('afterAction', event)
+        }
         this.queueSteps()
         this.end()
     }

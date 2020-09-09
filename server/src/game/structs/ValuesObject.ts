@@ -1,25 +1,26 @@
 interface ValuesObject {
     // [index: string]: string | boolean | number | DynamicValueObject
-    cardID?: DynamicCardIDString
+    cardID?: DynamicOrStoredCardIDString
     type?: ObjectTypeString
-    dynamicTarget?: DynamicTargetObject
-    damage?: DynamicNumber
-    healing?: DynamicNumber
-    min?: DynamicNumber
-    max?: DynamicNumber
-    attack?: DynamicNumber
-    health?: DynamicNumber
-    stats?: DynamicNumber
-    param?: DynamicString
-    name?: DynamicString
-    value?: DynamicValue
-    zone?: DynamicZoneString
+    dynamicTarget?: DynamicOrStoredTargetObject
+    damage?: DynamicOrStoredNumber
+    healing?: DynamicOrStoredNumber
+    min?: DynamicOrStoredNumber
+    max?: DynamicOrStoredNumber
+    attack?: DynamicOrStoredNumber
+    health?: DynamicOrStoredNumber
+    stats?: DynamicOrStoredNumber
+    param?: DynamicOrStoredString
+    name?: DynamicOrStoredString
+    value?: DynamicOrStoredValue
+    zone?: DynamicOrStoredZoneString
+    split?: DynamicOrStoredBoolean
 }
 
 export default ValuesObject
 
-import { DynamicTargetObject } from "./DynamicValueObject";
-import { DynamicCardIDString } from "../stringTypes/DictionaryKeyString";
+import { DynamicTargetObject, DynamicOrStoredTargetObject } from "./DynamicValueObject";
+import { DynamicOrStoredCardIDString } from "../stringTypes/DictionaryKeyString";
 import { ObjectTypeString } from "../stringTypes/ObjectTypeString";
-import { DynamicNumber, DynamicString, DynamicValue } from "./DynamicValue";
-import { DynamicZoneString } from "../stringTypes/ZoneString";
+import { DynamicNumber, DynamicString, DynamicValue, DynamicOrStoredNumber, DynamicOrStoredString, DynamicOrStoredValue, DynamicOrStoredBoolean } from "./DynamicValue";
+import { DynamicZoneString, DynamicOrStoredZoneString } from "../stringTypes/ZoneString";

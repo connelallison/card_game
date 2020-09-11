@@ -20,8 +20,8 @@ export class ActionActionEvent extends GameEvent {
     }
 
     generateLog() {
-        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
-        this.log = `${this.objectSource.name}'s action activates${targets}.`
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
+        this.log = `${this.objectSource.name.english}'s action activates${targets}.`
     }
 }
 

@@ -110,18 +110,21 @@ const ActionOperations = {
     },
 
     summonCard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cardID: string, number?: number, forOpponent?: boolean }) => {
+        const targetSlot = (targetObjs && targetObjs[0] instanceof BoardSlot) ? targetObjs[0] as BoardSlot
+            : (source instanceof Follower && source.inPlay()) ? source.slot : null
         const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.controller().opponent
         const number = values.number === undefined ? 1 : values.number
         const cardID = values.cardID as CardIDString
         if (typeof cardID !== 'string') throw ('cardID is not a string')
         if (cardID.length === 0) return
         for (let i = 0; i < number; i++) {
-            const summonEvent = new SummonEvent(source.game, {
+            const eventObj = Object.assign({
                 controller,
                 cardID,
                 objectSource: source,
                 charSource: source.charOwner(),
-            })
+            }, targetSlot && { targetSlot })
+            const summonEvent = new SummonEvent(source.game, eventObj)
             source.game.startNewDeepestPhase('SummonPhase', summonEvent)
         }
     },
@@ -143,9 +146,7 @@ const ActionOperations = {
 
     markDestroyed: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
         const targets = targetObjs as DestroyableCard[]
-        targets.forEach(target => {
-            target.pendingDestroy = true
-        })
+        targets.forEach(target => target.pendingDestroy = true)
     },
 
     forceDeathPhase: (source: GameObject, event: ActionEvent) => {
@@ -155,8 +156,53 @@ const ActionOperations = {
         } while (!source.game.ended && source.game.currentSequence().deathQueue.length > 0)
     },
 
-    storeValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { name: string, value: number }) => {
-        event[values.name] = values.value
+    banish: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        const targets = targetObjs as PersistentCard[]
+        targets.forEach(target => target.moveZone('setAsideZone'))
+    },
+
+    selfTransform: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        if (targetObjs[0] && source.effectOwner() instanceof Card) {
+            const transformTarget = targetObjs[0] as Card
+            ActionOperations.transform(source, event, [source.effectOwner()], {transformTarget})
+        }
+    },
+
+    transform: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { transformTarget: Card }) => {
+        const targets = targetObjs as Card[]
+        targets.forEach(target => {
+            const index = (target.type !== values.transformTarget.type && target instanceof PersistentCard && target.inPlay()) ? null : target.index()
+            const clone = values.transformTarget.clone()
+            clone.owner = target.owner
+            if (target instanceof PersistentCard && target.inPlay()) {
+                const slot = target instanceof Follower ? target.slot : null
+                ActionOperations.banish(source, event, [target])
+                if (clone instanceof PersistentCard) {
+                    if (source.controller().canSummon(clone)) {
+                        const eventObj = Object.assign(
+                            {
+                                controller: source.controller(),
+                                card: clone,
+                                objectSource: source,
+                                charSource: source.charOwner(),
+                            },
+                            typeof index === 'number' && { index },
+                            slot && { slot },
+                        )
+                        const enterPlayEvent = new EnterPlayEvent(source.game, eventObj)
+                        source.game.startNewDeepestPhase('EnterPlayPhase', enterPlayEvent)
+                    }
+                }
+            } else {
+                const zone = target.zone
+                ActionOperations.banish(source, event, [target])
+                target.owner[zone].splice(index, 0, clone)
+            }
+        })
+    },
+
+    storeValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: number }) => {
+        event[values.param] = values.value
     },
 }
 
@@ -175,3 +221,6 @@ import { CardIDString } from '../stringTypes/DictionaryKeyString'
 import { SummonEvent } from '../gamePhases/SummonPhase'
 import { EnterPlayEvent } from '../gamePhases/EnterPlayPhase'
 import DestroyableCard from '../gameObjects/DestroyableCard'
+import Follower from '../gameObjects/Follower'
+import BoardSlot from '../gameObjects/BoardSlot'
+import Card from '../gameObjects/Card'

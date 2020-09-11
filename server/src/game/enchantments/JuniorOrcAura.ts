@@ -1,8 +1,12 @@
 import AuraEnchantment, { AuraEnchantmentData } from "../gameObjects/AuraEnchantment";
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEnchantmentData = {
     'id': 'JuniorOrcAura',
-    'name': 'Junior Orc Aura',
+    'name': {
+        'english': `Junior Orc Aura`,
+    },
     'type': 'Enchantment',
     'subtype': 'Aura',
     'activeZones': ['board'],
@@ -21,13 +25,8 @@ const data: AuraEnchantmentData = {
 
 class JuniorOrcAura extends AuraEnchantment {
     static readonly data: AuraEnchantmentData = data
-
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-
 export default JuniorOrcAura
-
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";

@@ -18,7 +18,7 @@ export class SpendMoneyEvent extends GameEvent {
     }
 
     generateLog() {
-        this.log = `${this.player.name} spends ${this.money} money on ${this.card.name}.`
+        this.log = `${this.player.playerName} spends ${this.money} money on ${this.card.name.english}.`
     }
 }
 

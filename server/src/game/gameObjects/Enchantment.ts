@@ -2,7 +2,7 @@ import GameObject from './GameObject'
 
 export interface EnchantmentData {
     id: string
-    name: string
+    name: LocalisedStringObject
     type: 'Enchantment'
     subtype: EnchantmentSubtypeString
     activeZones: ZoneString[]
@@ -57,6 +57,10 @@ abstract class Enchantment extends GameObject {
         }
     }
 
+    effectOwner(): GameObject {
+        return this.owner.effectOwner()
+    }
+
     abstract clone(newOwner): Enchantment 
 }
 
@@ -75,5 +79,6 @@ import EffectOperation from '../functionTypes/EffectOperation'
 import Character from './Character'
 import Enchantments from '../dictionaries/Enchantments'
 import { EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
+import { LocalisedStringObject } from '../structs/Localisation'
 
 

@@ -19,8 +19,8 @@ class OrcDeck extends Deck {
       'CorporalMotivation',
       'BattleOfSuiyang',
       'BattleOfSuiyang',
-      'NapalmStrike',
-      'NapalmStrike',
+      'SuicideBomber',
+      'SuicideBomber',
     ]
     super(game, owner, 'OrcDeck', 'Orc Deck', {leader, passive, cards})
   }

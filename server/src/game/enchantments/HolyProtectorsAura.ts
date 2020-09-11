@@ -1,8 +1,13 @@
 import AuraEnchantment, { AuraEnchantmentData } from "../gameObjects/AuraEnchantment";
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";
+import { sumFriendlyFollowersHealth } from "../dictionaries/DynamicValueShortcuts";
 
 const data: AuraEnchantmentData = {
     'id': 'HolyProtectorsAura',
-    'name': 'Holy Protectors Aura',
+    'name': {
+        'english': `Holy Protectors Aura`,
+    },
     'type': 'Enchantment',
     'subtype': 'Aura',
     'activeZones': ['passiveZone'],
@@ -14,33 +19,14 @@ const data: AuraEnchantmentData = {
     'priority': 3,
     'effectObjs': [{
         'operation': 'incrementHealth',
-        'value': {
-            'valueType': 'number',
-            'from': 'numbers',
-            'reducer': 'sum',
-            'numbers': {
-                'valueType': 'numbers',
-                'from': 'targets',
-                'numberMap': 'health',
-                'targets': {
-                    'valueType': 'targets',
-                    'from': 'targetDomain',
-                    'targetDomain': ['friendlyBoard']
-                }
-            }
-        }
+        'value': sumFriendlyFollowersHealth
     }]
 }
 
 class HolyProtectorsAura extends AuraEnchantment {
     static readonly data: AuraEnchantmentData = data
-
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-
 export default HolyProtectorsAura
-
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";

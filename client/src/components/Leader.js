@@ -37,7 +37,7 @@ class Leader extends Component {
     return (
       <div onClick={this.handleClick} className={styleClasses} >
         <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
-        <p className={`card-text`}>{this.props.object.staticCardText}</p>
+        <p className={`card-text`}>{this.props.object.dynamicCardText}</p>
         <div className="multicolour-line">
           {attackLabel}
           <p className='health-label stat-label'>{this.props.object.health}H</p>

@@ -22,9 +22,11 @@ class BoardSlot extends Component {
         if (this.props.selectedSlot === this.props.object) {
             this.props.interactivity.clearSelectedSlot();
         } else if (this.canBeSelected()) {
-            if (!this.props.selected.targeted) {
+            if (!this.props.selected.requiresTarget) {
+                // console.log('chooseSelectedSlotNoTarget running')
                 this.props.interactivity.chooseSelectedSlotNoTarget(this.props.object)
             } else {
+                // console.log('chooseSelectedSlot running')
                 this.props.interactivity.chooseSelectedSlot(this.props.object)
             }
         } else {
@@ -33,12 +35,17 @@ class BoardSlot extends Component {
     }
 
     render() {
-        const outlineStatus =   this.props.selectedSlot === this.props.object ? "isSelected" :
-                                this.canBeSelected() ? "canBeSelected" : ""
+        const outlineStatus = this.props.selectedSlot === this.props.object ? "isSelected" :
+            this.canBeSelected() ? "canBeSelected" : ""
         const styleClasses = outlineStatus + ' card boardSlot'
         let slot
         if (this.props.object.follower) {
-            slot = <Follower object={this.props.object.follower} selected={this.props.selected} interactivity={this.props.interactivity} />
+            slot = <Follower
+                object={this.props.object.follower} 
+                selected={this.props.selected} 
+                selectedSlot={this.props.selectedSlot}
+                interactivity={this.props.interactivity}
+            />
         } else {
             slot = <div onClick={this.handleClick} className={styleClasses}>Empty Slot</div>
         }

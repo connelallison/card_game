@@ -7,19 +7,19 @@ const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsD
                 targetDomain.push(object.charOwner())
                 break
             case 'leftFollower':
-                if (object instanceof Follower && object.leftFollower()) targetDomain.push(object.leftFollower())
+                if ((object instanceof Follower || object instanceof BoardSlot) && object.leftFollower()) targetDomain.push(object.leftFollower())
                 break
             case 'rightFollower':
-                if (object instanceof Follower && object.rightFollower()) targetDomain.push(object.rightFollower())
+                if ((object instanceof Follower || object instanceof BoardSlot) && object.rightFollower()) targetDomain.push(object.rightFollower())
                 break
             case 'oppositeFollower':
-                if (object instanceof Follower && object.oppositeFollower()) targetDomain.push(object.oppositeFollower())
+                if ((object instanceof Follower || object instanceof BoardSlot) && object.oppositeFollower()) targetDomain.push(object.oppositeFollower())
                 break
             case 'adjacentFollowers':
-                if (object instanceof Follower && object.adjacentFollowers()) targetDomain.push(...object.adjacentFollowers())
+                if ((object instanceof Follower || object instanceof BoardSlot) && object.adjacentFollowers()) targetDomain.push(...object.adjacentFollowers())
                 break
             case 'neighbouringFollowers':
-                if (object instanceof Follower && object.neighbouringFollowers()) targetDomain.push(...object.neighbouringFollowers())
+                if ((object instanceof Follower || object instanceof BoardSlot) && object.neighbouringFollowers()) targetDomain.push(...object.neighbouringFollowers())
                 break
             case 'enemyBoard':
                 targetDomain.push(...object.controller().opponent.boardFollowers())
@@ -63,3 +63,4 @@ export default TargetDomains
 import GameObject from "../gameObjects/GameObject"
 import { TargetsDomainString } from "../stringTypes/DomainString"
 import Follower from "../gameObjects/Follower"
+import BoardSlot from "../gameObjects/BoardSlot"

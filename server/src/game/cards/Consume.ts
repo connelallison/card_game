@@ -1,14 +1,26 @@
 import EventMoment, { EventMomentData } from '../gameObjects/EventMoment'
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: EventMomentData = {
   'id': 'Consume',
-  'name': 'Consume',
+  'name': {
+    'english': `Consume`,
+  },
   'type': 'Moment',
   'subtype': 'Event',
+  'classes': ['Infamy'],
   'collectable': true,
   'targeted': false,
   'cost': 3,
-  'staticCardText': 'Event: Deal 3 damage to the weakest enemy follower and draw a card.',
+  'staticCardText': {
+    'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
+  },
+  'dynamicCardText': {
+      'templates': {
+          'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
+      },
+  },
   'activeRequirements': [{
     'activeRequirement': 'min1EnemyFollower',
   }],
@@ -40,12 +52,8 @@ const data: EventMomentData = {
 
 class Consume extends EventMoment {
   static readonly data: EventMomentData = data
-
   constructor(game: Game, owner: GamePlayer) {
     super(game, owner, data)
   }
 }
 export default Consume
-
-import Game from '../gamePhases/Game'
-import GamePlayer from '../gameObjects/GamePlayer'

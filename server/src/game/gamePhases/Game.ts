@@ -167,13 +167,13 @@ class Game extends GamePhase {
       } 
     } else if (selected.zone === 'hand' && selected.canBePlayed()) {
       // card in hand being played
-      const slot = selected instanceof Follower && selected.validSlots.includes(selectedSlot) ? {slot: selectedSlot} : {} // includes slot if card is follower
+      const slot = selected instanceof Follower && selected.validSlots.includes(selectedSlot) ? {slot: selectedSlot} : null // includes slot if card is follower
         const targets = !selected.targeted ? [] : [target] // includes target if card is targeted
-        const eventObj = Object.assign(slot, {
+        const eventObj = Object.assign({
           player: selected.owner,
           card: selected,
           targets,
-        })
+        }, slot)
         const playEvent = new PlayEvent(this, eventObj)
         this.startSequence('PlayPhase', playEvent)
     }
@@ -227,7 +227,7 @@ class Game extends GamePhase {
         this.executeEndTurnRequest(this.player1)
       })
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
-        console.log(`${this.player1.name} disconnected - ending game`)
+        console.log(`${this.player1.playerName} disconnected - ending game`)
         this.player1.disconnected = true
         this.ended = true
       })
@@ -240,7 +240,7 @@ class Game extends GamePhase {
         this.executeEndTurnRequest(this.player2)
       })
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
-        console.log(`${this.player2.name} disconnected - ending game`)
+        console.log(`${this.player2.playerName} disconnected - ending game`)
         this.player2.disconnected = true
         this.ended = true
       })
@@ -313,13 +313,13 @@ class Game extends GamePhase {
 
     this.emit('auraApply')
     if (this.player1.alive() && !this.player2.alive()) {
-      this.winner = this.player1.name + ' wins'
+      this.winner = this.player1.playerName + ' wins'
     } else if (!this.player1.alive() && this.player2.alive()) {
-      this.winner = this.player2.name + ' wins'
+      this.winner = this.player2.playerName + ' wins'
     } else if (!this.player1.alive() && !this.player2.alive()) {
       this.winner = 'draw'
     } else if (disconnected) {
-      this.winner = disconnected.opponent.name + ' wins because their opponent disconnected'
+      this.winner = disconnected.opponent.playerName + ' wins because their opponent disconnected'
     } else {
       throw new Error('endGame() has been called but neither player is dead')
     }

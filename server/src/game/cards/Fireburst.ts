@@ -1,10 +1,15 @@
 import ActionMoment, { ActionMomentData } from '../gameObjects/ActionMoment'
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: ActionMomentData = {
   'id': 'Fireburst',
-  'name': 'Fireburst',
+  'name': {
+    'english': `Fireburst`,
+  },
   'type': 'Moment',
   'subtype': 'Action',
+  'classes': ['The People'],
   'collectable': true,
   'cost': 1,
   'actions': [[
@@ -17,7 +22,14 @@ const data: ActionMomentData = {
     }
   ]],
   'targeted': true,
-  'staticCardText': 'Action: Deal 4 damage to a follower with 4 or more attack.',
+  'staticCardText': {
+    'english': `Action: Deal 4 damage to a follower with 4 or more attack.`,
+  },
+  'dynamicCardText': {
+      'templates': {
+          'english': `Action: Deal 4 damage to a follower with 4 or more attack.`,
+      },
+  },
   'targetDomain': ['enemyBoard', 'friendlyBoard'],
   'targetRequirements': [{
     targetRequirement: "minVal",
@@ -30,12 +42,8 @@ const data: ActionMomentData = {
 
 class Fireburst extends ActionMoment {
   static readonly data: ActionMomentData = data
-
   constructor(game: Game, owner: GamePlayer) {
     super(game, owner, data)
   }
 }
 export default Fireburst
-
-import Game from '../gamePhases/Game'
-import GamePlayer from '../gameObjects/GamePlayer'

@@ -21,8 +21,8 @@ export class PlayEvent extends GameEvent {
 
     generateLog() {
         const slot = this.slot ? ` in slot ${this.slot.index() + 1}` : ''
-        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
-        this.log = `${this.player.name} plays ${this.card.name}${slot}${targets}.`
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
+        this.log = `${this.player.playerName} plays ${this.card.name.english}${slot}${targets}.`
     }
 }
 

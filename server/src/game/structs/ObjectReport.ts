@@ -15,7 +15,8 @@ export interface ObjectReport {
   requiresTarget: boolean,
   validTargets: string[],
   staticCardText: string,
-  validSlots?: string[]
+  dynamicCardText: string,
+  validSlots?: string[],
 }
 
 export interface BoardSlotReport {

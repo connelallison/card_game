@@ -26,9 +26,9 @@ abstract class Leader extends Character {
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
-  provideReport(): ObjectReport {
+  provideReport(localisation: LocalisationString = 'english'): ObjectReport {
     return {
-      name: this.name,
+      name: this.name[localisation],
       id: this.id,
       objectID: this.objectID,
       cost: this.cost,
@@ -37,12 +37,13 @@ abstract class Leader extends Character {
       type: this.type,
       subtype: this.subtype,
       zone: this.zone,
-      ownerName: this.owner.name,
+      ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
       requiresTarget: this.targeted,
       validTargets: this.validTargetIDs(),
-      staticCardText: this.staticCardText,
+      staticCardText: this.staticCardText[localisation],
+      dynamicCardText: this.generateDynamicCardText(localisation),
     }
   }
 
@@ -127,10 +128,11 @@ abstract class Leader extends Character {
     Object.assign(this, dataObj)
   }
 
-  moveZone(destination: LeaderZoneString): void {
+  moveZone(destination: LeaderZoneString, index?: number): void {
     if (destination === 'leaderZone' && this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('graveyard')
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
-    this.owner[destination].push(this)
+    if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
+    else this.owner[destination].push(this)
     this.zone = destination
     this.updateEnchantments()
   }
@@ -165,3 +167,4 @@ import WeaponCreation from './WeaponCreation'
 import FlagsObject from '../structs/FlagsObject'
 import Permissions from '../dictionaries/Permissions'
 import { SummonEvent } from '../gamePhases/SummonPhase'
+import { LocalisationString } from '../structs/Localisation'

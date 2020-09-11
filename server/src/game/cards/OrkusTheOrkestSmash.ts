@@ -1,13 +1,25 @@
 import ActiveLeaderTechnique, { ActiveLeaderTechniqueData } from "../gameObjects/ActiveLeaderTechnique";
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: ActiveLeaderTechniqueData = {
     'id': 'OrkusTheOrkestSmash',
-    'name': 'Smash',
+    'name': {
+        'english': `Smash`,
+    },
     'type': 'LeaderTechnique',
     'subtype': 'Active',
+    'classes': ['Empire'],
     'cost': 2,
     'collectable': false,
-    'staticCardText': 'Action: Deal 2 damage to a follower.',
+    'staticCardText': {
+        'english': `Action: Deal 2 damage to a follower.`,
+    },
+    'dynamicCardText': {
+        'templates': {
+            'english': `Action: Deal 2 damage to a follower.`,
+        },
+    },
     'actions': [[{
         actionType: 'manualAction',
         operation: 'damage',
@@ -28,13 +40,8 @@ const data: ActiveLeaderTechniqueData = {
 
 class OrkusTheOrkestSmash extends ActiveLeaderTechnique {
     static readonly data: ActiveLeaderTechniqueData = data
-
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-
 export default OrkusTheOrkestSmash
-
-import Game from "../gamePhases/Game";
-import GamePlayer from "../gameObjects/GamePlayer";

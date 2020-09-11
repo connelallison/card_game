@@ -1,5 +1,6 @@
 const TargetToStringMaps = {
-    classID: (target: GameObject) => target.id
+    classID: (target: GameObject) => target.id,
+    name: (target: GameObject) => target.name,
 }
 
 export default TargetToStringMaps

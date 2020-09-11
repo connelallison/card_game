@@ -22,8 +22,8 @@ export class DamageEvent extends GameEvent {
     }
 
     generateLog() {
-        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name}`
-        this.log = `${this.target.name} takes ${this.damage} damage from ${this.charSource.name}${source}.`
+        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name.english}`
+        this.log = `${this.target.name.english} takes ${this.damage} damage from ${this.charSource.name.english}${source}.`
     }
 }
 

@@ -19,6 +19,10 @@ class KnightDeck extends Deck {
       'PrinceTimothy',
       'CombatTraining',
       'CombatTraining',
+      'NapalmStrike',
+      'NapalmStrike',
+      'BodyDouble',
+      'BodyDouble',
     ]
     super(game, owner, 'KnightDeck', 'KnightDeck', { leader, passive, cards })
   }

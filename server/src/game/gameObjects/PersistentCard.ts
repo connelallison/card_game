@@ -20,8 +20,8 @@ abstract class PersistentCard extends Card {
         return this.zone === this.inPlayZone
     }
 
-    putIntoPlay(): void {
-        this.moveZone(this.inPlayZone)
+    putIntoPlay(index?: number): void {
+        this.moveZone(this.inPlayZone, index)
         this.game.inPlay.push(this)
     }
 

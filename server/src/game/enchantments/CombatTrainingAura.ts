@@ -1,8 +1,12 @@
 import AuraEnchantment, { AuraEnchantmentData } from "../gameObjects/AuraEnchantment";
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEnchantmentData = {
     'id': 'CombatTrainingAura',
-    'name': 'Combat Training Aura',
+    'name': {
+        'english': `Combat Training Aura`,
+    },
     'type': 'Enchantment',
     'subtype': 'Aura',
     'activeZones': ['passiveZone'],
@@ -23,13 +27,8 @@ const data: AuraEnchantmentData = {
 
 class CombatTrainingAura extends AuraEnchantment {
     static readonly data: AuraEnchantmentData = data
-
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-
 export default CombatTrainingAura
-
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";

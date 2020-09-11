@@ -1,8 +1,12 @@
 import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEnchantmentData = {
     'id': 'SavageWolfTrigger',
-    'name': 'Savage Wolf Trigger',
+    'name': {
+        'english': `Savage Wolf Trigger`,
+    },
     'type': 'Enchantment',
     'subtype': 'Trigger',
     activeTypes: ['Follower'],
@@ -42,13 +46,8 @@ const data: TriggerEnchantmentData = {
 
 class SavageWolfTrigger extends TriggerEnchantment {
     static readonly data: TriggerEnchantmentData = data
-
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-
 export default SavageWolfTrigger
-
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";

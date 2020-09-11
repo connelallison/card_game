@@ -62,7 +62,7 @@ abstract class TriggerEnchantment extends Enchantment {
                     triggerType: triggerObj.eventType,
                     actions,
                     objectSource: this,
-                    cardSource: this.cardOwner()
+                    triggerOwner: this.effectOwner()
                 })
                 this.game.startNewDeepestPhase('TriggerPhase', triggerEvent)
             }

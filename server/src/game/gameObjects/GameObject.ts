@@ -3,7 +3,7 @@ abstract class GameObject {
     owner: GameObject
     zone: ZoneString
     id: string
-    name: string
+    name: LocalisedStringObject
     type: ObjectTypeString
     subtype: ObjectSubtypeString
     objectID: string
@@ -11,7 +11,7 @@ abstract class GameObject {
     enchantments: Enchantment[]
     auraEffects: EffectFunction[]
 
-    constructor(game: Game, id: string, name: string, type: ObjectTypeString, subtype: ObjectSubtypeString) {
+    constructor(game: Game, id: string, name: LocalisedStringObject, type: ObjectTypeString, subtype: ObjectSubtypeString) {
         this.game = game
         this.id = id
         this.name = name
@@ -81,8 +81,8 @@ abstract class GameObject {
         return this.controller().leaderZone[0]
     }
 
-    cardOwner(): Card | GamePlayer {
-        return this.owner.cardOwner()
+    effectOwner(): GameObject {
+        return this
     }
 
     currentTurn(): Turn {
@@ -105,32 +105,57 @@ abstract class GameObject {
         return EventDomains(this, eventDomain)
     }
 
-    dynamicOrStoredValue(value: DynamicOrStoredValue, actionEvent: ActionEvent): string | boolean | number | number[] | GameObject[] | GameEvent[] {
+    localisedDynamicValue(value: DynamicValue, localisation: LocalisationString = 'english') {
+        if (typeof value === 'number') return value
+        if (typeof value === 'string') return value
+        if (typeof value === 'boolean') return value
+        if (value instanceof Array) return value
+        if (value.hasOwnProperty('english')) return (value as LocalisedStringObject)[localisation]
+        const valueObj = value as DynamicValueObject
+        if (valueObj.valueType === 'localisedString') return this.dynamicLocalisedString(valueObj)[localisation]
+        return this.dynamicValue(value)
+    }
+
+    dynamicOrStoredValue(value: DynamicOrStoredValue, actionEvent: ActionEvent): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
         if (typeof value === 'object' && (value as DynamicOrStoredValueObject).from === 'stored') {
             return this.storedValue(value as StoredValueObject, actionEvent)
         }
         return this.dynamicValue(value as DynamicValue)
     }
 
-    storedValue(value: StoredValueObject, actionEvent: ActionEvent): string | boolean | number | number[] | GameObject[] | GameEvent[] {
-        return actionEvent[(value as StoredValueObject).param]
+    storedValue(value: StoredValueObject, actionEvent: ActionEvent): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
+        return actionEvent[value.param]
     }
 
-    dynamicValue(value: DynamicValue): string | boolean | number | number[] | GameObject[] | GameEvent[] {
+    dynamicValue(value: DynamicValue): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
         // console.log(value)
         if (typeof value === 'number') return value
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
         if (value instanceof Array) return value
-        if (value.valueType === 'string') return this.dynamicString(value)
-        if (value.valueType === 'number') return this.dynamicNumber(value)
-        if (value.valueType === 'numbers') return this.dynamicNumbers(value)
-        if (value.valueType === 'target') return this.dynamicTarget(value)
-        if (value.valueType === 'targets') return this.dynamicTargets(value)
-        if (value.valueType === 'event') return this.dynamicEvent(value)
-        if (value.valueType === 'events') return this.dynamicEvents(value)
+        if (value.hasOwnProperty('english')) return value as LocalisedStringObject
+        const valueObj = value as DynamicValueObject
+        if (valueObj.valueType === 'localisedString') return this.dynamicLocalisedString(valueObj)
+        if (valueObj.valueType === 'string') return this.dynamicString(valueObj)
+        if (valueObj.valueType === 'number') return this.dynamicNumber(valueObj)
+        if (valueObj.valueType === 'numbers') return this.dynamicNumbers(valueObj)
+        if (valueObj.valueType === 'target') return this.dynamicTarget(valueObj)
+        if (valueObj.valueType === 'targets') return this.dynamicTargets(valueObj)
+        if (valueObj.valueType === 'event') return this.dynamicEvent(valueObj)
+        if (valueObj.valueType === 'events') return this.dynamicEvents(valueObj)
     }
 
+    dynamicLocalisedString(obj: DynamicLocalisedStringObject): LocalisedStringObject {
+        if (obj.from === 'target') {
+            const target = this.dynamicTarget(obj.target)[0]
+            if (target) {
+                if (obj.stringMap === 'name') return target.name
+            }
+            return {
+                'english': ''
+            }
+        }
+    }
 
     dynamicString(obj: DynamicStringObject): string {
         if (obj.from === 'target') {
@@ -213,17 +238,15 @@ abstract class GameObject {
         let targets
         if (obj.actionType === 'autoAction' && (obj.target || obj.targets)) {
             const targetObj = obj.target ? obj.target : obj.targets ? obj.targets : null
-            // if (targetObj) {
             targets = this.dynamicValue(targetObj) as GameObject[]
-            // console.log(targets)
-            // }
         } else if (actionEvent.targets) {
             targets = [...actionEvent.targets]
         }
-        if (obj.actionType !== 'eventModAction' && targets && targets[0] && obj.extraTargets) targets.push(...targets[0].targetDomains(obj.extraTargets.targetDomain))
-        // console.log(values)
+        if (obj.actionType !== 'eventModAction' && targets && targets[0] && obj.extraTargets) {
+            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
+            else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
+        }
         return ActionOperations[obj.operation](this, actionEvent, targets, values)
-        // return ActionOperations[obj.operation](this, actionEvent, values)
     }
 
     targetRequirement(target: GameObject, obj: TargetRequirementObject): boolean {
@@ -265,7 +288,7 @@ import { CardIDString, EnchantmentIDString } from "../stringTypes/DictionaryKeyS
 import { TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
 import TargetDomains from "../dictionaries/TargetDomains"
 import EventDomains from "../dictionaries/EventDomains"
-import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject } from "../structs/DynamicValueObject"
+import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject, DynamicValueObject, DynamicLocalisedStringObject } from "../structs/DynamicValueObject"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import TargetToStringMap from "../functionTypes/TargetToStringMap"
 import DynamicTargetReducers from "../dictionaries/DynamicTargetReducers"
@@ -284,4 +307,5 @@ import ActiveRequirementObject from "../structs/ActiveRequirementObject"
 import ActiveRequirements from "../dictionaries/ActiveRequirements"
 import { DynamicValue, DynamicOrStoredValue } from "../structs/DynamicValue"
 import TriggerEnchantment from "./TriggerEnchantment"
+import { LocalisedStringObject, LocalisationString } from "../structs/Localisation"
 

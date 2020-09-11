@@ -1,5 +1,13 @@
-export type DynamicValueObject = DynamicStringObject | DynamicNumberObject | DynamicNumbersObject | DynamicTargetObject | DynamicTargetsObject | DynamicEventObject | DynamicEventsObject
+export type DynamicValueObject = DynamicLocalisedStringObject 
+                                | DynamicStringObject 
+                                | DynamicNumberObject 
+                                | DynamicNumbersObject 
+                                | DynamicTargetObject 
+                                | DynamicTargetsObject 
+                                | DynamicEventObject 
+                                | DynamicEventsObject
 
+export type DynamicLocalisedStringObject = DynamicLocalisedStringFromTarget 
 export type DynamicStringObject = DynamicStringFromTarget
 export type DynamicNumberObject = DynamicNumberFromTarget | DynamicNumberFromNumbers
 export type DynamicNumbersObject = DynamicNumbersFromTargets
@@ -8,6 +16,7 @@ export type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFrom
 export type DynamicEventObject = DynamicEventFromEvents
 export type DynamicEventsObject = DynamicEventsFromEventDomain
 
+export type DynamicOrStoredLocalisedStringObject = DynamicLocalisedStringFromTarget | DynamicLocalisedStringFromStored
 export type DynamicOrStoredStringObject = DynamicStringObject | DynamicStringFromStored
 export type DynamicOrStoredNumberObject = DynamicNumberObject | DynamicNumberFromStored
 export type DynamicOrStoredNumbersObject = DynamicNumbersObject | DynamicNumbersFromStored
@@ -15,14 +24,28 @@ export type DynamicOrStoredTargetObject = DynamicTargetObject | DynamicTargetFro
 export type DynamicOrStoredTargetsObject = DynamicTargetsObject | DynamicTargetsFromStored
 export type DynamicOrStoredEventObject = DynamicEventObject | DynamicEventFromStored
 export type DynamicOrStoredEventsObject = DynamicEventsObject | DynamicEventsFromStored
-export type StoredValueObject = DynamicStringFromStored
+export type StoredValueObject = DynamicLocalisedStringFromStored
+                            | DynamicStringFromStored
                             | DynamicNumberFromStored
                             | DynamicNumbersFromStored
                             | DynamicTargetFromStored
                             | DynamicTargetsFromStored
                             | DynamicEventFromStored
                             | DynamicEventsFromStored
-export type DynamicOrStoredValueObject = DynamicOrStoredStringObject | DynamicOrStoredNumberObject | DynamicOrStoredNumbersObject | DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject | DynamicOrStoredEventObject | DynamicOrStoredEventsObject
+export type DynamicOrStoredValueObject = DynamicOrStoredLocalisedStringObject | DynamicOrStoredStringObject | DynamicOrStoredNumberObject | DynamicOrStoredNumbersObject | DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject | DynamicOrStoredEventObject | DynamicOrStoredEventsObject
+
+export interface DynamicLocalisedStringFromTarget {
+    valueType: 'localisedString',
+    from: 'target',
+    target: DynamicTargetObject,
+    stringMap: 'name',
+}
+
+export interface DynamicLocalisedStringFromStored {
+    valueType: 'localisedString',
+    from: 'stored',
+    param: string,
+}
 
 export interface DynamicStringFromTarget {
     valueType: 'string',

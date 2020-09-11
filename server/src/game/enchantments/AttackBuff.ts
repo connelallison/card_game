@@ -1,29 +1,34 @@
-import StaticEnchantment from "../gameObjects/StaticEnchantment"
+import StaticEnchantment, { StaticEnchantmentData } from "../gameObjects/StaticEnchantment"
+import Game from "../gamePhases/Game"
+import GameObject from "../gameObjects/GameObject"
+
+const data: StaticEnchantmentData = {
+    'id': 'AttackBuff',
+    'name': {
+        'english': `Attack Buff`,
+    },
+    'type': 'Enchantment',
+    'subtype': 'Static',
+    'activeZones': ['board', 'hand', 'deck', 'leaderZone'],
+    'activeTypes': ['Follower', 'Leader'],
+    'effectObjs': [
+        {
+            'operation': 'incrementAttack',
+            'value': 0
+        }
+    ]
+}
 
 class AttackBuff extends StaticEnchantment {
+    static readonly data: StaticEnchantmentData = data
     constructor(game: Game, owner: GameObject, values: { attack: number } = { attack: 0 }) {
+        const moddedData = JSON.parse(JSON.stringify(data))
+        moddedData.effectObjs[0].value = values.attack
         super(
             game,
             owner,
-            {
-                'id': 'AttackBuff',
-                'name': 'Attack Buff',
-                'type': 'Enchantment',
-                'subtype': 'Static',
-                'activeZones': ['board', 'hand', 'deck', 'leaderZone'],
-                'activeTypes': ['Follower', 'Leader'],
-                'effectObjs': [
-                    {
-                        'operation': 'incrementAttack',
-                        'value': values.attack
-                    }
-                ]
-            }
+            moddedData
         )
     }
 }
-
 export default AttackBuff
-
-import Game from "../gamePhases/Game"
-import GameObject from "../gameObjects/GameObject"

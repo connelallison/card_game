@@ -23,8 +23,8 @@ export class HealingEvent extends GameEvent {
     }
 
     generateLog() {
-        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name}`
-        this.log = `${this.target.name} receives ${this.actualHealing} healing from ${this.charSource.name}${source}.`
+        const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name.english}`
+        this.log = `${this.target.name.english} receives ${this.actualHealing} healing from ${this.charSource.name.english}${source}.`
     }
 }
 

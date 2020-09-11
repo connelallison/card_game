@@ -1,8 +1,12 @@
 import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEnchantmentData = {
     'id': 'KnightAcademyTrigger',
-    'name': 'Knight Academy Trigger',
+    'name': {
+        'english': `Knight Academy Trigger`,
+    },
     'type': 'Enchantment',
     'subtype': 'Trigger',
     'repeatable': true,
@@ -42,13 +46,8 @@ const data: TriggerEnchantmentData = {
 
 class KnightAcademyTrigger extends TriggerEnchantment {
     static readonly data: TriggerEnchantmentData = data
-
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-
 export default KnightAcademyTrigger
-
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";

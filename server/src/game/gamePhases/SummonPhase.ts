@@ -6,7 +6,7 @@ interface SummonEventObject {
     cardID: CardIDString,
     objectSource: GameObject,
     charSource: Character,
-    slot?: BoardSlot,
+    targetSlot?: BoardSlot,
 }
 
 export class SummonEvent extends GameEvent {
@@ -14,7 +14,7 @@ export class SummonEvent extends GameEvent {
     cardID: CardIDString 
     objectSource: GameObject
     charSource: Character
-    slot?: BoardSlot
+    targetSlot: BoardSlot
 
     constructor(game: Game, object: SummonEventObject) {
         super(game) 
@@ -22,9 +22,9 @@ export class SummonEvent extends GameEvent {
     }
 
     generateLog() {
-        const source = this.charSource === this.objectSource ? '' : `'s ${this.objectSource.name}`
-        const controller = this.charSource === this.controller.leaderZone[0] ? '' : ` under ${this.controller.name}'s control` 
-        this.log =  `${this.charSource.name}${source} summons a ${this.cardID}${controller}.`
+        const source = this.charSource === this.objectSource ? '' : `'s ${this.objectSource.name.english}`
+        const controller = this.charSource === this.controller.leaderZone[0] ? '' : ` under ${this.controller.playerName}'s control` 
+        this.log =  `${this.charSource.name.english}${source} summons a ${this.cardID}${controller}.`
     }
 }
 
@@ -38,18 +38,19 @@ class SummonPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        const { controller, objectSource, charSource, cardID } = event
+        const { controller, objectSource, charSource, cardID, targetSlot } = event
         const card = this.createCard(cardID, controller) as PersistentCard
         controller.setAsideZone.push(card)
         if (controller.canSummon(card)) {
             event.generateLog()
             this.cacheEvent(event, 'summon')
-            const enterPlayEvent = new EnterPlayEvent(this.game(), {
+            const eventObj = Object.assign({
                 controller,
                 card,
                 objectSource,
                 charSource,
-            })
+            }, targetSlot && {targetSlot})
+            const enterPlayEvent = new EnterPlayEvent(this.game(), eventObj)
             this.startChild(new Phases.EnterPlayPhase(this, enterPlayEvent))
             this.queueSteps()
         }

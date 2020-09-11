@@ -18,6 +18,7 @@ export interface AutoActionObject extends BaseActionObject {
     target?: DynamicTargetObject,
     targets?: DynamicTargetsObject,
     extraTargets?: DynamicTargetsFromTargetDomain,
+    onlyExtraTargets?: boolean,
 }
 
 export interface ManualActionObject extends BaseActionObject {
@@ -25,6 +26,7 @@ export interface ManualActionObject extends BaseActionObject {
     operation: ActionOperationString,
     values?: ValuesObject,
     extraTargets?: DynamicTargetsFromTargetDomain,
+    onlyExtraTargets?: boolean,
 }
 
 export interface EventMapActionObject extends BaseActionObject {
@@ -33,6 +35,7 @@ export interface EventMapActionObject extends BaseActionObject {
     values: ValuesObject,
     eventMap: (event: GameEvent) => Card | Card[],
     extraTargets?: DynamicTargetsFromTargetDomain,
+    onlyExtraTargets?: boolean,
 }
 
 export interface EventModActionObject extends BaseActionObject {

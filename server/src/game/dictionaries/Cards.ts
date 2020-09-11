@@ -73,6 +73,8 @@ import SingleMindedFury from '../cards/SingleMindedFury'
 import CombatTraining from '../cards/CombatTraining'
 import BattleOfSuiyang from '../cards/BattleOfSuiyang'
 import NapalmStrike from '../cards/NapalmStrike'
+import SuicideBomber from '../cards/SuicideBomber'
+import BodyDouble from '../cards/BodyDouble'
 
 const Cards = {
   PlayerOneFollower,
@@ -99,6 +101,8 @@ const Cards = {
   CombatTraining,
   BattleOfSuiyang,
   NapalmStrike,
+  SuicideBomber,
+  BodyDouble,
 }
 
 export default Cards

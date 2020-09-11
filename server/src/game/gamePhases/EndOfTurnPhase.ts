@@ -12,7 +12,7 @@ export class EndOfTurnEvent extends GameEvent {
     }
 
     generateLog() {
-        this.log = `${this.activePlayer.name}'s turn ends.`
+        this.log = `${this.activePlayer.playerName}'s turn ends.`
     }
 }
 

@@ -3,16 +3,18 @@ import PersistentCard, { PersistentCardData } from "./PersistentCard";
 export interface DestroyableCardData extends PersistentCardData {
     type: DestroyableCardTypeString
     subtype: DestroyableCardSubtypeString
+    deathEvents?: DeathActionObject[][]
 }
 
 abstract class DestroyableCard extends PersistentCard {
     static readonly data: DestroyableCardData
     readonly data: DestroyableCardData
-    // death: ActionObject[]
+    deathEvents: DeathActionObject[][]
     pendingDestroy: boolean
 
     constructor(game: Game, owner: GamePlayer, data: DestroyableCardData) {
         super(game, owner, data)
+        this.deathEvents = data.deathEvents || []
         this.pendingDestroy = false
     }
 
@@ -25,7 +27,7 @@ abstract class DestroyableCard extends PersistentCard {
             actions: JSON.parse(JSON.stringify(this.actions)),
             events: JSON.parse(JSON.stringify(this.events)),
             enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
-            auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
+            auraEffects: this.auraEffects.splice(0),
             flags: JSON.parse(JSON.stringify(this.flags)),
         }
     }
@@ -39,3 +41,4 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { DestroyableCardTypeString } from "../stringTypes/ObjectTypeString";
 import { DestroyableCardSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { DeathActionObject } from "../structs/ActionObject";

@@ -9,7 +9,10 @@ class Follower extends Component {
   }
 
   canBeTargeted () {
-    return this.props.selected !== null && this.props.selected.validTargets !== null && this.props.selected.validTargets.includes(this.props.object.objectID)
+    return this.props.selected !== null 
+        && this.props.selected.validTargets !== null 
+        && !(this.props.selected.type === 'Follower' && this.props.selected.zone === 'hand' && this.props.selectedSlot === null) 
+        && this.props.selected.validTargets.includes(this.props.object.objectID)
   }
 
   handleClick () {
@@ -25,8 +28,8 @@ class Follower extends Component {
   }
 
   render () {
-    const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' : 
-                       this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
+    const textLength = this.props.object.dynamicCardText.length > 70 ? 'text-long' : 
+                       this.props.object.dynamicCardText.length > 35 ? 'text-medium' : 'text-short'
     const nameLength = this.props.object.name.length > 22 ? 'name-long' : 
                        this.props.object.name.length > 17 ? 'name-medium' : 'name-short'
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
@@ -47,7 +50,7 @@ class Follower extends Component {
       <div onClick={this.handleClick} className={styleClasses}>
         <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
         {handInfo}
-        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
+        <p className={`card-text ${textLength}`}>{this.props.object.dynamicCardText}</p>
         {/* <br /> */}
         <div className="multicolour-line">
           <p className='attack-label stat-label'>{this.props.object.attack}A</p> 

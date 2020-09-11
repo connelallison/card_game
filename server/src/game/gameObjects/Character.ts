@@ -89,7 +89,7 @@ abstract class Character extends DestroyableCard {
       actions: JSON.parse(JSON.stringify(this.actions)),
       events: JSON.parse(JSON.stringify(this.events)),
       enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
-      auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
+      auraEffects: this.auraEffects.splice(0),
       flags: JSON.parse(JSON.stringify(this.flags)),
     }
   }

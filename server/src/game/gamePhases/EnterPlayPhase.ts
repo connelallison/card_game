@@ -7,6 +7,8 @@ interface EnterPlayEventObject {
     objectSource: GameObject,
     charSource: Character,
     slot?: BoardSlot,
+    targetSlot?: BoardSlot,
+    index?: number
 }
 
 export class EnterPlayEvent extends GameEvent {
@@ -15,6 +17,8 @@ export class EnterPlayEvent extends GameEvent {
     objectSource: GameObject
     charSource: Character
     slot?: BoardSlot
+    targetSlot?: BoardSlot
+    index?: number
 
     constructor(game: Game, object: EnterPlayEventObject) {
         super(game) 
@@ -23,7 +27,7 @@ export class EnterPlayEvent extends GameEvent {
 
     generateLog() {
         const slot = this.card instanceof Follower ? `in slot ${this.slot.index() + 1} ` : ''
-        this.log =  `${this.card.name} enters play ${slot}under ${this.controller.name}'s control.`
+        this.log =  `${this.card.name.english} enters play ${slot}under ${this.controller.playerName}'s control.`
     }
 }
 class EnterPlayPhase extends EventPhase {
@@ -35,7 +39,8 @@ class EnterPlayPhase extends EventPhase {
     }
 
     start(): void {
-        const {event} = this
+        const event = this.event
+        this.resolveTargetSlot()
         this.putIntoPlay()
         event.generateLog()
         this.cacheEvent(event, 'enterPlay')
@@ -46,14 +51,20 @@ class EnterPlayPhase extends EventPhase {
         this.end()
     }
 
+    resolveTargetSlot(): void {
+        const event = this.event
+        if (!event.slot && event.targetSlot) event.slot = event.targetSlot.nearestEmptySlot()
+    }
+
     putIntoPlay(): void {
         const event = this.event
         if (event.card instanceof Follower) {
             const index = event.slot ? event.slot.index() : event.controller.firstEmptySlotIndex()
             if (!event.slot) event.slot = event.controller.board[index]
+            event.card.ready = false
             event.card.putIntoPlay(index)
         } else {
-            event.card.putIntoPlay()
+            event.card.putIntoPlay(event.index)
         }
     }
 

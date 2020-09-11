@@ -18,7 +18,7 @@ export class ProposedDrawEvent extends GameEvent {
     }
 
     generateLog() {
-        this.log = `${this.player.name} draws ${this.number} cards.`
+        this.log = `${this.player.playerName} draws ${this.number} cards.`
     }
 }
 
@@ -37,7 +37,7 @@ export class DrawEvent extends GameEvent {
     }
 
     generateLog() {
-        this.log = `${this.player.name} draws ${this.card.name}.`
+        this.log = `${this.player.playerName} draws ${this.card.name.english}.`
     }
 }
 

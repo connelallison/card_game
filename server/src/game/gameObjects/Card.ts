@@ -2,12 +2,14 @@ import GameObject from './GameObject'
 
 export interface CardData {
   id: string
-  name: string
+  name: LocalisedStringObject
   type: CardTypeString
   subtype: CardSubtypeString
+  classes: PlayerClassString[]
   collectable: boolean
   cost: number
-  staticCardText: string
+  staticCardText: LocalisedStringObject
+  dynamicCardText: DynamicCardTextObject
   actions?: ActionActionObject[][]
   events?: EventActionObject[][]
   activeRequirements?: ActiveRequirementObject[]
@@ -21,16 +23,18 @@ abstract class Card extends GameObject {
   static readonly data: CardData
   readonly data: CardData
   readonly originalID: CardIDString
-  readonly originalName: string
+  readonly originalName: LocalisedStringObject
   readonly originalOwner: GamePlayer
   id: CardIDString
   owner: GamePlayer
   type: CardTypeString
   subtype: CardSubtypeString
+  classes: PlayerClassString[]
   collectable: boolean
   rawCost: number
   cost: number
-  staticCardText: string
+  staticCardText: LocalisedStringObject
+  dynamicCardText: DynamicCardTextObject
   actions: ActionActionObject[][]
   events: EventActionObject[][]
   // tags: CardTagString[]
@@ -44,6 +48,7 @@ abstract class Card extends GameObject {
 
   constructor(game: Game, owner: GamePlayer, data: CardData) {
     super(game, data.id, data.name, data.type, data.subtype)
+    this.classes = data.classes
     this.originalID = this.id
     this.originalName = this.name
     this.owner = owner
@@ -53,6 +58,7 @@ abstract class Card extends GameObject {
     this.rawCost = data.cost
     this.cost = data.cost
     this.staticCardText = data.staticCardText
+    this.dynamicCardText = data.dynamicCardText
     this.actions = data.actions || []
     this.events = data.events || []
     this.activeRequirements = data.activeRequirements || []
@@ -64,22 +70,40 @@ abstract class Card extends GameObject {
     this.data = data
   }
 
-  provideReport(): ObjectReport {
+  provideReport(localisation: LocalisationString = 'english'): ObjectReport {
     return {
-      name: this.name,
+      name: this.name[localisation],
       id: this.id,
       objectID: this.objectID,
       cost: this.cost,
       type: this.type,
       subtype: this.subtype,
       zone: this.zone,
-      ownerName: this.owner.name,
+      ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
       requiresTarget: this.targeted,
       validTargets: this.validTargetIDs(),
-      staticCardText: this.staticCardText,
+      staticCardText: this.staticCardText[localisation],
+      dynamicCardText: this.generateDynamicCardText(localisation),
     }
+  }
+
+  dynamicCardTextValue(valueObj: DynamicCardTextValueObject, localisation: LocalisationString = 'english'): string {
+    if (valueObj.activeZones.includes(this.zone)) {
+      const value = this.localisedDynamicValue(valueObj.value, localisation)
+      if (value) return valueObj.templates[localisation].replace('$', value.toString())
+    }
+    return valueObj.default.toString()
+  }
+
+  generateDynamicCardText(localisation: LocalisationString = 'english'): string {
+    let template = this.dynamicCardText.templates[localisation]
+    const values = this.dynamicCardText.dynamicValues || []
+    for (let i = 0; i < values.length; i++) {
+      template = template.replace(`$${i}`, this.dynamicCardTextValue(values[i], localisation))
+    }
+    return template
   }
 
   updateArrays(): void {
@@ -124,10 +148,6 @@ abstract class Card extends GameObject {
     return (this.controller()[this.zone] as Card[]).indexOf(this)
   }
 
-  cardOwner(): Card {
-    return this
-  }
-
   addBaseEnchantments(enchantments: EnchantmentIDString[]): void {
     enchantments.forEach(enchantment => this.addEnchantment(this.createEnchantment(enchantment, this)))
   }
@@ -140,7 +160,7 @@ abstract class Card extends GameObject {
       actions: JSON.parse(JSON.stringify(this.actions)),
       events: JSON.parse(JSON.stringify(this.events)),
       enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
-      auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
+      auraEffects: this.auraEffects.splice(0),
       flags: JSON.parse(JSON.stringify(this.flags)),
     }
   }
@@ -152,7 +172,7 @@ abstract class Card extends GameObject {
     return clone
   }
 
-  abstract moveZone(destination: ZoneString): void
+  abstract moveZone(destination: ZoneString, index?: number): void
 }
 
 export default Card
@@ -170,3 +190,5 @@ import { ObjectReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import { ZoneString } from '../stringTypes/ZoneString'
 import Cards from '../dictionaries/Cards'
+import { LocalisedStringObject, LocalisationString, DynamicCardTextObject, DynamicCardTextValueObject } from '../structs/Localisation'
+import PlayerClassString from '../stringTypes/PlayerClassString'

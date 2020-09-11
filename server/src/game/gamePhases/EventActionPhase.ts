@@ -20,8 +20,8 @@ export class EventActionEvent extends GameEvent {
     }
 
     generateLog() {
-        const targets = this.targets && this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
-        this.log = `${this.objectSource.name}'s event activates${targets}.`
+        const targets = this.targets && this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
+        this.log = `${this.objectSource.name.english}'s event activates${targets}.`
     }
 }
 
@@ -36,13 +36,13 @@ class EventActionPhase extends EventPhase {
     start(): void {
         const event = this.event
         const actionCard = event.objectSource as Card
-        this.emit('beforeAction', event)
+        this.emit('beforeEventAction', event)
         event.generateLog()
         this.cacheEvent(event, 'eventAction')
         event.eventAction.forEach(actionObj => {
             actionCard.actionFunction(event, actionObj)
         })
-        this.emit('afterAction', event)
+        this.emit('afterEventAction', event)
         this.queueSteps()
         this.end()
     }

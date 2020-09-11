@@ -18,8 +18,8 @@ export class UseEvent extends GameEvent {
     }
 
     generateLog() {
-        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name}` : ''
-        this.log = `${this.controller.name} uses ${this.objectSource.name}${targets}.`
+        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
+        this.log = `${this.controller.playerName} uses ${this.objectSource.name.english}${targets}.`
     }
 }
 

@@ -17,7 +17,7 @@ export class AttackEvent extends GameEvent {
     }
 
     generateLog() {
-        this.log = `${this.attacker.name} attacks ${this.defender.name}.`
+        this.log = `${this.attacker.name.english} attacks ${this.defender.name.english}.`
     }
 }
 

@@ -29,27 +29,6 @@ abstract class Follower extends Character {
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
-  provideReport(): ObjectReport {
-    return {
-      name: this.name,
-      id: this.id,
-      objectID: this.objectID,
-      cost: this.cost,
-      attack: this.attack,
-      health: this.health,
-      type: this.type,
-      subtype: this.subtype,
-      zone: this.zone,
-      ownerName: this.owner.name,
-      playerID: this.owner.objectID,
-      canBeSelected: this.canBeSelected(),
-      requiresTarget: this.targeted,
-      validTargets: this.validTargetIDs(),
-      staticCardText: this.staticCardText,
-      validSlots: this.validSlotIDs(),
-    }
-  }
-
   updateArrays(): void {
     this.updateValidSlots()
     this.updateValidTargets()
@@ -107,47 +86,6 @@ abstract class Follower extends Character {
       cost: this.rawCost,
       flags: this.baseFlags(),
     }
-  }
-
-  cloneData(clone) {
-    return {
-      clonedFrom: this,
-      pendingDestroy: this.pendingDestroy,
-      rawCost: this.rawCost,
-      cost: this.cost,
-      ready: this.ready,
-      rawAttack: this.rawAttack,
-      attack: this.attack,
-      rawHealth: this.rawHealth,
-      health: this.health,
-      maxHealth: this.maxHealth,
-      actions: JSON.parse(JSON.stringify(this.actions)),
-      events: JSON.parse(JSON.stringify(this.events)),
-      enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
-      auraEffects: JSON.parse(JSON.stringify(this.auraEffects)),
-      flags: JSON.parse(JSON.stringify(this.flags)),
-    }
-  }
-
-  moveZone(destination: FollowerZoneString, index?: number): void {
-    if (this.zone === 'board') {
-      this.slot.follower = null
-      this.slot = null
-    } else {
-      this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
-    }
-
-    if (destination === 'board') {
-      const slot = index ? this.controller().board[index] : this.controller().firstEmptySlot()
-      if (slot instanceof BoardSlot) {
-        slot.follower = this
-        this.slot = slot
-      }
-    } else {
-      this.owner[destination].push(this)
-    }
-    this.zone = destination
-    this.updateEnchantments()
   }
 
   putIntoPlay(index?: number): void {
@@ -238,6 +176,27 @@ abstract class Follower extends Character {
     if (oppositeFollower) neighbouringFollowers.push(oppositeFollower)
     return neighbouringFollowers
   }
+
+  nearestEmptySlot(): BoardSlot {
+    if (this.zone !== 'board') return null
+    let rightmostSlot = this.rightSlot()
+    let leftmostSlot = this.leftSlot()
+    const queue: BoardSlot[] = [this.slot]
+    while (rightmostSlot || leftmostSlot) {
+      if (rightmostSlot) {
+        queue.push(rightmostSlot)
+        rightmostSlot = rightmostSlot.rightSlot()
+      }
+      if (leftmostSlot) {
+        queue.push(leftmostSlot)
+        leftmostSlot = leftmostSlot.leftSlot()
+      }
+    }
+    for (const slot of queue) {
+      if (slot.isEmpty()) return slot
+    }
+    return null
+  }
 }
 
 export default Follower
@@ -247,7 +206,6 @@ import GamePlayer from './GamePlayer'
 import { FollowerZoneString } from '../stringTypes/ZoneString'
 import BoardSlot from './BoardSlot'
 import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
-import { ObjectReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import { FollowerSubtypeString } from '../stringTypes/ObjectSubtypeString'
 import Permissions from '../dictionaries/Permissions'

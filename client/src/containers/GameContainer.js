@@ -33,7 +33,7 @@ class GameContainer extends Component {
             name: '',
           },
           leaderTechnique: {
-            staticCardText: '',
+            dynamicCardText: '',
             name: '',
           },
           board: [],
@@ -52,7 +52,7 @@ class GameContainer extends Component {
             name: '',
           },
           leaderTechnique: {
-            staticCardText: '',
+            dynamicCardText: '',
             name: '',
           },
           board: [],
@@ -136,38 +136,38 @@ class GameContainer extends Component {
   }
 
   handleClearSelected() {
-    // console.log("selected cleared")
+    console.log("selected cleared")
     this.setState({
       selected: null
     })
   }
 
   handleClearSelectedSlot() {
-    // console.log('selectedSlot cleared')
+    console.log('selectedSlot cleared')
     this.setState({
       selectedSlot: null
     })
   }
 
   handleChooseSelected(object) {
-    // console.log("selected chosen")
-    // console.log('selected: ', object)
+    console.log("selected chosen")
+    console.log('selected: ', object)
     this.setState({
       selected: object
     })
   }
 
   handleChooseSelectedSlot(object) {
-    // console.log('selectedSlot chosen')
-    // console.log('selectedSlot: ', object)
+    console.log('selectedSlot chosen')
+    console.log('selectedSlot: ', object)
     this.setState({
       selectedSlot: object
     })
   }
 
   handleChooseTarget(target = null) {
-    // console.log("target chosen")
-    this.announceMove(this.state.selected, target)
+    console.log("target chosen")
+    this.announceMove(this.state.selected, target, this.state.selectedSlot)
     this.setState({
       selected: null,
       selectedSlot: null,
@@ -175,7 +175,7 @@ class GameContainer extends Component {
   }
 
   handleChooseSelectedNoTarget(object) {
-    // console.log('selected chosen (no target required)')
+    console.log('selected chosen (no target required)')
     this.announceMove(object, null)
     this.setState({
       selected: null,
@@ -184,8 +184,8 @@ class GameContainer extends Component {
   }
 
   handleChooseSelectedSlotNoTarget(object) {
-    // console.log('selectedSlot chosen (no target required)')
-    // console.log('selectedSlot: ', object)
+    console.log('selectedSlot chosen (no target required)')
+    console.log('selectedSlot: ', object)
     this.announceMove(this.state.selected, null, object)
     this.setState({
       selected: null,
@@ -203,10 +203,10 @@ class GameContainer extends Component {
   }
 
   announceMove(selected, target = null, selectedSlot = null) {
-    // console.log('move request:')
-    // console.log('selected: ', selected)
-    // console.log('selectedSlot: ', selectedSlot)
-    // console.log('target: ', target)
+    console.log('move request:')
+    console.log('selected: ', selected)
+    console.log('selectedSlot: ', selectedSlot)
+    console.log('target: ', target)
     socket.emit("newMoveRequest", {
       selected: {
         objectID: selected.objectID,

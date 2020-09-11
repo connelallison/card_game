@@ -31,23 +31,24 @@ abstract class LeaderTechnique extends PersistentCard {
         if (this.inPlay() && this.controller().myTurn()) this.ready = true
     }
 
-    provideReport(): ObjectReport {
-        this.updateValidTargets()
+    provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+        // this.updateValidTargets()
 
         return {
-            name: this.name,
+            name: this.name[localisation],
             id: this.id,
             objectID: this.objectID,
             cost: this.cost,
             type: this.type,
             subtype: this.subtype,
             zone: this.zone,
-            ownerName: this.owner.name,
+            ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
             requiresTarget: this.targeted,
             validTargets: this.validTargetIDs(),
-            staticCardText: this.staticCardText,
+            staticCardText: this.staticCardText[localisation],
+            dynamicCardText: this.generateDynamicCardText(localisation),
         }
     }
 
@@ -59,10 +60,11 @@ abstract class LeaderTechnique extends PersistentCard {
         }
     }
 
-    moveZone(destination: LeaderTechniqueZoneString): void {
+    moveZone(destination: LeaderTechniqueZoneString, index?: number): void {
         if (destination === 'leaderTechniqueZone' && this.owner.leaderTechniqueZone[0]) this.owner.leaderTechniqueZone[0].moveZone('graveyard')
         this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
-        this.owner[destination].push(this)
+        if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
+        else this.owner[destination].push(this)
         this.zone = destination
         this.updateEnchantments()
     }
@@ -83,3 +85,4 @@ import GamePlayer from "./GamePlayer";
 import { LeaderTechniqueSubtypeString } from "../stringTypes/ObjectSubtypeString";
 import { LeaderTechniqueZoneString } from "../stringTypes/ZoneString";
 import { ObjectReport } from "../structs/ObjectReport";
+import { LocalisationString } from "../structs/Localisation";

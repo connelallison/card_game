@@ -31,8 +31,8 @@ class Creation extends Component {
   }
 
   render () {
-    const textLength = this.props.object.staticCardText.length > 70 ? 'text-long' : 
-                       this.props.object.staticCardText.length > 35 ? 'text-medium' : 'text-short'
+    const textLength = this.props.object.dynamicCardText.length > 70 ? 'text-long' : 
+                       this.props.object.dynamicCardText.length > 35 ? 'text-medium' : 'text-short'
     const nameLength = this.props.object.name.length > 22 ? 'name-long' : 
                        this.props.object.name.length > 17 ? 'name-medium' : 'name-short'
     const outlineStatus = this.props.selected === this.props.object ? "isSelected" :
@@ -55,7 +55,7 @@ class Creation extends Component {
       <div onClick={this.handleClick} className={styleClasses}>
         <p className={`card-name ${nameLength}`}>{this.props.object.name}</p>
         {handInfo}
-        <p className={`card-text ${textLength}`}>{this.props.object.staticCardText}</p>
+        <p className={`card-text ${textLength}`}>{this.props.object.dynamicCardText}</p>
         {/* <br /> */}
         <div className="multicolour-line">
             {costLabel}

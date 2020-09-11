@@ -26,9 +26,9 @@ abstract class WeaponCreation extends Creation {
         }
     }
 
-    provideReport(): ObjectReport {
+    provideReport(localisation: LocalisationString = 'english'): ObjectReport {
         return {
-            name: this.name,
+            name: this.name[localisation],
             id: this.id,
             objectID: this.objectID,
             cost: this.cost,
@@ -37,12 +37,13 @@ abstract class WeaponCreation extends Creation {
             type: this.type,
             subtype: this.subtype,
             zone: this.zone,
-            ownerName: this.owner.name,
+            ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
             requiresTarget: this.targeted,
             validTargets: this.validTargetIDs(),
-            staticCardText: this.staticCardText,
+            staticCardText: this.staticCardText[localisation],
+            dynamicCardText: this.generateDynamicCardText(localisation),
         }
     }
 
@@ -64,3 +65,4 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { ObjectReport } from "../structs/ObjectReport";
 import GameObjectData from "../structs/GameObjectData";
+import { LocalisationString } from "../structs/Localisation";

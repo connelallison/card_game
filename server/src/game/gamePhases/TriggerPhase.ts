@@ -7,7 +7,7 @@ interface TriggerEventObject {
     triggerType: TriggerTypeString
     actions: TriggerActionObject[]
     objectSource: TriggerEnchantment
-    cardSource: Card | GamePlayer
+    triggerOwner: GameObject
 }
 
 export class TriggerEvent extends GameEvent {
@@ -16,7 +16,7 @@ export class TriggerEvent extends GameEvent {
     triggerType: TriggerTypeString
     actions: TriggerActionObject[]
     objectSource: TriggerEnchantment
-    cardSource: Card | GamePlayer
+    triggerOwner: GameObject
 
     constructor(game: Game, object: TriggerEventObject) {
         super(game) 
@@ -24,7 +24,7 @@ export class TriggerEvent extends GameEvent {
     }
 
     generateLog() {
-        this.log = `${this.cardSource.name}'s ${this.objectSource.name} triggers from the ${this.triggerType} event.`
+        this.log = `${this.triggerOwner.name.english}'s ${this.objectSource.name.english} triggers from the ${this.triggerType} event.`
     }
 }
 
@@ -66,3 +66,4 @@ import Card from "../gameObjects/Card";
 import Game from "./Game";
 import { TriggerActionEvent } from "./TriggerActionPhase";
 import Phases from "../dictionaries/Phases";
+import GameObject from "../gameObjects/GameObject";

@@ -1,33 +1,39 @@
-import StaticEnchantment from "../gameObjects/StaticEnchantment"
+import StaticEnchantment, { StaticEnchantmentData } from "../gameObjects/StaticEnchantment"
+import Game from "../gamePhases/Game"
+import GameObject from "../gameObjects/GameObject"
+
+const data: StaticEnchantmentData = {
+    'id': 'AttackAndHealthBuff',
+    'name': {
+        'english': `Attack and Health Buff`,
+    },
+    'type': 'Enchantment',
+    'subtype': 'Static',
+    'activeZones': ['board', 'hand', 'deck', 'leaderZone'],
+    'activeTypes': ['Follower', 'Leader'],
+    'effectObjs': [
+        {
+            'operation': 'incrementAttack',
+            'value': 0
+        },
+        {
+            'operation': 'incrementHealth',
+            'value': 0
+        }
+    ]
+}
 
 class AttackAndHealthBuff extends StaticEnchantment {
+    static readonly data: StaticEnchantmentData = data
     constructor(game: Game, owner: GameObject, values: { attack: number, health: number } = { attack: 0, health: 0 }) {
+        const moddedData = JSON.parse(JSON.stringify(data))
+        moddedData.effectObjs[0].value = values.attack
+        moddedData.effectObjs[1].value = values.health
         super(
             game,
             owner,
-            {
-                'id': 'AttackAndHealthBuff',
-                'name': 'Attack and Health Buff',
-                'type': 'Enchantment',
-                'subtype': 'Static',
-                'activeZones': ['board', 'hand', 'deck', 'leaderZone'],
-                'activeTypes': ['Follower', 'Leader'],
-                'effectObjs': [
-                    {
-                        'operation': 'incrementAttack',
-                        'value': values.attack
-                    }, 
-                    {
-                        'operation': 'incrementHealth',
-                        'value': values.health
-                    }
-                ]
-            }
+            moddedData
         )
     }
 }
-
 export default AttackAndHealthBuff
-
-import Game from "../gamePhases/Game"
-import GameObject from "../gameObjects/GameObject"

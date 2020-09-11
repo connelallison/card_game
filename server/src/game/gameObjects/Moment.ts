@@ -16,9 +16,10 @@ abstract class Moment extends Card {
     super(game, owner, data)
   }
 
-  moveZone(destination: MomentZoneString): void {
+  moveZone(destination: MomentZoneString, index?: number): void {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
-    this.owner[destination].push(this)
+    if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
+    else this.owner[destination].push(this)
     this.zone = destination
     this.updateEnchantments()
   }

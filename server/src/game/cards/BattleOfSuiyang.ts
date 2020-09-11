@@ -1,14 +1,27 @@
 import EventMoment, { EventMomentData } from '../gameObjects/EventMoment'
+import Game from '../gamePhases/Game'
+import GamePlayer from '../gameObjects/GamePlayer'
+import { countFriendlyFollowers } from '../dictionaries/DynamicValueShortcuts'
 
 const data: EventMomentData = {
     'id': 'BattleOfSuiyang',
-    'name': 'Battle of Suiyang',
+    'name': {
+        'english': `Battle of Suiyang`,
+    },
     'type': 'Moment',
     'subtype': 'Event',
+    'classes': ['Infamy'],
     'cost': 2,
     'collectable': true,
     'targeted': false,
-    'staticCardText': 'Event: Destroy all friendly followers. For each destroyed, give followers in your hand +1/+1.',
+    'staticCardText': {
+        'english': `Event: Destroy all friendly followers. For each destroyed, give followers in your hand +1/+1.`,
+    },
+    'dynamicCardText': {
+        'templates': {
+            'english': `Event: Destroy all friendly followers. For each destroyed, give followers in your hand +1/+1.`,
+        },
+    },
     'activeRequirements': [{
         'activeRequirement': 'min1FriendlyFollower',
     }],
@@ -17,22 +30,8 @@ const data: EventMomentData = {
             'actionType': 'autoAction',
             'operation': 'storeValue',
             'values': {
-                'name': 'targetCount',
-                'value': {
-                    'valueType': 'number',
-                    'from': 'numbers',
-                    'reducer': 'count',
-                    'numbers': {
-                        'valueType': 'numbers',
-                        'from': 'targets',
-                        'numberMap': 'count',
-                        'targets': {
-                            'valueType': 'targets',
-                            'from': 'targetDomain',
-                            'targetDomain': 'friendlyBoard'
-                        },
-                    }
-                },
+                'param': 'targetCount',
+                'value': countFriendlyFollowers,
             },
         },
         {
@@ -69,12 +68,8 @@ const data: EventMomentData = {
 
 class BattleOfSuiyang extends EventMoment {
     static readonly data: EventMomentData = data
-
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
 export default BattleOfSuiyang
-
-import Game from '../gamePhases/Game'
-import GamePlayer from '../gameObjects/GamePlayer'

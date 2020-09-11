@@ -6,9 +6,10 @@ interface GameObjectData {
     cost?: number
     flags: FlagsObject
     id?: string
-    name?: string
+    name?: LocalisedStringObject
 }
 
 export default GameObjectData
 
 import FlagsObject from "./FlagsObject";
+import { LocalisedStringObject } from "./Localisation";

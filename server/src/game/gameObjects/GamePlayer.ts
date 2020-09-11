@@ -3,7 +3,8 @@ import GameObject from './GameObject'
 class GamePlayer extends GameObject {
   game: Game
   owner: GamePlayer
-  name: string
+  name: LocalisedStringObject
+  playerName: string
   socketID: string
   maxHealth: number
   currentHealth: number
@@ -37,8 +38,9 @@ class GamePlayer extends GameObject {
   disconnected: boolean
 
   constructor(game: Game, name: string, socketID: string = null, bot: boolean = false) {
-    super(game, name, name, 'Player', 'Player')
+    super(game, 'Player', {english: 'Player'}, 'Player', 'Player')
     this.owner = this
+    this.playerName = name
     this.socketID = socketID
     this.maxHealth = 20
     this.currentHealth = this.maxHealth
@@ -137,7 +139,7 @@ class GamePlayer extends GameObject {
     return this
   }
 
-  cardOwner(): GamePlayer {
+  effectOwner(): GamePlayer {
     return this
   }
 
@@ -280,4 +282,5 @@ import TechniqueCreation from './TechniqueCreation'
 import PersistentCard from './PersistentCard'
 import { PersistentCardTypeString } from '../stringTypes/ObjectTypeString'
 import { ProposedDrawEvent } from '../gamePhases/ProposedDrawPhase'
+import { LocalisedStringObject } from '../structs/Localisation'
 

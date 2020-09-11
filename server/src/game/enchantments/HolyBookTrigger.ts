@@ -1,8 +1,12 @@
 import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import Game from "../gamePhases/Game";
+import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEnchantmentData = {
     'id': 'HolyBookTrigger',
-    'name': 'Holy Book Trigger',
+    'name': {
+        'english': `Holy Book Trigger`,
+    },
     'type': 'Enchantment',
     'subtype': 'Trigger',
     'repeatable': true,
@@ -31,13 +35,8 @@ const data: TriggerEnchantmentData = {
 
 class HolyBookTrigger extends TriggerEnchantment {
     static readonly data: TriggerEnchantmentData = data
-
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-
 export default HolyBookTrigger
-
-import Game from "../gamePhases/Game";
-import GameObject from "../gameObjects/GameObject";

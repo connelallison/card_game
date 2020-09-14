@@ -14,22 +14,23 @@ const data: TriggerEnchantmentData = {
     repeatable: true,
     wonderTrigger: false,
     triggerObjs: [{
+        actionType: 'triggerAction',
         eventType: 'afterDeath',
         requirements: [
             {
-                targetRequirement: 'isType',
+                eventTargetRequirement: 'isType',
                 values: {
                     type: 'Follower'
                 },
                 targetMap: 'deathEventDestroyedTarget'
             },
             {
-                targetRequirement: 'isFriendly',
+                eventTargetRequirement: 'isFriendly',
                 targetMap: 'deathEventDestroyedTarget'
             }
         ],
-        actions: [{
-            actionType: 'autoAction',
+        actionFunctions: [{
+            functionType: 'autoAction',
             operation: 'buffAttackAndHealth',
             values: {
                 attack: 2,

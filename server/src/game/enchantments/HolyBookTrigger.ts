@@ -14,12 +14,13 @@ const data: TriggerEnchantmentData = {
     'activeZones': ['creationZone'],
     'activeTypes': ['Creation'],
     'triggerObjs': [{
+        'actionType': 'triggerAction',
         'eventType': 'endOfTurn',
         'requirements': [{
             'activeRequirement': 'isMyTurn'
         }],
-        'actions': [{
-            actionType: 'autoAction',
+        'actionFunctions': [{
+            functionType: 'autoAction',
             operation: 'heal',
             values: {
                 'healing': 2,

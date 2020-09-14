@@ -34,7 +34,7 @@ abstract class Creation extends DestroyableCard {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            requiresTarget: this.targeted,
+            targeted: this.targeted,
             validTargets: this.validTargetIDs(),
             staticCardText: this.staticCardText[localisation],
             dynamicCardText: this.generateDynamicCardText(localisation),
@@ -57,15 +57,18 @@ abstract class Creation extends DestroyableCard {
             name: this.originalName,
             charges: this.charges,
             cost: this.rawCost,
+            debt: 0,
             flags: this.baseFlags(),
         }
     }
 
     moveZone(destination: CreationZoneString, index?: number): void {
+        if (this.zone === 'creationZone') this.game.inPlay.splice(this.game.inPlay.indexOf(this), 1)
         this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
         this.owner[destination].push(this)
         if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
         else this.zone = destination
+        if (destination === 'creationZone') this.game.inPlay.push(this)
         this.updateEnchantments()
     }
 }
@@ -74,8 +77,8 @@ export default Creation
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { CreationZoneString } from "../stringTypes/ZoneString";
-import { CreationSubtypeString } from "../stringTypes/ObjectSubtypeString";
 import { ObjectReport } from "../structs/ObjectReport";
 import GameObjectData from "../structs/GameObjectData";
 import { LocalisationString } from "../structs/Localisation";
+import { CreationSubtypeString, CreationZoneString } from "../stringTypes/ZoneTypeSubtypeString";
+

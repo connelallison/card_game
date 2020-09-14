@@ -2,17 +2,19 @@ import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
 
 interface EventActionEventObject {
-    controller: GamePlayer,
-    objectSource: GameObject,
-    targets?: GameObject[],
-    eventAction: EventActionObject[],
+    controller: GamePlayer
+    objectSource: GameObject
+    targets?: GameObject[]
+    eventAction: EventAction
+    event: PlayEvent | SummonEvent | UseEvent
 }
 
 export class EventActionEvent extends GameEvent {
     controller: GamePlayer
     objectSource: GameObject
     targets?: GameObject[]
-    eventAction: EventActionObject[]
+    eventAction: EventAction
+    event: PlayEvent | SummonEvent | UseEvent
 
     constructor(game: Game, object: EventActionEventObject) {
         super(game) 
@@ -39,7 +41,8 @@ class EventActionPhase extends EventPhase {
         this.emit('beforeEventAction', event)
         event.generateLog()
         this.cacheEvent(event, 'eventAction')
-        event.eventAction.forEach(actionObj => {
+        event.eventAction.actionFunctions.forEach(actionObj => {
+            if (!actionObj.requirements || actionObj.requirements.every(requirement => actionCard.requirement(requirement, event.event)))
             actionCard.actionFunction(event, actionObj)
         })
         this.emit('afterEventAction', event)
@@ -53,5 +56,8 @@ export default EventActionPhase
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import GameObject from "../gameObjects/GameObject";
-import { EventActionObject } from "../structs/ActionObject";
+import { EventAction } from "../structs/Action";
 import Game from "./Game";
+import { PlayEvent } from "./PlayPhase";import { SummonEvent } from "./SummonPhase";
+import { UseEvent } from "./UsePhase";
+

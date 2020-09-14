@@ -8,15 +8,17 @@ export interface CardData {
   classes: PlayerClassString[]
   collectable: boolean
   cost: number
+  debt?: number
   staticCardText: LocalisedStringObject
   dynamicCardText: DynamicCardTextObject
-  actions?: ActionActionObject[][]
-  events?: EventActionObject[][]
-  activeRequirements?: ActiveRequirementObject[]
+  actions?: ActionAction[]
+  events?: EventAction[]
+  // eurekas?: EurekaAction[]
+  activeRequirements?: ActiveRequirement[]
   enchantments?: EnchantmentIDString[]
   targeted: boolean
   targetDomain?: TargetsDomainString | TargetsDomainString[]
-  targetRequirements?: TargetRequirementObject[]
+  targetRequirements?: TargetRequirement[]
 }
 
 abstract class Card extends GameObject {
@@ -33,16 +35,18 @@ abstract class Card extends GameObject {
   collectable: boolean
   rawCost: number
   cost: number
+  debt: number
   staticCardText: LocalisedStringObject
   dynamicCardText: DynamicCardTextObject
-  actions: ActionActionObject[][]
-  events: EventActionObject[][]
+  actions: ActionAction[]
+  events: EventAction[]
+  // eurekas: EurekaAction[]
   // tags: CardTagString[]
   // option: []
-  activeRequirements: ActiveRequirementObject[]
+  activeRequirements: ActiveRequirement[]
   targeted: boolean
   targetDomain: () => GameObject[]
-  targetRequirements: TargetRequirementObject[]
+  targetRequirements: TargetRequirement[]
   validTargets: GameObject[]
   clonedFrom: Card
 
@@ -57,15 +61,18 @@ abstract class Card extends GameObject {
     this.collectable = data.collectable
     this.rawCost = data.cost
     this.cost = data.cost
+    this.debt = 0
     this.staticCardText = data.staticCardText
     this.dynamicCardText = data.dynamicCardText
     this.actions = data.actions || []
     this.events = data.events || []
+    // this.eurekas = data.eurekas || []
     this.activeRequirements = data.activeRequirements || []
     this.targeted = data.targeted
     this.targetDomain = () => this.targetDomains(data.targetDomain || [])
     this.targetRequirements = data.targetRequirements || []
     this.validTargets = []
+    this.addBaseStatEnchantments(data)
     this.addBaseEnchantments(data.enchantments || [])
     this.data = data
   }
@@ -82,7 +89,7 @@ abstract class Card extends GameObject {
       ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
-      requiresTarget: this.targeted,
+      targeted: this.targeted,
       validTargets: this.validTargetIDs(),
       staticCardText: this.staticCardText[localisation],
       dynamicCardText: this.generateDynamicCardText(localisation),
@@ -92,7 +99,15 @@ abstract class Card extends GameObject {
   dynamicCardTextValue(valueObj: DynamicCardTextValueObject, localisation: LocalisationString = 'english'): string {
     if (valueObj.activeZones.includes(this.zone)) {
       const value = this.localisedDynamicValue(valueObj.value, localisation)
-      if (value) return valueObj.templates[localisation].replace('$', value.toString())
+      if (value) {
+        if (valueObj.templates) {
+          return valueObj.templates[localisation].replace('$', value.toString())
+        } else if (valueObj.fervour && this.controller().fervour > 0) {
+          return `*${value.toString()}*`
+        } else {
+          return value.toString()
+        }
+      }
     }
     return valueObj.default.toString()
   }
@@ -114,7 +129,7 @@ abstract class Card extends GameObject {
     if (this.zone === 'hand' && this.targeted) {
       let newTargets = this.targetDomain()
       this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => this.targetRequirement(target, requirement))
+        newTargets = newTargets.filter(target => this.targetRequirement(requirement, target))
       })
       this.validTargets = newTargets
       // this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(this, target)), this.targetDomain())
@@ -140,12 +155,18 @@ abstract class Card extends GameObject {
       id: this.originalID,
       name: this.originalName,
       cost: this.rawCost,
+      debt: 0,
       flags: this.baseFlags(),
     }
   }
 
+
   index(): number {
     return (this.controller()[this.zone] as Card[]).indexOf(this)
+  }
+
+  addBaseStatEnchantments(data: CardData): void {
+    if (data.debt) this.addEnchantment(new Enchantments.Debt(this.game, this, { statValue: data.debt }))
   }
 
   addBaseEnchantments(enchantments: EnchantmentIDString[]): void {
@@ -180,15 +201,13 @@ export default Card
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { CardIDString, EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
-import { CardTypeString } from '../stringTypes/ObjectTypeString'
-import { CardSubtypeString } from '../stringTypes/ObjectSubtypeString'
-import { ActionActionObject, EventActionObject } from '../structs/ActionObject'
-import ActiveRequirementObject from '../structs/ActiveRequirementObject'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
+import { ActionAction, EventAction } from '../structs/Action'
 import { TargetsDomainString } from '../stringTypes/DomainString'
 import { ObjectReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
-import { ZoneString } from '../stringTypes/ZoneString'
+import { CardSubtypeString, CardTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import Cards from '../dictionaries/Cards'
 import { LocalisedStringObject, LocalisationString, DynamicCardTextObject, DynamicCardTextValueObject } from '../structs/Localisation'
 import PlayerClassString from '../stringTypes/PlayerClassString'
+import Enchantments from '../dictionaries/Enchantments'
+import { ActiveRequirement, TargetRequirement } from '../structs/Requirement'

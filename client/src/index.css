@@ -218,6 +218,10 @@ input {
   background-color: saddlebrown;
 }
 
+.armour-label {
+  background-color: rgb(88, 88, 88);
+}
+
 .canBeSelected {
   outline: solid green 2px;
 }

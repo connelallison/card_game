@@ -16,6 +16,7 @@ const data: NamelessFollowerData = {
     'attack': 3,
     'health': 2,
     'charges': 2,
+    'targeted': false,
     'staticCardText': {
         'english': `Death: Deal 3 damage in this and neighbouring slots.`,
     },
@@ -24,22 +25,32 @@ const data: NamelessFollowerData = {
             'english': `Death: Deal 3 damage in this and neighbouring slots.`,
         },
     },
-    'deathEvents': [[
-        {
-            actionType: 'autoAction',
-            operation: 'damage',
-            extraTargets: {
-                valueType: 'targets',
-                from: 'targetDomain',
-                targetDomain: 'neighbouringFollowers',
+    'deathEvents': [{
+        actionType: 'deathAction',
+        name: {
+            english: 'Suicide Bomber Death Event'
+        },
+        text: {
+            'templates': {
+                'english': `Death: Deal 3 damage in this and neighbouring slots.`,
             },
-            onlyExtraTargets: true,
-            values: {
-                damage: 3,
+        },
+        actionFunctions: [
+            {
+                functionType: 'autoAction',
+                operation: 'damage',
+                extraTargets: {
+                    valueType: 'targets',
+                    from: 'targetDomain',
+                    targetDomain: 'neighbouringFollowers',
+                },
+                onlyExtraTargets: true,
+                values: {
+                    damage: 3,
+                }
             }
-        }
-    ]],
-    'targeted': false
+        ]
+    }],
 }
 
 class SuicideBomber extends NamelessFollower {

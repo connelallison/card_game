@@ -27,7 +27,7 @@ abstract class FamousFollower extends Follower {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            requiresTarget: this.targeted,
+            targeted: this.targeted,
             validTargets: this.validTargetIDs(),
             staticCardText: this.staticCardText[localisation],
             validSlots: this.validSlotIDs(),
@@ -39,6 +39,7 @@ abstract class FamousFollower extends Follower {
         if (this.zone === 'board') {
           this.slot.follower = null
           this.slot = null
+          this.game.inPlay.splice(this.game.inPlay.indexOf(this), 1)
         } else {
           this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
         }
@@ -48,6 +49,7 @@ abstract class FamousFollower extends Follower {
           if (slot instanceof BoardSlot) {
             slot.follower = this
             this.slot = slot
+            this.game.inPlay.push(this)
           }
         } else {
             if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
@@ -63,7 +65,6 @@ abstract class FamousFollower extends Follower {
           pendingDestroy: this.pendingDestroy,
           rawCost: this.rawCost,
           cost: this.cost,
-          ready: this.ready,
           rawAttack: this.rawAttack,
           attack: this.attack,
           rawHealth: this.rawHealth,
@@ -83,6 +84,6 @@ export default FamousFollower
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { LocalisationString } from "../structs/Localisation";
-import { ObjectReport } from "../structs/ObjectReport";import { FollowerZoneString } from "../stringTypes/ZoneString";
+import { ObjectReport } from "../structs/ObjectReport";import { FollowerZoneString } from "../stringTypes/ZoneTypeSubtypeString";
 import BoardSlot from "./BoardSlot";
 

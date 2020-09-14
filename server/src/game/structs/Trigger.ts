@@ -1,9 +1,9 @@
 interface Trigger {
     eventType: TriggerTypeString,
-    action: TriggerAction
+    action: (event: TriggerActionEvent) => void
 }
 
 export default Trigger
 
 import TriggerTypeString from "../stringTypes/TriggerTypeString";
-import TriggerAction from "../functionTypes/TriggerAction";
+import { TriggerActionEvent } from "../gamePhases/TriggerActionPhase";

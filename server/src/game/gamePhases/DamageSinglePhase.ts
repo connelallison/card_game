@@ -14,6 +14,7 @@ export class DamageEvent extends GameEvent {
     charSource: Character
     target: Character
     damage: number
+    actualDamage: number
     split?: boolean
 
     constructor(game: Game, object: DamageEventObject) {
@@ -38,10 +39,11 @@ class DamageSinglePhase extends EventPhase {
         const event = this.event
         if (event.damage > 0) {
             this.emit('beforeDamage', event)
-            event.target.takeDamage(event.damage)
+            const actualDamage = event.target.takeDamage(event.damage)
+            event.actualDamage = actualDamage
             event.generateLog()
             this.cacheEvent(event, 'damage')
-            this.emit('afterDamage', event)
+            if (event.actualDamage > 0) this.emit('afterDamage', event)
             this.queueSteps()
         }
         this.end()

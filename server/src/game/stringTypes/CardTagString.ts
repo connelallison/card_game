@@ -1,9 +1,16 @@
 type CardTagString = 'Action'
                     | 'Event'
-                    | 'Death'
+                    | 'DeathEvent'
                     | 'Option'
+                    | 'Eureka'
                     | 'Legacy'
                     | 'Guard'
                     | 'Pillage'
+                    | 'Rush'
+                    | 'Rent'
+                    | 'Fervour'
+                    | 'Debt'
+                    | 'Income'
+                    | 'Growth'
 
 export default CardTagString

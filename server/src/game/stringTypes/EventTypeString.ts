@@ -1,6 +1,7 @@
 type EventTypeString = 'death' 
                         | 'play' 
                         | 'action' 
+                        | 'eurekaAction'
                         | 'eventAction'
                         | 'deathAction'
                         | 'attack' 

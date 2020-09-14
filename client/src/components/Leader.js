@@ -32,6 +32,9 @@ class Leader extends Component {
     const attackLabel = this.props.object.attack > 0 ? (
       <p className='attack-label stat-label'>{this.props.object.attack}A</p>
     ) : null
+    const armourLabel = this.props.object.armour > 0 ? (
+      <p className='armour-label stat-label'>{this.props.object.armour}A</p>
+    ) : null
     const nameLength = this.props.object.name.length > 22 ? 'name-long' : 
                        this.props.object.name.length > 17 ? 'name-medium' : 'name-short'
     return (
@@ -41,6 +44,7 @@ class Leader extends Component {
         <div className="multicolour-line">
           {attackLabel}
           <p className='health-label stat-label'>{this.props.object.health}H</p>
+          {armourLabel}
           <p className='cost-label stat-label'>{this.props.object.currentMoney}/{this.props.object.maxMoney}M</p>
         </div>
       </div>

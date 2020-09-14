@@ -12,4 +12,4 @@ const ActiveRequirements = {
 export default ActiveRequirements
 
 import GameObject from "../gameObjects/GameObject"
-import { PersistentCardTypeString } from "../stringTypes/ObjectTypeString"
+import { PersistentCardTypeString } from "../stringTypes/ZoneTypeSubtypeString"

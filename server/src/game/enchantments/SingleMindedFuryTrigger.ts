@@ -15,16 +15,17 @@ const data: TriggerEnchantmentData = {
     repeatable: true,
     wonderTrigger: false,
     triggerObjs: [{
+        actionType: 'triggerAction',
         eventType: 'beforeDamage',
         requirements: [{
             targetMap: 'damageEventDamagedTarget',
-            targetRequirement: 'isDynamicTarget',
+            eventTargetRequirement: 'isDynamicTarget',
             values: {
                 dynamicTarget: lastEnemyFollowerEnteredPlay
             }
         }],
-        actions: [{
-            actionType: 'eventModAction',
+        actionFunctions: [{
+            functionType: 'eventModAction',
             operation: 'incrementNumberParam',
             values: {
                 param: 'damage',

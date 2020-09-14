@@ -164,18 +164,20 @@ class Game extends GamePhase {
           targets,
         })
         this.startSequence('UsePhase', useEvent)
-      } 
-    } else if (selected.zone === 'hand' && selected.canBePlayed()) {
+      }
+    } else if (selected.zone === 'hand' && selected.canBePlayed() && !(!target && selected.targeted && selected.validTargets.length > 0)) {
       // card in hand being played
-      const slot = selected instanceof Follower && selected.validSlots.includes(selectedSlot) ? {slot: selectedSlot} : null // includes slot if card is follower
-        const targets = !selected.targeted ? [] : [target] // includes target if card is targeted
-        const eventObj = Object.assign({
-          player: selected.owner,
-          card: selected,
-          targets,
-        }, slot)
-        const playEvent = new PlayEvent(this, eventObj)
-        this.startSequence('PlayPhase', playEvent)
+      const slot = (selected instanceof Follower && selected.validSlots.includes(selectedSlot)) ? { slot: selectedSlot } : null // includes slot if card is follower
+      const targets = !selected.targeted || target === null ? [] : [target] // includes target if card is targeted
+      const eventObj = Object.assign({
+        player: selected.owner,
+        card: selected,
+        targets,
+        handIndex: selected.index(),
+        handLength: selected.owner.hand.length,
+      }, slot)
+      const playEvent = new PlayEvent(this, eventObj)
+      this.startSequence('PlayPhase', playEvent)
     }
     this.announceGameState()
   }
@@ -229,7 +231,7 @@ class Game extends GamePhase {
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} disconnected - ending game`)
         this.player1.disconnected = true
-        this.ended = true
+        this.end()
       })
     }
     if (this.player2.socketID) {
@@ -242,7 +244,7 @@ class Game extends GamePhase {
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} disconnected - ending game`)
         this.player2.disconnected = true
-        this.ended = true
+        this.end()
       })
     }
   }
@@ -311,7 +313,19 @@ class Game extends GamePhase {
     if (this.activeChild) this.activeChild.ended = true
     const disconnected = this.player1.disconnected ? this.player1 : this.player2.disconnected ? this.player2 : null
 
-    this.emit('auraApply')
+    this.emit('auraReset')
+    this.emit('staticApply')
+    this.emit('auraEmit0')
+    this.emit('auraApply0')
+    this.emit('calculateGlobals')
+    this.emit('auraEmit1')
+    this.emit('auraApply1')
+    this.emit('auraEmit2')
+    this.emit('auraApply2')
+    this.emit('auraEmit3')
+    this.emit('auraApply3')
+    this.emit('updateArrays')
+
     if (this.player1.alive() && !this.player2.alive()) {
       this.winner = this.player1.playerName + ' wins'
     } else if (!this.player1.alive() && this.player2.alive()) {

@@ -3,13 +3,13 @@ import PersistentCard, { PersistentCardData } from "./PersistentCard";
 export interface DestroyableCardData extends PersistentCardData {
     type: DestroyableCardTypeString
     subtype: DestroyableCardSubtypeString
-    deathEvents?: DeathActionObject[][]
+    deathEvents?: DeathAction[]
 }
 
 abstract class DestroyableCard extends PersistentCard {
     static readonly data: DestroyableCardData
     readonly data: DestroyableCardData
-    deathEvents: DeathActionObject[][]
+    deathEvents: DeathAction[]
     pendingDestroy: boolean
 
     constructor(game: Game, owner: GamePlayer, data: DestroyableCardData) {
@@ -39,6 +39,5 @@ export default DestroyableCard
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { DestroyableCardTypeString } from "../stringTypes/ObjectTypeString";
-import { DestroyableCardSubtypeString } from "../stringTypes/ObjectSubtypeString";
-import { DeathActionObject } from "../structs/ActionObject";
+import { DeathAction, DeathActionFunction } from "../structs/Action";import { DestroyableCardTypeString, DestroyableCardSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
+

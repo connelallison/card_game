@@ -40,7 +40,7 @@ abstract class WeaponCreation extends Creation {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            requiresTarget: this.targeted,
+            targeted: this.targeted,
             validTargets: this.validTargetIDs(),
             staticCardText: this.staticCardText[localisation],
             dynamicCardText: this.generateDynamicCardText(localisation),
@@ -54,6 +54,7 @@ abstract class WeaponCreation extends Creation {
             attack: this.rawAttack,
             charges: this.charges,
             cost: this.rawCost,
+            debt: 0,
             flags: this.baseFlags(),
         }
     }

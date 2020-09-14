@@ -12,7 +12,7 @@ export interface ObjectReport {
   ownerName: string,
   playerID: string,
   canBeSelected: boolean,
-  requiresTarget: boolean,
+  targeted: boolean,
   validTargets: string[],
   staticCardText: string,
   dynamicCardText: string,
@@ -33,5 +33,4 @@ export interface BoardSlotReport {
   follower: ObjectReport,
 }
 
-import { ObjectTypeString } from "../stringTypes/ObjectTypeString";
-import { ObjectSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";

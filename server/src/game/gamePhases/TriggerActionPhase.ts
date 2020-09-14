@@ -4,17 +4,17 @@ import EventPhase from "./EventPhase";
 interface TriggerActionEventObject {
     controller: GamePlayer,
     objectSource: TriggerEnchantment
-    targets: Card[]
+    targets: GameObject[]
     event: GameEvent
-    action: TriggerActionObject[]
+    action: TriggerActionFunction[]
 }
 
 export class TriggerActionEvent extends GameEvent {
     controller: GamePlayer
     objectSource: TriggerEnchantment
-    targets: Card[]
+    targets: GameObject[]
     event: GameEvent
-    action: TriggerActionObject[]
+    action: TriggerActionFunction[]
 
     constructor(game: Game, object: TriggerActionEventObject) {
         super(game) 
@@ -40,7 +40,7 @@ class TriggerActionPhase extends EventPhase {
         event.generateLog()
         this.cacheEvent(event, 'action')
         event.action.forEach(action => {
-            event.objectSource.triggerActionFunction(event, action)
+            event.objectSource.actionFunction(event, action)
         })
         this.queueSteps()
         this.end()
@@ -51,6 +51,6 @@ export default TriggerActionPhase
 
 import GamePlayer from "../gameObjects/GamePlayer";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
-import Card from "../gameObjects/Card";
-import { TriggerActionObject } from "../structs/ActionObject";
+import { TriggerActionFunction } from "../structs/Action";
 import Game from "./Game";
+import GameObject from "../gameObjects/GameObject";

@@ -14,6 +14,7 @@ import DeathPhase from "../gamePhases/DeathPhase";
 import EndOfTurnPhase from "../gamePhases/EndOfTurnPhase";
 import EnterPlayPhase from "../gamePhases/EnterPlayPhase";
 import EventActionPhase from "../gamePhases/EventActionPhase";
+// import EurekaActionPhase from "../gamePhases/EurekaActionPhase";
 import HealMultiplePhase from "../gamePhases/HealMultiplePhase";
 import HealSinglePhase from "../gamePhases/HealSinglePhase";
 import PlayPhase from "../gamePhases/PlayPhase";
@@ -37,6 +38,7 @@ const Phases = {
     EndOfTurnPhase,
     EnterPlayPhase,
     EventActionPhase,
+    // EurekaActionPhase,
     HealMultiplePhase,
     HealSinglePhase,
     PlayPhase,
@@ -46,7 +48,7 @@ const Phases = {
     SummonPhase,
     UsePhase,
     SpendMoneyPhase,
-    TriggerPhase: TriggerPhase,
+    TriggerPhase,
     TriggerActionPhase,
 }
 

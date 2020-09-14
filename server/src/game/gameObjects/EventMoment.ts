@@ -1,7 +1,7 @@
 import Moment, { MomentData } from "./Moment";
 
 export interface EventMomentData extends MomentData {
-  events: EventActionObject[][]
+  events: EventAction[]
   targeted: false
   actions?: []
   targetDomain?: null
@@ -26,4 +26,4 @@ export default EventMoment
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { EventActionObject } from "../structs/ActionObject";
+import { EventAction } from "../structs/Action";

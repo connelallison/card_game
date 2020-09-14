@@ -7,10 +7,17 @@ class AuraUpdatePhase extends EventPhase {
     
     start(): void {
         this.emit('auraReset')
+        this.emit('staticApply')
+        this.emit('auraEmit0')
+        this.emit('auraApply0')
+        this.emit('calculateGlobals')
         this.emit('auraEmit1')
+        this.emit('auraApply1')
         this.emit('auraEmit2')
+        this.emit('auraApply2')
         this.emit('auraEmit3')
-        this.emit('auraApply')
+        this.emit('auraApply3')
+        this.emit('updateArrays')
         this.end()
     }
 }

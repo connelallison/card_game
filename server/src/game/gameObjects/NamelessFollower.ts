@@ -31,7 +31,7 @@ abstract class NamelessFollower extends Follower {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            requiresTarget: this.targeted,
+            targeted: this.targeted,
             validTargets: this.validTargetIDs(),
             staticCardText: this.staticCardText[localisation],
             validSlots: this.validSlotIDs(),
@@ -53,6 +53,7 @@ abstract class NamelessFollower extends Follower {
         if (this.zone === 'board') {
             this.slot.follower = null
             this.slot = null
+            this.game.inPlay.splice(this.game.inPlay.indexOf(this), 1)
         } else if (destination === 'board') {
             const clone = this.clone() as NamelessFollower
             this.owner[this.zone][this.index()] = clone
@@ -68,6 +69,7 @@ abstract class NamelessFollower extends Follower {
             if (slot instanceof BoardSlot) {
                 slot.follower = this
                 this.slot = slot
+                this.game.inPlay.push(this)
             }
         } else {
             if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
@@ -83,7 +85,6 @@ abstract class NamelessFollower extends Follower {
             pendingDestroy: this.pendingDestroy,
             rawCost: this.rawCost,
             cost: this.cost,
-            ready: this.ready,
             rawAttack: this.rawAttack,
             attack: this.attack,
             rawHealth: this.rawHealth,
@@ -103,7 +104,7 @@ export default NamelessFollower
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { FollowerZoneString } from "../stringTypes/ZoneString";
+import { FollowerZoneString } from "../stringTypes/ZoneTypeSubtypeString";
 import BoardSlot from "./BoardSlot";
 import { ObjectReport } from "../structs/ObjectReport"; import { LocalisationString } from "../structs/Localisation";
 

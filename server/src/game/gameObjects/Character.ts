@@ -20,7 +20,7 @@ abstract class Character extends DestroyableCard {
 
   constructor(game: Game, owner: GamePlayer, data: CharacterData) {
     super(game, owner, data)
-    this.ready = false
+    this.ready = true
     this.rawAttack = data.attack
     this.attack = this.rawAttack
     this.rawHealth = data.health
@@ -43,14 +43,7 @@ abstract class Character extends DestroyableCard {
     }
   }
 
-  getReady(): void {
-    if (this.inPlay()) {
-      this.ready = true
-    } else {
-      throw new Error(`getReady() is being called on a character (${this.name}) while not in play`)
-    }
-  }
-
+  
   canAttack(): boolean {
     return this.owner.myTurn() && this.ready && this.inPlay() && this.attack > 0
   }
@@ -58,11 +51,11 @@ abstract class Character extends DestroyableCard {
   hasTargets(): boolean {
     return this.validTargets.length > 0
   }
-
+  
   charOwner(): Character {
     return this
   }
-
+  
   isDamaged(): boolean {
     return this.missingHealth() > 0
   }
@@ -81,7 +74,6 @@ abstract class Character extends DestroyableCard {
       pendingDestroy: this.pendingDestroy,
       rawCost: this.rawCost,
       cost: this.cost,
-      ready: this.ready,
       rawAttack: this.rawAttack,
       attack: this.attack,
       rawHealth: this.rawHealth,
@@ -94,6 +86,7 @@ abstract class Character extends DestroyableCard {
     }
   }
 
+  abstract getReady(): void
   abstract updateValidTargets(): void
   abstract takeDamage(damage: number): number
   abstract receiveHealing(healing: number): number
@@ -104,6 +97,5 @@ export default Character
 
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
-import { CharacterSubtypeString } from '../stringTypes/ObjectSubtypeString'
-import { CharacterTypeString } from '../stringTypes/ObjectTypeString'
 import { StartOfTurnEvent } from '../gamePhases/StartOfTurnPhase'
+import { CharacterTypeString, CharacterSubtypeString } from '../stringTypes/ZoneTypeSubtypeString'

@@ -8,8 +8,9 @@ abstract class GameObject {
     subtype: ObjectSubtypeString
     objectID: string
     flags: FlagsObject
+    dataObj: GameObjectData
     enchantments: Enchantment[]
-    auraEffects: EffectFunction[]
+    auraEffects: EffectFunction[][]
 
     constructor(game: Game, id: string, name: LocalisedStringObject, type: ObjectTypeString, subtype: ObjectSubtypeString) {
         this.game = game
@@ -20,27 +21,44 @@ abstract class GameObject {
         this.objectID = `${this.id}:${Math.random()}`
         this.game.gameObjects[this.objectID] = this
         this.flags = {}
+        this.dataObj = null
         this.enchantments = []
-        this.auraEffects = []
+        this.auraEffects = [[], [], [], []]
         this.game.event.on('auraReset', event => this.auraReset())
-        this.game.event.on('auraApply', event => this.update())
+        this.game.event.on('staticApply', event => this.staticApply())
+        this.game.event.on('auraApply0', event => this.auraApply(0))
+        this.game.event.on('auraApply1', event => this.auraApply(1))
+        this.game.event.on('auraApply2', event => this.auraApply(2))
+        this.game.event.on('auraApply3', event => this.auraApply(3))
+        this.game.event.on('updateArrays', event => this.updateArrays())
+
     }
 
     auraReset(): void {
-        this.auraEffects = []
+        this.auraEffects = [[], [], [], []]
         this.updateEnchantments()
     }
 
-    update(): void {
-        const statics = this.enchantments.filter((enchantment => enchantment.subtype === 'Static' && enchantment.active())) as StaticEnchantment[]
+    staticApply(): void {
+        const statics = this.enchantments.filter((enchantment => enchantment instanceof StaticEnchantment && enchantment.active())) as StaticEnchantment[]
+        // statics.forEach(enchantment => enchantment.effects.forEach(effect => effect(this)))
         const dataObj = statics.reduce((data, enchantment) => {
             enchantment.effects.forEach(effect => effect(data))
             return data
         }, this.baseData())
-
-        this.auraEffects.forEach(effect => effect(dataObj))
-
         this.setData(dataObj)
+    }
+
+    auraApply(tier: 0 | 1 | 2 | 3): void {
+        this.auraEffects[tier].forEach(effect => effect(this))
+    }
+
+    update(): void {
+        this.staticApply()
+        this.auraApply(0)
+        this.auraApply(1)
+        this.auraApply(2)
+        this.auraApply(3)
         this.updateArrays()
     }
 
@@ -54,7 +72,7 @@ abstract class GameObject {
         Object.assign(this, dataObj)
     }
 
-    baseFlags() {
+    baseFlags(): FlagsObject {
         return {}
     }
 
@@ -64,7 +82,6 @@ abstract class GameObject {
     }
 
     removeEnchantment(enchantment: Enchantment): void {
-        if (enchantment.subtype === 'Trigger') (enchantment as TriggerEnchantment).disableListeners()
         this.enchantments = this.enchantments.filter(item => item !== enchantment)
         this.updateEnchantments()
     }
@@ -76,6 +93,10 @@ abstract class GameObject {
     controller(): GamePlayer {
         return this.owner.controller()
     }
+
+    // opponent(): GamePlayer {
+    //     return this.controller().opponent
+    // }
 
     charOwner(): Character {
         return this.controller().leaderZone[0]
@@ -93,9 +114,67 @@ abstract class GameObject {
         return this.game.createCard(cardID, owner)
     }
 
+    createPersistentCard(cardID: PersistentCardIDString, owner: GamePlayer): PersistentCard {
+        return this.game.createPersistentCard(cardID, owner)
+    }
+    createDestroyableCard(cardID: DestroyableCardIDString, owner: GamePlayer): DestroyableCard {
+        return this.game.createDestroyableCard(cardID, owner)
+    }
+    createFollower(cardID: FollowerIDString, owner: GamePlayer): Follower {
+        return this.game.createFollower(cardID, owner)
+    }
+    createLeader(cardID: LeaderIDString, owner: GamePlayer): Leader {
+        return this.game.createLeader(cardID, owner)
+    }
+    createMoment(cardID: MomentIDString, owner: GamePlayer): Moment {
+        return this.game.createMoment(cardID, owner)
+    }
+    createCreation(cardID: CreationIDString, owner: GamePlayer): Creation {
+        return this.game.createCreation(cardID, owner)
+    }
+    createLeaderTechnique(cardID: LeaderTechniqueIDString, owner: GamePlayer): LeaderTechnique {
+        return this.game.createLeaderTechnique(cardID, owner)
+    }
+    createPassive(cardID: PassiveIDString, owner: GamePlayer): Passive {
+        return this.game.createPassive(cardID, owner)
+    }
+    createNamelessFollower(cardID: NamelessFollowerIDString, owner: GamePlayer): NamelessFollower {
+        return this.game.createNamelessFollower(cardID, owner)
+    }
+    createFamousFollower(cardID: FamousFollowerIDString, owner: GamePlayer): FamousFollower {
+        return this.game.createFamousFollower(cardID, owner)
+    }
+    createWorkCreation(cardID: WorkCreationIDString, owner: GamePlayer): WorkCreation {
+        return this.game.createWorkCreation(cardID, owner)
+    }
+    createWeaponCreation(cardID: WeaponCreationIDString, owner: GamePlayer): WeaponCreation {
+        return this.game.createWeaponCreation(cardID, owner)
+    }
+    createWonderCreation(cardID: WonderCreationIDString, owner: GamePlayer): WonderCreation {
+        return this.game.createWonderCreation(cardID, owner)
+    }
+    createTechniqueCreation(cardID: TechniqueCreationIDString, owner: GamePlayer): TechniqueCreation {
+        return this.game.createTechniqueCreation(cardID, owner)
+    }
+
+
     createEnchantment(enchantmentID: EnchantmentIDString, owner: GameObject): Enchantment {
         return this.game.createEnchantment(enchantmentID, owner)
     }
+
+    createStaticEnchantment(enchantmentID: StaticEnchantmentIDString, owner: GameObject): StaticEnchantment {
+        return this.game.createStaticEnchantment(enchantmentID, owner)
+    }
+    createAuraEnchantment(enchantmentID: AuraEnchantmentIDString, owner: GameObject): AuraEnchantment {
+        return this.game.createAuraEnchantment(enchantmentID, owner)
+    }
+    createTriggerEnchantment(enchantmentID: TriggerEnchantmentIDString, owner: GameObject): TriggerEnchantment {
+        return this.game.createTriggerEnchantment(enchantmentID, owner)
+    }
+    createEnchantmentExpiry(enchantmentID: EnchantmentExpiryIDString, owner: GameObject): TriggerEnchantment {
+        return this.game.createEnchantmentExpiry(enchantmentID, owner)
+    }
+
 
     targetDomains(targetDomain: TargetsDomainString | TargetsDomainString[]): GameObject[] {
         return TargetDomains(this, targetDomain)
@@ -178,7 +257,7 @@ abstract class GameObject {
         if (obj.from === 'targetDomain') {
             const unfiltered = this.targetDomains(obj.targetDomain)
             if (obj.requirements) {
-                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(target, requirement))), unfiltered)
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(requirement, target))), unfiltered)
             }
             return unfiltered
         }
@@ -186,7 +265,7 @@ abstract class GameObject {
             const events = this.dynamicEvents(obj.events)
             const unfiltered = events.map(event => (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event))
             if (obj.requirements) {
-                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(target, requirement))), unfiltered)
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(requirement, target))), unfiltered)
             }
             return unfiltered
         }
@@ -201,6 +280,11 @@ abstract class GameObject {
     }
 
     dynamicNumber(obj: DynamicNumberObject): number {
+        if (obj.from === 'fervour') {
+            const base = typeof obj.base === 'number' ? obj.base : this.dynamicNumber(obj.base)
+            const fervour = obj.scaling ? this.controller().fervour * obj.scaling : this.controller().fervour
+            return base + fervour
+        }
         if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.dynamicNumbers(obj.numbers))
         if (obj.from === 'target') {
             const target = this.dynamicTarget(obj.target)[0]
@@ -230,26 +314,63 @@ abstract class GameObject {
     //     }
     // }
 
-    actionFunction(actionEvent: ActionEvent, obj: ActionObject): void {
-        const values: any = {}
+    actionFunction(actionEvent: ActionEvent, obj: ActionFunction): void {
+        const values: ValuesObject = {}
         for (let property in obj.values) {
             values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent)
         }
+        if (obj.functionType === 'autoAction') return this.autoActionFunction(actionEvent, obj, values)
+        if (obj.functionType === 'manualAction') return this.manualActionFunction(actionEvent as ActionActionEvent, obj, values)
+        if (obj.functionType === 'targetMapAction') return this.targetMapActionFunction(actionEvent as TriggerActionEvent, obj, values)
+        if (obj.functionType === 'eventModAction') return this.eventModActionFunction(actionEvent as TriggerActionEvent, obj, values)
+    }
+
+    autoActionFunction(actionEvent: ActionEvent, obj: AutoActionFunction, values): void {
         let targets
-        if (obj.actionType === 'autoAction' && (obj.target || obj.targets)) {
-            const targetObj = obj.target ? obj.target : obj.targets ? obj.targets : null
+        if (obj.target || obj.targets) {
+            const targetObj = obj.target ? obj.target : obj.targets
             targets = this.dynamicValue(targetObj) as GameObject[]
         } else if (actionEvent.targets) {
+            // death action events store a dead follower's slot as the default target, for relative targeting
             targets = [...actionEvent.targets]
         }
-        if (obj.actionType !== 'eventModAction' && targets && targets[0] && obj.extraTargets) {
+        if (obj.extraTargets && targets[0]) {
             if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
             else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
         }
         return ActionOperations[obj.operation](this, actionEvent, targets, values)
     }
 
-    targetRequirement(target: GameObject, obj: TargetRequirementObject): boolean {
+    manualActionFunction(actionEvent: ActionActionEvent, obj: ManualActionFunction, values): void {
+        let targets = [...actionEvent.targets]
+        if (obj.extraTargets && targets[0]) {
+            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
+            else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
+        }
+        return ActionOperations[obj.operation](this, actionEvent, targets, values)
+    }
+
+    targetMapActionFunction(triggerActionEvent: TriggerActionEvent, obj: TargetMapActionFunction, values): void {
+        let targets = [(EventToTargetMaps[obj.targetMap] as EventToTargetMap)(triggerActionEvent.event)]
+        if (obj.extraTargets && targets[0]) {
+            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
+            else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
+        }
+        return ActionOperations[obj.operation](this, triggerActionEvent, targets, values)
+    }
+
+    eventModActionFunction(triggerActionEvent: TriggerActionEvent, obj: EventModActionFunction, values): void {
+        return EventModOperations[obj.operation](this, triggerActionEvent.event, values)
+    }
+
+    requirement(obj: Requirement, target?: GameObject | GameEvent): boolean {
+        if (obj.hasOwnProperty('activeRequirement')) return this.activeRequirement(obj as ActiveRequirement)
+        if (obj.hasOwnProperty('targetRequirement')) return this.targetRequirement(obj as TargetRequirement, target as GameObject)
+        if (obj.hasOwnProperty('eventTargetRequirement')) return this.eventTargetRequirement(obj as EventTargetRequirement, target as GameEvent)
+        if (obj.hasOwnProperty('eventRequirement')) return this.eventRequirement(obj as EventRequirement, target as GameEvent)
+    }
+
+    targetRequirement(obj: TargetRequirement, target: GameObject): boolean {
         const values: any = {}
         for (let property in obj.values) {
             values[property] = this.dynamicValue(obj.values[property])
@@ -257,13 +378,31 @@ abstract class GameObject {
         return TargetRequirements[obj.targetRequirement](this, target, values)
     }
 
-    activeRequirement(obj: ActiveRequirementObject): boolean {
+    activeRequirement(obj: ActiveRequirement): boolean {
         const values: any = {}
         for (let property in obj.values) {
             values[property] = this.dynamicValue(obj.values[property])
         }
         return ActiveRequirements[obj.activeRequirement](this, values)
     }
+
+    eventTargetRequirement(obj: EventTargetRequirement, event: GameEvent): boolean {
+        const values: any = {}
+        for (let property in obj.values) {
+            values[property] = this.dynamicValue(obj.values[property])
+        }
+        const target = (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event)
+        return TargetRequirements[obj.eventTargetRequirement](this, target, values)
+    }
+
+    eventRequirement(obj: EventRequirement, event: GameEvent): boolean {
+        const values: any = {}
+        for (let property in obj.values) {
+            values[property] = this.dynamicValue(obj.values[property])
+        }
+        return EventRequirements[obj.eventRequirement](this, event)
+    }
+
 }
 
 export default GameObject
@@ -275,16 +414,13 @@ import Game from "../gamePhases/Game"
 import GamePlayer from "./GamePlayer"
 import Enchantment from "./Enchantment"
 import Card from "./Card"
-import { ZoneString } from "../stringTypes/ZoneString"
-import { ObjectTypeString } from "../stringTypes/ObjectTypeString"
-import { ObjectSubtypeString } from "../stringTypes/ObjectSubtypeString"
-import FlagsObject from "../structs/FlagsObject"
+import { ObjectSubtypeString, ObjectTypeString, ZoneString } from "../stringTypes/ZoneTypeSubtypeString"
 import EffectFunction from "../functionTypes/EffectFunction"
 import StaticEnchantment from "./StaticEnchantment"
-import GameObjectData from "../structs/GameObjectData"
+import GameObjectData, { FlagsObject } from "../structs/GameObjectData"
 import Character from "./Character"
 import Turn from "../gamePhases/Turn"
-import { CardIDString, EnchantmentIDString } from "../stringTypes/DictionaryKeyString"
+import { CardIDString, EnchantmentIDString, FollowerIDString, PersistentCardIDString, DestroyableCardIDString, LeaderIDString, MomentIDString, CreationIDString, LeaderTechniqueIDString, PassiveIDString, NamelessFollowerIDString, FamousFollowerIDString, WorkCreationIDString, WeaponCreationIDString, WonderCreationIDString, TechniqueCreationIDString, StaticEnchantmentIDString, AuraEnchantmentIDString, TriggerEnchantmentIDString, EnchantmentExpiryIDString } from "../stringTypes/DictionaryKeyString"
 import { TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
 import TargetDomains from "../dictionaries/TargetDomains"
 import EventDomains from "../dictionaries/EventDomains"
@@ -299,13 +435,32 @@ import DynamicEventReducers from "../dictionaries/DynamicEventReducers"
 import DynamicNumberReducers from "../dictionaries/DynamicNumberReducers"
 import TargetToNumberMap from "../functionTypes/TargetToNumberMap"
 import ActionEvent from "../gamePhases/ActionEvent"
-import { ActionObject } from "../structs/ActionObject"
+import { ActionFunction, AutoActionFunction, EventModActionFunction, ManualActionFunction, TargetMapActionFunction } from "../structs/Action"
 import ActionOperations from "../dictionaries/ActionOperations"
-import TargetRequirementObject from "../structs/TargetRequirementObject"
 import TargetRequirements from "../dictionaries/TargetRequirements"
-import ActiveRequirementObject from "../structs/ActiveRequirementObject"
 import ActiveRequirements from "../dictionaries/ActiveRequirements"
 import { DynamicValue, DynamicOrStoredValue } from "../structs/DynamicValue"
 import TriggerEnchantment from "./TriggerEnchantment"
 import { LocalisedStringObject, LocalisationString } from "../structs/Localisation"
+import Follower from "./Follower"
+import PersistentCard from "./PersistentCard"
+import DestroyableCard from "./DestroyableCard"
+import Leader from "./Leader"
+import Moment from "./Moment"
+import Creation from "./Creation"
+import LeaderTechnique from "./LeaderTechnique"
+import Passive from "./Passive"
+import NamelessFollower from "./NamelessFollower"
+import FamousFollower from "./FamousFollower"
+import WorkCreation from "./WorkCreation"
+import WeaponCreation from "./WeaponCreation"
+import WonderCreation from "./WonderCreation"
+import TechniqueCreation from "./TechniqueCreation"
+import AuraEnchantment from "./AuraEnchantment"
+import { TargetRequirement, ActiveRequirement, EventTargetRequirement, EventRequirement, Requirement } from "../structs/Requirement"
+import EventModOperations from "../dictionaries/EventModOperations"
+import { TriggerActionEvent } from "../gamePhases/TriggerActionPhase"
+import ValuesObject from "../structs/ValuesObject"
+import { ActionActionEvent } from "../gamePhases/ActionActionPhase"
+import EventRequirements from "../dictionaries/EventRequirements"
 

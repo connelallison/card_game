@@ -15,13 +15,14 @@ class DamageMultiplePhase extends EventPhase {
         }
         for (const event of events) {
             if (event.damage > 0) {
-                event.target.takeDamage(event.damage)
+                const actualDamage = event.target.takeDamage(event.damage)
+                event.actualDamage = actualDamage
                 event.generateLog()
                 this.cacheEvent(event, 'damage')
             }
         }
         for (const event of events) {
-            if (event.damage > 0) this.emit('afterDamage', event)
+            if (event.actualDamage > 0) this.emit('afterDamage', event)
         }
         this.queueSteps()
         this.end()

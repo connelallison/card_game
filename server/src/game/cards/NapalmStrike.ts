@@ -12,28 +12,64 @@ const data: ActionMomentData = {
   'classes': ['Arms'],
   'collectable': true,
   'cost': 3,
-  'actions': [[
-    {
-      actionType: 'autoAction',
-      operation: 'damage',
-      values: {
-        damage: 9,
-        split: true,
+  'actions': [{
+    actionType: 'actionAction',
+    targeted: true,
+    name: {
+      english: 'Napalm Strike'
+    },
+    text: {
+      'templates': {
+        'english': `Action: Deal $0 damage split between a follower and its adjacents.`,
       },
-      extraTargets: {
-        valueType: 'targets',
-        from: 'targetDomain',
-        targetDomain: ['adjacentFollowers'],
+      'dynamicValues': [{
+        value: {
+          valueType: 'number',
+          from: 'fervour',
+          base: 9
+        },
+        activeZones: ['hand'],
+        default: 9,
+        fervour: true,
+      }]
+    },
+    actionFunctions: [
+      {
+        functionType: 'autoAction',
+        operation: 'damage',
+        values: {
+          damage: {
+            valueType: 'number',
+            from: 'fervour',
+            base: 9,
+          },
+          split: true,
+        },
+        extraTargets: {
+          valueType: 'targets',
+          from: 'targetDomain',
+          targetDomain: ['adjacentFollowers'],
+        }
       }
-    }
-  ]],
+    ]
+  }],
   'staticCardText': {
     'english': `Action: Deal 9 damage split between a follower and its adjacents.`,
   },
   'dynamicCardText': {
-      'templates': {
-          'english': `Action: Deal 9 damage split between a follower and its adjacents.`,
+    'templates': {
+      'english': `Action: Deal $0 damage split between a follower and its adjacents.`,
+    },
+    'dynamicValues': [{
+      value: {
+        valueType: 'number',
+        from: 'fervour',
+        base: 9
       },
+      activeZones: ['hand'],
+      default: 9,
+      fervour: true,
+    }]
   },
   'activeRequirements': [{
     'activeRequirement': 'min1AllFollower'

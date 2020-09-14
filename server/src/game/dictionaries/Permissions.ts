@@ -1,18 +1,23 @@
 const Permissions = {
-    canAttack: (attacker: Character , defender: Character): boolean => {
+    canAttack: (attacker: Character, defender: Character): boolean => {
         return (
             attacker.canAttack()
             && defender.inPlay()
             && defender.controller() === attacker.controller().opponent
             && defender.notBehindGuard()
+            && (
+                !(attacker instanceof Follower)
+                || !attacker.summonSickness
+                || attacker.flags.rush && defender instanceof Follower
+            )
         )
     },
 
     canTarget: (card: Card, target: Card): boolean => {
         return (
-            card.targeted 
+            card.targeted
             && card.targetDomain().includes(target)
-            && card.targetRequirements.every(requirement => card.targetRequirement(target, requirement))
+            && card.targetRequirements.every(requirement => card.targetRequirement(requirement, target))
         )
     },
 
@@ -29,6 +34,8 @@ const Permissions = {
                 return true
             case 'Creation':
                 return player.creationZone.length < player.max.creationZone
+            case 'Passive':
+                return player.passiveZone.length < player.max.passiveZone
             case 'Follower':
                 return player.emptySlotsCount() > 0
             default:
@@ -42,7 +49,7 @@ const Permissions = {
             && player.myTurn()
             && card.zone === 'hand'
             && card.cost <= player.money
-            && (card.targeted ? card.validTargets.length > 0 : true )
+            && ((card.targeted && (card instanceof Moment || card instanceof TechniqueCreation)) ? card.validTargets.length > 0 : true)
             && (card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true)
             && card.activeRequirements.every(requirement => card.activeRequirement(requirement))
         )
@@ -69,5 +76,5 @@ import PersistentCard from "../gameObjects/PersistentCard"
 import TechniqueCreation from "../gameObjects/TechniqueCreation"
 import LeaderTechnique from "../gameObjects/LeaderTechnique"
 import Follower from "../gameObjects/Follower"
-import { PersistentCardTypeString } from "../stringTypes/ObjectTypeString"
-
+import Moment from "../gameObjects/Moment"
+import { PersistentCardTypeString } from "../stringTypes/ZoneTypeSubtypeString"

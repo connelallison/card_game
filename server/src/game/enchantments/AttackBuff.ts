@@ -23,7 +23,7 @@ class AttackBuff extends StaticEnchantment {
     static readonly data: StaticEnchantmentData = data
     constructor(game: Game, owner: GameObject, values: { attack: number } = { attack: 0 }) {
         const moddedData = JSON.parse(JSON.stringify(data))
-        moddedData.effectObjs[0].value = values.attack
+        moddedData.effectObjs[0].value = values.attack || 0
         super(
             game,
             owner,

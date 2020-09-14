@@ -19,50 +19,61 @@ const data: FamousFollowerData = {
     'english': `Event: Give all followers in your hand +1/+1 for every Knight you control.`,
   },
   'dynamicCardText': {
-      'templates': {
-          'english': `Event: Give all followers in your hand +1/+1 for every Knight you control.`,
-      },
+    'templates': {
+      'english': `Event: Give all followers in your hand +1/+1 for every Knight you control.`,
+    },
   },
-  'events': [[{
-    actionType: 'autoAction',
-    operation: 'buffStats',
-    values: {
-      stats: {
-        valueType: 'number',
-        from: 'numbers',
-        reducer: 'count',
-        numbers: {
-          valueType: 'numbers',
-          from: 'targets',
-          numberMap: 'count',
-          targets: {
-            valueType: 'targets',
-            from: 'targetDomain',
-            requirements: [{
-              targetRequirement: 'isSpecificCardClass',
-              values: {
-                cardID: 'Knight',
-              }
-            }],
-            targetDomain: 'friendlyBoard',
+  'events': [{
+    actionType: 'eventAction',
+    name: {
+      english: 'Prince Timothy Event'
+    },
+    text: {
+      'templates': {
+        'english': `Event: Give all followers in your hand +1/+1 for every Knight you control.`,
+      },
+    },
+    actionFunctions: [{
+      functionType: 'autoAction',
+      operation: 'buffStats',
+      values: {
+        stats: {
+          valueType: 'number',
+          from: 'numbers',
+          reducer: 'count',
+          numbers: {
+            valueType: 'numbers',
+            from: 'targets',
+            numberMap: 'count',
+            targets: {
+              valueType: 'targets',
+              from: 'targetDomain',
+              requirements: [{
+                targetRequirement: 'isSpecificCardClass',
+                values: {
+                  cardID: 'Knight',
+                }
+              }],
+              targetDomain: 'friendlyBoard',
 
+            }
           }
         }
-      }
-    },
-    targets: {
-      valueType: 'targets',
-      from: 'targetDomain',
-      targetDomain: 'friendlyHand',
-      requirements: [{
-        targetRequirement: 'isType',
-        values: {
-          type: 'Follower'
+      },
+      targets: {
+        valueType: 'targets',
+        from: 'targetDomain',
+        targetDomain: 'friendlyHand',
+        requirements: [{
+          targetRequirement: 'isType',
+          values: {
+            type: 'Follower'
+          }
         }
+        ],
       }
-      ],
-    }
-  }]],
+    }]
+  }],
   'targeted': false
 }
 

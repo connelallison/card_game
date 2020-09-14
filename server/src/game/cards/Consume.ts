@@ -17,37 +17,48 @@ const data: EventMomentData = {
     'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
   },
   'dynamicCardText': {
-      'templates': {
-          'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
-      },
+    'templates': {
+      'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
+    },
   },
   'activeRequirements': [{
     'activeRequirement': 'min1EnemyFollower',
   }],
-  'events': [[
-    {
-      'actionType': 'autoAction',
-      'operation': 'damage',
-      'values': {
-        'damage': 3,
-      },
-      'target': {
-        'valueType': 'target',
-        'from': 'targets',
-        'reducer': 'min',
-        'criterionMap': 'attack',
-        'targets': {
-          'valueType': 'targets',
-          'from': 'targetDomain',
-          'targetDomain': 'enemyBoard',
-        }
-      }
+  'events': [{
+    actionType: 'eventAction',
+    name: {
+      english: 'Consume'
     },
-    {
-      'actionType': 'autoAction',
-      'operation': 'draw',
-    }
-  ]]
+    text: {
+      'templates': {
+        'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
+      },
+    },
+    actionFunctions: [
+      {
+        'functionType': 'autoAction',
+        'operation': 'damage',
+        'values': {
+          'damage': 3,
+        },
+        'target': {
+          'valueType': 'target',
+          'from': 'targets',
+          'reducer': 'min',
+          'criterionMap': 'attack',
+          'targets': {
+            'valueType': 'targets',
+            'from': 'targetDomain',
+            'targetDomain': 'enemyBoard',
+          }
+        }
+      },
+      {
+        'functionType': 'autoAction',
+        'operation': 'draw',
+      }
+    ]
+  }]
 }
 
 class Consume extends EventMoment {

@@ -9,7 +9,7 @@ export type DynamicValueObject = DynamicLocalisedStringObject
 
 export type DynamicLocalisedStringObject = DynamicLocalisedStringFromTarget 
 export type DynamicStringObject = DynamicStringFromTarget
-export type DynamicNumberObject = DynamicNumberFromTarget | DynamicNumberFromNumbers
+export type DynamicNumberObject = DynamicNumberFromFervour | DynamicNumberFromTarget | DynamicNumberFromNumbers
 export type DynamicNumbersObject = DynamicNumbersFromTargets
 export type DynamicTargetObject = DynamicTargetFromEvent | DynamicTargetFromTargets | DynamicTargetFromTargetDomain
 export type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFromTargetDomain
@@ -58,6 +58,21 @@ export interface DynamicStringFromStored {
     valueType: 'string',
     from: 'stored',
     param: string,
+}
+
+export interface DynamicBooleanFromNumber {
+    valueType: 'boolean'
+    from: 'number'
+    number: DynamicNumber
+    comparison: DynamicNumber
+    // operator
+}
+
+export interface DynamicNumberFromFervour {
+    valueType: 'number',
+    from: 'fervour',
+    base: DynamicNumber
+    scaling?: number
 }
 
 export interface DynamicNumberFromTarget {
@@ -124,14 +139,14 @@ export interface DynamicTargetsFromEvents {
     valueType: 'targets',
     from: 'events',
     targetMap: EventToTargetMapString
-    requirements?: TargetRequirementObject[],
+    requirements?: TargetRequirement[],
     events: DynamicEventsObject,
 }
 
 export interface DynamicTargetsFromTargetDomain {
     valueType: 'targets',
     from: 'targetDomain',
-    requirements?: TargetRequirementObject[],
+    requirements?: TargetRequirement[],
     targetDomain: TargetsDomainString | TargetsDomainString[],
 }
 
@@ -145,7 +160,7 @@ export interface DynamicEventFromEvents {
     valueType: 'event',
     from: 'events',
     reducer: EventReducerString,
-    criterionMap?: (obj) => number,
+    // criterionMap?: (obj) => number,
     events: DynamicEventsObject,
 }
 
@@ -176,4 +191,5 @@ export interface DynamicEventsFromStored {
 
 import { TargetToStringMapString, TargetToNumberMapString, NumberReducerString, EventToTargetMapString, TargetReducerString, EventReducerString } from "../stringTypes/DictionaryKeyString"
 import { TargetDomainString, TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
-import TargetRequirementObject from "./TargetRequirementObject"
+import { DynamicNumber } from "./DynamicValue"
+import { TargetRequirement } from "./Requirement"

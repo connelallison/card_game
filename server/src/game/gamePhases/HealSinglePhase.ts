@@ -44,7 +44,7 @@ class HealSinglePhase extends EventPhase {
             event.actualHealing = actualHealing
             event.generateLog()
             this.cacheEvent(event, 'healing')
-            this.emit('afterHealing', event)
+            if (event.actualHealing > 0) this.emit('afterHealing', event)
             this.queueSteps()
         }
         this.end()

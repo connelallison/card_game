@@ -21,7 +21,7 @@ abstract class LeaderTechnique extends PersistentCard {
     constructor(game: Game, owner: GamePlayer, data: LeaderTechniqueData) {
         super(game, owner, data)
         this.repeatable = data.repeatable
-        this.ready = false
+        this.ready = true
         this.inPlayZone = 'leaderTechniqueZone'
 
         this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
@@ -45,7 +45,7 @@ abstract class LeaderTechnique extends PersistentCard {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            requiresTarget: this.targeted,
+            targeted: this.targeted,
             validTargets: this.validTargetIDs(),
             staticCardText: this.staticCardText[localisation],
             dynamicCardText: this.generateDynamicCardText(localisation),
@@ -54,15 +54,21 @@ abstract class LeaderTechnique extends PersistentCard {
 
     updateValidTargets(): void {
         if (this.inPlay() && this.targeted) {
-            this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(target, requirement)), this.targetDomain())
+            this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
         } else {
             this.validTargets = []
         }
     }
 
     moveZone(destination: LeaderTechniqueZoneString, index?: number): void {
-        if (destination === 'leaderTechniqueZone' && this.owner.leaderTechniqueZone[0]) this.owner.leaderTechniqueZone[0].moveZone('graveyard')
+        if (this.zone === 'leaderTechniqueZone') this.game.inPlay.splice(this.game.inPlay.indexOf(this), 1)
         this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+
+        if (destination === 'leaderTechniqueZone') {
+            if (this.owner.leaderTechniqueZone[0]) this.owner.leaderTechniqueZone[0].moveZone('graveyard')
+            this.game.inPlay.push(this)
+        }
+
         if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
         else this.owner[destination].push(this)
         this.zone = destination
@@ -82,7 +88,6 @@ export default LeaderTechnique
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { LeaderTechniqueSubtypeString } from "../stringTypes/ObjectSubtypeString";
-import { LeaderTechniqueZoneString } from "../stringTypes/ZoneString";
+import { LeaderTechniqueSubtypeString, LeaderTechniqueZoneString } from "../stringTypes/ZoneTypeSubtypeString";
 import { ObjectReport } from "../structs/ObjectReport";
 import { LocalisationString } from "../structs/Localisation";

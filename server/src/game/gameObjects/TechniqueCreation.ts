@@ -15,7 +15,7 @@ abstract class TechniqueCreation extends Creation {
   constructor(game: Game, owner: GamePlayer, data: TechniqueCreationData) {
     super(game, owner, data)
     this.repeatable = data.repeatable
-    this.ready = false
+    this.ready = true
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
@@ -26,7 +26,7 @@ abstract class TechniqueCreation extends Creation {
 
   updateValidTargets(): void {
     if ((this.zone === 'hand' || this.inPlay()) && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(target, requirement)), this.targetDomain())
+      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
     } else {
       this.validTargets = []
     }

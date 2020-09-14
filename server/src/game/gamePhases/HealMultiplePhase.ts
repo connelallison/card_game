@@ -22,7 +22,7 @@ class HealMultiplePhase extends EventPhase {
             }
         }
         for (const event of events) {
-            if (event.healing > 0 && event.target.isDamaged()) this.emit('afterHealing', event)
+            if (event.actualHealing > 0) this.emit('afterHealing', event)
         }
         this.queueSteps()
         this.end()

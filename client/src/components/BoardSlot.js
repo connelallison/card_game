@@ -22,7 +22,7 @@ class BoardSlot extends Component {
         if (this.props.selectedSlot === this.props.object) {
             this.props.interactivity.clearSelectedSlot();
         } else if (this.canBeSelected()) {
-            if (!this.props.selected.requiresTarget) {
+            if (!this.props.selected.targeted || this.props.selected.validTargets.length === 0) {
                 // console.log('chooseSelectedSlotNoTarget running')
                 this.props.interactivity.chooseSelectedSlotNoTarget(this.props.object)
             } else {

@@ -20,13 +20,24 @@ const data: ActiveLeaderTechniqueData = {
             'english': `Event: Summon a 2/2 Knight.`,
         },
     },
-    'events': [[{
-        actionType: 'autoAction',
-        operation: 'summonCard',
-        values: {
-            cardID: 'Knight',
-        }
-    }]],
+    'events': [{
+        actionType: 'eventAction',
+        name: {
+            english: 'Recruit'
+        },
+        text: {
+            'templates': {
+                'english': `Event: Summon a 2/2 Knight.`,
+            },
+        },
+        actionFunctions: [{
+            functionType: 'autoAction',
+            operation: 'createAndSummonCard',
+            values: {
+                cardID: 'Knight',
+            }
+        }]
+    }],
     'activeRequirements': [{
         activeRequirement: 'canSummonType',
         values: {

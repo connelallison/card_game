@@ -29,5 +29,4 @@ export default Moment
 
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
-import { MomentZoneString } from '../stringTypes/ZoneString'
-import { MomentSubtypeString } from '../stringTypes/ObjectSubtypeString'
+import { MomentSubtypeString, MomentZoneString } from '../stringTypes/ZoneTypeSubtypeString'

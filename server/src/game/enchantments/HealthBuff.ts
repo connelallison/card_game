@@ -23,7 +23,7 @@ class HealthBuff extends StaticEnchantment {
     static readonly data: StaticEnchantmentData = data
     constructor(game: Game, owner: GameObject, values: { health: number } = { health: 0 }) {
         const moddedData = JSON.parse(JSON.stringify(data))
-        moddedData.effectObjs[0].value = values.health
+        moddedData.effectObjs[0].value = values.health || 0
         super(
             game,
             owner,

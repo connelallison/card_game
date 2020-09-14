@@ -5,7 +5,7 @@ interface TriggerEventObject {
     controller: GamePlayer
     event: GameEvent
     triggerType: TriggerTypeString
-    actions: TriggerActionObject[]
+    actions: TriggerActionFunction[]
     objectSource: TriggerEnchantment
     triggerOwner: GameObject
 }
@@ -14,7 +14,7 @@ export class TriggerEvent extends GameEvent {
     controller: GamePlayer
     event: GameEvent
     triggerType: TriggerTypeString
-    actions: TriggerActionObject[]
+    actions: TriggerActionFunction[]
     objectSource: TriggerEnchantment
     triggerOwner: GameObject
 
@@ -48,7 +48,7 @@ class TriggerPhase extends EventPhase {
             event: event.event,
         })
         this.startChild(new Phases.TriggerActionPhase(this, triggerActionEvent))
-        if (!event.objectSource.repeatable) event.objectSource.owner.removeEnchantment(event.objectSource)
+        if (!event.objectSource.repeatable) event.objectSource.expire()
         if (event.objectSource.wonderTrigger && event.objectSource.owner instanceof WonderCreation) event.objectSource.owner.loseCharge()
         this.queueSteps()
         this.end()
@@ -60,7 +60,7 @@ export default TriggerPhase
 import WonderCreation from "../gameObjects/WonderCreation";
 import GamePlayer from "../gameObjects/GamePlayer";
 import TriggerTypeString from "../stringTypes/TriggerTypeString";
-import { TriggerActionObject } from "../structs/ActionObject";
+import { TriggerActionFunction } from "../structs/Action";
 import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
 import Card from "../gameObjects/Card";
 import Game from "./Game";

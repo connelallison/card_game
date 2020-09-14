@@ -16,12 +16,38 @@ const data: FamousFollowerData = {
   'cost': 4,
   'attack': 4,
   'health': 5,
+  'targeted': false,
   'staticCardText': {
     'english': `Event: Summon a copy of the last friendly minion that died.`,
   },
   'dynamicCardText': {
+    'templates': {
+      'english': `Event: Summon a copy of the last friendly minion that died. $0`,
+    },
+    'dynamicValues': [
+      {
+        value: {
+          valueType: 'localisedString',
+          from: 'target',
+          target: lastFriendlyFollowerDied,
+          stringMap: 'name'
+        },
+        default: '',
+        activeZones: ['hand'],
+        templates: {
+          'english': '($)'
+        }
+      }
+    ]
+  },
+  'events': [{
+    actionType: 'eventAction',
+    name: {
+      english: 'Orcissimus Event'
+    },
+    text: {
       'templates': {
-          'english': `Event: Summon a copy of the last friendly minion that died. $0`,
+        'english': `Event: Summon a copy of the last friendly minion that died. $0`,
       },
       'dynamicValues': [
         {
@@ -38,20 +64,20 @@ const data: FamousFollowerData = {
           }
         }
       ]
-  },
-  'events': [[{
-    actionType: 'autoAction',
-    operation: "summonCard",
-    values: {
-      cardID: {
-        valueType: 'string',
-        from: 'target',
-        stringMap: 'classID',
-        target: lastFriendlyFollowerDied
+    },
+    actionFunctions: [{
+      functionType: 'autoAction',
+      operation: "createAndSummonCard",
+      values: {
+        cardID: {
+          valueType: 'string',
+          from: 'target',
+          stringMap: 'classID',
+          target: lastFriendlyFollowerDied
+        }
       }
-    }
-  }]],
-  'targeted': false,
+    }]
+  }],
 }
 
 class Orcissimus extends FamousFollower {

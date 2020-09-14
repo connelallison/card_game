@@ -1,5 +1,0 @@
-export type ObjectTypeString = CardTypeString | 'Player' | 'Enchantment' | 'BoardSlot'
-export type CardTypeString = PersistentCardTypeString | 'Moment'
-export type PersistentCardTypeString = DestroyableCardTypeString | 'LeaderTechnique' | 'Passive'
-export type DestroyableCardTypeString = CharacterTypeString | 'Creation'
-export type CharacterTypeString = 'Leader' | 'Follower'

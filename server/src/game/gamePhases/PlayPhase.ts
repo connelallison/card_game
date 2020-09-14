@@ -6,6 +6,8 @@ interface PlayEventObject {
     card: Card,
     slot?: BoardSlot,
     targets: GameObject[],
+    handIndex: number,
+    handLength: number,
 }
 
 export class PlayEvent extends GameEvent {
@@ -13,10 +15,14 @@ export class PlayEvent extends GameEvent {
     card: Card
     slot?: BoardSlot
     targets: GameObject[]
+    handIndex: number
+    handLength: number
+    eureka: boolean
 
     constructor(game: Game, object: PlayEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
+        this.eureka = (this.handIndex === 0 || this.handIndex === this.handLength - 1)
     }
 
     generateLog() {
@@ -43,7 +49,10 @@ class PlayPhase extends EventPhase {
         this.enterPlayPhase()
         this.actionPhase()
         this.eventActionPhase()
-        if (event.card instanceof TechniqueCreation) event.card.loseCharge() 
+        if (event.card instanceof TechniqueCreation) {
+            event.card.loseCharge()
+            if (!event.card.repeatable) event.card.ready = false
+        }
         this.emit('afterPlay', event)
         this.queueSteps()
         this.end()
@@ -69,7 +78,7 @@ class PlayPhase extends EventPhase {
                 card: event.card,
                 objectSource: event.card,
                 charSource: event.player.leaderZone[0],
-            }, event.slot && {slot: event.slot})
+            }, event.slot && { slot: event.slot })
             const enterPlayEvent = new EnterPlayEvent(this.game(), eventObj)
             this.startChild(new Phases.EnterPlayPhase(this, enterPlayEvent))
         } else {
@@ -79,37 +88,53 @@ class PlayPhase extends EventPhase {
 
     actionPhase(): void {
         const event = this.event
-        event.card.actions.forEach(action => {
-            const actionEvent = new ActionActionEvent(this.game(), {
-                controller: event.player,
-                objectSource: event.card,
-                targets: event.targets,
-                action,
+        if (!event.card.targeted || event.targets.length > 0) {
+            event.card.actions.forEach(action => {
+                if (
+                    !(event.card instanceof PersistentCard && !event.card.inPlay())
+                    && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
+                    && (!action.requirements || action.requirements.every(requirement => {
+                        const target = requirement.hasOwnProperty('targetRequirement') ? event.targets[0] : event
+                        return event.card.requirement(requirement, target)
+                    }))
+                ) {
+                    const actionEvent = new ActionActionEvent(this.game(), {
+                        controller: event.player,
+                        objectSource: event.card,
+                        targets: event.targets,
+                        action,
+                        event,
+                    })
+                    this.startChild(new Phases.ActionActionPhase(this, actionEvent))
+                }
             })
-            this.startChild(new Phases.ActionActionPhase(this, actionEvent))
-        })
+        }
     }
 
     eventActionPhase(): void {
         const event = this.event
-        if (event.card instanceof Moment) {
-            event.card.events.forEach(eventAction => {
+        event.card.events.forEach(eventAction => {
+            if (
+                !(event.card instanceof PersistentCard && !event.card.inPlay())
+                && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
+                && (!eventAction.requirements || eventAction.requirements.every(requirement => event.card.requirement(requirement, event)))
+            ) {
+
                 const eventActionEvent = new EventActionEvent(this.game(), {
                     controller: event.player,
                     objectSource: event.card,
-                    targets: event.targets,
                     eventAction,
+                    event,
                 })
                 this.startChild(new Phases.EventActionPhase(this, eventActionEvent))
-            })
-        }
+            }
+        })
     }
 }
 
 export default PlayPhase
 
 import Sequence from "./Sequence";
-import Moment from "../gameObjects/Moment";
 import TechniqueCreation from "../gameObjects/TechniqueCreation";
 import GamePlayer from "../gameObjects/GamePlayer";
 import Card from "../gameObjects/Card";
@@ -122,3 +147,4 @@ import { EnterPlayEvent } from "./EnterPlayPhase";
 import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import { SpendMoneyEvent } from "./SpendMoneyPhase";
+import DestroyableCard from "../gameObjects/DestroyableCard";

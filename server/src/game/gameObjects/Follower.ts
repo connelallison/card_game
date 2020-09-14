@@ -17,6 +17,7 @@ abstract class Follower extends Character {
   slot: BoardSlot
   categories: FollowerCategoryString[]
   validSlots: BoardSlot[]
+  summonSickness: boolean
 
   constructor(game: Game, owner: GamePlayer, data: FollowerData) {
     super(game, owner, data)
@@ -25,6 +26,7 @@ abstract class Follower extends Character {
     this.slot = null
     this.categories = data.categories
     this.validSlots = []
+    this.summonSickness = false
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
@@ -40,7 +42,7 @@ abstract class Follower extends Character {
         return Permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(target, requirement)), this.targetDomain())
+      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
     } else {
       this.validTargets = []
     }
@@ -77,6 +79,15 @@ abstract class Follower extends Character {
     return this.maxHealth - this.rawHealth
   }
 
+  getReady(): void {
+    if (this.inPlay()) {
+      this.ready = true
+      this.summonSickness = false
+    } else {
+      throw new Error(`getReady() is being called on a character (${this.name}) while not in play`)
+    }
+  }
+
   baseData(): GameObjectData {
     return {
       id: this.originalID,
@@ -84,14 +95,15 @@ abstract class Follower extends Character {
       attack: this.rawAttack,
       health: this.rawHealth,
       cost: this.rawCost,
+      debt: 0,
       flags: this.baseFlags(),
     }
   }
 
-  putIntoPlay(index?: number): void {
-    this.moveZone(this.inPlayZone, index)
-    this.game.inPlay.push(this)
-  }
+  // putIntoPlay(index?: number): void {
+  //   this.moveZone(this.inPlayZone, index)
+  //   this.game.inPlay.push(this)
+  // }
 
   index(): number {
     if (this.zone === 'board') {
@@ -203,9 +215,8 @@ export default Follower
 
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
-import { FollowerZoneString } from '../stringTypes/ZoneString'
+import { FollowerSubtypeString, FollowerZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import BoardSlot from './BoardSlot'
 import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
 import GameObjectData from '../structs/GameObjectData'
-import { FollowerSubtypeString } from '../stringTypes/ObjectSubtypeString'
 import Permissions from '../dictionaries/Permissions'

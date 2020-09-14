@@ -12,10 +12,10 @@ const data: NamelessFollowerData = {
     'classes': ['All'],
     'categories': [],
     'collectable': true,
-    'cost': 2,
+    'cost': 3,
     'attack': 3,
     'health': 3,
-    'charges': 3,
+    'charges': 2,
     'staticCardText': {
         'english': `Action: Transform into a clone of a follower.`,
     },
@@ -24,12 +24,24 @@ const data: NamelessFollowerData = {
             'english': `Action: Transform into a clone of a follower.`,
         },
     },
-    'actions': [[
-        {
-            actionType: 'manualAction',
-            operation: 'selfTransform',
-        }
-    ]],
+    'actions': [{
+        actionType: 'actionAction',
+        name: {
+            english: 'Body Double Action'
+        },
+        text: {
+            'templates': {
+                'english': `Action: Transform into a clone of a follower.`,
+            },
+        },
+        targeted: true,
+        actionFunctions: [
+            {
+                functionType: 'manualAction',
+                operation: 'selfTransform',
+            }
+        ]
+    }],
     'targeted': true,
     'targetDomain': ['friendlyBoard', 'enemyBoard'],
 

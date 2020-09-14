@@ -4,7 +4,7 @@ export interface AuraEnchantmentData extends EnchantmentData {
     subtype: 'Aura'
     effectObjs: EffectFunctionObject[]
     targetDomain: TargetsDomainString | TargetsDomainString[]
-    targetRequirements?: TargetRequirementObject[]
+    targetRequirements?: TargetRequirement[]
     priority: 1 | 2 | 3
 }
 
@@ -12,10 +12,10 @@ abstract class AuraEnchantment extends Enchantment {
     static readonly data: AuraEnchantmentData
     readonly data: AuraEnchantmentData
     subtype: 'Aura'
-    priority: 1 | 2 | 3
+    priority: 0 | 1 | 2 | 3
     effects: EffectFunction[]
     targetDomain: () => GameObject[]
-    targetRequirements: TargetRequirementObject[]
+    targetRequirements: TargetRequirement[]
     emit: () => void
 
     constructor(game: Game, owner: GameObject, data: AuraEnchantmentData) {
@@ -43,8 +43,8 @@ abstract class AuraEnchantment extends Enchantment {
     auraEmit(): void {
         const targets = this.targetDomain()
         targets.forEach(target => {
-            if (this.targetRequirements.every(requirement => this.targetRequirement(target, requirement))) {
-                this.effects.forEach(effect => target.auraEffects.push(effect))
+            if (this.targetRequirements.every(requirement => this.targetRequirement(requirement, target))) {
+                this.effects.forEach(effect => target.auraEffects[this.priority].push(effect))
             }
         })
     }
@@ -62,7 +62,7 @@ export default AuraEnchantment
 import GameObject from './GameObject'
 import Game from '../gamePhases/Game'
 import EffectFunction from '../functionTypes/EffectFunction'
-import TargetRequirementObject from '../structs/TargetRequirementObject'
 import EffectFunctionObject from '../structs/EffectFunctionObject'
 import { TargetsDomainString } from '../stringTypes/DomainString'
 import Enchantments from '../dictionaries/Enchantments'
+import { TargetRequirement } from '../structs/Requirement'

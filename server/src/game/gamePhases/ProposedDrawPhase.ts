@@ -4,13 +4,13 @@ import EventPhase from "./EventPhase";
 interface ProposedDrawEventObject {
     player: GamePlayer,
     number?: number,
-    criteria?: TargetRequirementObject[]
+    criteria?: TargetRequirement[]
 }
 
 export class ProposedDrawEvent extends GameEvent {
     player: GamePlayer
     number?: number = 1
-    criteria?: TargetRequirementObject[]
+    criteria?: TargetRequirement[]
     
     constructor(game: Game, object: ProposedDrawEventObject) {
         super(game) 
@@ -55,7 +55,7 @@ class ProposedDrawPhase extends EventPhase {
         const event = this.event
         this.emit('proposedDrawEvent', event)
         const { player } = event
-        const drawQueue = event.criteria.reduce((queue, criterion) => queue.filter(card => player.targetRequirement(card, criterion)), player.deck)
+        const drawQueue = event.criteria.reduce((queue, requirement) => queue.filter(card => player.targetRequirement(requirement, card)), player.deck)
         for (let i = 0; i < event.number; i++) {
             if (i < drawQueue.length) {
                 if (player.hand.length < player.max.hand) {
@@ -104,7 +104,7 @@ export default ProposedDrawPhase
 
 import Phases from "../dictionaries/Phases";
 import GamePlayer from "../gameObjects/GamePlayer";
-import TargetRequirementObject from "../structs/TargetRequirementObject";
 import Game from "./Game";
 import { DamageEvent } from "./DamageSinglePhase";
 import Card from "../gameObjects/Card";
+import { TargetRequirement } from "../structs/Requirement";

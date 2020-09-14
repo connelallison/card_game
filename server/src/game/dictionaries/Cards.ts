@@ -49,8 +49,6 @@ ActionMoment
 EventMoment
 Leader
 
-import PlayerOneFollower from '../cards/PlayerOneFollower'
-import PlayerTwoFollower from '../cards/PlayerTwoFollower'
 import Footman from '../cards/Footman'
 import RoyalGuard from '../cards/RoyalGuard'
 import JuniorOrc from '../cards/JuniorOrc'
@@ -75,34 +73,84 @@ import BattleOfSuiyang from '../cards/BattleOfSuiyang'
 import NapalmStrike from '../cards/NapalmStrike'
 import SuicideBomber from '../cards/SuicideBomber'
 import BodyDouble from '../cards/BodyDouble'
+import Archimedes from '../cards/Archimedes'
+import JohnFKennedy from '../cards/JohnFKennedy'
+import WallLabourer from '../cards/WallLabourer'
 
-const Cards = {
-  PlayerOneFollower,
-  PlayerTwoFollower,
+export const NamelessFollowers = {
   Footman,
   RoyalGuard,
   SavageWolf,
   JuniorOrc,
-  Fireburst,
-  Consume,
-  HolyBook,
-  ClubOfLooting,
-  KnightAcademy,
   Knight,
-  Orcissimus,
-  CorporalMotivation,
-  OrkusTheOrkest,
-  OrkusTheOrkestSmash,
-  KingFredTheSaintly,
-  KingFredTheSaintlyRecruit,
-  PrinceTimothy,
-  HolyProtectors,
-  SingleMindedFury,
-  CombatTraining,
-  BattleOfSuiyang,
-  NapalmStrike,
   SuicideBomber,
   BodyDouble,
+  WallLabourer,
+  Orcissimus,
 }
+
+export const FamousFollowers = {
+  // Orcissimus,
+  PrinceTimothy,
+  Archimedes,
+  JohnFKennedy,
+}
+
+export const ActionMoments = {
+  Fireburst,
+  NapalmStrike,
+}
+
+export const EventMoments = {
+  Consume,
+  BattleOfSuiyang,
+}
+
+export const WorkCreations = {
+  HolyBook,
+}
+
+export const WeaponCreations = {
+  ClubOfLooting,
+}
+
+export const WonderCreations = {
+  KnightAcademy,
+}
+
+export const TechniqueCreations = {
+  CorporalMotivation,
+}
+
+export const PermanentPassives = {
+  CombatTraining,
+}
+
+export const EthosPassives = {
+  HolyProtectors,
+  SingleMindedFury,
+}
+
+export const ActiveLeaderTechniques = {
+  OrkusTheOrkestSmash,
+  KingFredTheSaintlyRecruit,
+}
+
+export const Leaders = {
+  OrkusTheOrkest,
+  KingFredTheSaintly,
+}
+
+export const Followers =  {...NamelessFollowers, ...FamousFollowers}
+export const Characters = {...Leaders, ...Followers}
+export const Creations = {...WorkCreations, ...WeaponCreations, ...WonderCreations, ...TechniqueCreations}
+export const LeaderTechniques = {...ActiveLeaderTechniques}
+export const Passives = {...PermanentPassives, ...EthosPassives}
+export const Moments = {...ActionMoments, ...EventMoments}
+export const DestroyableCards = {...Characters, ...Creations}
+export const PersistentCards = {...DestroyableCards, ...Passives, ...LeaderTechniques}
+
+const Cards = {...PersistentCards, ...Moments}
+// const Cards = {...Followers, ...Leaders, ...Creations, ...LeaderTechniques, ...Passives, ...Moments}
 
 export default Cards

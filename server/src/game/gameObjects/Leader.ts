@@ -4,7 +4,7 @@ export interface LeaderData extends CharacterData {
   type: 'Leader'
   subtype: 'Leader'
   starter: boolean
-  leaderTechniqueID: CardIDString
+  leaderTechniqueID: LeaderTechniqueIDString
 }
 
 abstract class Leader extends Character {
@@ -14,7 +14,7 @@ abstract class Leader extends Character {
   inPlayZone: 'leaderZone'
   type: 'Leader'
   subtype: 'Leader'
-  leaderTechniqueID: CardIDString
+  leaderTechniqueID: LeaderTechniqueIDString
   starter: boolean
 
   constructor(game: Game, owner: GamePlayer, data: LeaderData) {
@@ -40,7 +40,7 @@ abstract class Leader extends Character {
       ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
-      requiresTarget: this.targeted,
+      targeted: this.targeted,
       validTargets: this.validTargetIDs(),
       staticCardText: this.staticCardText[localisation],
       dynamicCardText: this.generateDynamicCardText(localisation),
@@ -53,16 +53,16 @@ abstract class Leader extends Character {
         return Permissions.canAttack(this, defender)
       })
     } else if (this.zone === 'hand' && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(target, requirement)), this.targetDomain())
+      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
     } else {
       this.validTargets = []
     }
   }
 
   takeDamage(damage: number): number {
-    this.owner.currentHealth -= damage
+    const reducedDamage = this.owner.takeDamage(damage)
     this.update()
-    return damage
+    return reducedDamage
     // console.log(`${this.owner.name} takes ${damage} damage`)
     // console.log(`${this.owner.name} now has ${this.health} health`)
   }
@@ -87,6 +87,7 @@ abstract class Leader extends Character {
       attack: this.baseAttack(),
       health: this.baseHealth(),
       cost: this.rawCost,
+      debt: 0,
       flags: this.baseFlags(),
     }
   }
@@ -119,6 +120,15 @@ abstract class Leader extends Character {
     return {}
   }
 
+  getReady(): void {
+    if (this.inPlay()) {
+      this.ready = true
+    } else {
+      throw new Error(`getReady() is being called on a character (${this.name}) while not in play`)
+    }
+  }
+
+
   toggleAttack(dataObj: GameObjectData): void {
     if (this.inPlay() && !this.controller().myTurn()) dataObj.attack = 0
   }
@@ -129,8 +139,14 @@ abstract class Leader extends Character {
   }
 
   moveZone(destination: LeaderZoneString, index?: number): void {
-    if (destination === 'leaderZone' && this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('graveyard')
+    if (this.zone === 'leaderZone') this.game.inPlay.splice(this.game.inPlay.indexOf(this), 1)
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
+
+    if (destination === 'leaderZone') {
+      if (this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('graveyard')
+      this.game.inPlay.push(this)
+    }
+
     if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
     else this.owner[destination].push(this)
     this.zone = destination
@@ -140,13 +156,13 @@ abstract class Leader extends Character {
   putIntoPlay(): void {
     const health = this.health
     this.moveZone(this.inPlayZone)
-    this.game.inPlay.push(this)
     this.owner.maxHealth += health
     this.owner.currentHealth += health
     if (this.game.activeChild) {
+      const leaderTechnique = this.createCard(this.leaderTechniqueID, this.controller()) as LeaderTechnique
       const summonEvent = new SummonEvent(this.game, {
         controller: this.controller(),
-        cardID: this.leaderTechniqueID,
+        card: leaderTechnique,
         objectSource: this,
         charSource: this
       })
@@ -159,12 +175,13 @@ export default Leader
 
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
-import { LeaderZoneString } from '../stringTypes/ZoneString'
-import { CardIDString } from '../stringTypes/DictionaryKeyString'
+import { LeaderZoneString } from '../stringTypes/ZoneTypeSubtypeString'
+import { CardIDString, LeaderTechniqueIDString } from '../stringTypes/DictionaryKeyString'
 import { ObjectReport } from '../structs/ObjectReport'
-import GameObjectData from '../structs/GameObjectData'
+import GameObjectData, { FlagsObject } from '../structs/GameObjectData'
 import WeaponCreation from './WeaponCreation'
-import FlagsObject from '../structs/FlagsObject'
 import Permissions from '../dictionaries/Permissions'
 import { SummonEvent } from '../gamePhases/SummonPhase'
 import { LocalisationString } from '../structs/Localisation'
+import LeaderTechnique from './LeaderTechnique'
+

@@ -33,6 +33,12 @@ const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsD
             case 'friendlyLeader':
                 targetDomain.push(...object.controller().leaderZone)
                 break
+            case 'friendlyPlayer': 
+                targetDomain.push(object.controller())
+                break
+            case 'enemyPlayer': 
+                targetDomain.push(object.controller().opponent)
+                break
             case 'enemyHand':
                 targetDomain.push(...object.controller().opponent.hand)
                 break

@@ -45,7 +45,6 @@ class EnterPlayPhase extends EventPhase {
         event.generateLog()
         this.cacheEvent(event, 'enterPlay')
         this.startChild(new Phases.AuraUpdatePhase(this))
-        this.eventActionPhase()
         this.emit('onEnterPlay', event)
         this.queueSteps()
         this.end()
@@ -61,23 +60,11 @@ class EnterPlayPhase extends EventPhase {
         if (event.card instanceof Follower) {
             const index = event.slot ? event.slot.index() : event.controller.firstEmptySlotIndex()
             if (!event.slot) event.slot = event.controller.board[index]
-            event.card.ready = false
+            event.card.summonSickness = true
             event.card.putIntoPlay(index)
         } else {
             event.card.putIntoPlay(event.index)
         }
-    }
-
-    eventActionPhase(): void {
-        const event = this.event
-        event.card.events.forEach(eventAction => {
-            const eventActionEvent = new EventActionEvent(this.game(), {
-                controller: event.controller,
-                objectSource: event.card,
-                eventAction,
-            })
-            this.startChild(new Phases.EventActionPhase(this, eventActionEvent))
-        })
     }
 }
 

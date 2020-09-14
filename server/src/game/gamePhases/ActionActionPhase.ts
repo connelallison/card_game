@@ -5,17 +5,19 @@ interface ActionActionEventObject {
     controller: GamePlayer,
     objectSource: GameObject,
     targets: GameObject[],
-    action: ActionActionObject[],
+    action: ActionAction,
+    event: PlayEvent | UseEvent
 }
 
 export class ActionActionEvent extends GameEvent {
     controller: GamePlayer
     objectSource: GameObject
     targets: GameObject[]
-    action: ActionActionObject[]
+    action: ActionAction
+    event: PlayEvent
 
     constructor(game: Game, object: ActionActionEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
     }
 
@@ -36,15 +38,18 @@ class ActionActionPhase extends EventPhase {
     start(): void {
         const event = this.event
         const actionCard = event.objectSource as Card
-        if (event.action.length > 0) {
-            this.emit('beforeAction', event)
-            event.generateLog()
-            this.cacheEvent(event, 'action')
-            event.action.forEach(actionObj => {
+        this.emit('beforeAction', event)
+        event.generateLog()
+        this.cacheEvent(event, 'action')
+        event.action.actionFunctions.forEach(actionObj => {
+            if (!actionObj.requirements || actionObj?.requirements.every(requirement => {
+                const target = requirement.hasOwnProperty('targetRequirement') ? event.targets[0] : event.event
+                return actionCard.requirement(requirement, target)
+            })) {
                 actionCard.actionFunction(event, actionObj)
-            })
-            this.emit('afterAction', event)
-        }
+            }
+        })
+        this.emit('afterAction', event)
         this.queueSteps()
         this.end()
     }
@@ -55,5 +60,7 @@ export default ActionActionPhase
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import GameObject from "../gameObjects/GameObject";
-import { ActionActionObject } from "../structs/ActionObject";
+import { ActionAction } from "../structs/Action";
 import Game from "./Game";
+import { PlayEvent } from "./PlayPhase";import { UseEvent } from "./UsePhase";
+

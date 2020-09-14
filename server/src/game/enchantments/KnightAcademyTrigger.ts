@@ -14,6 +14,7 @@ const data: TriggerEnchantmentData = {
     'activeZones': ['creationZone'],
     'activeTypes': ['Creation'],
     'triggerObjs': [{
+        'actionType': 'triggerAction',
         'eventType': 'afterDraw',
         'requirements': [
             {
@@ -23,20 +24,20 @@ const data: TriggerEnchantmentData = {
                 }
             },
             {
-                'targetRequirement': 'isType',
+                'eventTargetRequirement': 'isType',
                 'values': {
                     'type': 'Follower'
                 },
                 'targetMap': 'drawEventDrawnCard'
             },
             {
-                'targetRequirement': 'isFriendly',
+                'eventTargetRequirement': 'isFriendly',
                 'targetMap': 'drawEventDrawnCard'
             }
         ],
-        'actions': [{
-            actionType: 'autoAction',
-            operation: 'summonCard',
+        'actionFunctions': [{
+            functionType: 'autoAction',
+            operation: 'createAndSummonCard',
             values: {
                 'cardID': 'Knight'
             }

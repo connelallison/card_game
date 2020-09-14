@@ -25,9 +25,19 @@ const data: EventMomentData = {
     'activeRequirements': [{
         'activeRequirement': 'min1FriendlyFollower',
     }],
-    'events': [[
+    'events': [{
+        actionType: 'eventAction',
+        name: {
+            english: 'Battle of Suiyang'
+        },
+        text: {
+            'templates': {
+                'english': `Event: Destroy all friendly followers. For each destroyed, give followers in your hand +1/+1.`,
+            },
+        },
+        actionFunctions: [
         {
-            'actionType': 'autoAction',
+            'functionType': 'autoAction',
             'operation': 'storeValue',
             'values': {
                 'param': 'targetCount',
@@ -35,7 +45,7 @@ const data: EventMomentData = {
             },
         },
         {
-            'actionType': 'autoAction',
+            'functionType': 'autoAction',
             'operation': 'markDestroyed',
             'targets': {
                 'valueType': 'targets',
@@ -44,11 +54,11 @@ const data: EventMomentData = {
             },
         },
         {
-            'actionType': 'autoAction',
+            'functionType': 'autoAction',
             'operation': 'forceDeathPhase',
         },
         {
-            'actionType': 'autoAction',
+            'functionType': 'autoAction',
             'operation': 'buffStats',
             'values': {
                 'stats': {
@@ -63,7 +73,7 @@ const data: EventMomentData = {
                 'targetDomain': 'friendlyHand',
             },
         }
-    ]],
+    ]}],
 }
 
 class BattleOfSuiyang extends EventMoment {

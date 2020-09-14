@@ -16,7 +16,7 @@ class LeaderTechnique extends Component {
         if (this.props.selected === this.props.object) {
             this.props.interactivity.clearSelected();
         } else if (this.props.selected === null && this.props.object.canBeSelected) {
-            if (this.props.object.requiresTarget) {
+            if (this.props.object.targeted) {
                 this.props.interactivity.chooseSelected(this.props.object)
             } else {
                 this.props.interactivity.chooseSelectedNoTarget(this.props.object)

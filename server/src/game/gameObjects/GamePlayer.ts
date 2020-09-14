@@ -3,11 +3,13 @@ import GameObject from './GameObject'
 class GamePlayer extends GameObject {
   game: Game
   owner: GamePlayer
+  zone: 'global'
   name: LocalisedStringObject
   playerName: string
   socketID: string
   maxHealth: number
   currentHealth: number
+  armour: number
   rawGrowth: number
   growth: number
   rawIncome: number
@@ -16,6 +18,8 @@ class GamePlayer extends GameObject {
   money: number
   currentDebt: number
   queuedDebt: number
+  rent: number
+  fervour: number
   leaderZone: Leader[]
   leaderTechniqueZone: LeaderTechnique[]
   board: BoardSlot[]
@@ -38,12 +42,14 @@ class GamePlayer extends GameObject {
   disconnected: boolean
 
   constructor(game: Game, name: string, socketID: string = null, bot: boolean = false) {
-    super(game, 'Player', {english: 'Player'}, 'Player', 'Player')
+    super(game, 'Player', { english: 'Player' }, 'Player', 'Player')
     this.owner = this
+    this.zone = 'global'
     this.playerName = name
     this.socketID = socketID
     this.maxHealth = 20
     this.currentHealth = this.maxHealth
+    this.armour = 0
     this.rawGrowth = 1
     this.growth = this.rawGrowth
     this.rawIncome = 2
@@ -52,6 +58,8 @@ class GamePlayer extends GameObject {
     this.money = this.rawMoney
     this.currentDebt = 0
     this.queuedDebt = 0
+    this.rent = 0
+    this.fervour = 0
     this.leaderZone = []
     this.leaderTechniqueZone = []
     this.max = {
@@ -75,6 +83,7 @@ class GamePlayer extends GameObject {
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
     this.game.event.on('endOfTurn', (event) => this.endOfTurn(event))
+    this.game.event.on('calculateGlobals', event => this.calculateGlobals())
   }
 
   boardFollowers(): Follower[] {
@@ -82,7 +91,7 @@ class GamePlayer extends GameObject {
   }
 
   leaderReport() {
-    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.income, currentMoney: this.money })
+    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.income, currentMoney: this.money, armour: this.armour })
   }
 
   leaderTechniqueReport() {
@@ -147,18 +156,41 @@ class GamePlayer extends GameObject {
     return this.rawMoney - this.currentDebt
   }
 
-  baseData() {
+  baseData(): GameObjectData {
     return {
       growth: this.rawGrowth,
       income: this.rawIncome,
       money: this.baseMoney(),
+      debt: 0,
+      rent: 0,
+      fervour: 0,
       flags: this.baseFlags(),
     }
   }
 
-  setData(dataObj) {
-    Object.assign(this, dataObj)
+  calculateGlobals(): void {
+    const inPlay = this.game.inPlay.filter(card => card.controller() === this)
+    inPlay.forEach(card => {
+      if (card.growth) this.growth += card.growth
+      if (card.income) this.income += card.income
+      if (card.rent) this.rent += card.rent
+      if (card.fervour) this.fervour += card.fervour
+    })
   }
+
+  update(): void {
+    this.staticApply()
+    this.auraApply(0)
+    this.calculateGlobals()
+    this.auraApply(1)
+    this.auraApply(2)
+    this.auraApply(3)
+    this.updateArrays()
+}
+
+  // setData(dataObj) {
+  //   Object.assign(this, dataObj)
+  // }
 
   mulliganDraw(): void {
     if (this.deck.length > 0) {
@@ -227,6 +259,19 @@ class GamePlayer extends GameObject {
     return this.leaderZone[0].health > 0
   }
 
+  gainArmour(armour: number): void {
+    this.armour += armour
+  }
+
+  takeDamage(damage: number): number {
+    const remainingDamage = damage > this.armour ? damage - this.armour : 0
+    const remainingArmour = this.armour > damage ? this.armour - damage : 0
+    this.armour = remainingArmour
+    this.currentHealth -= remainingDamage
+    // this.update()
+    return remainingDamage
+  }
+
   spendMoney(amount: number): void {
     this.rawMoney -= amount
     this.money -= amount
@@ -280,7 +325,8 @@ import Passive from './Passive'
 import { ObjectReport, BoardSlotReport } from '../structs/ObjectReport'
 import TechniqueCreation from './TechniqueCreation'
 import PersistentCard from './PersistentCard'
-import { PersistentCardTypeString } from '../stringTypes/ObjectTypeString'
 import { ProposedDrawEvent } from '../gamePhases/ProposedDrawPhase'
 import { LocalisedStringObject } from '../structs/Localisation'
+import GameObjectData from '../structs/GameObjectData'
+import { PersistentCardTypeString } from '../stringTypes/ZoneTypeSubtypeString'
 

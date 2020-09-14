@@ -2,8 +2,8 @@ import Deck from '../gameObjects/Deck'
 
 class KnightDeck extends Deck {
   constructor(game, owner) {
-    const leader: CardIDString = 'KingFredTheSaintly'
-    const passive: CardIDString = 'HolyProtectors'
+    const leader = 'KingFredTheSaintly'
+    const passive = 'HolyProtectors'
     const cards: CardIDString[] = [
       'Footman',
       'Footman',
@@ -21,8 +21,10 @@ class KnightDeck extends Deck {
       'CombatTraining',
       'NapalmStrike',
       'NapalmStrike',
-      'BodyDouble',
-      'BodyDouble',
+      'Archimedes',
+      'Archimedes',
+      'JohnFKennedy',
+      'JohnFKennedy',
     ]
     super(game, owner, 'KnightDeck', 'KnightDeck', { leader, passive, cards })
   }

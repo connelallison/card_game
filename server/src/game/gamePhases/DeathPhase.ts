@@ -34,10 +34,10 @@ class DeathPhase extends EventPhase {
         inPlay.filter(card => card instanceof DestroyableCard).forEach((card: DestroyableCard) => {
             if (card.isDestroyed()) {
                 if (card instanceof Leader) {
-                    inPlay.splice(inPlay.indexOf(card), 1)
+                    // inPlay.splice(inPlay.indexOf(card), 1)
                     this.game().end()
                 } else {
-                    inPlay.splice(inPlay.indexOf(card), 1)
+                    // inPlay.splice(inPlay.indexOf(card), 1)
                     const deathEvent = (card instanceof Follower) 
                     ? new DeathEvent(this.game(), {
                         died: card,
@@ -52,8 +52,7 @@ class DeathPhase extends EventPhase {
                     this.cacheEvent(deathEvent, 'death')
                     deathQueue.push(deathEvent)
                     card.moveZone('graveyard')
-                    if (card instanceof Follower) this.deathActionPhase(card, deathEvent.slot)
-                    else this.deathActionPhase(card)
+                    this.deathActionPhase(card, deathEvent)
                 }
             }
         })
@@ -64,19 +63,21 @@ class DeathPhase extends EventPhase {
         this.end()
     }
 
-    deathActionPhase(card: DestroyableCard, slot?: BoardSlot): void {
+    deathActionPhase(card: DestroyableCard, event: DeathEvent): void {
         card.deathEvents.forEach(deathAction => {
             const deathActionEvent = (card instanceof Follower)
             ? new DeathActionEvent(this.game(), {
                 controller: card.controller(),
                 objectSource: card,
                 deathAction,
-                targets: [slot]
+                targets: [event.slot],
+                event,
             })
             : new DeathActionEvent(this.game(), {
                 controller: card.controller(),
                 objectSource: card,
                 deathAction,
+                event,
             })
             this.startChild(new Phases.DeathActionPhase(this, deathActionEvent))
         })

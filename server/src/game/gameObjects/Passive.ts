@@ -33,5 +33,4 @@ export default Passive
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { PassiveZoneString } from "../stringTypes/ZoneString";
-import { PassiveSubtypeString } from "../stringTypes/ObjectSubtypeString";
+import { PassiveSubtypeString, PassiveZoneString } from "../stringTypes/ZoneTypeSubtypeString";

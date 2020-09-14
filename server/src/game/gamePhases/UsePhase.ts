@@ -65,6 +65,7 @@ class UsePhase extends EventPhase {
                 objectSource: event.objectSource,
                 targets: event.targets,
                 action,
+                event,
             })
             this.startChild(new Phases.ActionActionPhase(this, actionEvent))
         })
@@ -78,6 +79,7 @@ class UsePhase extends EventPhase {
                 objectSource: event.objectSource,
                 targets: event.targets,
                 eventAction,
+                event,
             })
             this.startChild(new Phases.EventActionPhase(this, eventActionEvent))
         })

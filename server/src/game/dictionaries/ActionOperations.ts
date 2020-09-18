@@ -241,7 +241,11 @@ const ActionOperations = {
     },
 
     storeValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: number }) => {
-        event[values.param] = values.value
+        event.stored[values.param] = values.value
+    },
+
+    storeTarget: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string }) => {
+        if (targetObjs[0]) event.stored[values.param] = targetObjs[0]
     },
 
     enchantmentExpiry: (source: GameObject, event: ActionEvent) => {

@@ -4,7 +4,6 @@ import EventPhase from "./EventPhase"
 interface DeathActionEventObject {
     controller: GamePlayer
     objectSource: GameObject
-    targets?: GameObject[]
     deathAction: DeathAction
     event: DeathEvent
 }
@@ -12,9 +11,9 @@ interface DeathActionEventObject {
 export class DeathActionEvent extends GameEvent {
     controller: GamePlayer
     objectSource: GameObject
-    targets?: GameObject[]
     deathAction: DeathAction
     event: DeathEvent
+    stored?: { [index: string]: any }
 
     constructor(game: Game, object: DeathActionEventObject) {
         super(game) 
@@ -22,8 +21,9 @@ export class DeathActionEvent extends GameEvent {
     }
 
     generateLog() {
-        const targets = this.targets && this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
-        this.log = `${this.objectSource.name.english}'s death event activates${targets}.`
+        // const targets = this.targets && this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
+        // this.log = `${this.objectSource.name.english}'s death event activates${targets}.`
+        this.log = `${this.objectSource.name.english}'s death event activates.`
     }
 }
 
@@ -41,10 +41,7 @@ class DeathActionPhase extends EventPhase {
         this.emit('beforeDeathAction', event)
         event.generateLog()
         this.cacheEvent(event, 'deathAction')
-        event.deathAction.actionFunctions.forEach(actionObj => {
-            if (!actionObj.requirements || actionObj.requirements.every(requirement => destroyedCard.requirement(requirement, event.event)))
-            destroyedCard.actionFunction(event, actionObj)
-        })
+        event.deathAction.activeSteps.forEach(step => destroyedCard.actionStep(event, step))
         this.emit('afterDeathAction', event)
         this.queueSteps()
         this.end()
@@ -59,4 +56,5 @@ import { DeathAction, DeathActionFunction } from "../structs/Action"
 import Game from "./Game"
 import DestroyableCard from "../gameObjects/DestroyableCard"
 import { DeathEvent } from "./DeathPhase"
+import BoardSlot from "../gameObjects/BoardSlot"
 

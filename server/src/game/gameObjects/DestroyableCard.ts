@@ -10,11 +10,13 @@ abstract class DestroyableCard extends PersistentCard {
     static readonly data: DestroyableCardData
     readonly data: DestroyableCardData
     deathEvents: DeathAction[]
+    activeDeathEvents: DeathAction[]
     pendingDestroy: boolean
 
     constructor(game: Game, owner: GamePlayer, data: DestroyableCardData) {
         super(game, owner, data)
         this.deathEvents = data.deathEvents || []
+        this.activeDeathEvents = []
         this.pendingDestroy = false
     }
 
@@ -31,13 +33,25 @@ abstract class DestroyableCard extends PersistentCard {
             flags: JSON.parse(JSON.stringify(this.flags)),
         }
     }
-    
-    abstract isDestroyed(): boolean 
+
+    updateActiveDeathEvents(): void {
+        this.activeDeathEvents = this.deathEvents.filter(deathEvent => this.eventActive(deathEvent))
+    }
+
+    updateArrays(): void {
+        this.updateActiveOptions()
+        this.updateActiveActions()
+        this.updateActiveEvents()
+        this.updateActiveDeathEvents()
+    }
+
+    abstract isDestroyed(): boolean
 }
 
 export default DestroyableCard
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { DeathAction, DeathActionFunction } from "../structs/Action";import { DestroyableCardTypeString, DestroyableCardSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
+import { DeathAction } from "../structs/Action";
+import { DestroyableCardTypeString, DestroyableCardSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
 

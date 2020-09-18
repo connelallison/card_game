@@ -4,7 +4,6 @@ import EventPhase from "./EventPhase";
 interface ActionActionEventObject {
     controller: GamePlayer,
     objectSource: GameObject,
-    targets: GameObject[],
     action: ActionAction,
     event: PlayEvent | UseEvent
 }
@@ -12,9 +11,9 @@ interface ActionActionEventObject {
 export class ActionActionEvent extends GameEvent {
     controller: GamePlayer
     objectSource: GameObject
-    targets: GameObject[]
     action: ActionAction
     event: PlayEvent
+    stored?: {}
 
     constructor(game: Game, object: ActionActionEventObject) {
         super(game)
@@ -22,8 +21,9 @@ export class ActionActionEvent extends GameEvent {
     }
 
     generateLog() {
-        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
-        this.log = `${this.objectSource.name.english}'s action activates${targets}.`
+        // const actionTargets = this.actionTargets.length > 0 ? `, targeting ${this.actionTargets[0].name.english}` : ''
+        // this.log = `${this.objectSource.name.english}'s action activates${actionTargets}.`
+        this.log = `${this.objectSource.name.english}'s action activates.`
     }
 }
 
@@ -41,14 +41,7 @@ class ActionActionPhase extends EventPhase {
         this.emit('beforeAction', event)
         event.generateLog()
         this.cacheEvent(event, 'action')
-        event.action.actionFunctions.forEach(actionObj => {
-            if (!actionObj.requirements || actionObj?.requirements.every(requirement => {
-                const target = requirement.hasOwnProperty('targetRequirement') ? event.targets[0] : event.event
-                return actionCard.requirement(requirement, target)
-            })) {
-                actionCard.actionFunction(event, actionObj)
-            }
-        })
+        event.action.activeSteps.forEach(step => actionCard.actionStep(event, step))
         this.emit('afterAction', event)
         this.queueSteps()
         this.end()

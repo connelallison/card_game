@@ -3,26 +3,30 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEnchantmentData = {
-    'id': 'CombatTrainingAura',
-    'name': {
-        'english': `Combat Training Aura`,
+    id: 'CombatTrainingAura',
+    name: {
+        english: `Combat Training Aura`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Aura',
-    'activeZones': ['passiveZone'],
-    'activeTypes': ['Passive'],
-    'effectObjs': [{
+    type: 'Enchantment',
+    subtype: 'Aura',
+    priority: 1,
+    activeZones: ['passiveZone'],
+    activeTypes: ['Passive'],
+    effectObjs: [{
         operation: 'incrementAttack',
         value: 1,
     }],
-    'targetDomain': ['friendlyBoard'],
-    'targetRequirements': [{
-        'targetRequirement': 'isSpecificCardClass',
-        'values': {
-            'cardID': 'Knight',
-        }
-    }],
-    'priority': 1,
+    targets: {
+        valueType: 'targets',
+        from: 'targetDomain',
+        targetDomain: ['friendlyBoard'],
+        requirements: [{
+            targetRequirement: 'isSpecificCardClass',
+            values: {
+                'cardID': 'Knight',
+            }
+        }]
+    },
 }
 
 class CombatTrainingAura extends AuraEnchantment {

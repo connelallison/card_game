@@ -2,19 +2,21 @@ import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
 
 interface PlayEventObject {
-    player: GamePlayer,
-    card: Card,
-    slot?: BoardSlot,
-    targets: GameObject[],
-    handIndex: number,
-    handLength: number,
+    player: GamePlayer
+    card: Card
+    slot?: BoardSlot
+    // optionChoices: OptionChoice[]
+    // actionTargets: GameObject[][][]
+    handIndex: number
+    handLength: number
 }
 
 export class PlayEvent extends GameEvent {
     player: GamePlayer
     card: Card
     slot?: BoardSlot
-    targets: GameObject[]
+    // optionChoices: OptionChoice[]
+    // actionTargets: GameObject[][][]
     handIndex: number
     handLength: number
     eureka: boolean
@@ -27,8 +29,9 @@ export class PlayEvent extends GameEvent {
 
     generateLog() {
         const slot = this.slot ? ` in slot ${this.slot.index() + 1}` : ''
-        const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
-        this.log = `${this.player.playerName} plays ${this.card.name.english}${slot}${targets}.`
+        // const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
+        // this.log = `${this.player.playerName} plays ${this.card.name.english}${slot}${targets}.`
+        this.log = `${this.player.playerName} plays ${this.card.name.english}${slot}.`
     }
 }
 
@@ -47,6 +50,7 @@ class PlayPhase extends EventPhase {
         this.cacheEvent(event, 'play')
         this.emit('onPlay', event)
         this.enterPlayPhase()
+        this.optionPhase()
         this.actionPhase()
         this.eventActionPhase()
         if (event.card instanceof TechniqueCreation) {
@@ -86,40 +90,49 @@ class PlayPhase extends EventPhase {
         }
     }
 
+    optionPhase(): void {
+        const event = this.event
+        event.card.activeOptions.forEach(optionAction => {
+            if (
+                !(event.card instanceof PersistentCard && !event.card.inPlay())
+                && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
+            ) {
+                const actionEvent = new OptionActionEvent(this.game(), {
+                    controller: event.player,
+                    objectSource: event.card,
+                    optionAction,
+                    event,
+                })
+                this.startChild(new Phases.OptionActionPhase(this, actionEvent))
+            }
+        })
+    }
+
     actionPhase(): void {
         const event = this.event
-        if (!event.card.targeted || event.targets.length > 0) {
-            event.card.actions.forEach(action => {
-                if (
-                    !(event.card instanceof PersistentCard && !event.card.inPlay())
-                    && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
-                    && (!action.requirements || action.requirements.every(requirement => {
-                        const target = requirement.hasOwnProperty('targetRequirement') ? event.targets[0] : event
-                        return event.card.requirement(requirement, target)
-                    }))
-                ) {
-                    const actionEvent = new ActionActionEvent(this.game(), {
-                        controller: event.player,
-                        objectSource: event.card,
-                        targets: event.targets,
-                        action,
-                        event,
-                    })
-                    this.startChild(new Phases.ActionActionPhase(this, actionEvent))
-                }
-            })
-        }
+        event.card.activeActions.forEach(action => {
+            if (
+                !(event.card instanceof PersistentCard && !event.card.inPlay())
+                && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
+            ) {
+                const actionEvent = new ActionActionEvent(this.game(), {
+                    controller: event.player,
+                    objectSource: event.card,
+                    action,
+                    event,
+                })
+                this.startChild(new Phases.ActionActionPhase(this, actionEvent))
+            }
+        })
     }
 
     eventActionPhase(): void {
         const event = this.event
-        event.card.events.forEach(eventAction => {
+        event.card.activeEvents.forEach(eventAction => {
             if (
                 !(event.card instanceof PersistentCard && !event.card.inPlay())
                 && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
-                && (!eventAction.requirements || eventAction.requirements.every(requirement => event.card.requirement(requirement, event)))
             ) {
-
                 const eventActionEvent = new EventActionEvent(this.game(), {
                     controller: event.player,
                     objectSource: event.card,
@@ -148,3 +161,5 @@ import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import { SpendMoneyEvent } from "./SpendMoneyPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
+import { OptionActionEvent } from "./OptionActionPhase"; import { OptionChoice } from "../structs/Action";
+

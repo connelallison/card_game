@@ -3,18 +3,18 @@ import Game from "../gamePhases/Game"
 import GameObject from "../gameObjects/GameObject"
 
 const data: StaticEnchantmentData = {
-    'id': 'Debt',
-    'name': {
-        'english': `Debt`,
+    id: 'Debt',
+    name: {
+        english: `Debt`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Static',
-    'activeZones': ['board', 'hand', 'deck', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'setAsideZone', 'global', 'graveyard'],
-    'activeTypes': ['Follower', 'Leader', 'Creation', 'LeaderTechnique', 'Moment', 'Passive', 'Player'],
-    'effectObjs': [
+    type: 'Enchantment',
+    subtype: 'Static',
+    activeZones: ['board', 'hand', 'deck', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'setAsideZone', 'global', 'graveyard'],
+    activeTypes: ['Follower', 'Leader', 'Creation', 'LeaderTechnique', 'Moment', 'Passive', 'Player'],
+    effectObjs: [
         {
-            'operation': 'incrementDebt',
-            'value': 0
+            operation: 'incrementDebt',
+            value: 0
         }
     ]
 }

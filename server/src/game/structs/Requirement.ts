@@ -1,7 +1,8 @@
 import { ActiveRequirementString, TargetRequirementString, EventToTargetMapString, EventRequirementString } from "../stringTypes/DictionaryKeyString";
+import { DynamicBooleanObject } from "./DynamicValueObject";
 import ValuesObject from "./ValuesObject";
 
-export interface ActiveRequirement {
+export interface ActiveRequirementShortcut {
     activeRequirement: ActiveRequirementString
     values?: ValuesObject
 }
@@ -22,9 +23,15 @@ export interface EventRequirement {
     values?: ValuesObject
 }
 
+export interface CustomRequirement {
+    customRequirement: DynamicBooleanObject
+}
 
-export type ActionRequirement = ActiveRequirement | TargetRequirement | EventRequirement
-export type EventActionRequirement = ActiveRequirement | EventRequirement
-export type DeathActionRequirement = ActiveRequirement | EventRequirement
-export type Requirement = ActiveRequirement | TargetRequirement | EventTargetRequirement | EventRequirement
-export type TriggerRequirement = ActiveRequirement | EventTargetRequirement | EventRequirement
+
+export type Requirement = ActiveRequirementShortcut | TargetRequirement | EventTargetRequirement | EventRequirement | CustomRequirement
+// export type ActionRequirement = ActiveRequirementShortcut | TargetRequirement | EventRequirement | CustomRequirement
+// export type EventActionRequirement = ActiveRequirementShortcut | EventRequirement | CustomRequirement
+// export type DeathActionRequirement = ActiveRequirementShortcut | EventRequirement | CustomRequirement
+export type ActiveRequirement = ActiveRequirementShortcut | CustomRequirement
+export type RunRequirement = ActiveRequirementShortcut | CustomRequirement | TargetRequirement
+export type TriggerRequirement = ActiveRequirementShortcut | EventTargetRequirement | EventRequirement | CustomRequirement

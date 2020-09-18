@@ -25,6 +25,8 @@ class KnightDeck extends Deck {
       'Archimedes',
       'JohnFKennedy',
       'JohnFKennedy',
+      'TechEntrepreneur',
+      'TechEntrepreneur',
     ]
     super(game, owner, 'KnightDeck', 'KnightDeck', { leader, passive, cards })
   }

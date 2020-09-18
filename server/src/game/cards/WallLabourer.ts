@@ -3,61 +3,96 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-    'id': 'WallLabourer',
-    'name': {
-        'english': `Wall Labourer`,
+    id: 'WallLabourer',
+    name: {
+        english: `Wall Labourer`,
     },
-    'type': 'Follower',
-    'subtype': 'Nameless',
-    'classes': ['All'],
-    'categories': [],
-    'collectable': true,
-    'cost': 1,
-    'attack': 1,
-    'health': 1,
-    'charges': 2,
-    'targeted': false,
-    'staticCardText': {
-        'english': `Action: Gain 3 Armour.`,
+    type: 'Follower',
+    subtype: 'Nameless',
+    classes: ['All'],
+    categories: [],
+    collectable: true,
+    cost: 1,
+    attack: 1,
+    health: 1,
+    charges: 2,
+    staticText: {
+        english: `Action: If a friendly follower died this turn, gain 3 Armour.`,
     },
-    'dynamicCardText': {
-        'templates': {
-            'english': `Action: Gain $0 Armour.`,
+    text: {
+        templates: {
+            english: `Action: If a friendly follower died this turn, gain $0 Armour.`,
         },
-        'dynamicValues': [{
+        dynamicValues: [{
             value: {
-              valueType: 'number',
-              from: 'fervour',
-              base: 3
+                valueType: 'number',
+                from: 'fervour',
+                base: 3
             },
             activeZones: ['hand'],
             default: 3,
             fervour: true,
-          }]
+        }]
     },
-    'actions': [{
+    actions: [{
         actionType: 'actionAction',
-        targeted: false,
         name: {
             english: 'Wall Labourer Action'
         },
         text: {
-            'templates': {
-                'english': `Action: Gain $0 Armour.`,
+            templates: {
+                english: `Action: If a friendly follower died this turn, gain $0 Armour.`,
             },
-            'dynamicValues': [{
+            dynamicValues: [{
                 value: {
-                  valueType: 'number',
-                  from: 'fervour',
-                  base: 3
+                    valueType: 'number',
+                    from: 'fervour',
+                    base: 3
                 },
                 activeZones: ['hand'],
                 default: 3,
                 fervour: true,
-              }]
+            }]
         },
-        actionFunctions: [
-            {
+        actionSteps: [{
+            requirements: [{
+                customRequirement: {
+                    valueType: 'boolean',
+                    from: 'number',
+                    comparison: 0,
+                    operator: 'greaterThan',
+                    number: {
+                        valueType: 'number',
+                        from: 'targets',
+                        numberMap: 'count',
+                        targets: {
+                            valueType: 'targets',
+                            from: 'events',
+                            targetMap: 'deathEventDestroyedTarget',
+                            requirements: [
+                                {
+                                    targetRequirement: 'isFriendly'
+                                },
+                                {
+                                    targetRequirement: 'isType',
+                                    values: {
+                                        type: 'Follower'
+                                    }
+                                }
+                            ],
+                            events: {
+                                valueType: 'events',
+                                from: 'eventDomain',
+                                eventDomain: 'deathEvents',
+                                requirements: [{
+                                    eventRequirement: 'thisTurn'
+                                }]
+                            }
+                        }
+                    }
+                }
+            }],
+            actionFunctions: [{
                 functionType: 'autoAction',
                 operation: 'gainArmour',
                 values: {
@@ -65,10 +100,10 @@ const data: NamelessFollowerData = {
                         valueType: 'number',
                         from: 'fervour',
                         base: 3
-                      },
+                    },
                 }
-            }
-        ]
+            }]
+        }]
     }],
 }
 

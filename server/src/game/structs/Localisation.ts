@@ -6,7 +6,7 @@ export interface LocalisedStringObject {
 }
 
 
-export interface DynamicCardTextValueObject {
+export interface DynamicTextValueObject {
     value: DynamicValueObject
     default: string | number
     activeZones: ZoneString[]
@@ -14,9 +14,9 @@ export interface DynamicCardTextValueObject {
     fervour?: boolean
 }
 
-export interface DynamicCardTextObject {
+export interface DynamicTextObject {
     templates: LocalisedStringObject
-    dynamicValues?: DynamicCardTextValueObject[]
+    dynamicValues?: DynamicTextValueObject[]
 }
 
 export type LocalisationString = 'english'

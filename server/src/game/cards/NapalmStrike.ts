@@ -3,26 +3,43 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: ActionMomentData = {
-  'id': 'NapalmStrike',
-  'name': {
-    'english': `Napalm Strike`,
+  id: 'NapalmStrike',
+  name: {
+    english: `Napalm Strike`,
   },
-  'type': 'Moment',
-  'subtype': 'Action',
-  'classes': ['Arms'],
-  'collectable': true,
-  'cost': 3,
-  'actions': [{
+  type: 'Moment',
+  subtype: 'Action',
+  classes: ['Arms'],
+  collectable: true,
+  cost: 3,
+  staticText: {
+    english: `Action: Deal 9 damage split between a follower and its adjacents.`,
+  },
+  text: {
+    templates: {
+      english: `Action: Deal $0 damage split between a follower and its adjacents.`,
+    },
+    dynamicValues: [{
+      value: {
+        valueType: 'number',
+        from: 'fervour',
+        base: 9
+      },
+      activeZones: ['hand'],
+      default: 9,
+      fervour: true,
+    }]
+  },
+  actions: [{
     actionType: 'actionAction',
-    targeted: true,
     name: {
       english: 'Napalm Strike'
     },
     text: {
-      'templates': {
-        'english': `Action: Deal $0 damage split between a follower and its adjacents.`,
+      templates: {
+        english: `Action: Deal $0 damage split between a follower and its adjacents.`,
       },
-      'dynamicValues': [{
+      dynamicValues: [{
         value: {
           valueType: 'number',
           from: 'fervour',
@@ -33,9 +50,31 @@ const data: ActionMomentData = {
         fervour: true,
       }]
     },
-    actionFunctions: [
-      {
-        functionType: 'autoAction',
+    actionSteps: [{
+      manualTargets: [{
+        targets: {
+          valueType: 'targets',
+          from: 'targetDomain',
+          targetDomain: ['friendlyBoard', 'enemyBoard'],
+        },
+        text: {
+          templates: {
+            english: `Action: Deal $0 damage split between a follower and its adjacents.`,
+          },
+          dynamicValues: [{
+            value: {
+              valueType: 'number',
+              from: 'fervour',
+              base: 9
+            },
+            activeZones: ['hand'],
+            default: 9,
+            fervour: true,
+          }]
+        },
+      }],
+      actionFunctions: [{
+        functionType: 'manualAction',
         operation: 'damage',
         values: {
           damage: {
@@ -50,32 +89,9 @@ const data: ActionMomentData = {
           from: 'targetDomain',
           targetDomain: ['adjacentFollowers'],
         }
-      }
-    ]
-  }],
-  'staticCardText': {
-    'english': `Action: Deal 9 damage split between a follower and its adjacents.`,
-  },
-  'dynamicCardText': {
-    'templates': {
-      'english': `Action: Deal $0 damage split between a follower and its adjacents.`,
-    },
-    'dynamicValues': [{
-      value: {
-        valueType: 'number',
-        from: 'fervour',
-        base: 9
-      },
-      activeZones: ['hand'],
-      default: 9,
-      fervour: true,
+      }]
     }]
-  },
-  'activeRequirements': [{
-    'activeRequirement': 'min1AllFollower'
   }],
-  'targeted': true,
-  'targetDomain': ['friendlyBoard', 'enemyBoard'],
 }
 
 class NapalmStrike extends ActionMoment {

@@ -17,6 +17,7 @@ abstract class Character extends DestroyableCard {
   rawHealth: number
   health: number
   ready: boolean
+  attackTargets: Character[]
 
   constructor(game: Game, owner: GamePlayer, data: CharacterData) {
     super(game, owner, data)
@@ -25,6 +26,7 @@ abstract class Character extends DestroyableCard {
     this.attack = this.rawAttack
     this.rawHealth = data.health
     this.health = this.rawHealth
+    this.attackTargets = []
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
@@ -43,13 +45,16 @@ abstract class Character extends DestroyableCard {
     }
   }
 
-  
+  attackTargetIDs(): string[] {
+    return this.attackTargets.map(target => target.objectID)
+  }
+
   canAttack(): boolean {
     return this.owner.myTurn() && this.ready && this.inPlay() && this.attack > 0
   }
 
   hasTargets(): boolean {
-    return this.validTargets.length > 0
+    return this.attackTargets.length > 0
   }
   
   charOwner(): Character {
@@ -86,8 +91,8 @@ abstract class Character extends DestroyableCard {
     }
   }
 
+  abstract updateAttackTargets(): void
   abstract getReady(): void
-  abstract updateValidTargets(): void
   abstract takeDamage(damage: number): number
   abstract receiveHealing(healing: number): number
   abstract missingHealth(): number

@@ -3,6 +3,7 @@ interface EventCache {
     death: DeathEvent[],
     play: PlayEvent[],
     action: ActionActionEvent[],
+    optionAction: OptionActionEvent[],
     // eurekaAction: EurekaActionEvent[],
     eventAction: EventActionEvent[],
     deathAction: DeathActionEvent[],
@@ -40,4 +41,5 @@ import { TriggerEvent } from "./TriggerPhase";
 import { TriggerActionEvent } from "./TriggerActionPhase";
 import { DeathActionEvent } from "./DeathActionPhase";
 import { DrawEvent } from "./ProposedDrawPhase";
+import { OptionActionEvent } from "./OptionActionPhase";
 // import { EurekaActionEvent } from "./EurekaActionPhase";

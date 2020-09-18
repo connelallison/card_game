@@ -3,52 +3,54 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: FamousFollowerData = {
-  'id': 'Archimedes',
-  'name': {
-    'english': `Archimedes`,
+  id: 'Archimedes',
+  name: {
+    english: `Archimedes`,
   },
-  'type': 'Follower',
-  'subtype': 'Famous',
-  'classes': ['Learning'],
-  'categories': [],
-  'collectable': true,
-  'cost': 3,
-  'attack': 4,
-  'health': 5,
-  'targeted': false,
-  'staticCardText': {
-    'english': `Eureka: Gain Rush.`,
+  type: 'Follower',
+  subtype: 'Famous',
+  classes: ['Learning'],
+  categories: [],
+  collectable: true,
+  cost: 3,
+  attack: 4,
+  health: 5,
+  staticText: {
+    english: `Eureka: Gain Rush.`,
   },
-  'dynamicCardText': {
-    'templates': {
-      'english': `Eureka: Gain Rush.`,
+  text: {
+    templates: {
+      english: `Eureka: Gain Rush.`,
     },
   },
-  'actions': [{
+  actions: [{
     actionType: 'actionAction',
     name: {
       english: 'Archimedes Eureka'
     },
-    targeted: false,
-    requirements: [{
-      eventRequirement: 'isEureka'
-    }],
     text: {
       templates: {
         english: 'Eureka: Gain Rush.'
       }
     },
-    actionFunctions: [{
-      functionType: 'autoAction',
-      operation: 'addEnchantment',
-      target: {
-        valueType: "target",
-        from: "targetDomain",
-        targetDomain: "self",
-      },
-      values: {
-        enchantmentID: 'Rush'
-      }
+    actionSteps: [{
+      autoTargets: [{
+        targets: {
+          valueType: "target",
+          from: "targetDomain",
+          targetDomain: "self",
+        },
+      }],
+      requirements: [{
+        activeRequirement: 'eureka'
+      }],
+      actionFunctions: [{
+        functionType: 'autoAction',
+        operation: 'addEnchantment',
+        values: {
+          enchantmentID: 'Rush'
+        }
+      }]
     }]
   }],
 }

@@ -2,10 +2,6 @@ import Moment, { MomentData } from "./Moment";
 
 export interface EventMomentData extends MomentData {
   events: EventAction[]
-  targeted: false
-  actions?: []
-  targetDomain?: null
-  targetRequirements?: null
 }
 
 abstract class EventMoment extends Moment {

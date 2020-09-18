@@ -12,18 +12,30 @@ import CreationZone from '../components/CreationZone.js'
 import socket from '../helpers/websocket.js'
 import PassiveZone from '../components/PassiveZone.js'
 import LeaderTechnique from '../components/LeaderTechnique.js'
+import PlayerStatus from '../components/PlayerStatus.js'
 
 class GameContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
       selected: null,
+      attackTarget: null,
       selectedSlot: null,
+      optionChoices: [],
+      actionTargets: [],
       gameState: {
         started: null,
         winner: null,
         myTurn: false,
         my: {
+          stats: {
+            money: 0,
+            income: 0,
+            growth: 0,
+            debt: 0,
+            rent: 0,
+            fervour: 0,
+          },
           leader: {
             attack: 0,
             health: 0,
@@ -34,7 +46,7 @@ class GameContainer extends Component {
             name: '',
           },
           leaderTechnique: {
-            dynamicCardText: '',
+            text: '',
             name: '',
           },
           board: [],
@@ -44,6 +56,14 @@ class GameContainer extends Component {
           deck: 0
         },
         opponent: {
+          stats: {
+            money: 0,
+            income: 0,
+            growth: 0,
+            debt: 0,
+            rent: 0,
+            fervour: 0,
+          },
           leader: {
             attack: 0,
             health: 0,
@@ -53,7 +73,7 @@ class GameContainer extends Component {
             name: '',
           },
           leaderTechnique: {
-            dynamicCardText: '',
+            text: '',
             name: '',
           },
           board: [],
@@ -139,7 +159,9 @@ class GameContainer extends Component {
   handleClearSelected() {
     // console.log("selected cleared")
     this.setState({
-      selected: null
+      selected: null,
+      selectedSlot: null,
+      selectedOptions: [],
     })
   }
 
@@ -172,6 +194,7 @@ class GameContainer extends Component {
     this.setState({
       selected: null,
       selectedSlot: null,
+      selectedOptions: [],
     })
   }
 
@@ -202,6 +225,78 @@ class GameContainer extends Component {
   handleInvalidMove() {
     console.log("invalid move")
   }
+
+  // moveReady() {
+  //   return (
+  //     this.state.selected !== null
+  //     && 
+  //   )
+  // }
+
+  // moveStruct() {
+  //   const report = {
+  //     "name": "Tech Entrepreneur",
+  //     "id": "TechEntrepreneur",
+  //     "objectID": "TechEntrepreneur:0.7506640235420281",
+  //     "cost": 2,
+  //     "attack": 4,
+  //     "health": 4,
+  //     "charges": 1,
+  //     "type": "Follower",
+  //     "subtype": "Nameless",
+  //     "zone": "hand",
+  //     "ownerName": "Connel",
+  //     "playerID": "Player:0.9122314769583764",
+  //     "canBeSelected": true,
+  //     "staticText": "Option: Debt 2; or Rent 1.",
+  //     "text": "Option: Debt 2; or Rent 1.",
+  //     "options": [
+  //       {
+  //         "name": "Tech Entrepreneur Option",
+  //         "text": "Option: Debt 2; or Rent 1.",
+  //         "options": [
+  //           {
+  //             "name": "Bootstrap",
+  //             "text": "Debt 2",
+  //             "targetedSteps": [[]]
+  //           },
+  //           {
+  //             "name": "Venture Capital",
+  //             "text": "Rent 1",
+  //             "targetedSteps": [[]]
+  //           }
+  //         ]
+  //       }
+  //     ],
+  //     "actions": [],
+  //     "attackTargets": [],
+  //     "validSlots": ["BoardSlot:0.7403819084361432", "BoardSlot:0.26291570758308946", "BoardSlot:0.6438730410761568", "BoardSlot:0.1663211346874145", "BoardSlot:0.015948360010374696", "BoardSlot:0.12416090875946151", "BoardSlot:0.02811373627316005", "BoardSlot:0.041737922620413315"]
+  //   }
+  //   const optionReport = {
+  //     "name": "Tech Entrepreneur Option",
+  //     "text": "Option: Debt 2; or Rent 1.",
+  //     "options": [
+  //       {
+  //         "name": "Bootstrap",
+  //         "text": "Debt 2",
+  //         "targetedSteps": [
+  //           []
+  //         ]
+  //       },
+  //       {
+  //         "name": "Venture Capital",
+  //         "text": "Rent 1",
+  //         "targetedSteps": [
+  //           []
+  //         ]
+  //       }
+  //     ]
+  //   }
+  //   const move = {
+  //     selected: {},
+
+  //   }
+  // }
 
   announceMove(selected, target = null, selectedSlot = null) {
     // console.log('move request:')
@@ -249,7 +344,8 @@ class GameContainer extends Component {
           {/* {gameStatus}
           {turnTimer} */}
         </div>
-        <br />
+        {/* <br /> */}
+        <PlayerStatus stats={this.state.gameState.opponent.stats} />
         <OpponentHand cards={this.state.gameState.opponent.hand} />
         {/* <br /> */}
         <PlayArea selected={this.state.selected} interactivity={this.interactivityHandlers}>
@@ -263,7 +359,8 @@ class GameContainer extends Component {
           </div>
           <br />
           <BoardHalf mine={false} slots={this.state.gameState.opponent.board} selected={this.state.selected} selectedSlot={this.state.selectedSlot} interactivity={this.interactivityHandlers} />
-          <br />
+          {/* <br /> */}
+          <div className='anchor' />
           <BoardHalf mine slots={this.state.gameState.my.board} selected={this.state.selected} selectedSlot={this.state.selectedSlot} interactivity={this.interactivityHandlers} />
           <br />
           <div className='leaderDiv'>
@@ -276,7 +373,8 @@ class GameContainer extends Component {
           {/* <br /> */}
         </PlayArea>
         <PlayerHand cards={this.state.gameState.my.hand} selected={this.state.selected} interactivity={this.interactivityHandlers} />
-        <br />
+        <PlayerStatus stats={this.state.gameState.my.stats} />
+        {/* <br /> */}
         {/* <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer} /> */}
       </>
     )

@@ -3,15 +3,15 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: StaticEnchantmentData = {
-    'id': 'Guard',
-    'name': {
-        'english': `Guard`,
+    id: 'Guard',
+    name: {
+        english: `Guard`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Static',
-    'activeZones': ['board'],
-    'activeTypes': ['Follower'],
-    'effectObjs': [{
+    type: 'Enchantment',
+    subtype: 'Static',
+    activeZones: ['board'],
+    activeTypes: ['Follower'],
+    effectObjs: [{
         operation: 'guard',
         value: true
     }]

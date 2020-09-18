@@ -76,6 +76,7 @@ import BodyDouble from '../cards/BodyDouble'
 import Archimedes from '../cards/Archimedes'
 import JohnFKennedy from '../cards/JohnFKennedy'
 import WallLabourer from '../cards/WallLabourer'
+import TechEntrepreneur from '../cards/TechEntrepreneur'
 
 export const NamelessFollowers = {
   Footman,
@@ -86,11 +87,11 @@ export const NamelessFollowers = {
   SuicideBomber,
   BodyDouble,
   WallLabourer,
-  Orcissimus,
+  TechEntrepreneur,
 }
 
 export const FamousFollowers = {
-  // Orcissimus,
+  Orcissimus,
   PrinceTimothy,
   Archimedes,
   JohnFKennedy,

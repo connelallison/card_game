@@ -126,6 +126,7 @@ abstract class GamePhase {
             death: [],
             play: [],
             action: [],
+            optionAction: [],
             eventAction: [],
             deathAction: [],
             // eurekaAction: [],

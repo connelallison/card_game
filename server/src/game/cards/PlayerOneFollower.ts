@@ -3,28 +3,27 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-  'id': 'PlayerOneFollower',
-  'name': {
-    'english': `Player 1 Follower`,
+  id: 'PlayerOneFollower',
+  name: {
+    english: `Player 1 Follower`,
   },
-  'type': 'Follower',
-  'subtype': 'Nameless',
-  'classes': ['All'],
-  'categories': [],
-  'collectable': false,
-  'cost': 2,
-  'attack': 2,
-  'health': 3,
-  'charges': 1,
-  'staticCardText': {
-    'english': ``,
+  type: 'Follower',
+  subtype: 'Nameless',
+  classes: ['All'],
+  categories: [],
+  collectable: false,
+  cost: 2,
+  attack: 2,
+  health: 3,
+  charges: 1,
+  staticText: {
+    english: ``,
   },
-  'dynamicCardText': {
-      'templates': {
-          'english': ``,
+  text: {
+      templates: {
+          english: ``,
       },
   },
-  'targeted': false
 }
 
 class PlayerOneFollower extends NamelessFollower {

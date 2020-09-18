@@ -17,6 +17,7 @@ import EventActionPhase from "../gamePhases/EventActionPhase";
 // import EurekaActionPhase from "../gamePhases/EurekaActionPhase";
 import HealMultiplePhase from "../gamePhases/HealMultiplePhase";
 import HealSinglePhase from "../gamePhases/HealSinglePhase";
+import OptionActionPhase from "../gamePhases/OptionActionPhase";
 import PlayPhase from "../gamePhases/PlayPhase";
 import ProposedAttackPhase from "../gamePhases/ProposedAttackPhase";
 import ProposedDrawPhase from "../gamePhases/ProposedDrawPhase";
@@ -41,6 +42,7 @@ const Phases = {
     // EurekaActionPhase,
     HealMultiplePhase,
     HealSinglePhase,
+    OptionActionPhase,
     PlayPhase,
     ProposedAttackPhase,
     ProposedDrawPhase,

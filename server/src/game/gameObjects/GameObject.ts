@@ -203,11 +203,11 @@ abstract class GameObject {
     }
 
     storedValue(value: StoredValueObject, actionEvent: ActionEvent): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
-        return actionEvent[value.param]
+        return actionEvent.stored[value.param]
     }
 
     dynamicValue(value: DynamicValue): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
-        // console.log(value)
+        if (typeof value === 'undefined') return value
         if (typeof value === 'number') return value
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
@@ -216,6 +216,7 @@ abstract class GameObject {
         const valueObj = value as DynamicValueObject
         if (valueObj.valueType === 'localisedString') return this.dynamicLocalisedString(valueObj)
         if (valueObj.valueType === 'string') return this.dynamicString(valueObj)
+        if (valueObj.valueType === 'boolean') return this.dynamicBoolean(valueObj)
         if (valueObj.valueType === 'number') return this.dynamicNumber(valueObj)
         if (valueObj.valueType === 'numbers') return this.dynamicNumbers(valueObj)
         if (valueObj.valueType === 'target') return this.dynamicTarget(valueObj)
@@ -231,7 +232,7 @@ abstract class GameObject {
                 if (obj.stringMap === 'name') return target.name
             }
             return {
-                'english': ''
+                english: ''
             }
         }
     }
@@ -241,6 +242,14 @@ abstract class GameObject {
             const target = this.dynamicTarget(obj.target)[0]
             if (target) return (TargetToStringMaps[obj.stringMap] as TargetToStringMap)(target)
             return ''
+        }
+    }
+
+    dynamicBoolean(obj: DynamicBooleanObject): boolean {
+        if (obj.from === 'number') {
+            const number = this.dynamicValue(obj.number) as number
+            const comparison = this.dynamicValue(obj.comparison) as number
+            return NumberToBooleanMaps[obj.operator](number, comparison)
         }
     }
 
@@ -276,7 +285,13 @@ abstract class GameObject {
     }
 
     dynamicEvents(obj: DynamicEventsObject): GameEvent[] {
-        if (obj.from === 'eventDomain') return this.eventDomains(obj.eventDomain)
+        if (obj.from === 'eventDomain') {
+            const unfiltered = this.eventDomains(obj.eventDomain)
+            if (obj.requirements) {
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.eventRequirement(requirement, target))), unfiltered)
+            }
+            return unfiltered
+        }
     }
 
     dynamicNumber(obj: DynamicNumberObject): number {
@@ -291,6 +306,7 @@ abstract class GameObject {
             if (target) return (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)
             return null
         }
+        if (obj.from === 'targets') return this.dynamicTargets(obj.targets).length
     }
 
     dynamicNumbers(obj: DynamicNumbersObject): number[] {
@@ -314,60 +330,62 @@ abstract class GameObject {
     //     }
     // }
 
-    actionFunction(actionEvent: ActionEvent, obj: ActionFunction): void {
+    actionStep(actionEvent: ActionEvent, step: ActionStep): void {
+        step.actionFunctions.forEach(actionFunction => this.actionFunction(actionEvent, step, actionFunction))
+    }
+
+    actionFunction(actionEvent: ActionEvent, step: ActionStep, obj: ActionFunction): void {
         const values: ValuesObject = {}
         for (let property in obj.values) {
             values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent)
         }
-        if (obj.functionType === 'autoAction') return this.autoActionFunction(actionEvent, obj, values)
-        if (obj.functionType === 'manualAction') return this.manualActionFunction(actionEvent as ActionActionEvent, obj, values)
-        if (obj.functionType === 'targetMapAction') return this.targetMapActionFunction(actionEvent as TriggerActionEvent, obj, values)
-        if (obj.functionType === 'eventModAction') return this.eventModActionFunction(actionEvent as TriggerActionEvent, obj, values)
+        if (obj.functionType === 'autoAction') return this.autoActionFunction(actionEvent, step, obj, values)
+        if (obj.functionType === 'manualAction') return this.manualActionFunction(actionEvent as ActionActionEvent, step as ActionActionStep, obj, values)
+        if (obj.functionType === 'targetMapAction') return this.targetMapActionFunction(actionEvent as TriggerActionEvent, step, obj, values)
+        if (obj.functionType === 'eventModAction') return this.eventModActionFunction(actionEvent as TriggerActionEvent, step, obj, values)
     }
 
-    autoActionFunction(actionEvent: ActionEvent, obj: AutoActionFunction, values): void {
-        let targets
-        if (obj.target || obj.targets) {
-            const targetObj = obj.target ? obj.target : obj.targets
-            targets = this.dynamicValue(targetObj) as GameObject[]
-        } else if (actionEvent.targets) {
-            // death action events store a dead follower's slot as the default target, for relative targeting
-            targets = [...actionEvent.targets]
-        }
+    autoActionFunction(actionEvent: ActionEvent, step: ActionStep, obj: AutoActionFunction, values): void {
+        let targets = (this.dynamicOrStoredValue(step.autoTargets?.[obj.autoTarget ?? 0].targets, actionEvent) as GameObject[]) ?? []
         if (obj.extraTargets && targets[0]) {
             if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
             else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
         }
-        return ActionOperations[obj.operation](this, actionEvent, targets, values)
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, targets[0])) ?? true)
+            return ActionOperations[obj.operation](this, actionEvent, targets, values)
     }
 
-    manualActionFunction(actionEvent: ActionActionEvent, obj: ManualActionFunction, values): void {
-        let targets = [...actionEvent.targets]
+    manualActionFunction(actionEvent: ActionActionEvent, step: ActionActionStep, obj: ManualActionFunction, values): void {
+        let targets = [step.manualTargets[obj.manualTarget ?? 0].chosenTarget]
         if (obj.extraTargets && targets[0]) {
             if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
             else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
         }
-        return ActionOperations[obj.operation](this, actionEvent, targets, values)
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, targets[0])) ?? true)
+            return ActionOperations[obj.operation](this, actionEvent, targets, values)
     }
 
-    targetMapActionFunction(triggerActionEvent: TriggerActionEvent, obj: TargetMapActionFunction, values): void {
+    targetMapActionFunction(triggerActionEvent: TriggerActionEvent, step: ActionStep, obj: TargetMapActionFunction, values): void {
         let targets = [(EventToTargetMaps[obj.targetMap] as EventToTargetMap)(triggerActionEvent.event)]
         if (obj.extraTargets && targets[0]) {
             if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
             else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
         }
-        return ActionOperations[obj.operation](this, triggerActionEvent, targets, values)
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, triggerActionEvent)) ?? true)
+            return ActionOperations[obj.operation](this, triggerActionEvent, targets, values)
     }
 
-    eventModActionFunction(triggerActionEvent: TriggerActionEvent, obj: EventModActionFunction, values): void {
-        return EventModOperations[obj.operation](this, triggerActionEvent.event, values)
+    eventModActionFunction(triggerActionEvent: TriggerActionEvent, step: ActionStep, obj: EventModActionFunction, values): void {
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, triggerActionEvent)) ?? true)
+            return EventModOperations[obj.operation](this, triggerActionEvent.event, values)
     }
 
     requirement(obj: Requirement, target?: GameObject | GameEvent): boolean {
-        if (obj.hasOwnProperty('activeRequirement')) return this.activeRequirement(obj as ActiveRequirement)
+        if (obj.hasOwnProperty('activeRequirement')) return this.activeRequirement(obj as ActiveRequirementShortcut)
         if (obj.hasOwnProperty('targetRequirement')) return this.targetRequirement(obj as TargetRequirement, target as GameObject)
         if (obj.hasOwnProperty('eventTargetRequirement')) return this.eventTargetRequirement(obj as EventTargetRequirement, target as GameEvent)
         if (obj.hasOwnProperty('eventRequirement')) return this.eventRequirement(obj as EventRequirement, target as GameEvent)
+        if (obj.hasOwnProperty('customRequirement')) return this.dynamicBoolean((obj as CustomRequirement).customRequirement)
     }
 
     targetRequirement(obj: TargetRequirement, target: GameObject): boolean {
@@ -378,7 +396,7 @@ abstract class GameObject {
         return TargetRequirements[obj.targetRequirement](this, target, values)
     }
 
-    activeRequirement(obj: ActiveRequirement): boolean {
+    activeRequirement(obj: ActiveRequirementShortcut): boolean {
         const values: any = {}
         for (let property in obj.values) {
             values[property] = this.dynamicValue(obj.values[property])
@@ -424,7 +442,7 @@ import { CardIDString, EnchantmentIDString, FollowerIDString, PersistentCardIDSt
 import { TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
 import TargetDomains from "../dictionaries/TargetDomains"
 import EventDomains from "../dictionaries/EventDomains"
-import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject, DynamicValueObject, DynamicLocalisedStringObject } from "../structs/DynamicValueObject"
+import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject, DynamicValueObject, DynamicLocalisedStringObject, DynamicBooleanObject } from "../structs/DynamicValueObject"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import TargetToStringMap from "../functionTypes/TargetToStringMap"
 import DynamicTargetReducers from "../dictionaries/DynamicTargetReducers"
@@ -435,7 +453,7 @@ import DynamicEventReducers from "../dictionaries/DynamicEventReducers"
 import DynamicNumberReducers from "../dictionaries/DynamicNumberReducers"
 import TargetToNumberMap from "../functionTypes/TargetToNumberMap"
 import ActionEvent from "../gamePhases/ActionEvent"
-import { ActionFunction, AutoActionFunction, EventModActionFunction, ManualActionFunction, TargetMapActionFunction } from "../structs/Action"
+import { ActionActionStep, ActionFunction, ActionStep, AutoActionFunction, EventModActionFunction, ManualActionFunction, TargetMapActionFunction } from "../structs/Action"
 import ActionOperations from "../dictionaries/ActionOperations"
 import TargetRequirements from "../dictionaries/TargetRequirements"
 import ActiveRequirements from "../dictionaries/ActiveRequirements"
@@ -457,10 +475,11 @@ import WeaponCreation from "./WeaponCreation"
 import WonderCreation from "./WonderCreation"
 import TechniqueCreation from "./TechniqueCreation"
 import AuraEnchantment from "./AuraEnchantment"
-import { TargetRequirement, ActiveRequirement, EventTargetRequirement, EventRequirement, Requirement } from "../structs/Requirement"
+import { TargetRequirement, ActiveRequirementShortcut, EventTargetRequirement, EventRequirement, Requirement, CustomRequirement } from "../structs/Requirement"
 import EventModOperations from "../dictionaries/EventModOperations"
 import { TriggerActionEvent } from "../gamePhases/TriggerActionPhase"
 import ValuesObject from "../structs/ValuesObject"
 import { ActionActionEvent } from "../gamePhases/ActionActionPhase"
 import EventRequirements from "../dictionaries/EventRequirements"
+import NumberToBooleanMaps from "../dictionaries/NumberToBooleanMaps"
 

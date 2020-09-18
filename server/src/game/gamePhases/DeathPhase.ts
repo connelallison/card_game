@@ -65,20 +65,13 @@ class DeathPhase extends EventPhase {
 
     deathActionPhase(card: DestroyableCard, event: DeathEvent): void {
         card.deathEvents.forEach(deathAction => {
-            const deathActionEvent = (card instanceof Follower)
-            ? new DeathActionEvent(this.game(), {
-                controller: card.controller(),
-                objectSource: card,
-                deathAction,
-                targets: [event.slot],
-                event,
-            })
-            : new DeathActionEvent(this.game(), {
+            const deathActionEvent = new DeathActionEvent(this.game(), {
                 controller: card.controller(),
                 objectSource: card,
                 deathAction,
                 event,
             })
+            if (card instanceof Follower) deathActionEvent.stored.deathSlot = event.slot
             this.startChild(new Phases.DeathActionPhase(this, deathActionEvent))
         })
     }

@@ -3,28 +3,27 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: LeaderData = {
-    'id': 'KingFredTheSaintly',
-    'name': {
-        'english': `King Fred, the Saintly`,
+    id: 'KingFredTheSaintly',
+    name: {
+        english: `King Fred, the Saintly`,
     },
-    'type': 'Leader',
-    'subtype': 'Leader',
-    'classes': ['The People'],
-    'collectable': true,
-    'cost': 0,
-    'attack': 1,
-    'health': 8,
-    'targeted': false,
-    'leaderTechniqueID': 'KingFredTheSaintlyRecruit',
-    'staticCardText': {
-        'english': ``,
+    type: 'Leader',
+    subtype: 'Leader',
+    classes: ['The People'],
+    collectable: true,
+    cost: 0,
+    attack: 1,
+    health: 8,
+    leaderTechniqueID: 'KingFredTheSaintlyRecruit',
+    staticText: {
+        english: ``,
     },
-    'dynamicCardText': {
-        'templates': {
-            'english': ``,
+    text: {
+        templates: {
+            english: ``,
         },
     },
-    'starter': true
+    starter: true
 }
 
 class KingFredTheSaintly extends Leader {

@@ -6,10 +6,13 @@ const ActiveRequirements = {
     minAllFollowers: (object: GameObject, values: {min: number}) => (object.controller().boardFollowers().length + object.controller().opponent.boardFollowers().length >= values.min),
     min1AllFollower: (object: GameObject) => (object.controller().boardFollowers().length + object.controller().opponent.boardFollowers().length >= 1),
     canSummonType: (object: GameObject, values: {type: string}) => (object.controller().canSummonType(values.type as PersistentCardTypeString)),
-    isMyTurn: (object: GameObject) => (object.controller().myTurn())
+    isMyTurn: (object: GameObject) => (object.controller().myTurn()),
+    eureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() ?? false),
+    notEureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() === false ?? false),
 }
 
 export default ActiveRequirements
 
+import Card from "../gameObjects/Card"
 import GameObject from "../gameObjects/GameObject"
 import { PersistentCardTypeString } from "../stringTypes/ZoneTypeSubtypeString"

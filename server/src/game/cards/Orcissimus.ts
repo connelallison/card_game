@@ -4,27 +4,26 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import { lastFriendlyFollowerDied } from "../dictionaries/DynamicValueShortcuts";
 
 const data: FamousFollowerData = {
-  'id': 'Orcissimus',
-  'name': {
-    'english': `Orcissimus`,
+  id: 'Orcissimus',
+  name: {
+    english: `Orcissimus`,
   },
-  'type': 'Follower',
-  'subtype': 'Famous',
-  'classes': ['Faith'],
-  'categories': [],
-  'collectable': true,
-  'cost': 4,
-  'attack': 4,
-  'health': 5,
-  'targeted': false,
-  'staticCardText': {
-    'english': `Event: Summon a copy of the last friendly minion that died.`,
+  type: 'Follower',
+  subtype: 'Famous',
+  classes: ['Faith'],
+  categories: [],
+  collectable: true,
+  cost: 4,
+  attack: 4,
+  health: 5,
+  staticText: {
+    english: `Event: Summon a copy of the last friendly minion that died.`,
   },
-  'dynamicCardText': {
-    'templates': {
-      'english': `Event: Summon a copy of the last friendly minion that died. $0`,
+  text: {
+    templates: {
+      english: `Event: Summon a copy of the last friendly minion that died. $0`,
     },
-    'dynamicValues': [
+    dynamicValues: [
       {
         value: {
           valueType: 'localisedString',
@@ -35,21 +34,21 @@ const data: FamousFollowerData = {
         default: '',
         activeZones: ['hand'],
         templates: {
-          'english': '($)'
+          english: '($)'
         }
       }
     ]
   },
-  'events': [{
+  events: [{
     actionType: 'eventAction',
     name: {
       english: 'Orcissimus Event'
     },
     text: {
-      'templates': {
-        'english': `Event: Summon a copy of the last friendly minion that died. $0`,
+      templates: {
+        english: `Event: Summon a copy of the last friendly minion that died. $0`,
       },
-      'dynamicValues': [
+      dynamicValues: [
         {
           value: {
             valueType: 'localisedString',
@@ -60,22 +59,24 @@ const data: FamousFollowerData = {
           default: '',
           activeZones: ['hand'],
           templates: {
-            'english': '($)'
+            english: '($)'
           }
         }
       ]
     },
-    actionFunctions: [{
-      functionType: 'autoAction',
-      operation: "createAndSummonCard",
-      values: {
-        cardID: {
-          valueType: 'string',
-          from: 'target',
-          stringMap: 'classID',
-          target: lastFriendlyFollowerDied
+    actionSteps: [{
+      actionFunctions: [{
+        functionType: 'autoAction',
+        operation: "createAndSummonCard",
+        values: {
+          cardID: {
+            valueType: 'string',
+            from: 'target',
+            stringMap: 'classID',
+            target: lastFriendlyFollowerDied
+          }
         }
-      }
+      }]
     }]
   }],
 }

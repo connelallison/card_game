@@ -4,21 +4,23 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import { lastEnemyFollowerEnteredPlay } from "../dictionaries/DynamicValueShortcuts";
 
 const data: PermanentPassiveData = {
-    'id': 'SingleMindedFury',
-    'name': {
-        'english': `Single-Minded Fury`,
+    id: 'SingleMindedFury',
+    name: {
+        english: `Single-Minded Fury`,
     },
-    'type': 'Passive',
-    'subtype': 'Permanent',
-    'classes': ['Empire'],
-    'collectable': true,
-    'cost': 4,
-    'staticCardText': {
-        'english': `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources.`,
+    type: 'Passive',
+    subtype: 'Permanent',
+    classes: ['Empire'],
+    collectable: true,
+    cost: 4,
+    ethos: true,
+    enchantments: ['SingleMindedFuryTrigger'],
+    staticText: {
+        english: `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources.`,
     },
-    'dynamicCardText': {
-        'templates': {
-            'english': `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources. $0`,
+    text: {
+        templates: {
+            english: `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources. $0`,
         },
         dynamicValues: [
             {
@@ -31,14 +33,11 @@ const data: PermanentPassiveData = {
                 activeZones: ['passiveZone'],
                 default: '',
                 templates: {
-                    'english': '($)'
+                    english: '($)'
                 }
             }
         ]
     },
-    'enchantments': ['SingleMindedFuryTrigger'],
-    'targeted': false,
-    'ethos': true
 }
 
 class SingleMindedFury extends PermanentPassive {

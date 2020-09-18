@@ -34,10 +34,10 @@ abstract class Creation extends DestroyableCard {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            targeted: this.targeted,
-            validTargets: this.validTargetIDs(),
-            staticCardText: this.staticCardText[localisation],
-            dynamicCardText: this.generateDynamicCardText(localisation),
+            staticText: this.staticText[localisation],
+            text: this.generateDynamicText(this.text, localisation),
+            options: this.optionsReport(localisation),
+            actions: this.actionsReport(localisation),
         }
     }
 

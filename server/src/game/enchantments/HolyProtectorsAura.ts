@@ -4,23 +4,24 @@ import GameObject from "../gameObjects/GameObject";
 import { sumFriendlyFollowersHealth } from "../dictionaries/DynamicValueShortcuts";
 
 const data: AuraEnchantmentData = {
-    'id': 'HolyProtectorsAura',
-    'name': {
-        'english': `Holy Protectors Aura`,
+    id: 'HolyProtectorsAura',
+    name: {
+        english: `Holy Protectors Aura`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Aura',
-    'activeZones': ['passiveZone'],
-    'activeTypes': ['Passive'],
-    'targetDomain': ['friendlyLeader'],
-    'targetRequirements': [{
-        'targetRequirement': 'isFriendly'
+    type: 'Enchantment',
+    subtype: 'Aura',
+    priority: 3,
+    activeZones: ['passiveZone'],
+    activeTypes: ['Passive'],
+    effectObjs: [{
+        operation: 'incrementHealth',
+        value: sumFriendlyFollowersHealth
     }],
-    'priority': 3,
-    'effectObjs': [{
-        'operation': 'incrementHealth',
-        'value': sumFriendlyFollowersHealth
-    }]
+    targets:  {
+        valueType: 'targets',
+        from: 'targetDomain',
+        targetDomain: ['friendlyLeader'],
+    }
 }
 
 class HolyProtectorsAura extends AuraEnchantment {

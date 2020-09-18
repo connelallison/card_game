@@ -90,6 +90,17 @@ class GamePlayer extends GameObject {
     return this.board.filter(slot => !slot.isEmpty()).map(slot => slot.follower)
   }
 
+  statsReport() {
+    return {
+      money: this.money,
+      income: this.income,
+      growth: this.growth,
+      debt: this.queuedDebt,
+      rent: this.rent,
+      fervour: this.fervour,
+    }
+  }
+
   leaderReport() {
     return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.income, currentMoney: this.money, armour: this.armour })
   }
@@ -148,9 +159,9 @@ class GamePlayer extends GameObject {
     return this
   }
 
-  effectOwner(): GamePlayer {
-    return this
-  }
+  // effectOwner(): GamePlayer {
+  //   return this
+  // }
 
   baseMoney(): number {
     return this.rawMoney - this.currentDebt

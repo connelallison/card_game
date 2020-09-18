@@ -32,20 +32,18 @@ abstract class Follower extends Character {
   }
 
   updateArrays(): void {
+    this.updateActiveOptions()
+    this.updateActiveActions()
+    this.updateActiveEvents()
+    this.updateActiveDeathEvents()
+    this.updateAttackTargets()
     this.updateValidSlots()
-    this.updateValidTargets()
   }
 
-  updateValidTargets(): void {
-    if (this.inPlay()) {
-      this.validTargets = (this.owner.opponent.leaderZone as Character[]).concat(this.owner.opponent.boardFollowers()).filter(defender => {
-        return Permissions.canAttack(this, defender)
-      })
-    } else if (this.zone === 'hand' && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
-    } else {
-      this.validTargets = []
-    }
+  updateAttackTargets(): void {
+    this.attackTargets = this.inPlay() ? (this.owner.opponent.leaderZone as Character[]).concat(this.owner.opponent.boardFollowers()).filter(defender => {
+      return Permissions.canAttack(this, defender)
+    }) : []
   }
 
   updateValidSlots(): void {

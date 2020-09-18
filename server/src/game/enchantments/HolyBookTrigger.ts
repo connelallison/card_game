@@ -3,33 +3,37 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEnchantmentData = {
-    'id': 'HolyBookTrigger',
-    'name': {
-        'english': `Holy Book Trigger`,
+    id: 'HolyBookTrigger',
+    name: {
+        english: `Holy Book Trigger`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Trigger',
-    'repeatable': true,
-    'wonderTrigger': false,
-    'activeZones': ['creationZone'],
-    'activeTypes': ['Creation'],
-    'triggerObjs': [{
-        'actionType': 'triggerAction',
-        'eventType': 'endOfTurn',
-        'requirements': [{
-            'activeRequirement': 'isMyTurn'
-        }],
-        'actionFunctions': [{
-            functionType: 'autoAction',
-            operation: 'heal',
-            values: {
-                'healing': 2,
-            },
-            targets: {
-                valueType: 'targets',
-                from: 'targetDomain',
-                targetDomain: ['friendlyBoard', 'friendlyLeader']
-            }
+    type: 'Enchantment',
+    subtype: 'Trigger',
+    repeatable: true,
+    wonderTrigger: false,
+    activeZones: ['creationZone'],
+    activeTypes: ['Creation'],
+    triggerObjs: [{
+        actionType: 'triggerAction',
+        eventType: 'endOfTurn',
+        actionSteps: [{
+            requirements: [{
+                activeRequirement: 'isMyTurn'
+            }],
+            autoTargets: [{
+                targets: {
+                    valueType: 'targets',
+                    from: 'targetDomain',
+                    targetDomain: ['friendlyBoard', 'friendlyLeader']
+                }
+            }],
+            actionFunctions: [{
+                functionType: 'autoAction',
+                operation: 'heal',
+                values: {
+                    'healing': 2,
+                },
+            }]
         }]
     }]
 }

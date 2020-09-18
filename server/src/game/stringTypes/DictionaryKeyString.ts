@@ -51,6 +51,7 @@ export type EventRequirementString = keyof typeof EventRequirements
 export type EventToTargetMapString = keyof typeof EventToTargetMaps
 // export type NumberOperatorString = keyof typeof DynamicNumberOperators
 export type NumberReducerString = keyof typeof DynamicNumberReducers
+export type NumberToBooleanMapString = keyof typeof NumberToBooleanMaps
 export type PhaseString = keyof typeof Phases
 export type TargetReducerString = keyof typeof DynamicTargetReducers
 export type TargetRequirementString = keyof typeof TargetRequirements
@@ -93,3 +94,4 @@ import TargetToNumberMaps from "../dictionaries/TargetToNumberMaps"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import Phases from "../dictionaries/Phases"
 import EventRequirements from "../dictionaries/EventRequirements"
+import NumberToBooleanMaps from "../dictionaries/NumberToBooleanMaps"

@@ -1,33 +1,33 @@
 import { DynamicNumberObject, DynamicTargetObject } from "../structs/DynamicValueObject";
 
 export const countFriendlyFollowers: DynamicNumberObject = {
-    'valueType': 'number',
-    'from': 'numbers',
+    valueType: 'number',
+    from: 'numbers',
     'reducer': 'count',
     'numbers': {
-        'valueType': 'numbers',
-        'from': 'targets',
+        valueType: 'numbers',
+        from: 'targets',
         'numberMap': 'count',
-        'targets': {
-            'valueType': 'targets',
-            'from': 'targetDomain',
-            'targetDomain': 'friendlyBoard'
+        targets: {
+            valueType: 'targets',
+            from: 'targetDomain',
+            targetDomain: 'friendlyBoard'
         },
     }
 }
 
 export const sumFriendlyFollowersHealth: DynamicNumberObject = {
-    'valueType': 'number',
-    'from': 'numbers',
+    valueType: 'number',
+    from: 'numbers',
     'reducer': 'sum',
     'numbers': {
-        'valueType': 'numbers',
-        'from': 'targets',
+        valueType: 'numbers',
+        from: 'targets',
         'numberMap': 'health',
-        'targets': {
-            'valueType': 'targets',
-            'from': 'targetDomain',
-            'targetDomain': ['friendlyBoard']
+        targets: {
+            valueType: 'targets',
+            from: 'targetDomain',
+            targetDomain: ['friendlyBoard']
         }
     }
 }

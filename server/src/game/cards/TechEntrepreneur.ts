@@ -17,21 +17,58 @@ const data: NamelessFollowerData = {
     health: 4,
     charges: 1,
     staticText: {
-        english: `Option: Debt 2; or Rent 1.`,
+        english: `Option: Pay 1 Money now; or Debt 2; or Rent 1.`,
     },
     text: {
         templates: {
-            english: `Option: Debt 2; or Rent 1.`,
+            english: `Option: Pay 1 Money now; or Debt 2; or Rent 1.`,
         },
     },
     options: [{
         actionType: 'optionAction',
         name: { english: 'Tech Entrepreneur Option' },
-        text: { templates: { english: 'Option: Debt 2; or Rent 1.' } },
+        text: { templates: { english: 'Option: Pay 1 Money now; or Debt 2; or Rent 1.' } },
         actions: [
             {
                 actionType: 'actionAction',
                 name: { english: 'Bootstrap' },
+                text: { templates: { english: 'Pay 1 Money now.' } },
+                actionSteps: [{
+                    actionFunctions: [{
+                        functionType: "autoAction",
+                        operation: 'spendMoney',
+                        values: {
+                            money: 1
+                        }
+                    }],
+                    requirements: [{
+                        activeRequirement: "canAfford",
+                        values: {
+                            cost: {
+                                valueType: "number",
+                                from: "compound",
+                                base: 1,
+                                numberMods: [{
+                                    operator: 'add',
+                                    value: {
+                                        valueType: 'number',
+                                        from: 'target',
+                                        target: {
+                                            valueType: 'target',
+                                            from: 'targetDomain',
+                                            targetDomain: 'self'
+                                        },
+                                        numberMap: 'cost'
+                                    }
+                                }]
+                            }
+                        }
+                    }]
+                }]
+            },
+            {
+                actionType: 'actionAction',
+                name: { english: 'Loan' },
                 text: { templates: { english: 'Debt 2' } },
                 actionSteps: [{
                     autoTargets: [{
@@ -48,6 +85,10 @@ const data: NamelessFollowerData = {
                             statValue: 2,
                             statEnchantmentID: 'Debt',
                         },
+                    },
+                    {
+                        functionType: 'autoAction',
+                        operation: 'forceTargetUpdate',
                     }]
                 }],
             },
@@ -65,7 +106,7 @@ const data: NamelessFollowerData = {
                     }],
                     actionFunctions: [{
                         functionType: 'autoAction',
-                        operation: 'addEnchantment',
+                        operation: 'addStatEnchantment',
                         values: {
                             statValue: 1,
                             statEnchantmentID: 'Rent',

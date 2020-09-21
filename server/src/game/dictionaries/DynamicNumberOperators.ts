@@ -1,9 +1,9 @@
 
-// const DynamicNumberOperators = {
-//     add: (value: number | DynamicNumber) => value === null ? (acc: number) => acc : typeof value === 'number' ? (acc: number) => (acc + value) : (acc: number) => (acc + value()),
-//     subtract: (value: number | DynamicNumber) => value === null ? (acc: number) => acc : typeof value === 'number' ? (acc: number) => (acc - value) : (acc: number) => (acc - value()),
-//     multiply: (value: number | DynamicNumber) => value === null ? (acc: number) => acc : typeof value === 'number' ? (acc: number) => (acc * value) : (acc: number) => (acc * value()),
-//     divide: (value: number | DynamicNumber) => value === null ? (acc: number) => acc : typeof value === 'number' ? (acc: number) => (acc / value) : (acc: number) => (acc / value()),
-// }
+const DynamicNumberOperators = {
+    add: (acc: number, value: number) => acc + value,
+    subtract: (acc: number, value: number) => acc - value,
+    multiply: (acc: number, value: number) => acc * value,
+    divide: (acc: number, value: number) => acc / value,
+}
 
-// export default DynamicNumberOperators
+export default DynamicNumberOperators

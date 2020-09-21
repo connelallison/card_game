@@ -55,7 +55,8 @@ export default OptionActionPhase
 import Card from "../gameObjects/Card";
 import GamePlayer from "../gameObjects/GamePlayer";
 import GameObject from "../gameObjects/GameObject";
-import { OptionAction, OptionChoice } from "../structs/Action";
+import { OptionAction } from "../structs/Action";
 import Game from "./Game";
-import { PlayEvent } from "./PlayPhase";import { UseEvent } from "./UsePhase";
+import { PlayEvent } from "./PlayPhase";
+import { UseEvent } from "./UsePhase";
 

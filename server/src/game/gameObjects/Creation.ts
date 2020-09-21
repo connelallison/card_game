@@ -22,6 +22,10 @@ abstract class Creation extends DestroyableCard {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+        this.updateActiveOptions()
+        this.updateActiveActions()
+        this.updateActiveEvents()
+
         return {
             name: this.name[localisation],
             id: this.id,
@@ -58,6 +62,10 @@ abstract class Creation extends DestroyableCard {
             charges: this.charges,
             cost: this.rawCost,
             debt: 0,
+            rent: 0,
+            fervour: 0,
+            growth: 0,
+            income: 0,
             flags: this.baseFlags(),
         }
     }

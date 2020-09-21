@@ -32,8 +32,8 @@ abstract class Follower extends Character {
   }
 
   updateArrays(): void {
-    this.updateActiveOptions()
-    this.updateActiveActions()
+    // this.updateActiveOptions()
+    // this.updateActiveActions()
     this.updateActiveEvents()
     this.updateActiveDeathEvents()
     this.updateAttackTargets()
@@ -54,10 +54,19 @@ abstract class Follower extends Character {
     }
   }
 
-  validSlotIDs(): string[] {
-    return this.validSlots.map(slot => slot.objectID)
+  validSlotsReport(localisation: LocalisationString = 'english'): ManualTargetReport {
+    const localisations: LocalisedStringObject = {
+      english: 'Choose a slot to put the follower in.'
+    }
+    return this.validSlots.length > 0 ? {
+      hostile: false,
+      text: localisations[localisation],
+      validTargets: this.validSlots.map(slot => slot.objectID),
+    } : null
   }
 
+
+  
   takeDamage(damage: number): number {
     this.rawHealth -= damage
     this.health -= damage
@@ -94,6 +103,10 @@ abstract class Follower extends Character {
       health: this.rawHealth,
       cost: this.rawCost,
       debt: 0,
+      rent: 0,
+      fervour: 0,
+      growth: 0,
+      income: 0,
       flags: this.baseFlags(),
     }
   }
@@ -218,3 +231,5 @@ import BoardSlot from './BoardSlot'
 import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
 import GameObjectData from '../structs/GameObjectData'
 import Permissions from '../dictionaries/Permissions'
+import { ManualTargetReport } from '../structs/ObjectReport'
+import { LocalisationString, LocalisedStringObject } from '../structs/Localisation'

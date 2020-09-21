@@ -39,48 +39,42 @@ const data: TechniqueCreationData = {
     },
     text: {
       templates: {
-        english: `Action: Deal 1 damage to a follower, then give it +3 Attack.`,
+        english: `Action: Deal $0 damage to a follower, then give it +3 Attack.`,
       },
       dynamicValues: [{
         value: {
           valueType: 'number',
           from: 'fervour',
-          base: 4,
+          base: 1,
         },
         activeZones: ['hand', 'creationZone'],
-        default: 4,
+        default: 1,
         fervour: true,
       }]
     },
     actionSteps: [{
       manualTargets: [{
+        hostile: true,
         targets: {
           valueType: 'targets',
           from: 'targetDomain',
-          targetDomain: ['enemyBoard', 'friendlyBoard'],
-          requirements: [{
-            targetRequirement: 'minVal',
-            values: {
-              param: 'attack',
-              value: 4,
-            }
-          }]
+          targetDomain: ['enemyBoard', 'friendlyBoard']
         },
         text: {
           templates: {
-            english: `Deal 1 damage to a follower, then give it +3 Attack.`,
+            english: `Deal $0 damage to a follower, then give it +3 Attack.`,
           },
           dynamicValues: [{
             value: {
               valueType: 'number',
               from: 'fervour',
-              base: 4,
+              base: 1,
             },
             activeZones: ['hand', 'creationZone'],
-            default: 4,
+            default: 1,
             fervour: true,
           }]
-        }
+        },
       }],
       actionFunctions: [{
         functionType: 'manualAction',

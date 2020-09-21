@@ -27,6 +27,10 @@ abstract class Leader extends Character {
   }
 
   provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+    this.updateActiveOptions()
+    this.updateActiveActions()
+    this.updateActiveEvents()
+
     return {
       name: this.name[localisation],
       id: this.id,
@@ -44,13 +48,13 @@ abstract class Leader extends Character {
       text: this.generateDynamicText(this.text, localisation),
       options: this.optionsReport(localisation),
       actions: this.actionsReport(localisation),
-      attackTargets: this.attackTargetIDs(),
+      attackTargets: this.attackTargetsReport(),
     }
   }
 
   updateArrays(): void {
-    this.updateActiveOptions()
-    this.updateActiveActions()
+    // this.updateActiveOptions()
+    // this.updateActiveActions()
     this.updateActiveEvents()
     this.updateActiveDeathEvents()
     this.updateAttackTargets()
@@ -87,6 +91,10 @@ abstract class Leader extends Character {
       health: this.baseHealth(),
       cost: this.rawCost,
       debt: 0,
+      rent: 0,
+      fervour: 0,
+      growth: 0,
+      income: 0,
       flags: this.baseFlags(),
     }
   }

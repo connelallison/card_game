@@ -90,6 +90,22 @@ class GamePlayer extends GameObject {
     return this.board.filter(slot => !slot.isEmpty()).map(slot => slot.follower)
   }
 
+  validSelectionsReport(localisation: LocalisationString = 'english'): ManualTargetReport {
+    if (this.myTurn()) {
+      const validSelections = [...this.leaderZone, ...this.leaderTechniqueZone, ...this.hand, ...this.boardFollowers(), ...this.creationZone]
+      .filter(card => card.canBeSelected())
+      .map(card => card.objectID)
+      
+      return {
+        hostile: false,
+        text: {
+          english: 'Choose a card.'
+        }[localisation],
+        validTargets: validSelections,
+      }
+    } else return null
+  }
+
   statsReport() {
     return {
       money: this.money,
@@ -152,6 +168,7 @@ class GamePlayer extends GameObject {
       this.increaseIncome(this.growth)
       this.refillMoney()
       this.payDebt()
+      this.payRent()
     }
   }
 
@@ -179,9 +196,12 @@ class GamePlayer extends GameObject {
     }
   }
 
+  inPlay(): PersistentCard[] {
+    return this.game.inPlay.filter(card => card.controller() === this)
+  }
+
   calculateGlobals(): void {
-    const inPlay = this.game.inPlay.filter(card => card.controller() === this)
-    inPlay.forEach(card => {
+    this.inPlay().forEach(card => {
       if (card.growth) this.growth += card.growth
       if (card.income) this.income += card.income
       if (card.rent) this.rent += card.rent
@@ -197,7 +217,7 @@ class GamePlayer extends GameObject {
     this.auraApply(2)
     this.auraApply(3)
     this.updateArrays()
-}
+  }
 
   // setData(dataObj) {
   //   Object.assign(this, dataObj)
@@ -310,9 +330,26 @@ class GamePlayer extends GameObject {
     }
   }
 
+  accrueDebt(debt: number): void {
+    this.queuedDebt += debt
+  }
+
   payDebt(): void {
     this.currentDebt = this.queuedDebt
     this.queuedDebt = 0
+  }
+
+  payRent(): void {
+    this.inPlay().forEach(card => {
+      if (card.rent > 0) {
+        const spendMoneyEvent = new SpendMoneyEvent(this.game, {
+          player: this,
+          money: card.rent,
+          card,
+        })
+        this.game.startNewDeepestPhase('SpendMoneyPhase', spendMoneyEvent)
+      }
+    })
   }
 
   reportPlayableCards() {
@@ -333,11 +370,12 @@ import LeaderTechnique from './LeaderTechnique'
 import BoardSlot from './BoardSlot'
 import Creation from './Creation'
 import Passive from './Passive'
-import { ObjectReport, BoardSlotReport } from '../structs/ObjectReport'
+import { ObjectReport, BoardSlotReport, ManualTargetReport } from '../structs/ObjectReport'
 import TechniqueCreation from './TechniqueCreation'
 import PersistentCard from './PersistentCard'
 import { ProposedDrawEvent } from '../gamePhases/ProposedDrawPhase'
-import { LocalisedStringObject } from '../structs/Localisation'
+import { LocalisationString, LocalisedStringObject } from '../structs/Localisation'
 import GameObjectData from '../structs/GameObjectData'
 import { PersistentCardTypeString } from '../stringTypes/ZoneTypeSubtypeString'
+import { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'
 

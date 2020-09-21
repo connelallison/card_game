@@ -27,6 +27,12 @@ class KnightDeck extends Deck {
       'JohnFKennedy',
       'TechEntrepreneur',
       'TechEntrepreneur',
+      'TechEntrepreneur',
+      'TechEntrepreneur',
+      'TechEntrepreneur',
+      'TechEntrepreneur',
+      'TechEntrepreneur',
+      'TechEntrepreneur',
     ]
     super(game, owner, 'KnightDeck', 'KnightDeck', { leader, passive, cards })
   }

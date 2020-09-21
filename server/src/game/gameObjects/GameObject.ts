@@ -203,7 +203,9 @@ abstract class GameObject {
     }
 
     storedValue(value: StoredValueObject, actionEvent: ActionEvent): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
-        return actionEvent.stored[value.param]
+        const storedValue = actionEvent.stored[value.param]
+        if (storedValue instanceof GameObject || storedValue instanceof GameEvent) return [storedValue] as GameObject[] | GameEvent[]
+        else return storedValue
     }
 
     dynamicValue(value: DynamicValue): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
@@ -307,6 +309,7 @@ abstract class GameObject {
             return null
         }
         if (obj.from === 'targets') return this.dynamicTargets(obj.targets).length
+        if (obj.from === 'compound') return obj.numberMods.reduce((acc, mod) => this.numberMod(acc, mod), obj.base)
     }
 
     dynamicNumbers(obj: DynamicNumbersObject): number[] {
@@ -316,19 +319,10 @@ abstract class GameObject {
         }
     }
 
-    // wrapCompoundDynamicNumber(object: CompoundDynamicNumberObject): DynamicNumber {
-    //     const baseValue = object.baseValue
-    //     const numberMods = object.numberMods.map(obj => this.wrapNumberMod(obj))
-    //     return () => numberMods.reduce((accumulator, valueMod) => valueMod(accumulator), baseValue)
-    // }
-
-    // wrapNumberMod(obj: NumberModObject): DynamicNumberOperator {
-    //     if (obj.hasOwnProperty('value')) {
-    //         return DynamicNumberOperators[obj.operator](obj.value)
-    //     } else {
-    //         return DynamicNumberOperators[obj.operator](this.dynamicNumber(obj.valueObj as DynamicNumberObject))
-    //     }
-    // }
+    numberMod(accumulator: number, mod: NumberModObject) {
+        const value = this.dynamicValue(mod.value) as number
+        return DynamicNumberOperators[mod.operator](accumulator, value)
+    }
 
     actionStep(actionEvent: ActionEvent, step: ActionStep): void {
         step.actionFunctions.forEach(actionFunction => this.actionFunction(actionEvent, step, actionFunction))
@@ -442,7 +436,7 @@ import { CardIDString, EnchantmentIDString, FollowerIDString, PersistentCardIDSt
 import { TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
 import TargetDomains from "../dictionaries/TargetDomains"
 import EventDomains from "../dictionaries/EventDomains"
-import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject, DynamicValueObject, DynamicLocalisedStringObject, DynamicBooleanObject } from "../structs/DynamicValueObject"
+import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject, DynamicValueObject, DynamicLocalisedStringObject, DynamicBooleanObject, NumberModObject } from "../structs/DynamicValueObject"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import TargetToStringMap from "../functionTypes/TargetToStringMap"
 import DynamicTargetReducers from "../dictionaries/DynamicTargetReducers"
@@ -482,4 +476,5 @@ import ValuesObject from "../structs/ValuesObject"
 import { ActionActionEvent } from "../gamePhases/ActionActionPhase"
 import EventRequirements from "../dictionaries/EventRequirements"
 import NumberToBooleanMaps from "../dictionaries/NumberToBooleanMaps"
+import DynamicNumberOperators from "../dictionaries/DynamicNumberOperators"
 

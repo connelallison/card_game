@@ -52,6 +52,7 @@ const data: ActionMomentData = {
     },
     actionSteps: [{
       manualTargets: [{
+        hostile: true,
         targets: {
           valueType: 'targets',
           from: 'targetDomain',

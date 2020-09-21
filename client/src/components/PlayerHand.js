@@ -1,9 +1,9 @@
 import React from 'react'
-import Follower from './Follower.js'
-import Moment from './Moment.js'
-import Unknown from './Unknown.js'
-import Creation from './Creation.js'
-import Passive from './Passive.js'
+import Follower from './Follower'
+import Moment from './Moment'
+import Unknown from './Unknown'
+import Creation from './Creation'
+import Passive from './Passive'
 
 const PlayerHand = (props) => {
   let cardList
@@ -13,19 +13,19 @@ const PlayerHand = (props) => {
         return (<Unknown />)
       } else if (card.type === 'Follower') {
         return (
-          <Follower object={card} selected={props.selected} interactivity={props.interactivity} />
+          <Follower object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else if (card.type === 'Moment') {
         return (
-          <Moment object={card} selected={props.selected} interactivity={props.interactivity} />
+          <Moment object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else if (card.type === 'Creation') {
         return (
-          <Creation object={card} selected={props.selected} interactivity={props.interactivity} />
+          <Creation object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else if (card.type === 'Passive') {
         return  (
-          <Passive object={card} selected={props.selected} interactivity={props.interactivity} />
+          <Passive object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else {
         return new Error('card is not a follower, moment, or creation')

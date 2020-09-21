@@ -45,8 +45,15 @@ abstract class Character extends DestroyableCard {
     }
   }
 
-  attackTargetIDs(): string[] {
-    return this.attackTargets.map(target => target.objectID)
+  attackTargetsReport(localisation: LocalisationString = 'english'): ManualTargetReport {
+    const localisations: LocalisedStringObject = {
+      english: 'Choose a target to attack.'
+    }
+    return this.attackTargets.length > 0 ? {
+      hostile: true,
+      text: localisations[localisation],
+      validTargets: this.attackTargets.map(target => target.objectID),
+    } : null
   }
 
   canAttack(): boolean {
@@ -104,3 +111,5 @@ import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { StartOfTurnEvent } from '../gamePhases/StartOfTurnPhase'
 import { CharacterTypeString, CharacterSubtypeString } from '../stringTypes/ZoneTypeSubtypeString'
+import { ManualTargetReport } from '../structs/ObjectReport'
+import { LocalisationString, LocalisedStringObject } from '../structs/Localisation'

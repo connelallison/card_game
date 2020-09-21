@@ -35,6 +35,13 @@ const data: NamelessFollowerData = {
             },
         },
         actionSteps: [{
+            autoTargets: [{
+                targets: {
+                    valueType: 'target',
+                    from: 'stored',
+                    param: 'deathSlot'
+                },
+            }],
             actionFunctions: [
                 {
                     functionType: 'autoAction',

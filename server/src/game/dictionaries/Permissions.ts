@@ -44,6 +44,7 @@ const Permissions = {
     },
 
     canPlay: (player: GamePlayer, card: Card): boolean => {
+        // console.log('active', card.active())
         return (
             player === card.controller()
             && player.myTurn()
@@ -55,6 +56,20 @@ const Permissions = {
     },
 
     canUse: (player: GamePlayer, card: Card): boolean => {
+        // console.log('controller', card.name.english, player === card.controller())
+        // console.log('myturn', card.name.english, player.myTurn())
+        // console.log('type', card.name.english, (card instanceof TechniqueCreation || card instanceof LeaderTechnique))
+        // console.log('cost', card.name.english, card.cost <= player.money)
+        // console.log('active', card.name.english, card.active())
+        // console.log('overall', card.name.english, (
+        //     player === card.controller()
+        //     && player.myTurn()
+        //     && (card instanceof TechniqueCreation || card instanceof LeaderTechnique)
+        //     && card.inPlay()
+        //     && card.cost <= player.money
+        //     && card.active()
+        // ))
+
         return (
             player === card.controller()
             && player.myTurn()

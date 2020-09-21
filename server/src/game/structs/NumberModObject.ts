@@ -1,11 +1,9 @@
-// import NumberOperatorString from "../stringTypes/NumberOperatorString";
-// import DynamicNumberObject from "./DynamicNumberObject";
-// import DynamicNumber from "../functionTypes/DynamicNumber";
+// import { NumberOperatorString } from "../stringTypes/DictionaryKeyString";
+// import { DynamicNumber } from "./DynamicValue";
 
 // interface NumberModObject {
 //     operator: NumberOperatorString,
-//     value?: number | DynamicNumber,
-//     valueObj?: DynamicNumberObject,
+//     value?: DynamicNumber,
 // }
 
 // export default NumberModObject

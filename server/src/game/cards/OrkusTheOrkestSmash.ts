@@ -53,6 +53,7 @@ const data: ActiveLeaderTechniqueData = {
         },
         actionSteps: [{
             manualTargets: [{
+                hostile: true,
                 targets: {
                     valueType: 'targets',
                     from: 'targetDomain',

@@ -18,8 +18,8 @@ export interface ObjectReport {
   text: string
   options: OptionActionReport[]
   actions: ActionActionReport[]
-  validSlots?: string[]
-  attackTargets?: string[]
+  validSlots?: ManualTargetReport
+  attackTargets?: ManualTargetReport
 }
 
 export interface BoardSlotReport {
@@ -39,25 +39,32 @@ export interface BoardSlotReport {
 export interface OptionActionReport {
   name: string
   text: string
-  // index: number
-  options: ActionActionReport[]
+  actions: ActionActionReport[]
 }
 
 export interface ActionActionReport {
   name: string
   text: string
-  // index: number
-  targetedSteps: ManualTargetReport[][]
+  targetedSteps: ActionActionStepReport[]
 }
 
 export interface ActionActionStepReport {
-
+  manualTargets: ManualTargetReport[]
 }
 
 export interface ManualTargetReport {
   text: string
   validTargets: string[]
-  // index: number
+  hostile: boolean
+}
+
+export interface MoveRequest {
+  selected: string
+  attackTarget: string
+  selectedSlot: string
+  options: OptionChoiceRequest[]
+  actions: string[][][]
 }
 
 import { ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
+import { OptionChoiceRequest } from "./Action";

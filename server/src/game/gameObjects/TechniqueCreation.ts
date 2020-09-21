@@ -37,8 +37,8 @@ abstract class TechniqueCreation extends Creation {
   }
 
   actionsActive(): boolean {
-    return this.controller().myTurn() && this.zone === 'creationZone'
-}
+    return this.controller().myTurn() && (this.zone === 'creationZone' || this.zone === 'hand')
+  }
 }
 
 export default TechniqueCreation

@@ -72,7 +72,8 @@ class SummonPhase extends EventPhase {
         const event = this.event
         event.card.events.forEach(eventAction => {
             if (
-                !(event.card instanceof PersistentCard && !event.card.inPlay())
+                event.card.eventActive(eventAction)
+                && !(event.card instanceof PersistentCard && !event.card.inPlay())
                 && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
             ) {
                 const eventActionEvent = new EventActionEvent(this.game(), {
@@ -99,4 +100,3 @@ import Game from "./Game";
 import { EnterPlayEvent } from "./EnterPlayPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
-

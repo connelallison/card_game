@@ -53,6 +53,7 @@ class PlayPhase extends EventPhase {
         this.optionPhase()
         this.actionPhase()
         this.eventActionPhase()
+        this.accrueDebtPhase()
         if (event.card instanceof TechniqueCreation) {
             event.card.loseCharge()
             if (!event.card.repeatable) event.card.ready = false
@@ -65,7 +66,7 @@ class PlayPhase extends EventPhase {
     spendMoneyPhase(): void {
         const event = this.event
         if (event.card.cost > 0) {
-            const spendMoneyEvent = new SpendMoneyEvent(this.game(), {
+            const spendMoneyEvent = new AccrueDebtEvent(this.game(), {
                 player: event.player,
                 card: event.card,
                 money: event.card.cost
@@ -110,6 +111,7 @@ class PlayPhase extends EventPhase {
 
     actionPhase(): void {
         const event = this.event
+        // console.log(event.card.activeActions)
         event.card.activeActions.forEach(action => {
             if (
                 !(event.card instanceof PersistentCard && !event.card.inPlay())
@@ -128,9 +130,10 @@ class PlayPhase extends EventPhase {
 
     eventActionPhase(): void {
         const event = this.event
-        event.card.activeEvents.forEach(eventAction => {
+        event.card.events.forEach(eventAction => {
             if (
-                !(event.card instanceof PersistentCard && !event.card.inPlay())
+                event.card.eventActive(eventAction)
+                && !(event.card instanceof PersistentCard && !event.card.inPlay())
                 && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
             ) {
                 const eventActionEvent = new EventActionEvent(this.game(), {
@@ -143,6 +146,18 @@ class PlayPhase extends EventPhase {
             }
         })
     }
+
+    accrueDebtPhase(): void {
+        const event = this.event
+        if (event.card.debt > 0) {
+            const accrueDebtEvent = new AccrueDebtEvent(this.game(), {
+                player: event.player,
+                card: event.card,
+                money: event.card.cost
+            })
+            this.startChild(new Phases.AccrueDebtPhase(this, accrueDebtEvent))
+        }
+    }
 }
 
 export default PlayPhase
@@ -152,14 +167,13 @@ import TechniqueCreation from "../gameObjects/TechniqueCreation";
 import GamePlayer from "../gameObjects/GamePlayer";
 import Card from "../gameObjects/Card";
 import BoardSlot from "../gameObjects/BoardSlot";
-import GameObject from "../gameObjects/GameObject";
 import Game from "./Game";
 import Phases from "../dictionaries/Phases";
 import PersistentCard from "../gameObjects/PersistentCard";
 import { EnterPlayEvent } from "./EnterPlayPhase";
 import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
-import { SpendMoneyEvent } from "./SpendMoneyPhase";
+import { SpendMoneyEvent as AccrueDebtEvent } from "./SpendMoneyPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 import { OptionActionEvent } from "./OptionActionPhase"; import { OptionChoice } from "../structs/Action";
 

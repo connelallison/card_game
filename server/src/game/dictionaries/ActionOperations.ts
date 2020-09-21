@@ -87,7 +87,7 @@ const ActionOperations = {
 
     addEnchantment: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { enchantmentID: EnchantmentIDString, expires?: EnchantmentExpiryIDString[] }) => {
         targetObjs.forEach(target => {
-            
+            console.log(values.enchantmentID)            
             const enchantment = new Enchantments[values.enchantmentID](source.game, target)
             if (values.expires) enchantment.addExpiries(values.expires)
             target.addEnchantment(enchantment)
@@ -183,6 +183,17 @@ const ActionOperations = {
     //     })
     // },
 
+    spendMoney: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.controller().opponent : source.controller()
+        if (!(source instanceof Card)) throw Error(`spending money on something other than a card: ${source.name.english}`)
+        const spendMoneyEvent = new SpendMoneyEvent(source.game, {
+            player,
+            money: values.money,
+            card: source as Card,
+        })
+        source.game.startNewDeepestPhase('SpendMoneyPhase', spendMoneyEvent)
+    },
+
     markDestroyed: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
         const targets = targetObjs as DestroyableCard[]
         targets.forEach(target => target.pendingDestroy = true)
@@ -193,6 +204,10 @@ const ActionOperations = {
             source.game.startNewDeepestPhase('AuraUpdatePhase')
             source.game.startNewDeepestPhase('DeathPhase')
         } while (!source.game.ended && source.game.currentSequence().deathQueue.length > 0)
+    },
+
+    forceTargetUpdate: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        targetObjs.forEach(target => target.update())
     },
 
     banish: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
@@ -214,7 +229,7 @@ const ActionOperations = {
             const clone = values.transformTarget.clone()
             clone.owner = target.owner
             if (target instanceof PersistentCard && target.inPlay()) {
-                const slot = target instanceof Follower ? target.slot : null
+                const targetSlot = target instanceof Follower ? target.slot : null
                 ActionOperations.banish(source, event, [target])
                 if (clone instanceof PersistentCard) {
                     if (source.controller().canSummon(clone)) {
@@ -226,10 +241,10 @@ const ActionOperations = {
                                 charSource: source.charOwner(),
                             },
                             typeof index === 'number' && { index },
-                            slot && { slot },
+                            targetSlot && { targetSlot },
                         )
-                        const enterPlayEvent = new EnterPlayEvent(source.game, eventObj)
-                        source.game.startNewDeepestPhase('EnterPlayPhase', enterPlayEvent)
+                        const summonEvent = new SummonEvent(source.game, eventObj)
+                        source.game.startNewDeepestPhase('SummonPhase', summonEvent)
                     }
                 }
             } else {
@@ -274,3 +289,4 @@ import BoardSlot from '../gameObjects/BoardSlot'
 import Card from '../gameObjects/Card'
 import Enchantment from '../gameObjects/Enchantment'
 import { TargetRequirement } from '../structs/Requirement'
+import SpendMoneyPhase, { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'

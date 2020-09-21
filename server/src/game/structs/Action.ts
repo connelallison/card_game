@@ -55,6 +55,7 @@ export interface EventModActionFunction extends BaseActionFunction {
 export interface ManualTarget {
     targets: DynamicTargetsFromTargetDomain
     text: DynamicTextObject
+    hostile?: boolean
     validTargets?: GameObject[]
     chosenTarget?: GameObject
 }
@@ -145,12 +146,12 @@ export interface OptionAction {
 }
 
 export interface OptionChoice {
-    action: number
+    chosenAction: number
     chosenTargets: GameObject[][]
 }
 
 export interface OptionChoiceRequest {
-    action: number 
+    chosenAction: number 
     chosenTargets: string[][]
 }
 

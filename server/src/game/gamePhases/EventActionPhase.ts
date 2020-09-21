@@ -18,6 +18,7 @@ export class EventActionEvent extends GameEvent {
 
     constructor(game: Game, object: EventActionEventObject) {
         super(game) 
+        this.stored = {}
         Object.assign(this, object)
     }
 

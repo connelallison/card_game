@@ -39,8 +39,8 @@ abstract class DestroyableCard extends PersistentCard {
     }
 
     updateArrays(): void {
-        this.updateActiveOptions()
-        this.updateActiveActions()
+        // this.updateActiveOptions()
+        // this.updateActiveActions()
         this.updateActiveEvents()
         this.updateActiveDeathEvents()
     }

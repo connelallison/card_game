@@ -118,6 +118,7 @@ class Game extends GamePhase {
         hand: opponentHand,
         deck: player.opponent.deck.length
       },
+      validSelections: player.validSelectionsReport(),
     }
     return gameState
   }
@@ -144,21 +145,19 @@ class Game extends GamePhase {
 
   parseOptionChoice(optionChoice: OptionChoiceRequest): OptionChoice {
     return {
-      action: optionChoice.action,
+      chosenAction: optionChoice.chosenAction,
       chosenTargets: this.parseActionTargets(optionChoice.chosenTargets)
     }
   }
 
-  executeMoveRequest(moveRequest, player) {
+  executeMoveRequest(moveRequest: MoveRequest, player: GamePlayer) {
     if (!player.myTurn()) return
 
-    const selected = this.gameObjects[moveRequest.selected.objectID] as Card
-    const attackTarget = (moveRequest.attackTarget && this.gameObjects[moveRequest.attackTarget.objectID] as Character) //?? null
-    // const attackTarget = moveRequest.attackTarget === null ? null : this.gameObjects[moveRequest.attackTarget.objectID] as Character
-    const selectedSlot = (moveRequest.selectedSlot && this.gameObjects[moveRequest.selectedSlot.objectID] as BoardSlot) //?? null
-    // const selectedSlot = moveRequest.selectedSlot === null ? null : this.gameObjects[moveRequest.selectedSlot.objectID] as BoardSlot
-    const optionChoices: OptionChoice[] = moveRequest.optionChoices?.map(optionChoice => this.parseOptionChoice(optionChoice)) ?? []
-    const actionTargets: GameObject[][][] = moveRequest.actionTargets?.map(actionTargets => this.parseActionTargets(actionTargets)) ?? []
+    const selected = this.gameObjects[moveRequest.selected] as Card
+    const attackTarget = moveRequest.attackTarget && this.gameObjects[moveRequest.attackTarget] as Character
+    const selectedSlot = moveRequest.selectedSlot && this.gameObjects[moveRequest.selectedSlot] as BoardSlot
+    const options: OptionChoice[] = moveRequest.options?.map(optionChoice => this.parseOptionChoice(optionChoice)) ?? []
+    const actions: GameObject[][][] = moveRequest.actions?.map(actionTargets => this.parseActionTargets(actionTargets)) ?? [[[]]]
 
     if (selected instanceof Character && selected.inPlay() && attackTarget instanceof Character && attackTarget.inPlay()) {
       // character in play attacking
@@ -167,19 +166,19 @@ class Game extends GamePhase {
       (selected instanceof TechniqueCreation || selected instanceof LeaderTechnique)
       && selected.inPlay()
       && selected.canBeUsed()
-      && selected.validateAllOptionChoices(optionChoices)
-      && selected.validateAllActionTargets(actionTargets)
+      && selected.validateAllOptionChoices(options)
+      && selected.validateAllActionTargets(actions)
     ) {
       // technique in play being used
-      this.executeUseRequest(selected, optionChoices, actionTargets)
+      this.executeUseRequest(selected, options, actions)
     } else if (
       selected.zone === 'hand'
       && selected.canBePlayed()
-      && selected.validateAllOptionChoices(optionChoices)
-      && selected.validateAllActionTargets(actionTargets)
+      && selected.validateAllOptionChoices(options)
+      && selected.validateAllActionTargets(actions)
     ) {
       // card in hand being played
-      this.executePlayRequest(selected, optionChoices, actionTargets, selectedSlot)
+      this.executePlayRequest(selected, options, actions, selectedSlot)
     }
     this.announceGameState()
   }
@@ -204,9 +203,9 @@ class Game extends GamePhase {
     this.startSequence('UsePhase', useEvent)
   }
 
-  executePlayRequest(selected: Card, optionChoices: OptionChoice[], actionTargets: GameObject[][][], selectedSlot: BoardSlot): void {
-    selected.setAllOptionChoices(optionChoices)
-    selected.setAllActionTargets(actionTargets)
+  executePlayRequest(selected: Card, options: OptionChoice[], actions: GameObject[][][], selectedSlot: BoardSlot): void {
+    selected.setAllOptionChoices(options)
+    selected.setAllActionTargets(actions)
     const slot = (selected instanceof Follower && selected.validSlots.includes(selectedSlot)) ? { slot: selectedSlot } : null // includes slot if card is follower
     const eventObj = Object.assign({
       player: selected.owner,
@@ -404,3 +403,4 @@ import TestBot from '../gameTests/TestBot'
 import Phases from '../dictionaries/Phases'
 import { PhaseString } from '../stringTypes/DictionaryKeyString'
 import { OptionChoice, OptionChoiceRequest } from '../structs/Action'
+import { MoveRequest } from '../structs/ObjectReport'

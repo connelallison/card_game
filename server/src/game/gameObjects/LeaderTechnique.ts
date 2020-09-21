@@ -32,6 +32,10 @@ abstract class LeaderTechnique extends PersistentCard {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+        this.updateActiveOptions()
+        this.updateActiveActions()
+        this.updateActiveEvents()
+
         return {
             name: this.name[localisation],
             id: this.id,
@@ -70,6 +74,10 @@ abstract class LeaderTechnique extends PersistentCard {
     }
 
     canBeUsed(): boolean {
+        // if (this.id === 'OrkusTheOrkestSmash') {
+        //     console.log('ready', this.name.english, this.ready)
+        //     console.log('canUse', this.name.english, this.controller().canUse(this))
+        // }
         return this.ready && this.controller().canUse(this)
     }
 

@@ -50,12 +50,23 @@ input {
   margin-left: 5px;
 }
 
+/* #root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.playarea {
+  width: 95%;
+  align-self: center;
+} */
+
 .multicolour-line {
   display: inline-flex;
   background-color: inherit;
   /* align-self: flex-end; */
   justify-content: center;
 }
+
 
 .deck {
   text-align: right;
@@ -87,7 +98,7 @@ input {
   background-color: lightgrey;
   text-align: center;
   border: 1px solid black;
-  /* border-radius: 3px; */
+  border-radius: 3px;
   width: 160px;
   margin-left: 5px;
   margin-right: 5px;
@@ -156,8 +167,22 @@ input {
 
 .anchor {
   height: 15px;
-  width: 0px;
-  position: relative;
+  /* width: 0px; */
+  display: flex;
+  flex-direction: column;
+  position: relative; 
+  align-items: center;
+  justify-content: center;
+}
+
+.optionSelections {
+  background-color: transparent;
+  position: absolute;
+  align-items: center;
+}
+
+.optionActions {
+  background-color: transparent;
 }
 
 .card {
@@ -166,7 +191,7 @@ input {
   /* width: 7%; */
   background-color: lightgrey;
   border: 1px solid black;
-  /* border-radius: 0px; */
+  border-radius: 3px;
   margin-left: 3px;
   margin-right: 3px;
   display: flex;
@@ -254,11 +279,20 @@ input {
 }
 
 .canBeTargeted {
-  outline: solid red 1px;
+  outline: solid red 2px;
+}
+
+.nonHostileTarget {
+  /* outline: solid */
+  filter: drop-shadow(0 0 8px rgb(6, 173, 0));
+}
+
+.hostileTarget {
+  filter: drop-shadow(0 0 8px rgb(207, 0, 0));
 }
 
 .isSelected {
-  outline: solid blue 1px;
+  outline: solid blue 2px;
 }
 
 .topBar {

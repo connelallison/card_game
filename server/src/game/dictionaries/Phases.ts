@@ -5,6 +5,7 @@ GameEvent
 GamePhase
 EventPhase
 import ActionActionPhase from "../gamePhases/ActionActionPhase";
+import AccrueDebtPhase from "../gamePhases/AccrueDebtPhase";
 import AttackPhase from "../gamePhases/AttackPhase";
 import AuraUpdatePhase from "../gamePhases/AuraUpdatePhase";
 import DamageMultiplePhase from "../gamePhases/DamageMultiplePhase";
@@ -30,6 +31,7 @@ import TriggerActionPhase from "../gamePhases/TriggerActionPhase";
 
 const Phases = {
     ActionActionPhase,
+    AccrueDebtPhase,
     AttackPhase,
     AuraUpdatePhase,
     DamageMultiplePhase,

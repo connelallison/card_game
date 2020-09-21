@@ -14,7 +14,11 @@ abstract class FamousFollower extends Follower {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-        return {
+      this.updateActiveOptions()
+      this.updateActiveActions()
+      this.updateActiveEvents()
+
+      return {
             name: this.name[localisation],
             id: this.id,
             objectID: this.objectID,
@@ -31,8 +35,8 @@ abstract class FamousFollower extends Follower {
             text: this.generateDynamicText(this.text, localisation),
             options: this.optionsReport(localisation),
             actions: this.actionsReport(localisation),
-            attackTargets: this.attackTargetIDs(),
-            validSlots: this.validSlotIDs(),
+            attackTargets: this.attackTargetsReport(),
+            validSlots: this.validSlotsReport(),
           }
     }
 

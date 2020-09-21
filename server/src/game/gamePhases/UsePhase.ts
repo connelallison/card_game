@@ -39,6 +39,7 @@ class UsePhase extends EventPhase {
         if (!card.repeatable) card.ready = false
         this.actionPhase()
         this.eventActionPhase()
+        this.accrueDebtPhase()
         if (event.card instanceof TechniqueCreation) event.card.loseCharge()
         this.queueSteps()
         this.end()
@@ -92,9 +93,10 @@ class UsePhase extends EventPhase {
 
     eventActionPhase(): void {
         const event = this.event
-        event.card.activeEvents.forEach(eventAction => {
+        event.card.events.forEach(eventAction => {
             if (
-                !(event.card instanceof PersistentCard && !event.card.inPlay())
+                event.card.eventActive(eventAction)
+                && !(event.card instanceof PersistentCard && !event.card.inPlay())
                 && !(event.card instanceof DestroyableCard && event.card.isDestroyed())
             ) {
                 const eventActionEvent = new EventActionEvent(this.game(), {
@@ -106,6 +108,18 @@ class UsePhase extends EventPhase {
                 this.startChild(new Phases.EventActionPhase(this, eventActionEvent))
             }
         })
+    }
+
+    accrueDebtPhase(): void {
+        const event = this.event
+        if (event.card.debt > 0) {
+            const accrueDebtEvent = new AccrueDebtEvent(this.game(), {
+                player: event.player,
+                card: event.card,
+                money: event.card.cost
+            })
+            this.startChild(new Phases.AccrueDebtPhase(this, accrueDebtEvent))
+        }
     }
 }
 
@@ -124,4 +138,5 @@ import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 import PersistentCard from "../gameObjects/PersistentCard";
-import { OptionActionEvent } from "./OptionActionPhase";
+import { OptionActionEvent } from "./OptionActionPhase";import { AccrueDebtEvent } from "./AccrueDebtPhase";
+

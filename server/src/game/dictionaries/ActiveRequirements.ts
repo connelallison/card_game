@@ -9,6 +9,7 @@ const ActiveRequirements = {
     isMyTurn: (object: GameObject) => (object.controller().myTurn()),
     eureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() ?? false),
     notEureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() === false ?? false),
+    canAfford: (object: GameObject, values: {cost: number}) => (object.controller().money >= values.cost),
 }
 
 export default ActiveRequirements

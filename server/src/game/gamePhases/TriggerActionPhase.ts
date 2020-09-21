@@ -19,6 +19,7 @@ export class TriggerActionEvent extends GameEvent {
 
     constructor(game: Game, object: TriggerActionEventObject) {
         super(game) 
+        this.stored = {}
         Object.assign(this, object)
     }
 

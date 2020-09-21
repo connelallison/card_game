@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Creation from './Creation.js'
+import Creation from './Creation'
 
 class CreationZone extends Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class CreationZone extends Component {
     let creationList
     if (this.props.creations.length > 0) {
       creationList = this.props.creations.map((creation) => 
-        <Creation object={creation} selected={this.props.selected} interactivity={this.props.interactivity} />
+        <Creation object={creation} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
       )
     } else {
       creationList = [

@@ -69,6 +69,10 @@ abstract class Card extends GameObject {
   }
 
   provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+    this.updateActiveOptions()
+    this.updateActiveActions()
+    this.updateActiveEvents()
+
     return {
       name: this.name[localisation],
       id: this.id,
@@ -88,23 +92,23 @@ abstract class Card extends GameObject {
   }
 
   optionsReport(localisation: LocalisationString = 'english'): OptionActionReport[] {
-    return this.activeOptions.map(option => this.optionReport(option, localisation))
+    return this.activeOptions.length > 0 ? this.activeOptions.map(option => this.optionReport(option, localisation)) : null
   }
 
   optionReport(optionAction: OptionAction, localisation: LocalisationString = 'english'): OptionActionReport {
     return {
       name: optionAction.name[localisation],
       text: this.generateDynamicText(optionAction.text, localisation),
-      options: optionAction.activeActions.map(action => this.actionReport(action, localisation))
+      actions: optionAction.activeActions.map(action => this.actionReport(action, localisation))
     }
   }
 
   actionsReport(localisation: LocalisationString = 'english'): ActionActionReport[] {
-    return this.activeActions.map(action => this.actionReport(action, localisation))
+    return this.activeActions.length > 0 ? this.activeActions.map(action => this.actionReport(action, localisation)) : null
   }
 
   actionReport(action: ActionAction, localisation: LocalisationString = 'english'): ActionActionReport {
-    const targetedSteps = action.activeSteps.map(step => step.manualTargets?.map(target => this.manualTargetReport(target, localisation)) ?? [])
+    const targetedSteps = action.activeSteps.map(step => this.actionStepReport(step, localisation))
     return {
       name: action.name[localisation],
       text: this.generateDynamicText(action.text, localisation),
@@ -112,32 +116,46 @@ abstract class Card extends GameObject {
     }
   }
 
+  actionStepReport(step: ActionActionStep, localisation: LocalisationString = 'english'): ActionActionStepReport {
+    return {
+      manualTargets: step.manualTargets?.map(target => this.manualTargetReport(target, localisation)) ?? []
+    }
+  }
+
+  manualTargetReport(manualTarget: ManualTarget, localisation: LocalisationString = 'english'): ManualTargetReport {
+    return {
+      text: this.generateDynamicText(manualTarget.text, localisation),
+      validTargets: manualTarget.validTargets.map(target => target.objectID),
+      hostile: manualTarget.hostile ?? false,
+    }
+  }
+
   validateStepTargets(actionStep: ActionActionStep, chosenTargets: GameObject[]): boolean {
-    return actionStep.manualTargets.every((manualTarget, index) => manualTarget.validTargets.includes(chosenTargets[index]))
+    return !!chosenTargets && (actionStep.manualTargets?.every((manualTarget, index) => manualTarget.validTargets.includes(chosenTargets[index])) ?? true)
   }
 
   validateActionTargets(action: ActionAction, chosenTargets: GameObject[][]): boolean {
-    return action.activeSteps.every((step, index) => this.validateStepTargets(step, chosenTargets[index]))
+    return !!chosenTargets && (action.activeSteps?.every((step, index) => this.validateStepTargets(step, chosenTargets[index])) ?? true)
   }
 
   validateAllActionTargets(chosenTargets: GameObject[][][]): boolean {
-    return this.activeActions.every((action, index) => this.validateActionTargets(action, chosenTargets[index]))
+    return !!chosenTargets && this.activeActions.every((action, index) => this.validateActionTargets(action, chosenTargets[index]))
   }
 
   validateOptionChoice(option: OptionAction, optionChoice: OptionChoice): boolean {
-    return this.validateActionTargets(option.actions[optionChoice.action], optionChoice.chosenTargets)
+    return !!optionChoice && this.validateActionTargets(option.actions[optionChoice.chosenAction], optionChoice.chosenTargets)
   }
 
   validateAllOptionChoices(optionChoices: OptionChoice[]): boolean {
-    return this.activeOptions.every((option, index) => this.validateOptionChoice(option, optionChoices[index]))
+    return !!optionChoices && this.activeOptions.every((option, index) => this.validateOptionChoice(option, optionChoices[index]))
   }
 
   setStepTargets(actionStep: ActionActionStep, chosenTargets: GameObject[]): void {
-    actionStep.manualTargets.forEach((manualTarget, index) => manualTarget.chosenTarget = chosenTargets[index])
+    actionStep.manualTargets?.forEach((manualTarget, index) => manualTarget.chosenTarget = chosenTargets[index])
   }
 
   setActionTargets(action: ActionAction, chosenTargets: GameObject[][]): void {
-    action.activeSteps.forEach((step, index) => this.setStepTargets(step, chosenTargets[index]))
+    action.activeSteps?.forEach((step, index) => this.setStepTargets(step, chosenTargets[index]))
   }
 
   setAllActionTargets(chosenTargets: GameObject[][][]): void {
@@ -145,7 +163,7 @@ abstract class Card extends GameObject {
   }
 
   setOptionChoice(option: OptionAction, optionChoice: OptionChoice): void {
-    option.chosenActions = [option.activeActions[optionChoice.action]]
+    option.chosenActions = [option.activeActions[optionChoice.chosenAction]]
     option.chosenActions.forEach(action => this.setActionTargets(action, optionChoice.chosenTargets))
   }
 
@@ -154,7 +172,7 @@ abstract class Card extends GameObject {
   }
 
   active(): boolean {
-    return this.activeOptions.length + this.activeActions.length + this.activeEvents.length > 0
+    return (this.activeOptions.length + this.activeActions.length + this.activeEvents.length) > 0
   }
 
   actionsActive(): boolean {
@@ -162,11 +180,11 @@ abstract class Card extends GameObject {
   }
 
   updateActiveOptions(): void {
-    this.activeOptions = this.actionsActive() ? this.options.filter(option => this.optionActive(option)) : []
+    this.activeOptions = this.actionsActive() ? JSON.parse(JSON.stringify(this.options)).filter(option => this.optionActive(option)) : []
   }
 
   updateActiveActions(): void {
-    this.activeActions = this.actionsActive() ? this.actions.filter(action => this.actionActive(action)) : []
+    this.activeActions = this.actionsActive() ? JSON.parse(JSON.stringify(this.actions)).filter(action => this.actionActive(action)) : []
   }
 
   updateActiveEvents(): void {
@@ -211,13 +229,6 @@ abstract class Card extends GameObject {
     return active && autoTargets
   }
 
-  manualTargetReport(manualTarget: ManualTarget, localisation: LocalisationString = 'english'): ManualTargetReport {
-    return {
-      text: this.generateDynamicText(manualTarget.text, localisation),
-      validTargets: manualTarget.validTargets.map(target => target.objectID),
-    }
-  }
-
   dynamicTextValue(valueObj: DynamicTextValueObject, localisation: LocalisationString = 'english'): string {
     if (valueObj.activeZones.includes(this.zone)) {
       const value = this.localisedDynamicValue(valueObj.value, localisation)
@@ -244,9 +255,9 @@ abstract class Card extends GameObject {
   }
 
   updateArrays(): void {
-    this.updateActiveOptions()
-    this.updateActiveActions()
-    this.updateActiveEvents()
+    // this.updateActiveOptions()
+    // this.updateActiveActions()
+    // this.updateActiveEvents()
   }
 
   canBeSelected(): boolean {
@@ -312,7 +323,7 @@ import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { CardIDString, EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
 import { ActionAction, ActionActionStep, DeathAction, EventAction, EventActionStep, ManualTarget, OptionAction, OptionChoice, } from '../structs/Action'
-import { ActionActionReport, ManualTargetReport, ObjectReport, OptionActionReport } from '../structs/ObjectReport'
+import { ActionActionReport, ActionActionStepReport, ManualTargetReport, ObjectReport, OptionActionReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import { CardSubtypeString, CardTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import Cards from '../dictionaries/Cards'
@@ -320,4 +331,6 @@ import { LocalisedStringObject, LocalisationString, DynamicTextObject, DynamicTe
 import PlayerClassString from '../stringTypes/PlayerClassString'
 import Enchantments from '../dictionaries/Enchantments'
 import LeaderTechnique from './LeaderTechnique'
+import TechniqueCreation from './TechniqueCreation'
+import Moment from './Moment'
 

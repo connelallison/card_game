@@ -17,6 +17,7 @@ export class ActionActionEvent extends GameEvent {
 
     constructor(game: Game, object: ActionActionEventObject) {
         super(game)
+        this.stored = {}
         Object.assign(this, object)
     }
 
@@ -38,6 +39,7 @@ class ActionActionPhase extends EventPhase {
     start(): void {
         const event = this.event
         const actionCard = event.objectSource as Card
+        // console.log(event.action.activeSteps)
         this.emit('beforeAction', event)
         event.generateLog()
         this.cacheEvent(event, 'action')

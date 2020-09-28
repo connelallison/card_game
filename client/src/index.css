@@ -39,6 +39,7 @@ p.lowerMargin {
   /* margin: 1px; */
   /* margin-bottom: 0; */
   margin: 0;
+  margin-right: 10px;
   text-align: center;
 }
 
@@ -179,6 +180,7 @@ input {
   background-color: transparent;
   position: absolute;
   align-items: center;
+  z-index: 1;
 }
 
 .optionActions {
@@ -292,7 +294,8 @@ input {
 }
 
 .isSelected {
-  outline: solid blue 2px;
+  /* outline: solid blue 2px; */
+  filter: drop-shadow(0 0 8px rgb(25, 10, 231));
 }
 
 .topBar {

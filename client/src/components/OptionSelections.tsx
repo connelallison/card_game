@@ -1,26 +1,13 @@
 import React, { Component } from 'react'
+import EntityContainer from './EntityContainer'
 import OptionAction from './OptionAction'
-import { TargetSelection } from './TargetableEntity'
 
-interface OptionSelectionsProps {
-    // mine: boolean
-    contents: any
-    targetSelection: TargetSelection
-    handleSelection: (object: any) => void
-}
-
-class OptionSelections extends Component {
-    props!: OptionSelectionsProps
-
-    constructor(props: OptionSelectionsProps) {
-        super(props)
-    }
-
+class OptionSelections extends EntityContainer {
     render() {
         let optionActions
         if (this.props.contents) {
-            optionActions = (this.props.contents as any[]).map(optionAction =>
-                <OptionAction object={optionAction} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
+            optionActions = (this.props.contents).map(optionAction =>
+                <OptionAction object={optionAction} selected={this.props.selected} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
             )
         } else {
             optionActions = null

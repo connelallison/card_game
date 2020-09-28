@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 interface EntityProps {
-    // mine?: boolean
+    selected: any[]
     object: any
     targetSelection: TargetSelection
     handleSelection: (object: any) => void
@@ -32,7 +32,7 @@ abstract class TargetableEntity extends Component {
     }
 
     outlineStatus(): string {
-        return this.canBeTargeted() ? this.targetType() : ''
+        return this.props.selected && this.props.selected.includes(this.props.object) ? 'isSelected' : this.canBeTargeted() ? this.targetType() : ''
     }
 
     canBeTargeted(): boolean {

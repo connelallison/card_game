@@ -1,17 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
+import EntityContainer from './EntityContainer'
 import Passive from './Passive'
 
-class PassiveZone extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
-
+class PassiveZone extends EntityContainer {
     render() {
         let passiveList
-        if (this.props.passives.length > 0) {
-            passiveList = this.props.passives.map((passive) =>
-                <Passive object={passive} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
+        if (this.props.contents.length > 0) {
+            passiveList = this.props.contents.map((passive) =>
+                <Passive object={passive} selected={this.props.selected} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
             )
         } else {
             passiveList = [

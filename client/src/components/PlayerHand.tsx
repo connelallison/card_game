@@ -4,28 +4,29 @@ import Moment from './Moment'
 import Unknown from './Unknown'
 import Creation from './Creation'
 import Passive from './Passive'
+import { EntityContainerProps } from './EntityContainer'
 
-const PlayerHand = (props) => {
+const PlayerHand = (props: EntityContainerProps) => {
   let cardList
-  if (props.cards.length > 0) {
-    cardList = props.cards.map((card) => {
+  if (props.contents.length > 0) {
+    cardList = props.contents.map((card) => {
       if (card.type === 'unknown') {
         return (<Unknown />)
       } else if (card.type === 'Follower') {
         return (
-          <Follower object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Follower object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else if (card.type === 'Moment') {
         return (
-          <Moment object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Moment object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else if (card.type === 'Creation') {
         return (
-          <Creation object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Creation object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else if (card.type === 'Passive') {
         return  (
-          <Passive object={card} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Passive object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
         )
       } else {
         return new Error('card is not a follower, moment, or creation')
@@ -43,7 +44,6 @@ const PlayerHand = (props) => {
 
   return (
     <div className='player-hand'>
-      {/* <p className='lowerMargin'>My current cards:</p> */}
       <div className='cardList playerHand'>
         {cardList}
       </div>

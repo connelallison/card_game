@@ -5,7 +5,7 @@ import PlayerHand from '../components/PlayerHand'
 import Deck from '../components/Deck'
 import BoardHalf from '../components/BoardHalf'
 import GameStatus from '../components/GameStatus'
-import TestGame from '../components/TestGame'
+import StartGame from '../components/StartGame'
 import DisplayName from '../components/DisplayName'
 import PlayArea from '../components/PlayArea'
 import CreationZone from '../components/CreationZone'
@@ -14,13 +14,17 @@ import PassiveZone from '../components/PassiveZone'
 import LeaderTechnique from '../components/LeaderTechnique'
 import PlayerStatus from '../components/PlayerStatus'
 import OptionSelections from '../components/OptionSelections'
+import EndGame from '../components/EndGame'
+import DeckSelection from '../components/DeckSelection'
 
 class GameContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      deckID: localStorage.getItem('deckID') || 'KnightDeck',
       targetSelection: null,
       selected: null,
+      inGame: false,
       gameState: {
         validSelections: null,
         started: null,
@@ -55,6 +59,7 @@ class GameContainer extends Component {
           deck: 0
         },
         opponent: {
+          name: '',
           stats: {
             money: 0,
             income: 0,
@@ -84,7 +89,6 @@ class GameContainer extends Component {
       },
       serverPlayers: [],
       turnTimer: 0,
-      requestTestGameEnabled: true
     }
     this.timerID = setInterval(
       () => this.tick(),
@@ -94,7 +98,9 @@ class GameContainer extends Component {
     this.actionTargets = null
     this.requiresConfirmation = null
 
-    this.handleRequestTestGame = this.handleRequestTestGame.bind(this)
+    this.handleUpdateDeck = this.handleUpdateDeck.bind(this)
+    this.handleStartGame = this.handleStartGame.bind(this)
+    this.handleEndGame = this.handleEndGame.bind(this)
     this.handleEndTurn = this.handleEndTurn.bind(this)
     this.handleSelection = this.handleSelection.bind(this)
 
@@ -108,9 +114,9 @@ class GameContainer extends Component {
     this.setState({ gameState: report.gameState, selected: null }, this.updateTargetSelection)
     report.eventsReport.forEach(log => console.log(log))
     if (this.state.gameState.started && !this.state.gameState.winner) {
-      this.setState({ requestTestGameEnabled: false })
+      this.setState({ inGame: true })
     } else {
-      this.setState({ requestTestGameEnabled: true })
+      this.setState({ inGame: false })
     }
   }
 
@@ -130,15 +136,33 @@ class GameContainer extends Component {
     localStorage.setItem('displayName', displayName)
   }
 
-  handleRequestTestGame(opponentID) {
-    if (this.state.requestTestGameEnabled) {
-      console.log('requesting test game')
+  handleUpdateDeck(deckID) {
+    socket.emit('updateDeckID', {
+      deckID,
+    })
+    localStorage.setItem('deckID', deckID)
+    this.setState({ deckID })
+  }
+
+  handleStartGame(opponentID) {
+    if (!this.state.inGame) {
+      // console.log('starting game')
       socket.emit('requestTestGame', {
         opponentID
       })
     } else {
-      console.log('test game button disabled')
+      console.log('start game button disabled')
     }
+  }
+
+  handleEndGame() {
+    console.log(this.state.inGame)
+    if (this.state.inGame) socket.emit('endGame')
+  }
+
+  handleEndTurn() {
+    // console.log('ending turn')
+    if (this.state.gameState.myTurn) socket.emit('endTurn')
   }
 
   initMoveRequest(selected) {
@@ -165,10 +189,6 @@ class GameContainer extends Component {
     if (this.moveRequest.selected && this.findNextTargetSelection() === null) this.announceMove()
   }
 
-  findNextOptionActionTargetSelection() {
-
-  }
-
   nextOption() {
     const slotChoiceRequired = this.moveRequest.validSlots && !this.moveRequest.validSlots.chosenTarget
     const nextOption = (
@@ -180,8 +200,6 @@ class GameContainer extends Component {
   }
 
   nextOptionActionSelection() {
-    // const slotChoiceRequired = this.moveRequest.validSlots && !this.moveRequest.validSlots.chosenTarget
-    // const nextOption = (!slotChoiceRequired && this.moveRequest.options && this.moveRequest.options.find(option => !option.chosenTarget || option.actionTargets[option.chosenTarget].some(target => !target.chosenTarget))) || null
     const nextOption = this.nextOption()
     return nextOption && !nextOption.chosenTarget && nextOption.actions
   }
@@ -216,11 +234,15 @@ class GameContainer extends Component {
     if (targetSelection !== this.state.targetSelection) this.setState({ targetSelection }, this.checkMoveRequest)
   }
 
-  handleClearSelected() {
-    this.resetMoveRequest()
-    this.setState({
-      selected: null,
-    }, this.updateTargetSelection)
+  handleClearSelected(selected) {
+    if (selected === this.moveRequest.selected) {
+      this.resetMoveRequest()
+      this.setState({
+        selected: null,
+      }, this.updateTargetSelection)
+    } else if (this.moveRequest.validSlots && selected === this.moveRequest.validSlots.chosenTarget) {
+      return this.handleChooseSelected(this.moveRequest.selected)
+    }
   }
 
   handleInvalidMove() {
@@ -230,13 +252,18 @@ class GameContainer extends Component {
   handleChooseSelected(selected) {
     this.initMoveRequest(selected)
     this.setState({
-      selected,
+      selected: [selected],
     }, this.updateTargetSelection)
   }
 
   handleChooseTarget(target) {
-    this.findNextTargetSelection().chosenTarget = target
-    this.updateTargetSelection()
+    const targetSelection = this.findNextTargetSelection()
+    targetSelection.chosenTarget = target
+    if (targetSelection === this.moveRequest.validSlots) {
+      this.setState({
+        selected: [this.moveRequest.selected, target],
+      }, this.updateTargetSelection)
+    } else this.updateTargetSelection()
   }
 
   handleConfirmation() {
@@ -245,7 +272,7 @@ class GameContainer extends Component {
   }
 
   handleSelection(selection) {
-    if (selection === this.moveRequest.selected) return this.handleClearSelected()
+    if (this.state.selected && this.state.selected.includes(selection)) return this.handleClearSelected(selection)
     else if (selection === 'confirm') return this.handleConfirmation()
     else if (!this.state.targetSelection || !this.state.targetSelection.validTargets.includes(selection.objectID)) return this.handleInvalidMove()
     else if (!this.moveRequest.selected) return this.handleChooseSelected(selection)
@@ -253,7 +280,6 @@ class GameContainer extends Component {
   }
 
   announceMove() {
-    console.log('announcing move')
     const moveRequest = {
       selected: this.moveRequest.selected.objectID,
       attackTarget: this.moveRequest.attackTargets && this.moveRequest.attackTargets.chosenTarget.objectID,
@@ -261,13 +287,7 @@ class GameContainer extends Component {
       options: this.moveRequest.options && this.moveRequest.options.map(option => this.chosenOptionTargets(option)),
       actions: this.moveRequest.actions && this.moveRequest.actions.map(action => this.chosenActionTargets(action))
     }
-    console.log('about to emit')
     socket.emit('newMoveRequest', moveRequest)
-  }
-
-  handleEndTurn() {
-    // console.log('ending turn')
-    if (this.state.gameState.myTurn) socket.emit('endTurn')
   }
 
   flatMappedOption(option) {
@@ -324,13 +344,17 @@ class GameContainer extends Component {
     } else {
       currentName = 'Anonymous'
     }
-    // console.log(currentName);
 
     return (
       <>
         <div className='topBar'>
           <DisplayName currentName={currentName} handleSubmit={this.handleUpdateDisplayName} />
-          <TestGame onRequested={this.handleRequestTestGame} opponents={this.state.serverPlayers} socketID={socket.id} />
+          <DeckSelection deckID={this.state.deckID} updateDeck={this.handleUpdateDeck} />
+          {
+            this.state.inGame 
+            ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name}/>
+            : <StartGame startGame={this.handleStartGame} opponents={this.state.serverPlayers} socketID={socket.id} />
+          }
           <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
         </div>
         <PlayerStatus stats={this.state.gameState.opponent.stats} />
@@ -338,27 +362,27 @@ class GameContainer extends Component {
         <PlayArea targetSelection={this.state.targetSelection} requiresConfirmation={this.requiresConfirmation} handleSelection={this.handleSelection}>
           <Deck mine={false} cardNumber={this.state.gameState.opponent.deck} />
           <div className='leaderDiv'>
-            <PassiveZone mine={false} passives={this.state.gameState.opponent.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <Leader mine={false} object={this.state.gameState.opponent.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <LeaderTechnique mine={false} object={this.state.gameState.opponent.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <CreationZone mine={false} creations={this.state.gameState.opponent.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <PassiveZone mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <Leader mine={false} selected={this.state.selected} object={this.state.gameState.opponent.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <LeaderTechnique mine={false} selected={this.state.selected} object={this.state.gameState.opponent.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <CreationZone mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           </div>
           <br />
-          <BoardHalf mine={false} slots={this.state.gameState.opponent.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+          <BoardHalf mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           <div className='anchor'>
-            <OptionSelections mine={true} contents={this.nextOptionActionSelection()} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <OptionSelections mine={true} selected={this.state.selected} contents={this.nextOptionActionSelection()} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           </div>
-          <BoardHalf mine slots={this.state.gameState.my.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+          <BoardHalf mine selected={this.state.selected} contents={this.state.gameState.my.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           <br />
           <div className='leaderDiv'>
-            <PassiveZone mine passives={this.state.gameState.my.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <Leader mine object={this.state.gameState.my.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <LeaderTechnique mine object={this.state.gameState.my.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <CreationZone mine creations={this.state.gameState.my.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <PassiveZone mine selected={this.state.selected} contents={this.state.gameState.my.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <Leader mine selected={this.state.selected} object={this.state.gameState.my.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <LeaderTechnique mine selected={this.state.selected} object={this.state.gameState.my.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <CreationZone mine selected={this.state.selected} contents={this.state.gameState.my.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           </div>
           <Deck mine cardNumber={this.state.gameState.my.deck} />
         </PlayArea>
-        <PlayerHand cards={this.state.gameState.my.hand} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+        <PlayerHand mine contents={this.state.gameState.my.hand} selected={this.state.selected} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
         <PlayerStatus stats={this.state.gameState.my.stats} />
       </>
     )

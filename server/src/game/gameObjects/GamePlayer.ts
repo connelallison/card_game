@@ -40,6 +40,7 @@ class GamePlayer extends GameObject {
   opponent: GamePlayer
   bot: boolean
   disconnected: boolean
+  conceded: boolean
 
   constructor(game: Game, name: string, socketID: string = null, bot: boolean = false) {
     super(game, 'Player', { english: 'Player' }, 'Player', 'Player')

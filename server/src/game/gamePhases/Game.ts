@@ -24,7 +24,7 @@ class Game extends GamePhase {
   activeChild: Turn
   children: Turn[]
   queuedPhases: Turn[]
-  turnNumber: number
+  // turnNumber: number
   unreportedEvents: GameEvent[]
   winner: string
 
@@ -48,7 +48,7 @@ class Game extends GamePhase {
     this.player2deckID = player2deckID
     this.ended = false
     this.activeChild = null
-    this.turnNumber = 0
+    // this.turnNumber = 0
     this.queuedPhases = []
     this.unreportedEvents = []
     this.winner
@@ -109,6 +109,7 @@ class Game extends GamePhase {
         deck: player.deck.length
       },
       opponent: {
+        name: player.opponent.playerName,
         stats: player.opponent.statsReport(),
         passives: player.opponent.passivesReport(),
         creations: player.opponent.creationsReport(),
@@ -240,8 +241,8 @@ class Game extends GamePhase {
     } else {
       this.player2.bot = false
     }
-    const player1deck = new Decks[this.player1deckID](this, this.player1) as Deck
-    const player2deck = new Decks[this.player2deckID](this, this.player2) as Deck
+    const player1deck = new Deck(this, this.player1, Decks[this.player1deckID]) 
+    const player2deck = new Deck(this, this.player2, Decks[this.player2deckID])
     player1deck.leader.putIntoPlay()
     player2deck.leader.putIntoPlay()
     player1deck.leaderTechnique.putIntoPlay()
@@ -260,6 +261,11 @@ class Game extends GamePhase {
       serverEvent.on(`playerEndTurnRequest:${this.player1.socketID}`, () => {
         this.executeEndTurnRequest(this.player1)
       })
+      serverEvent.on(`playerEndGameRequest:${this.player1.socketID}`, () => {
+        console.log(`${this.player1.playerName} conceded - ending game`)
+        this.player1.conceded = true
+        this.end()
+      })
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} disconnected - ending game`)
         this.player1.disconnected = true
@@ -272,6 +278,11 @@ class Game extends GamePhase {
       })
       serverEvent.on(`playerEndTurnRequest:${this.player2.socketID}`, () => {
         this.executeEndTurnRequest(this.player2)
+      })
+      serverEvent.on(`playerEndGameRequest:${this.player2.socketID}`, () => {
+        console.log(`${this.player2.playerName} conceded - ending game`)
+        this.player2.conceded = true
+        this.end()
       })
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} disconnected - ending game`)
@@ -343,6 +354,7 @@ class Game extends GamePhase {
   end() {
     if (this.activeChild) this.activeChild.ended = true
     const disconnected = this.player1.disconnected ? this.player1 : this.player2.disconnected ? this.player2 : null
+    const conceded = this.player1.conceded ? this.player1 : this.player2.conceded ? this.player2 : null
 
     this.emit('auraReset')
     this.emit('staticApply')
@@ -364,7 +376,9 @@ class Game extends GamePhase {
     } else if (!this.player1.alive() && !this.player2.alive()) {
       this.winner = 'draw'
     } else if (disconnected) {
-      this.winner = disconnected.opponent.playerName + ' wins because their opponent disconnected'
+      this.winner = disconnected.playerName + ' disconnected'
+    } else if (conceded) {
+      this.winner = conceded.playerName + ' conceded'
     } else {
       throw new Error('endGame() has been called but neither player is dead')
     }

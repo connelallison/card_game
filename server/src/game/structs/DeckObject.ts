@@ -1,4 +1,6 @@
 interface DeckObject {
+    id: string
+    name: string
     leader: LeaderIDString
     passive: EthosPassiveIDString
     cards: CardIDString[]

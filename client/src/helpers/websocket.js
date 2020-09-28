@@ -1,4 +1,3 @@
-// import PubSub from "./PubSub.js";
 import io from 'socket.io-client'
 
 const host = window.location.hostname
@@ -11,6 +10,11 @@ socket.on('connect', (data) => {
       displayName: localStorage.getItem('displayName')
     })
   }
+  if (localStorage.getItem('deckID')) {
+    socket.emit('updateDeckID', {
+      deckID: localStorage.getItem('deckID')
+    })
+  }
 })
 socket.on('displayNameAnnouncement', (data) => {
   console.log(data.message)
@@ -18,15 +22,5 @@ socket.on('displayNameAnnouncement', (data) => {
 socket.on('disconnect', (data) => {
   console.log('disconnected from websocket connection at ' + Date().toString())
 })
-
-// sendButton.addEventListener('click', function () {
-//   socket.emit('websocketMessage', {
-//     message: inputField.value
-//   })
-// });
-//
-// socket.on('websocketMessage', function (data) {
-//   output.innerHTML += `<p>${data.message}</p>`;
-// })
 
 export default socket

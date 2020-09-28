@@ -15,9 +15,11 @@ interface ValuesObject {
     armour?: DynamicOrStoredNumber
     min?: DynamicOrStoredNumber
     max?: DynamicOrStoredNumber
+    money?: DynamicOrStoredNumber
     attack?: DynamicOrStoredNumber
     health?: DynamicOrStoredNumber
     stats?: DynamicOrStoredNumber
+    cost?: DynamicOrStoredNumber
     debt?: DynamicOrStoredNumber
     rent?: DynamicOrStoredNumber
     fervour?: DynamicOrStoredNumber

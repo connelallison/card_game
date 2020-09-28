@@ -24,7 +24,7 @@ class Game extends GamePhase {
   activeChild: Turn
   children: Turn[]
   queuedPhases: Turn[]
-  turnNumber: number
+  // turnNumber: number
   unreportedEvents: GameEvent[]
   winner: string
 
@@ -48,7 +48,7 @@ class Game extends GamePhase {
     this.player2deckID = player2deckID
     this.ended = false
     this.activeChild = null
-    this.turnNumber = 0
+    // this.turnNumber = 0
     this.queuedPhases = []
     this.unreportedEvents = []
     this.winner
@@ -99,6 +99,7 @@ class Game extends GamePhase {
       winner: this.winner,
       myTurn: player.myTurn(),
       my: {
+        stats: player.statsReport(),
         passives: player.passivesReport(),
         creations: player.creationsReport(),
         board: player.boardReport(),
@@ -108,6 +109,8 @@ class Game extends GamePhase {
         deck: player.deck.length
       },
       opponent: {
+        name: player.opponent.playerName,
+        stats: player.opponent.statsReport(),
         passives: player.opponent.passivesReport(),
         creations: player.opponent.creationsReport(),
         board: player.opponent.boardReport(),
@@ -116,6 +119,7 @@ class Game extends GamePhase {
         hand: opponentHand,
         deck: player.opponent.deck.length
       },
+      validSelections: player.validSelectionsReport(),
     }
     return gameState
   }
@@ -136,56 +140,89 @@ class Game extends GamePhase {
     // }
   }
 
-  executeMoveRequest(moveRequest, player) {
-    if (player !== this.activeChild.activePlayer) return
+  parseActionTargets(actionTargetIDs: string[][]): GameObject[][] {
+    return actionTargetIDs.map(actionStepIDs => actionStepIDs.map(targetID => this.gameObjects[targetID]))
+  }
 
-    const selected = this.gameObjects[moveRequest.selected.objectID] as Card
-    const target = moveRequest.target === null ? null : this.gameObjects[moveRequest.target.objectID] as Card
-    const selectedSlot = moveRequest.selectedSlot === null ? null : this.gameObjects[moveRequest.selectedSlot.objectID] as BoardSlot
+  parseOptionChoice(optionChoice: OptionChoiceRequest): OptionChoice {
+    return {
+      chosenAction: optionChoice.chosenAction,
+      chosenTargets: this.parseActionTargets(optionChoice.chosenTargets)
+    }
+  }
 
-    if (selected instanceof Character && selected.inPlay()) {
+  executeMoveRequest(moveRequest: MoveRequest, player: GamePlayer) {
+    if (!player.myTurn()) return
+
+    const selected = this.gameObjects[moveRequest.selected] as Card
+    const attackTarget = moveRequest.attackTarget && this.gameObjects[moveRequest.attackTarget] as Character
+    const selectedSlot = moveRequest.selectedSlot && this.gameObjects[moveRequest.selectedSlot] as BoardSlot
+    const options: OptionChoice[] = moveRequest.options?.map(optionChoice => this.parseOptionChoice(optionChoice)) ?? []
+    const actions: GameObject[][][] = moveRequest.actions?.map(actionTargets => this.parseActionTargets(actionTargets)) ?? [[[]]]
+
+    if (selected instanceof Character && selected.inPlay() && attackTarget instanceof Character && attackTarget.inPlay()) {
       // character in play attacking
-      if (target instanceof Character && target.inPlay()) {
-        if (Permissions.canAttack(selected, target)) {
-          const attackEvent = new AttackEvent(this, {
-            attacker: selected,
-            defender: target,
-          })
-          this.startSequence('ProposedAttackPhase', attackEvent)
-        }
-      }
-    } else if ((selected instanceof TechniqueCreation || selected instanceof LeaderTechnique) && selected.inPlay() && selected.canBeUsed()) {
+      this.executeAttackRequest(selected, attackTarget)
+    } else if (
+      (selected instanceof TechniqueCreation || selected instanceof LeaderTechnique)
+      && selected.inPlay()
+      && selected.canBeUsed()
+      && selected.validateAllOptionChoices(options)
+      && selected.validateAllActionTargets(actions)
+    ) {
       // technique in play being used
-      if (!selected.targeted || Permissions.canTarget(selected, target)) {
-        const targets = !selected.targeted ? [] : [target] // includes target if technique is targeted
-        const useEvent = new UseEvent(this, {
-          controller: selected.owner,
-          objectSource: selected,
-          targets,
-        })
-        this.startSequence('UsePhase', useEvent)
-      }
-    } else if (selected.zone === 'hand' && selected.canBePlayed() && !(!target && selected.targeted && selected.validTargets.length > 0)) {
+      this.executeUseRequest(selected, options, actions)
+    } else if (
+      selected.zone === 'hand'
+      && selected.canBePlayed()
+      && selected.validateAllOptionChoices(options)
+      && selected.validateAllActionTargets(actions)
+    ) {
       // card in hand being played
-      const slot = (selected instanceof Follower && selected.validSlots.includes(selectedSlot)) ? { slot: selectedSlot } : null // includes slot if card is follower
-      const targets = !selected.targeted || target === null ? [] : [target] // includes target if card is targeted
-      const eventObj = Object.assign({
-        player: selected.owner,
-        card: selected,
-        targets,
-        handIndex: selected.index(),
-        handLength: selected.owner.hand.length,
-      }, slot)
-      const playEvent = new PlayEvent(this, eventObj)
-      this.startSequence('PlayPhase', playEvent)
+      this.executePlayRequest(selected, options, actions, selectedSlot)
     }
     this.announceGameState()
+  }
+
+  executeAttackRequest(selected: Character, attackTarget: Character): void {
+    if (Permissions.canAttack(selected, attackTarget)) {
+      const attackEvent = new AttackEvent(this, {
+        attacker: selected,
+        defender: attackTarget,
+      })
+      this.startSequence('ProposedAttackPhase', attackEvent)
+    }
+  }
+
+  executeUseRequest(selected: LeaderTechnique | TechniqueCreation, optionChoices: OptionChoice[], actionTargets: GameObject[][][]): void {
+    selected.setAllOptionChoices(optionChoices)
+    selected.setAllActionTargets(actionTargets)
+    const useEvent = new UseEvent(this, {
+      player: selected.owner,
+      card: selected,
+    })
+    this.startSequence('UsePhase', useEvent)
+  }
+
+  executePlayRequest(selected: Card, options: OptionChoice[], actions: GameObject[][][], selectedSlot: BoardSlot): void {
+    selected.setAllOptionChoices(options)
+    selected.setAllActionTargets(actions)
+    const slot = (selected instanceof Follower && selected.validSlots.includes(selectedSlot)) ? { slot: selectedSlot } : null // includes slot if card is follower
+    const eventObj = Object.assign({
+      player: selected.owner,
+      card: selected,
+      handIndex: selected.index(),
+      handLength: selected.owner.hand.length,
+    },
+      slot,
+    )
+    const playEvent = new PlayEvent(this, eventObj)
+    this.startSequence('PlayPhase', playEvent)
   }
 
   executeEndTurnRequest(player: GamePlayer) {
     if (this.activeChild.activePlayer === player) {
       this.activeChild.end()
-      // this.startSequence('EndOfTurnPhase')
     }
   }
 
@@ -204,10 +241,8 @@ class Game extends GamePhase {
     } else {
       this.player2.bot = false
     }
-    // this.player2.increaseIncome(1)
-    // this.player2.refillMoney()
-    const player1deck = new Decks[this.player1deckID](this, this.player1) as Deck
-    const player2deck = new Decks[this.player2deckID](this, this.player2) as Deck
+    const player1deck = new Deck(this, this.player1, Decks[this.player1deckID]) 
+    const player2deck = new Deck(this, this.player2, Decks[this.player2deckID])
     player1deck.leader.putIntoPlay()
     player2deck.leader.putIntoPlay()
     player1deck.leaderTechnique.putIntoPlay()
@@ -216,8 +251,6 @@ class Game extends GamePhase {
     player2deck.passive.putIntoPlay()
     player1deck.cards.forEach(card => card.moveZone('deck'))
     player2deck.cards.forEach(card => card.moveZone('deck'))
-    // this.player1.deck = player1deck.cards
-    // this.player2.deck = player2deck.cards
   }
 
   initListeners() {
@@ -227,6 +260,11 @@ class Game extends GamePhase {
       })
       serverEvent.on(`playerEndTurnRequest:${this.player1.socketID}`, () => {
         this.executeEndTurnRequest(this.player1)
+      })
+      serverEvent.on(`playerEndGameRequest:${this.player1.socketID}`, () => {
+        console.log(`${this.player1.playerName} conceded - ending game`)
+        this.player1.conceded = true
+        this.end()
       })
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} disconnected - ending game`)
@@ -240,6 +278,11 @@ class Game extends GamePhase {
       })
       serverEvent.on(`playerEndTurnRequest:${this.player2.socketID}`, () => {
         this.executeEndTurnRequest(this.player2)
+      })
+      serverEvent.on(`playerEndGameRequest:${this.player2.socketID}`, () => {
+        console.log(`${this.player2.playerName} conceded - ending game`)
+        this.player2.conceded = true
+        this.end()
       })
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} disconnected - ending game`)
@@ -304,7 +347,6 @@ class Game extends GamePhase {
 
   startNewDeepestPhase(phaseType: PhaseString | 'Sequence', event?: GameEvent | GameEvent[]): void {
     const bottomPhase = this.currentBottomPhase()
-    // console.log(Phases)
     const newPhase = new Phases[phaseType](bottomPhase, event)
     bottomPhase.startChild(newPhase)
   }
@@ -312,6 +354,7 @@ class Game extends GamePhase {
   end() {
     if (this.activeChild) this.activeChild.ended = true
     const disconnected = this.player1.disconnected ? this.player1 : this.player2.disconnected ? this.player2 : null
+    const conceded = this.player1.conceded ? this.player1 : this.player2.conceded ? this.player2 : null
 
     this.emit('auraReset')
     this.emit('staticApply')
@@ -333,7 +376,9 @@ class Game extends GamePhase {
     } else if (!this.player1.alive() && !this.player2.alive()) {
       this.winner = 'draw'
     } else if (disconnected) {
-      this.winner = disconnected.opponent.playerName + ' wins because their opponent disconnected'
+      this.winner = disconnected.playerName + ' disconnected'
+    } else if (conceded) {
+      this.winner = conceded.playerName + ' conceded'
     } else {
       throw new Error('endGame() has been called but neither player is dead')
     }
@@ -371,3 +416,5 @@ import { PlayEvent } from './PlayPhase'
 import TestBot from '../gameTests/TestBot'
 import Phases from '../dictionaries/Phases'
 import { PhaseString } from '../stringTypes/DictionaryKeyString'
+import { OptionChoice, OptionChoiceRequest } from '../structs/Action'
+import { MoveRequest } from '../structs/ObjectReport'

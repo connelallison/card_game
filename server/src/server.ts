@@ -12,12 +12,12 @@ GameObject
 import Game from './game/gamePhases/Game'
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
-function testGame (socketID = null) {
+function testGame(player: ServerPlayer) {
   if (Math.floor(Math.random() * 2)) {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'KnightDeck', 'OrcDeck', false, true, true, socketID, null, true)
+    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'OrcDeck', false, true, true, player.socketID, null, true)
     testGame.init()
   } else {
-    const testGame = new Game(connectedPlayers[socketID].displayName, 'TestBot', 'OrcDeck', 'KnightDeck', false, true, true, socketID, null, true)
+    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'KnightDeck', false, true, true, player.socketID, null, true)
     testGame.init()
   }
 
@@ -34,14 +34,9 @@ function testGame (socketID = null) {
   // console.log('Message posted to worker');
 }
 
-function pvpGame (player1SocketID, player2SocketID) {
-  if (Math.floor(Math.random() * 2)) {
-    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'KnightDeck', 'OrcDeck', false, true, true, player1SocketID, player2SocketID)
-    pvpGame.init()
-  } else {
-    const pvpGame = new Game(connectedPlayers[player1SocketID].displayName, connectedPlayers[player2SocketID].displayName, 'OrcDeck', 'KnightDeck', false, true, true, player1SocketID, player2SocketID)
-    pvpGame.init()
-  }
+function pvpGame(player1: ServerPlayer, player2: ServerPlayer) {
+  const pvpGame = new Game(player1.displayName, player2.displayName, player1.deckID, player2.deckID, false, true, true, player1.socketID, player2.socketID)
+  pvpGame.init()
 }
 
 const app = express()
@@ -58,7 +53,7 @@ const server = app.listen(port, function () {
 
 const io = socket(server)
 
-const connectedPlayers = {}
+const connectedPlayers: {[index: string]: ServerPlayer} = {}
 const connectedSockets = {}
 
 io.on('connection', function (socket) {
@@ -79,7 +74,11 @@ io.on('connection', function (socket) {
     })
     io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   })
-  socket.on('requestTestGame', function (opponent) {
+  socket.on('updateDeckID', data => {
+    console.log('updateDeckID request received')
+    serverPlayer.deckID = data.deckID
+  })
+  socket.on('requestTestGame', function (opponent: {opponentID: string}) {
     // console.log(`server: newGameStatus:${socketID}`);
     serverEvent.on(`newGameStatus:${socketID}`, function (gameState) {
       // console.log(gameState);
@@ -92,8 +91,9 @@ io.on('connection', function (socket) {
     })
     // setTimeout(testGame, 1000, socketID);
     if (!opponent.opponentID || opponent.opponentID === 'TestBot') {
-      testGame(socketID)
+      testGame(serverPlayer)
     } else {
+      const opponentPlayer = connectedPlayers[opponent.opponentID]
       const opponentSocket = connectedSockets[opponent.opponentID]
       serverEvent.on(`newGameStatus:${opponent.opponentID}`, function (gameState) {
         // console.log(gameState);
@@ -103,7 +103,7 @@ io.on('connection', function (socket) {
       serverEvent.on(`newTurnTimer:${opponent.opponentID}`, function (turnTimer) {
         opponentSocket.emit('turnTimerUpdate', turnTimer)
       })
-      pvpGame(socketID, opponent.opponentID)
+      pvpGame(serverPlayer, opponentPlayer)
     }
   })
   socket.on('newMoveRequest', function (moveRequest) {
@@ -113,6 +113,7 @@ io.on('connection', function (socket) {
   socket.on('endTurn', function () {
     serverEvent.emit(`playerEndTurnRequest:${socketID}`)
   })
+  socket.on('endGame', () => serverEvent.emit(`playerEndGameRequest:${socketID}`))
   socket.on('disconnect', () => {
     // connectedPlayers.splice(connectedPlayers.indexOf(serverPlayer), 1);
     delete connectedPlayers[socketID]
@@ -121,8 +122,6 @@ io.on('connection', function (socket) {
     serverEvent.emit(`playerDisconnected:${socketID}`)
     io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   })
-  // class ServerEvent extends EventEmitter {}
-  // const serverEvent = new ServerEvent();
 })
 
 serverEvent.on('newGameStatus', function (gameState) {
@@ -133,33 +132,3 @@ serverEvent.on('newGameStatus', function (gameState) {
 serverEvent.on('newTurnTimer', function (turnTimer) {
   io.emit('turnTimerUpdate', turnTimer)
 })
-
-// setTimeout(testGame, 5000);
-
-// io.emit("gameStateUpdate", {
-//     started: false,
-//     winner: null,
-//     myTurn: true,
-//     my: {
-//       attack: 0,
-//       health: 30,
-//       currentMoney: 3,
-//       maxMoney: 3,
-//       board: [],
-//       hand: [],
-//       deck: 30
-//     },
-//     opponent: {
-//       attack: 0,
-//       health: 30,
-//       currentMoney: 0,
-//       maxMoney: 0,
-//       board: [],
-//       hand: 3,
-//       deck: 25
-//     },
-//     legalMoves: {
-//       canAttackWith: {},
-//       canPlay: {}
-//   }
-// })

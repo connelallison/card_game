@@ -3,25 +3,29 @@ import Game from "../gamePhases/Game"
 import GameObject from "../gameObjects/GameObject"
 
 const data: AuraEnchantmentData = {
-    'id': 'FootmanAura',
-    'name': {
-        'english': `Footman Aura`,
+    id: 'FootmanAura',
+    name: {
+        english: `Footman Aura`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Aura',
-    'activeZones': ['board'],
-    'activeTypes': ['Follower'],
-    'activeRequirements': [{
-        'activeRequirement': 'isMyTurn'
+    type: 'Enchantment',
+    subtype: 'Aura',
+    priority: 1,
+    activeZones: ['board'],
+    activeTypes: ['Follower'],
+    targets: {
+        valueType: 'targets',
+        from: 'targetDomain',
+        targetDomain: ['self'],
+    },
+    activeRequirements: [{
+        activeRequirement: 'isMyTurn'
     }],
-    'targetDomain': ['self'],
-    'effectObjs': [
+    effectObjs: [
         {
-            'operation': 'incrementAttack',
-            'value': 2
+            operation: 'incrementAttack',
+            value: 2
         }
     ],
-    'priority': 1,
 }
 
 class FootmanAura extends AuraEnchantment {

@@ -126,6 +126,7 @@ abstract class GamePhase {
             death: [],
             play: [],
             action: [],
+            optionAction: [],
             eventAction: [],
             deathAction: [],
             // eurekaAction: [],
@@ -139,6 +140,7 @@ abstract class GamePhase {
             startOfTurn: [],
             endOfTurn: [],
             spendMoney: [],
+            accrueDebt: [],
             trigger: [],
             triggerAction: [],
         }

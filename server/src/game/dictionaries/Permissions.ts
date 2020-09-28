@@ -13,13 +13,13 @@ const Permissions = {
         )
     },
 
-    canTarget: (card: Card, target: Card): boolean => {
-        return (
-            card.targeted
-            && card.targetDomain().includes(target)
-            && card.targetRequirements.every(requirement => card.targetRequirement(requirement, target))
-        )
-    },
+    // canTarget: (card: Card, target: Card): boolean => {
+    //     return (
+    //         card.targeted
+    //         && card.targetDomain().includes(target)
+    //         && card.targetRequirements.every(requirement => card.targetRequirement(requirement, target))
+    //     )
+    // },
 
     canSummon: (player: GamePlayer, card: PersistentCard): boolean => {
         return (
@@ -44,25 +44,39 @@ const Permissions = {
     },
 
     canPlay: (player: GamePlayer, card: Card): boolean => {
+        // console.log('active', card.active())
         return (
             player === card.controller()
             && player.myTurn()
             && card.zone === 'hand'
             && card.cost <= player.money
-            && ((card.targeted && (card instanceof Moment || card instanceof TechniqueCreation)) ? card.validTargets.length > 0 : true)
-            && (card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true)
-            && card.activeRequirements.every(requirement => card.activeRequirement(requirement))
+            && ((card instanceof Moment || card instanceof TechniqueCreation) ? card.active() : true)
+            && ((card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true))
         )
     },
 
-    canUse: (player: GamePlayer, card: TechniqueCreation | LeaderTechnique): boolean => {
+    canUse: (player: GamePlayer, card: Card): boolean => {
+        // console.log('controller', card.name.english, player === card.controller())
+        // console.log('myturn', card.name.english, player.myTurn())
+        // console.log('type', card.name.english, (card instanceof TechniqueCreation || card instanceof LeaderTechnique))
+        // console.log('cost', card.name.english, card.cost <= player.money)
+        // console.log('active', card.name.english, card.active())
+        // console.log('overall', card.name.english, (
+        //     player === card.controller()
+        //     && player.myTurn()
+        //     && (card instanceof TechniqueCreation || card instanceof LeaderTechnique)
+        //     && card.inPlay()
+        //     && card.cost <= player.money
+        //     && card.active()
+        // ))
+
         return (
             player === card.controller()
             && player.myTurn()
+            && (card instanceof TechniqueCreation || card instanceof LeaderTechnique)
             && card.inPlay()
             && card.cost <= player.money
-            && (card.targeted ? card.validTargets.length > 0 : true)
-            && card.activeRequirements.every(requirement => card.activeRequirement(requirement))
+            && card.active()
         )
     },
 }

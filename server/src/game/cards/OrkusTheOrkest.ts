@@ -3,28 +3,27 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: LeaderData = {
-  'id': 'OrkusTheOrkest',
-  'name': {
-    'english': `Orkus the Orkest`,
+  id: 'OrkusTheOrkest',
+  name: {
+    english: `Orkus the Orkest`,
   },
-  'type': 'Leader',
-  'subtype': 'Leader',
-  'classes': ['Empire'],
-  'collectable': true,
-  'cost': 0,
-  'attack': 1,
-  'health': 4,
-  'targeted': false,
-  'leaderTechniqueID': 'OrkusTheOrkestSmash',
-  'staticCardText': {
-    'english': ``,
+  type: 'Leader',
+  subtype: 'Leader',
+  classes: ['Empire'],
+  collectable: true,
+  cost: 0,
+  attack: 1,
+  health: 4,
+  leaderTechniqueID: 'OrkusTheOrkestSmash',
+  staticText: {
+    english: ``,
   },
-  'dynamicCardText': {
-      'templates': {
-          'english': ``,
+  text: {
+      templates: {
+          english: ``,
       },
   },
-  'starter': true,
+  starter: true,
 }
 
 class OrkusTheOrkest extends Leader {

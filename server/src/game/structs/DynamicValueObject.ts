@@ -1,5 +1,6 @@
 export type DynamicValueObject = DynamicLocalisedStringObject 
                                 | DynamicStringObject 
+                                | DynamicBooleanObject
                                 | DynamicNumberObject 
                                 | DynamicNumbersObject 
                                 | DynamicTargetObject 
@@ -9,7 +10,8 @@ export type DynamicValueObject = DynamicLocalisedStringObject
 
 export type DynamicLocalisedStringObject = DynamicLocalisedStringFromTarget 
 export type DynamicStringObject = DynamicStringFromTarget
-export type DynamicNumberObject = DynamicNumberFromFervour | DynamicNumberFromTarget | DynamicNumberFromNumbers
+export type DynamicBooleanObject = DynamicBooleanFromNumber
+export type DynamicNumberObject = DynamicNumberFromFervour | DynamicNumberFromTarget | DynamicNumberFromTargets | DynamicNumberFromNumbers | DynamicNumberFromCompound
 export type DynamicNumbersObject = DynamicNumbersFromTargets
 export type DynamicTargetObject = DynamicTargetFromEvent | DynamicTargetFromTargets | DynamicTargetFromTargetDomain
 export type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFromTargetDomain
@@ -18,21 +20,23 @@ export type DynamicEventsObject = DynamicEventsFromEventDomain
 
 export type DynamicOrStoredLocalisedStringObject = DynamicLocalisedStringFromTarget | DynamicLocalisedStringFromStored
 export type DynamicOrStoredStringObject = DynamicStringObject | DynamicStringFromStored
+export type DynamicOrStoredBooleanObject = DynamicBooleanObject | DynamicBooleanFromStored
 export type DynamicOrStoredNumberObject = DynamicNumberObject | DynamicNumberFromStored
 export type DynamicOrStoredNumbersObject = DynamicNumbersObject | DynamicNumbersFromStored
-export type DynamicOrStoredTargetObject = DynamicTargetObject | DynamicTargetFromStored
+export type DynamicOrStoredTargetObject = DynamicTargetObject | DynamicTargetFromStored 
 export type DynamicOrStoredTargetsObject = DynamicTargetsObject | DynamicTargetsFromStored
 export type DynamicOrStoredEventObject = DynamicEventObject | DynamicEventFromStored
 export type DynamicOrStoredEventsObject = DynamicEventsObject | DynamicEventsFromStored
 export type StoredValueObject = DynamicLocalisedStringFromStored
                             | DynamicStringFromStored
+                            | DynamicBooleanFromStored
                             | DynamicNumberFromStored
                             | DynamicNumbersFromStored
                             | DynamicTargetFromStored
                             | DynamicTargetsFromStored
                             | DynamicEventFromStored
                             | DynamicEventsFromStored
-export type DynamicOrStoredValueObject = DynamicOrStoredLocalisedStringObject | DynamicOrStoredStringObject | DynamicOrStoredNumberObject | DynamicOrStoredNumbersObject | DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject | DynamicOrStoredEventObject | DynamicOrStoredEventsObject
+export type DynamicOrStoredValueObject = DynamicValueObject | StoredValueObject
 
 export interface DynamicLocalisedStringFromTarget {
     valueType: 'localisedString',
@@ -64,8 +68,14 @@ export interface DynamicBooleanFromNumber {
     valueType: 'boolean'
     from: 'number'
     number: DynamicNumber
+    operator: NumberToBooleanMapString
     comparison: DynamicNumber
-    // operator
+}
+
+export interface DynamicBooleanFromStored {
+    valueType: 'boolean'
+    from: 'stored'
+    param: string
 }
 
 export interface DynamicNumberFromFervour {
@@ -80,6 +90,13 @@ export interface DynamicNumberFromTarget {
     from: 'target',
     numberMap: TargetToNumberMapString,
     target: DynamicTargetObject,
+}
+
+export interface DynamicNumberFromTargets {
+    valueType: 'number',
+    from: 'targets',
+    numberMap: 'count',
+    targets: DynamicTargetsObject
 }
 
 export interface DynamicNumberFromNumbers {
@@ -135,6 +152,12 @@ export interface DynamicTargetFromStored {
     param: string,
 }
 
+export interface DynamicTargetFromAutoTarget {
+    value: 'target',
+    from: 'autoTarget',
+    autoTarget: number,
+}
+
 export interface DynamicTargetsFromEvents {
     valueType: 'targets',
     from: 'events',
@@ -156,6 +179,12 @@ export interface DynamicTargetsFromStored {
     param: string,
 }
 
+export interface DynamicTargetsFromAutoTarget {
+    value: 'targets',
+    from: 'autoTarget',
+    autoTarget: number,
+}
+
 export interface DynamicEventFromEvents {
     valueType: 'event',
     from: 'events',
@@ -173,7 +202,7 @@ export interface DynamicEventFromStored {
 export interface DynamicEventsFromEventDomain {
     valueType: 'events',
     from: 'eventDomain',
-    // requirements?: EventRequirementObject[],
+    requirements?: EventRequirement[],
     eventDomain: EventsDomainString | EventsDomainString[],
 }
 
@@ -183,13 +212,19 @@ export interface DynamicEventsFromStored {
     param: string,
 }
 
-// export interface CompoundDynamicNumberObject {
-//     valueType: 'number',
-//     baseValue: number,
-//     numberMods: NumberModObject[],
-// }
+export interface DynamicNumberFromCompound {
+    valueType: 'number'
+    from: 'compound'
+    base: number
+    numberMods: NumberModObject[]
+}
 
-import { TargetToStringMapString, TargetToNumberMapString, NumberReducerString, EventToTargetMapString, TargetReducerString, EventReducerString } from "../stringTypes/DictionaryKeyString"
+export interface NumberModObject {
+    operator: NumberOperatorString,
+    value?: DynamicNumber,
+}
+
+import { TargetToStringMapString, TargetToNumberMapString, NumberReducerString, EventToTargetMapString, TargetReducerString, EventReducerString, NumberToBooleanMapString, NumberOperatorString } from "../stringTypes/DictionaryKeyString"
 import { TargetDomainString, TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
 import { DynamicNumber } from "./DynamicValue"
-import { TargetRequirement } from "./Requirement"
+import { EventRequirement, TargetRequirement } from "./Requirement"

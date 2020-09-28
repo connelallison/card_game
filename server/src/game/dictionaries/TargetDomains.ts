@@ -4,7 +4,7 @@ const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsD
     zones.forEach(zone => {
         switch (zone) {
             case 'self':
-                targetDomain.push(object.charOwner())
+                targetDomain.push(object.effectOwner())
                 break
             case 'leftFollower':
                 if ((object instanceof Follower || object instanceof BoardSlot) && object.leftFollower()) targetDomain.push(object.leftFollower())

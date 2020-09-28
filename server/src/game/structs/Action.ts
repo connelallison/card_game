@@ -1,6 +1,6 @@
 export type ActionFunction = ActionActionFunction | EventActionFunction | DeathActionFunction | TriggerActionFunction
 
-export type ActionActionFunction = AutoActionFunction | ManualActionFunction 
+export type ActionActionFunction = AutoActionFunction | ManualActionFunction
 export type EventActionFunction = AutoActionFunction
 export type DeathActionFunction = AutoActionFunction
 export type TriggerActionFunction = EventModActionFunction | AutoActionFunction | TargetMapActionFunction
@@ -15,20 +15,24 @@ export interface AutoActionFunction extends BaseActionFunction {
     functionType: 'autoAction'
     operation: ActionOperationString
     values?: ValuesObject
-    target?: DynamicTargetObject
-    targets?: DynamicTargetsObject
+    // targets?: DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject
+    autoTarget?: number
+    // validTargets?: GameObject[]
     extraTargets?: DynamicTargetsFromTargetDomain
     onlyExtraTargets?: boolean
-    requirements?: EventActionRequirement[]
+    // activeRequirements?: ActiveRequirement[]
+    runRequirements?: RunRequirement[]
 }
 
 export interface ManualActionFunction extends BaseActionFunction {
     functionType: 'manualAction'
     operation: ActionOperationString
     values?: ValuesObject
+    manualTarget?: number
     extraTargets?: DynamicTargetsFromTargetDomain
     onlyExtraTargets?: boolean
-    requirements?: ActionRequirement[]
+    // activeRequirements?: ActiveRequirement[]
+    runRequirements?: RunRequirement[]
 }
 
 export interface TargetMapActionFunction extends BaseActionFunction {
@@ -38,61 +42,126 @@ export interface TargetMapActionFunction extends BaseActionFunction {
     targetMap: EventToTargetMapString
     extraTargets?: DynamicTargetsFromTargetDomain
     onlyExtraTargets?: boolean
-    requirements?: TriggerRequirement[]
+    runRequirements?: TriggerRequirement[]
 }
 
 export interface EventModActionFunction extends BaseActionFunction {
     functionType: 'eventModAction'
     operation: EventModOperationString
     values?: ValuesObject
+    runRequirements?: TriggerRequirement[]
+}
+
+export interface ManualTarget {
+    targets: DynamicTargetsFromTargetDomain
+    text: DynamicTextObject
+    hostile?: boolean
+    validTargets?: GameObject[]
+    chosenTarget?: GameObject
+}
+
+export interface AutoTarget {
+    // targets: DynamicTargetObject | DynamicTargetsObject
+    targets: DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject
+    optional?: boolean
+}
+
+export type ActionStep = ActionActionStep | EventActionStep | TriggerActionStep
+
+export interface ActionActionStep {
+    manualTargets?: ManualTarget[]
+    autoTargets?: AutoTarget[]
+    actionFunctions: ActionActionFunction[]
+    requirements?: ActiveRequirement[]
+}
+
+export interface EventActionStep {
+    autoTargets?: AutoTarget[]
+    actionFunctions: EventActionFunction[]
+    requirements?: ActiveRequirement[]
+}
+
+export interface TriggerActionStep {
+    autoTargets?: AutoTarget[]
+    actionFunctions: TriggerActionFunction[]
     requirements?: TriggerRequirement[]
 }
 
 
+// export interface BaseAction {
+//     actionType: 'actionAction' | 'eventAction' | 'deathAction' | 'triggerAction'
+//     name?: LocalisedStringObject
+//     text?: DynamicCardTextObject
+//     actionFunctions: ActionFunction[]
+//     requirements?: Requirement[]
+// }
 
-export interface BaseAction {
-    actionType: 'actionAction' | 'eventAction' | 'deathAction' | 'triggerAction'
-    name?: LocalisedStringObject
-    text?: DynamicCardTextObject
-    actionFunctions: ActionFunction[]
-    requirements?: Requirement[]
-}
-
-export interface ActionAction extends BaseAction {
+// export interface ActionAction extends BaseAction {
+export interface ActionAction {
     actionType: 'actionAction'
     name: LocalisedStringObject
-    text: DynamicCardTextObject
-    actionFunctions: ActionActionFunction[]
-    targeted: boolean
-    requirements?: ActionRequirement[]
+    text: DynamicTextObject
+    actionSteps: ActionActionStep[]
+    activeSteps?: ActionActionStep[]
+    // requirements?: ActiveRequirement[]
 }
 
-export interface EventAction extends BaseAction {
+// export interface EventAction extends BaseAction {
+export interface EventAction {
     actionType: 'eventAction'
     name: LocalisedStringObject
-    text: DynamicCardTextObject
-    actionFunctions: EventActionFunction[]
-    requirements?: EventActionRequirement[]
+    text: DynamicTextObject
+    actionSteps: EventActionStep[]
+    activeSteps?: EventActionStep[]
+    // requirements?: ActiveRequirement[]
 }
 
-export interface DeathAction extends BaseAction {
+// export interface DeathAction extends BaseAction {
+export interface DeathAction {
     actionType: 'deathAction'
     name: LocalisedStringObject
-    text: DynamicCardTextObject
-    actionFunctions: DeathActionFunction[]
-    requirements?: DeathActionRequirement[]
+    text: DynamicTextObject
+    actionSteps: EventActionStep[]
+    activeSteps?: EventActionStep[]
+    // requirements?: ActiveRequirement[]
 }
 
-export interface TriggerAction extends BaseAction {
+// export interface TriggerAction extends BaseAction {
+export interface TriggerAction {
     actionType: 'triggerAction'
-    actionFunctions: TriggerActionFunction[]
+    actionSteps: TriggerActionStep[]
     eventType: TriggerTypeString
-    requirements?: TriggerRequirement[]
 }
+
+export interface OptionAction {
+    actionType: 'optionAction'
+    name: LocalisedStringObject
+    text: DynamicTextObject
+    // targeted: boolean
+    // requirements?: ActiveRequirement[]
+    // targets: DynamicTargetsFromTargetDomain[]
+    actions: ActionAction[]
+    activeActions?: ActionAction[]
+    chosenActions?: ActionAction[]
+}
+
+export interface OptionChoice {
+    chosenAction: number
+    chosenTargets: GameObject[][]
+}
+
+export interface OptionChoiceRequest {
+    chosenAction: number 
+    chosenTargets: string[][]
+}
+
+export type PlayableAction = ActionAction | EventAction
+export type ReportableAction = ActionAction | EventAction | DeathAction //| OptionAction
 
 import ValuesObject from "./ValuesObject"
-import { DynamicTargetObject, DynamicTargetsObject, DynamicTargetsFromTargetDomain } from "./DynamicValueObject"
+import { DynamicTargetsFromTargetDomain, DynamicOrStoredTargetObject, DynamicOrStoredTargetsObject } from "./DynamicValueObject"
 import { ActionOperationString, EventModOperationString, EventToTargetMapString } from "../stringTypes/DictionaryKeyString"
-import { DynamicCardTextObject, LocalisedStringObject } from "./Localisation"
+import { DynamicTextObject, LocalisedStringObject } from "./Localisation"
 import TriggerTypeString from "../stringTypes/TriggerTypeString"
-import { ActionRequirement, DeathActionRequirement, EventActionRequirement, Requirement, TriggerRequirement } from "./Requirement"
+import { ActiveRequirement, RunRequirement, TriggerRequirement } from "./Requirement"
+import GameObject from "../gameObjects/GameObject"

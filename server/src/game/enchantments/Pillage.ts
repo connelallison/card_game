@@ -3,17 +3,17 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: StaticEnchantmentData = {
-    'id': 'Pillage',
-    'name': {
-        'english': `Pillage`,
+    id: 'Pillage',
+    name: {
+        english: `Pillage`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Static',
-    'activeZones': ['board', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone'],
-    'activeTypes': ['Follower', 'Creation', 'Leader', 'LeaderTechnique', 'Moment'],
-    'effectObjs': [{
-        'operation': 'pillage',
-        'value': true
+    type: 'Enchantment',
+    subtype: 'Static',
+    activeZones: ['board', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone'],
+    activeTypes: ['Follower', 'Creation', 'Leader', 'LeaderTechnique', 'Moment'],
+    effectObjs: [{
+        operation: 'pillage',
+        value: true
     }]
 }
 

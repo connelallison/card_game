@@ -3,17 +3,17 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: StaticEnchantmentData = {
-    'id': 'Rush',
-    'name': {
-        'english': `Rush`,
+    id: 'Rush',
+    name: {
+        english: `Rush`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Static',
-    'activeZones': ['board', 'hand', 'deck'],
-    'activeTypes': ['Follower'],
-    'effectObjs': [{
-        'operation': 'rush',
-        'value': true
+    type: 'Enchantment',
+    subtype: 'Static',
+    activeZones: ['board', 'hand', 'deck'],
+    activeTypes: ['Follower'],
+    effectObjs: [{
+        operation: 'rush',
+        value: true
     }]
 }
 

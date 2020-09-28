@@ -1,6 +1,6 @@
 export type DynamicLocalisedString = LocalisedStringObject | DynamicLocalisedStringObject
 export type DynamicString = string | DynamicStringObject
-export type DynamicBoolean = boolean // | DynamicBooleanObject
+export type DynamicBoolean = boolean | DynamicBooleanObject
 export type DynamicNumber = number | DynamicNumberObject
 export type DynamicNumbers = number[] | DynamicNumbersObject
 export type DynamicTarget = GameObject[] | DynamicTargetObject
@@ -12,7 +12,7 @@ export type DynamicValue = DynamicLocalisedString | DynamicString | DynamicBoole
 
 export type DynamicOrStoredLocalisedString = LocalisedStringObject | DynamicOrStoredLocalisedStringObject
 export type DynamicOrStoredString = string | DynamicOrStoredStringObject
-export type DynamicOrStoredBoolean = boolean // | DynamicOrStoredBooleanObject
+export type DynamicOrStoredBoolean = boolean | DynamicOrStoredBooleanObject
 export type DynamicOrStoredNumber = number | DynamicOrStoredNumberObject
 export type DynamicOrStoredNumbers = number[] | DynamicOrStoredNumbersObject
 export type DynamicOrStoredTarget = GameObject[] | DynamicOrStoredTargetObject
@@ -22,7 +22,7 @@ export type DynamicOrStoredEvents = GameEvent[] | DynamicOrStoredEventsObject
 
 export type DynamicOrStoredValue = DynamicOrStoredLocalisedString | DynamicOrStoredString | DynamicOrStoredBoolean | DynamicOrStoredNumber | DynamicOrStoredNumbers | DynamicOrStoredTarget | DynamicOrStoredTargets | DynamicOrStoredEvent | DynamicOrStoredEvents
 
-import { DynamicNumberObject, DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumbersObject, DynamicOrStoredStringObject, DynamicOrStoredNumberObject, DynamicOrStoredNumbersObject, DynamicOrStoredTargetObject, DynamicOrStoredTargetsObject, DynamicOrStoredEventObject, DynamicOrStoredEventsObject, DynamicLocalisedStringObject, DynamicOrStoredLocalisedStringObject } from "./DynamicValueObject";
+import { DynamicNumberObject, DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumbersObject, DynamicOrStoredStringObject, DynamicOrStoredNumberObject, DynamicOrStoredNumbersObject, DynamicOrStoredTargetObject, DynamicOrStoredTargetsObject, DynamicOrStoredEventObject, DynamicOrStoredEventsObject, DynamicLocalisedStringObject, DynamicOrStoredLocalisedStringObject, DynamicBooleanObject, DynamicOrStoredBooleanObject } from "./DynamicValueObject";
 import GameObject from "../gameObjects/GameObject";
 import GameEvent from "../gamePhases/GameEvent";
 import { LocalisedStringObject } from "./Localisation"

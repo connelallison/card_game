@@ -17,6 +17,10 @@ abstract class NamelessFollower extends Follower {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+        this.updateActiveOptions()
+        this.updateActiveActions()
+        this.updateActiveEvents()
+
         return {
             name: this.name[localisation],
             id: this.id,
@@ -31,11 +35,12 @@ abstract class NamelessFollower extends Follower {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            targeted: this.targeted,
-            validTargets: this.validTargetIDs(),
-            staticCardText: this.staticCardText[localisation],
-            validSlots: this.validSlotIDs(),
-            dynamicCardText: this.generateDynamicCardText(localisation),
+            staticText: this.staticText[localisation],
+            text: this.generateDynamicText(this.text, localisation),
+            options: this.optionsReport(localisation),
+            actions: this.actionsReport(localisation),
+            attackTargets: this.attackTargetsReport(),
+            validSlots: this.validSlotsReport(),
         }
     }
 

@@ -3,18 +3,18 @@ import Game from "../gamePhases/Game"
 import GameObject from "../gameObjects/GameObject"
 
 const data: StaticEnchantmentData = {
-    'id': 'Fervour',
-    'name': {
-        'english': `Fervour`,
+    id: 'Fervour',
+    name: {
+        english: `Fervour`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Static',
-    'activeZones': ['board', 'hand', 'deck', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'setAsideZone', 'global', 'graveyard'],
-    'activeTypes': ['Follower', 'Leader', 'Creation', 'LeaderTechnique', 'Moment', 'Passive', 'Player'],
-    'effectObjs': [
+    type: 'Enchantment',
+    subtype: 'Static',
+    activeZones: ['board', 'hand', 'deck', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'setAsideZone', 'global', 'graveyard'],
+    activeTypes: ['Follower', 'Leader', 'Creation', 'LeaderTechnique', 'Moment', 'Passive', 'Player'],
+    effectObjs: [
         {
-            'operation': 'incrementFervour',
-            'value': 0
+            operation: 'incrementFervour',
+            value: 0
         }
     ]
 }

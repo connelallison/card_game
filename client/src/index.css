@@ -2,9 +2,14 @@
   background: beige;
   outline: none;
 }
-/* input {
 
+/* input {
+  background-color: lightgrey;
 } */
+
+label {
+  background-color: lightgrey;
+}
 
 body {
   margin: 0;
@@ -26,18 +31,35 @@ p {
   /* text-align: center; */
 }
 
+form {
+  background-color: lightgrey;
+}
+
 p.lowerMargin {
-  margin: 5px;
+  /* margin: 1px; */
+  /* margin-bottom: 0; */
+  margin: 0;
+  margin-right: 10px;
   text-align: center;
 }
 
-button {
+/* button {
   background: lightgrey;
-}
+} */
 
 input {
   margin-left: 5px;
 }
+
+/* #root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.playarea {
+  width: 95%;
+  align-self: center;
+} */
 
 .multicolour-line {
   display: inline-flex;
@@ -45,6 +67,7 @@ input {
   /* align-self: flex-end; */
   justify-content: center;
 }
+
 
 .deck {
   text-align: right;
@@ -76,7 +99,7 @@ input {
   background-color: lightgrey;
   text-align: center;
   border: 1px solid black;
-  /* border-radius: 3px; */
+  border-radius: 3px;
   width: 160px;
   margin-left: 5px;
   margin-right: 5px;
@@ -124,6 +147,7 @@ input {
 }
 
 .game-status {
+  background-color: lightgrey;
   text-align: center;
   font-weight: bold;
   font-size: 18px;
@@ -132,6 +156,36 @@ input {
   justify-self: flex-end;
 }
 
+.player-status {
+  margin: 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.anchor {
+  height: 15px;
+  /* width: 0px; */
+  display: flex;
+  flex-direction: column;
+  position: relative; 
+  align-items: center;
+  justify-content: center;
+}
+
+.optionSelections {
+  background-color: transparent;
+  position: absolute;
+  align-items: center;
+  z-index: 1;
+}
+
+.optionActions {
+  background-color: transparent;
+}
 
 .card {
   /* background-image: url("./images/dogecropped.jpg"); */
@@ -139,7 +193,7 @@ input {
   /* width: 7%; */
   background-color: lightgrey;
   border: 1px solid black;
-  /* border-radius: 0px; */
+  border-radius: 3px;
   margin-left: 3px;
   margin-right: 3px;
   display: flex;
@@ -227,21 +281,34 @@ input {
 }
 
 .canBeTargeted {
-  outline: solid red 1px;
+  outline: solid red 2px;
+}
+
+.nonHostileTarget {
+  /* outline: solid */
+  filter: drop-shadow(0 0 8px rgb(6, 173, 0));
+}
+
+.hostileTarget {
+  filter: drop-shadow(0 0 8px rgb(207, 0, 0));
 }
 
 .isSelected {
-  outline: solid blue 1px;
+  /* outline: solid blue 2px; */
+  filter: drop-shadow(0 0 8px rgb(25, 10, 231));
 }
 
 .topBar {
+  background-color: lightgrey;
   display: flex;
   justify-content: space-evenly;
+  /* margin-bottom: 0; */
+  border-bottom: solid rgb(78, 77, 77) 2px;
 }
 
-#request-test-game, #update-display-name {
+/* #request-test-game, #update-display-name {
   background: lightgrey;
-}
+} */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

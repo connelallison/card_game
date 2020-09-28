@@ -3,29 +3,28 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-  'id': 'RoyalGuard',
-  'name': {
-    'english': `Royal Guard`,
+  id: 'RoyalGuard',
+  name: {
+    english: `Royal Guard`,
   },
-  'type': 'Follower',
-  'subtype': 'Nameless',
-  'classes': ['All'],
-  'categories': [],
-  'collectable': true,
-  'cost': 3,
-  'attack': 3,
-  'health': 4,
-  'charges': 2,
-  'staticCardText': {
-    'english': `Guard`,
+  type: 'Follower',
+  subtype: 'Nameless',
+  classes: ['All'],
+  categories: [],
+  collectable: true,
+  cost: 3,
+  attack: 3,
+  health: 4,
+  charges: 2,
+  staticText: {
+    english: `Guard`,
   },
-  'dynamicCardText': {
-      'templates': {
-          'english': `Guard`,
+  text: {
+      templates: {
+          english: `Guard`,
       },
   },
-  'enchantments': ['Guard'],
-  'targeted': false
+  enchantments: ['Guard'],
 }
 
 class RoyalGuard extends NamelessFollower {

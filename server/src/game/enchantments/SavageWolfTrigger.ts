@@ -3,12 +3,12 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEnchantmentData = {
-    'id': 'SavageWolfTrigger',
-    'name': {
-        'english': `Savage Wolf Trigger`,
+    id: 'SavageWolfTrigger',
+    name: {
+        english: `Savage Wolf Trigger`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Trigger',
+    type: 'Enchantment',
+    subtype: 'Trigger',
     activeTypes: ['Follower'],
     activeZones: ['board'],
     repeatable: true,
@@ -16,31 +16,35 @@ const data: TriggerEnchantmentData = {
     triggerObjs: [{
         actionType: 'triggerAction',
         eventType: 'afterDeath',
-        requirements: [
-            {
-                eventTargetRequirement: 'isType',
-                values: {
-                    type: 'Follower'
+        actionSteps: [{
+            requirements: [
+                {
+                    eventTargetRequirement: 'isType',
+                    values: {
+                        type: 'Follower'
+                    },
+                    targetMap: 'deathEventDestroyedTarget'
                 },
-                targetMap: 'deathEventDestroyedTarget'
-            },
-            {
-                eventTargetRequirement: 'isFriendly',
-                targetMap: 'deathEventDestroyedTarget'
-            }
-        ],
-        actionFunctions: [{
-            functionType: 'autoAction',
-            operation: 'buffAttackAndHealth',
-            values: {
-                attack: 2,
-                health: 1,
-            },
-            target: {
-                valueType: 'target',
-                from: 'targetDomain',
-                targetDomain: 'self'
-            }
+                {
+                    eventTargetRequirement: 'isFriendly',
+                    targetMap: 'deathEventDestroyedTarget'
+                }
+            ],
+            autoTargets: [{
+                targets: {
+                    valueType: 'target',
+                    from: 'targetDomain',
+                    targetDomain: 'self'
+                },
+            }],
+            actionFunctions: [{
+                functionType: 'autoAction',
+                operation: 'buffAttackAndHealth',
+                values: {
+                    attack: 2,
+                    health: 1,
+                },
+            }]
         }]
     }]
 }

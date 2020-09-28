@@ -4,36 +4,35 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import { sumFriendlyFollowersHealth } from "../dictionaries/DynamicValueShortcuts";
 
 const data: PermanentPassiveData = {
-    'id': 'HolyProtectors',
-    'name': {
-        'english': `Holy Protectors`,
+    id: 'HolyProtectors',
+    name: {
+        english: `Holy Protectors`,
     },
-    'type': 'Passive',
-    'subtype': 'Permanent',
-    'classes': ['Economy'],
-    'collectable': true,
-    'cost': 4,
-    'staticCardText': {
-        'english': `Passive: Your leader gains (temporary) Health equal to the total Health of your followers.`,
+    type: 'Passive',
+    subtype: 'Permanent',
+    classes: ['Economy'],
+    collectable: true,
+    cost: 4,
+    staticText: {
+        english: `Passive: Your leader gains (temporary) Health equal to the total Health of your followers.`,
     },
-    'dynamicCardText': {
-        'templates': {
-            'english': `Passive: Your leader gains (temporary) Health equal to the total Health of your followers. $0`,
+    text: {
+        templates: {
+            english: `Passive: Your leader gains (temporary) Health equal to the total Health of your followers. $0`,
         },
-        'dynamicValues': [
+        dynamicValues: [
             {
                 value: sumFriendlyFollowersHealth,
                 activeZones: ['passiveZone'],
                 default: '',
                 templates: {
-                    'english': '(+$ Health)'
+                    english: '(+$ Health)'
                 }
             }
         ]
     },
-    'enchantments': ['HolyProtectorsAura'],
-    'targeted': false,
-    'ethos': true,
+    enchantments: ['HolyProtectorsAura'],
+    ethos: true,
 }
 
 class HolyProtectors extends PermanentPassive {

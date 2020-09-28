@@ -3,18 +3,18 @@ import Game from "../gamePhases/Game"
 import GameObject from "../gameObjects/GameObject"
 
 const data: StaticEnchantmentData = {
-    'id': 'AttackBuff',
-    'name': {
-        'english': `Attack Buff`,
+    id: 'AttackBuff',
+    name: {
+        english: `Attack Buff`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Static',
-    'activeZones': ['board', 'hand', 'deck', 'leaderZone'],
-    'activeTypes': ['Follower', 'Leader'],
-    'effectObjs': [
+    type: 'Enchantment',
+    subtype: 'Static',
+    activeZones: ['board', 'hand', 'deck', 'leaderZone'],
+    activeTypes: ['Follower', 'Leader'],
+    effectObjs: [
         {
-            'operation': 'incrementAttack',
-            'value': 0
+            operation: 'incrementAttack',
+            value: 0
         }
     ]
 }

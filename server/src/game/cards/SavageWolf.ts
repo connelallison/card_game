@@ -3,29 +3,28 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-  'id': 'SavageWolf',
-  'name': {
-    'english': `Savage Wolf`,
+  id: 'SavageWolf',
+  name: {
+    english: `Savage Wolf`,
   },
-  'type': 'Follower',
-  'subtype': 'Nameless',
-  'classes': ['All'],
-  'categories': [],
-  'collectable': true,
-  'cost': 3,
-  'attack': 4,
-  'health': 3,
-  'charges': 2,
-  'staticCardText': {
-    'english': `After a friendly follower dies, gain +2/+1.`,
+  type: 'Follower',
+  subtype: 'Nameless',
+  classes: ['All'],
+  categories: [],
+  collectable: true,
+  cost: 3,
+  attack: 4,
+  health: 3,
+  charges: 2,
+  staticText: {
+    english: `After a friendly follower dies, gain +2/+1.`,
   },
-  'dynamicCardText': {
-      'templates': {
-          'english': `After a friendly follower dies, gain +2/+1.`,
+  text: {
+      templates: {
+          english: `After a friendly follower dies, gain +2/+1.`,
       },
   },
-  'enchantments': ['SavageWolfTrigger'],
-  'targeted': false
+  enchantments: ['SavageWolfTrigger'],
 }
 
 class SavageWolf extends NamelessFollower {

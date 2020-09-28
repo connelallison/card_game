@@ -47,7 +47,7 @@ abstract class Enchantment extends GameObject {
         this.zone = this.owner.zone
         const active = this.activeZones.includes(this.owner.zone)
             && this.activeTypes.includes(this.owner.type)
-            && this.activeRequirements.every(requirement => this.activeRequirement(requirement))
+            && this.activeRequirements.every(requirement => this.requirement(requirement))
         this.previousActive = active
         this.updateEnchantments()
         return active
@@ -87,6 +87,6 @@ import EffectOperation from '../functionTypes/EffectOperation'
 import Character from './Character'
 import { EnchantmentIDString, EnchantmentExpiryIDString } from '../stringTypes/DictionaryKeyString'
 import { LocalisedStringObject } from '../structs/Localisation'
-import { ActiveRequirement } from '../structs/Requirement'
+import { ActiveRequirement, ActiveRequirementShortcut } from '../structs/Requirement'
 
 

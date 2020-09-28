@@ -8,11 +8,11 @@ class Deck {
   passive: Passive
   cards: Card[]
 
-  constructor (game, owner, deckID, deckName, deck: DeckObject) {
+  constructor (game, owner, deck: DeckObject) {
     this.game = game
     this.owner = owner
-    this.id = deckID
-    this.name = deckName
+    this.id = deck.id
+    this.name = deck.name
     this.leader = this.game.createCard(deck.leader, this.owner) as Leader
     this.leaderTechnique = this.game.createCard(this.leader.leaderTechniqueID, this.owner) as LeaderTechnique
     this.passive = this.game.createCard(deck.passive, this.owner) as Passive

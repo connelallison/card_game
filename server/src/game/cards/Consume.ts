@@ -3,61 +3,59 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: EventMomentData = {
-  'id': 'Consume',
-  'name': {
-    'english': `Consume`,
+  id: 'Consume',
+  name: {
+    english: `Consume`,
   },
-  'type': 'Moment',
-  'subtype': 'Event',
-  'classes': ['Infamy'],
-  'collectable': true,
-  'targeted': false,
-  'cost': 3,
-  'staticCardText': {
-    'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
+  type: 'Moment',
+  subtype: 'Event',
+  classes: ['Infamy'],
+  collectable: true,
+  cost: 3,
+  staticText: {
+    english: `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
   },
-  'dynamicCardText': {
-    'templates': {
-      'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
+  text: {
+    templates: {
+      english: `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
     },
   },
-  'activeRequirements': [{
-    'activeRequirement': 'min1EnemyFollower',
-  }],
-  'events': [{
+  events: [{
     actionType: 'eventAction',
     name: {
       english: 'Consume'
     },
     text: {
-      'templates': {
-        'english': `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
+      templates: {
+        english: `Event: Deal 3 damage to the weakest enemy follower and draw a card.`,
       },
     },
-    actionFunctions: [
-      {
-        'functionType': 'autoAction',
-        'operation': 'damage',
-        'values': {
-          'damage': 3,
-        },
-        'target': {
-          'valueType': 'target',
-          'from': 'targets',
+    actionSteps: [{
+      autoTargets: [{
+        targets: {
+          valueType: 'target',
+          from: 'targets',
           'reducer': 'min',
           'criterionMap': 'attack',
-          'targets': {
-            'valueType': 'targets',
-            'from': 'targetDomain',
-            'targetDomain': 'enemyBoard',
+          targets: {
+            valueType: 'targets',
+            from: 'targetDomain',
+            targetDomain: 'enemyBoard',
           }
-        }
+        },
+      }],
+      actionFunctions: [{
+        functionType: 'autoAction',
+        operation: 'damage',
+        values: {
+          'damage': 3,
+        },
       },
       {
-        'functionType': 'autoAction',
-        'operation': 'draw',
-      }
-    ]
+        functionType: 'autoAction',
+        operation: 'draw',
+      }]
+    }]
   }]
 }
 

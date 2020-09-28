@@ -3,28 +3,27 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: FamousFollowerData = {
-    'id': 'JohnFKennedy',
-    'name': {
-        'english': `John F. Kennedy`,
+    id: 'JohnFKennedy',
+    name: {
+        english: `John F. Kennedy`,
     },
-    'type': 'Follower',
-    'subtype': 'Famous',
-    'classes': ['All'],
-    'categories': [],
-    'collectable': true,
-    'cost': 2,
-    'attack': 2,
-    'health': 2,
-    'targeted': false,
-    'staticCardText': {
-        'english': `Event and Death: Gain +2 Fervour until the end of your turn.`,
+    type: 'Follower',
+    subtype: 'Famous',
+    classes: ['All'],
+    categories: [],
+    collectable: true,
+    cost: 2,
+    attack: 2,
+    health: 2,
+    staticText: {
+        english: `Event and Death: Gain +2 Fervour until the end of your turn.`,
     },
-    'dynamicCardText': {
-        'templates': {
-            'english': `Event and Death: Gain +2 Fervour until the end of your turn.`,
+    text: {
+        templates: {
+            english: `Event and Death: Gain +2 Fervour until the end of your turn.`,
         },
     },
-    'events': [{
+    events: [{
         actionType: 'eventAction',
         name: {
             english: 'John F. Kennedy Event'
@@ -34,21 +33,26 @@ const data: FamousFollowerData = {
                 english: 'Event: Gain +2 Fervour until the end of your turn.'
             }
         },
-        actionFunctions: [{
-            functionType: 'autoAction',
-            operation: 'addStatEnchantment',
-            values: {
-                statEnchantmentID: 'Fervour',
-                statValue: 2,
-                expires: ['ExpiresEndOfMyTurn']
-            },
-            target: {
-                valueType: 'target',
-                from: 'targetDomain',
-                targetDomain: 'friendlyPlayer'
-            }
-        }]}],
-    'deathEvents': [{
+        actionSteps: [{
+            autoTargets: [{
+                targets: {
+                    valueType: 'target',
+                    from: 'targetDomain',
+                    targetDomain: 'friendlyPlayer'
+                },
+            }],
+            actionFunctions: [{
+                functionType: 'autoAction',
+                operation: 'addStatEnchantment',
+                values: {
+                    statEnchantmentID: 'Fervour',
+                    statValue: 2,
+                    expires: ['ExpiresEndOfMyTurn']
+                },
+            }]
+        }]
+    }],
+    deathEvents: [{
         actionType: 'deathAction',
         name: {
             english: 'John F. Kennedy Death Event'
@@ -58,20 +62,25 @@ const data: FamousFollowerData = {
                 english: 'Death: Gain +2 Fervour until the end of your turn.'
             }
         },
-        actionFunctions: [{
-        functionType: 'autoAction',
-        operation: 'addStatEnchantment',
-        values: {
-            statEnchantmentID: 'Fervour',
-            statValue: 2,
-            expires: ['ExpiresEndOfMyTurn']
-        },
-        target: {
-            valueType: 'target',
-            from: 'targetDomain',
-            targetDomain: 'friendlyPlayer'
-        }
-    }]}],
+        actionSteps: [{
+            autoTargets: [{
+                targets: {
+                    valueType: 'target',
+                    from: 'targetDomain',
+                    targetDomain: 'friendlyPlayer'
+                },
+            }],
+            actionFunctions: [{
+                functionType: 'autoAction',
+                operation: 'addStatEnchantment',
+                values: {
+                    statEnchantmentID: 'Fervour',
+                    statValue: 2,
+                    expires: ['ExpiresEndOfMyTurn']
+                },
+            }]
+        }]
+    }],
 }
 
 class JohnFKennedy extends FamousFollower {

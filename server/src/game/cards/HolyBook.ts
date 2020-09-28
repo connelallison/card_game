@@ -3,26 +3,25 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: WorkCreationData = {
-    'id': 'HolyBook',
-    'name': {
-        'english': `Holy Book`,
+    id: 'HolyBook',
+    name: {
+        english: `Holy Book`,
     },
-    'type': 'Creation',
-    'subtype': 'Work',
-    'classes': ['Economy'],
-    'collectable': true,
-    'cost': 2,
-    'charges': 3,
-    'staticCardText': {
-        'english': `At the end of your turn, restore 2 Health to all friendly characters.`,
+    type: 'Creation',
+    subtype: 'Work',
+    classes: ['Economy'],
+    collectable: true,
+    cost: 2,
+    charges: 3,
+    staticText: {
+        english: `At the end of your turn, restore 2 Health to all friendly characters.`,
     },
-    'dynamicCardText': {
-        'templates': {
-            'english': `At the end of your turn, restore 2 Health to all friendly characters.`,
+    text: {
+        templates: {
+            english: `At the end of your turn, restore 2 Health to all friendly characters.`,
         },
     },
-    'targeted': false,
-    'enchantments': ['HolyBookTrigger'],
+    enchantments: ['HolyBookTrigger'],
 }
 
 class HolyBook extends WorkCreation {

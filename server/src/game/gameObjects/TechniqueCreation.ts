@@ -24,14 +24,6 @@ abstract class TechniqueCreation extends Creation {
     if (this.inPlay() && this.controller().myTurn()) this.ready = true
   }
 
-  updateValidTargets(): void {
-    if ((this.zone === 'hand' || this.inPlay()) && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
-    } else {
-      this.validTargets = []
-    }
-  }
-
   canBeSelected(): boolean {
     if (this.inPlay()) {
       return this.canBeUsed()
@@ -42,6 +34,10 @@ abstract class TechniqueCreation extends Creation {
 
   canBeUsed(): boolean {
     return this.ready && this.controller().canUse(this)
+  }
+
+  actionsActive(): boolean {
+    return this.controller().myTurn() && (this.zone === 'creationZone' || this.zone === 'hand')
   }
 }
 

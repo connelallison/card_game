@@ -3,24 +3,28 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEnchantmentData = {
-    'id': 'JuniorOrcAura',
-    'name': {
-        'english': `Junior Orc Aura`,
+    id: 'JuniorOrcAura',
+    name: {
+        english: `Junior Orc Aura`,
     },
-    'type': 'Enchantment',
-    'subtype': 'Aura',
-    'activeZones': ['board'],
-    'activeTypes': ['Follower'],
-    'targetDomain': ['friendlyBoard'],
-    'targetRequirements': [
-        { 'targetRequirement': 'isFriendly' },
-        { 'targetRequirement': 'notSelf' }
-    ],
-    'effectObjs': [{
-        'operation': 'incrementAttack',
-        'value': 1
+    type: 'Enchantment',
+    subtype: 'Aura',
+    priority: 1,
+    activeZones: ['board'],
+    activeTypes: ['Follower'],
+    effectObjs: [{
+        operation: 'incrementAttack',
+        value: 1
     }],
-    'priority': 1
+    targets: {
+        valueType: 'targets',
+        from: 'targetDomain',
+        targetDomain: ['friendlyBoard'],
+        requirements: [
+            { targetRequirement: 'isFriendly' },
+            { targetRequirement: 'notSelf' }
+        ],
+    },
 }
 
 class JuniorOrcAura extends AuraEnchantment {

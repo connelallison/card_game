@@ -1,7 +1,7 @@
 import React from 'react'
-import Follower from './Follower.js'
-import Moment from './Moment.js'
-import Unknown from './Unknown.js'
+import Follower from './Follower'
+import Moment from './Moment'
+import Unknown from './Unknown'
 
 const OpponentHand = (props) => {
   let cardList

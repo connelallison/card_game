@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class TestGame extends Component {
+class StartGame extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -16,7 +16,7 @@ class TestGame extends Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    this.props.onRequested(this.state.value)
+    this.props.startGame(this.state.value)
   }
 
   render() {
@@ -35,10 +35,10 @@ class TestGame extends Component {
             {options}
           </select>
         </label>
-        <input type='submit' id='request-test-game' value='Request Game'/>
+        <input type='submit' id='request-test-game' value='Start Game'/>
       </form>
     )
   }
 }
 
-export default TestGame
+export default StartGame

@@ -27,6 +27,10 @@ abstract class Leader extends Character {
   }
 
   provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+    this.updateActiveOptions()
+    this.updateActiveActions()
+    this.updateActiveEvents()
+
     return {
       name: this.name[localisation],
       id: this.id,
@@ -40,31 +44,32 @@ abstract class Leader extends Character {
       ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
-      targeted: this.targeted,
-      validTargets: this.validTargetIDs(),
-      staticCardText: this.staticCardText[localisation],
-      dynamicCardText: this.generateDynamicCardText(localisation),
+      staticText: this.staticText[localisation],
+      text: this.generateDynamicText(this.text, localisation),
+      options: this.optionsReport(localisation),
+      actions: this.actionsReport(localisation),
+      attackTargets: this.attackTargetsReport(),
     }
   }
 
-  updateValidTargets(): void {
-    if (this.inPlay()) {
-      this.validTargets = this.owner.opponent.boardFollowers().filter(defender => {
-        return Permissions.canAttack(this, defender)
-      })
-    } else if (this.zone === 'hand' && this.targeted) {
-      this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
-    } else {
-      this.validTargets = []
-    }
+  updateArrays(): void {
+    // this.updateActiveOptions()
+    // this.updateActiveActions()
+    this.updateActiveEvents()
+    this.updateActiveDeathEvents()
+    this.updateAttackTargets()
+  }
+
+  updateAttackTargets(): void {
+    this.attackTargets = this.inPlay() ? this.owner.opponent.boardFollowers().filter(defender => {
+      return Permissions.canAttack(this, defender)
+    }) : []
   }
 
   takeDamage(damage: number): number {
     const reducedDamage = this.owner.takeDamage(damage)
     this.update()
     return reducedDamage
-    // console.log(`${this.owner.name} takes ${damage} damage`)
-    // console.log(`${this.owner.name} now has ${this.health} health`)
   }
 
   receiveHealing(rawHealing: number): number {
@@ -72,8 +77,6 @@ abstract class Leader extends Character {
     this.owner.currentHealth += healing
     this.update()
     return healing
-    // console.log(`${this.owner.name} receives ${healing} healing`)
-    // console.log(`${this.owner.name} now has ${this.health} health`)
   }
 
   missingHealth(): number {
@@ -88,6 +91,10 @@ abstract class Leader extends Character {
       health: this.baseHealth(),
       cost: this.rawCost,
       debt: 0,
+      rent: 0,
+      fervour: 0,
+      growth: 0,
+      income: 0,
       flags: this.baseFlags(),
     }
   }

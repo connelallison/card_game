@@ -27,6 +27,10 @@ abstract class WeaponCreation extends Creation {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+        this.updateActiveOptions()
+        this.updateActiveActions()
+        this.updateActiveEvents()
+
         return {
             name: this.name[localisation],
             id: this.id,
@@ -40,10 +44,10 @@ abstract class WeaponCreation extends Creation {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            targeted: this.targeted,
-            validTargets: this.validTargetIDs(),
-            staticCardText: this.staticCardText[localisation],
-            dynamicCardText: this.generateDynamicCardText(localisation),
+            staticText: this.staticText[localisation],
+            text: this.generateDynamicText(this.text, localisation),
+            options: this.optionsReport(localisation),
+            actions: this.actionsReport(localisation),
         }
     }
 
@@ -55,6 +59,10 @@ abstract class WeaponCreation extends Creation {
             charges: this.charges,
             cost: this.rawCost,
             debt: 0,
+            rent: 0,
+            fervour: 0,
+            growth: 0,
+            income: 0,
             flags: this.baseFlags(),
         }
     }

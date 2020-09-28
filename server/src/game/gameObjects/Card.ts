@@ -9,16 +9,12 @@ export interface CardData {
   collectable: boolean
   cost: number
   debt?: number
-  staticCardText: LocalisedStringObject
-  dynamicCardText: DynamicCardTextObject
+  staticText: LocalisedStringObject
+  text: DynamicTextObject
   actions?: ActionAction[]
   events?: EventAction[]
-  // eurekas?: EurekaAction[]
-  activeRequirements?: ActiveRequirement[]
+  options?: OptionAction[]
   enchantments?: EnchantmentIDString[]
-  targeted: boolean
-  targetDomain?: TargetsDomainString | TargetsDomainString[]
-  targetRequirements?: TargetRequirement[]
 }
 
 abstract class Card extends GameObject {
@@ -36,18 +32,15 @@ abstract class Card extends GameObject {
   rawCost: number
   cost: number
   debt: number
-  staticCardText: LocalisedStringObject
-  dynamicCardText: DynamicCardTextObject
+  staticText: LocalisedStringObject
+  text: DynamicTextObject
+  options: OptionAction[]
+  activeOptions: OptionAction[]
   actions: ActionAction[]
+  activeActions: ActionAction[]
   events: EventAction[]
-  // eurekas: EurekaAction[]
+  activeEvents: EventAction[]
   // tags: CardTagString[]
-  // option: []
-  activeRequirements: ActiveRequirement[]
-  targeted: boolean
-  targetDomain: () => GameObject[]
-  targetRequirements: TargetRequirement[]
-  validTargets: GameObject[]
   clonedFrom: Card
 
   constructor(game: Game, owner: GamePlayer, data: CardData) {
@@ -62,22 +55,24 @@ abstract class Card extends GameObject {
     this.rawCost = data.cost
     this.cost = data.cost
     this.debt = 0
-    this.staticCardText = data.staticCardText
-    this.dynamicCardText = data.dynamicCardText
+    this.staticText = data.staticText
+    this.text = data.text
+    this.options = data.options || []
+    this.activeOptions = []
     this.actions = data.actions || []
+    this.activeActions = []
     this.events = data.events || []
-    // this.eurekas = data.eurekas || []
-    this.activeRequirements = data.activeRequirements || []
-    this.targeted = data.targeted
-    this.targetDomain = () => this.targetDomains(data.targetDomain || [])
-    this.targetRequirements = data.targetRequirements || []
-    this.validTargets = []
+    this.activeEvents = []
     this.addBaseStatEnchantments(data)
     this.addBaseEnchantments(data.enchantments || [])
     this.data = data
   }
 
   provideReport(localisation: LocalisationString = 'english'): ObjectReport {
+    this.updateActiveOptions()
+    this.updateActiveActions()
+    this.updateActiveEvents()
+
     return {
       name: this.name[localisation],
       id: this.id,
@@ -89,14 +84,152 @@ abstract class Card extends GameObject {
       ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
-      targeted: this.targeted,
-      validTargets: this.validTargetIDs(),
-      staticCardText: this.staticCardText[localisation],
-      dynamicCardText: this.generateDynamicCardText(localisation),
+      staticText: this.staticText[localisation],
+      text: this.generateDynamicText(this.text, localisation),
+      options: this.optionsReport(localisation),
+      actions: this.actionsReport(localisation),
     }
   }
 
-  dynamicCardTextValue(valueObj: DynamicCardTextValueObject, localisation: LocalisationString = 'english'): string {
+  optionsReport(localisation: LocalisationString = 'english'): OptionActionReport[] {
+    return this.activeOptions.length > 0 ? this.activeOptions.map(option => this.optionReport(option, localisation)) : null
+  }
+
+  optionReport(optionAction: OptionAction, localisation: LocalisationString = 'english'): OptionActionReport {
+    return {
+      name: optionAction.name[localisation],
+      text: this.generateDynamicText(optionAction.text, localisation),
+      actions: optionAction.activeActions.map(action => this.actionReport(action, localisation))
+    }
+  }
+
+  actionsReport(localisation: LocalisationString = 'english'): ActionActionReport[] {
+    return this.activeActions.length > 0 ? this.activeActions.map(action => this.actionReport(action, localisation)) : null
+  }
+
+  actionReport(action: ActionAction, localisation: LocalisationString = 'english'): ActionActionReport {
+    const targetedSteps = action.activeSteps.map(step => this.actionStepReport(step, localisation))
+    return {
+      name: action.name[localisation],
+      text: this.generateDynamicText(action.text, localisation),
+      targetedSteps
+    }
+  }
+
+  actionStepReport(step: ActionActionStep, localisation: LocalisationString = 'english'): ActionActionStepReport {
+    return {
+      manualTargets: step.manualTargets?.map(target => this.manualTargetReport(target, localisation)) ?? []
+    }
+  }
+
+  manualTargetReport(manualTarget: ManualTarget, localisation: LocalisationString = 'english'): ManualTargetReport {
+    return {
+      text: this.generateDynamicText(manualTarget.text, localisation),
+      validTargets: manualTarget.validTargets.map(target => target.objectID),
+      hostile: manualTarget.hostile ?? false,
+    }
+  }
+
+  validateStepTargets(actionStep: ActionActionStep, chosenTargets: GameObject[]): boolean {
+    return !!chosenTargets && (actionStep.manualTargets?.every((manualTarget, index) => manualTarget.validTargets.includes(chosenTargets[index])) ?? true)
+  }
+
+  validateActionTargets(action: ActionAction, chosenTargets: GameObject[][]): boolean {
+    return !!chosenTargets && (action.activeSteps?.every((step, index) => this.validateStepTargets(step, chosenTargets[index])) ?? true)
+  }
+
+  validateAllActionTargets(chosenTargets: GameObject[][][]): boolean {
+    return !!chosenTargets && this.activeActions.every((action, index) => this.validateActionTargets(action, chosenTargets[index]))
+  }
+
+  validateOptionChoice(option: OptionAction, optionChoice: OptionChoice): boolean {
+    return !!optionChoice && this.validateActionTargets(option.actions[optionChoice.chosenAction], optionChoice.chosenTargets)
+  }
+
+  validateAllOptionChoices(optionChoices: OptionChoice[]): boolean {
+    return !!optionChoices && this.activeOptions.every((option, index) => this.validateOptionChoice(option, optionChoices[index]))
+  }
+
+  setStepTargets(actionStep: ActionActionStep, chosenTargets: GameObject[]): void {
+    actionStep.manualTargets?.forEach((manualTarget, index) => manualTarget.chosenTarget = chosenTargets[index])
+  }
+
+  setActionTargets(action: ActionAction, chosenTargets: GameObject[][]): void {
+    action.activeSteps?.forEach((step, index) => this.setStepTargets(step, chosenTargets[index]))
+  }
+
+  setAllActionTargets(chosenTargets: GameObject[][][]): void {
+    this.activeActions.forEach((action, index) => this.setActionTargets(action, chosenTargets[index]))
+  }
+
+  setOptionChoice(option: OptionAction, optionChoice: OptionChoice): void {
+    option.chosenActions = [option.activeActions[optionChoice.chosenAction]]
+    option.chosenActions.forEach(action => this.setActionTargets(action, optionChoice.chosenTargets))
+  }
+
+  setAllOptionChoices(optionChoices: OptionChoice[]): void {
+    this.activeOptions.forEach((option, index) => this.setOptionChoice(option, optionChoices[index]))
+  }
+
+  active(): boolean {
+    return (this.activeOptions.length + this.activeActions.length + this.activeEvents.length) > 0
+  }
+
+  actionsActive(): boolean {
+    return this.controller().myTurn() && this.zone === 'hand'
+  }
+
+  updateActiveOptions(): void {
+    this.activeOptions = this.actionsActive() ? JSON.parse(JSON.stringify(this.options)).filter(option => this.optionActive(option)) : []
+  }
+
+  updateActiveActions(): void {
+    this.activeActions = this.actionsActive() ? JSON.parse(JSON.stringify(this.actions)).filter(action => this.actionActive(action)) : []
+  }
+
+  updateActiveEvents(): void {
+    this.activeEvents = this.events.filter(event => this.eventActive(event))
+  }
+
+  optionActive(optionAction: OptionAction): boolean {
+    optionAction.activeActions = optionAction.actions.filter(action => this.actionActive(action))
+    return optionAction.activeActions.length > 0
+  }
+
+  actionActive(action: ActionAction): boolean {
+    action.activeSteps = action.actionSteps.filter(actionStep => this.actionStepActive(actionStep))
+    return action.activeSteps.length > 0
+  }
+
+  eventActive(event: EventAction | DeathAction): boolean {
+    event.activeSteps = event.actionSteps.filter(actionStep => this.eventStepActive(actionStep))
+    return event.activeSteps.length > 0
+  }
+
+  actionStepActive(actionStep: ActionActionStep): boolean {
+    const active = actionStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
+    const autoTargets = actionStep.autoTargets?.every(autoTarget =>
+      autoTarget.optional
+      || autoTarget.targets.from === 'stored'
+      || (this.dynamicValue(autoTarget.targets) as GameObject[]).length > 0) ?? true
+    if (actionStep.manualTargets) {
+      actionStep.manualTargets.forEach(manualTarget => manualTarget.validTargets = active ? this.dynamicValue(manualTarget.targets) as GameObject[] : [])
+      const manualTargets = actionStep.manualTargets?.every(manualTarget => manualTarget.validTargets.length > 0)
+      return active && autoTargets && manualTargets
+    }
+    return active && autoTargets
+  }
+
+  eventStepActive(eventStep: EventActionStep): boolean {
+    const active = eventStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
+    const autoTargets = eventStep.autoTargets?.every(autoTarget =>
+      autoTarget.optional
+      || autoTarget.targets.from === 'stored'
+      || (this.dynamicValue(autoTarget.targets) as GameObject[]).length > 0) ?? true
+    return active && autoTargets
+  }
+
+  dynamicTextValue(valueObj: DynamicTextValueObject, localisation: LocalisationString = 'english'): string {
     if (valueObj.activeZones.includes(this.zone)) {
       const value = this.localisedDynamicValue(valueObj.value, localisation)
       if (value) {
@@ -112,34 +245,19 @@ abstract class Card extends GameObject {
     return valueObj.default.toString()
   }
 
-  generateDynamicCardText(localisation: LocalisationString = 'english'): string {
-    let template = this.dynamicCardText.templates[localisation]
-    const values = this.dynamicCardText.dynamicValues || []
+  generateDynamicText(text: DynamicTextObject, localisation: LocalisationString = 'english'): string {
+    let template = text.templates[localisation]
+    const values = text.dynamicValues || []
     for (let i = 0; i < values.length; i++) {
-      template = template.replace(`$${i}`, this.dynamicCardTextValue(values[i], localisation))
+      template = template.replace(`$${i}`, this.dynamicTextValue(values[i], localisation))
     }
     return template
   }
 
   updateArrays(): void {
-    this.updateValidTargets()
-  }
-
-  updateValidTargets(): void {
-    if (this.zone === 'hand' && this.targeted) {
-      let newTargets = this.targetDomain()
-      this.targetRequirements.forEach(requirement => {
-        newTargets = newTargets.filter(target => this.targetRequirement(requirement, target))
-      })
-      this.validTargets = newTargets
-      // this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => requirement(this, target)), this.targetDomain())
-    } else {
-      this.validTargets = []
-    }
-  }
-
-  validTargetIDs(): string[] {
-    return this.validTargets.map(target => target.objectID)
+    // this.updateActiveOptions()
+    // this.updateActiveActions()
+    // this.updateActiveEvents()
   }
 
   canBeSelected(): boolean {
@@ -148,6 +266,10 @@ abstract class Card extends GameObject {
 
   canBePlayed(): boolean {
     return this.controller().canPlay(this)
+  }
+
+  eureka(): boolean {
+    return this.zone === 'hand' && (this.index() === 0 || this.index() === this.owner[this.zone].length - 1)
   }
 
   baseData(): GameObjectData {
@@ -159,7 +281,6 @@ abstract class Card extends GameObject {
       flags: this.baseFlags(),
     }
   }
-
 
   index(): number {
     return (this.controller()[this.zone] as Card[]).indexOf(this)
@@ -189,7 +310,7 @@ abstract class Card extends GameObject {
   clone(): Card {
     const clone = new Cards[this.originalID](this.game, this.owner)
     Object.assign(clone, this.cloneData(clone))
-    
+
     return clone
   }
 
@@ -201,13 +322,15 @@ export default Card
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { CardIDString, EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
-import { ActionAction, EventAction } from '../structs/Action'
-import { TargetsDomainString } from '../stringTypes/DomainString'
-import { ObjectReport } from '../structs/ObjectReport'
+import { ActionAction, ActionActionStep, DeathAction, EventAction, EventActionStep, ManualTarget, OptionAction, OptionChoice, } from '../structs/Action'
+import { ActionActionReport, ActionActionStepReport, ManualTargetReport, ObjectReport, OptionActionReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import { CardSubtypeString, CardTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import Cards from '../dictionaries/Cards'
-import { LocalisedStringObject, LocalisationString, DynamicCardTextObject, DynamicCardTextValueObject } from '../structs/Localisation'
+import { LocalisedStringObject, LocalisationString, DynamicTextObject, DynamicTextValueObject } from '../structs/Localisation'
 import PlayerClassString from '../stringTypes/PlayerClassString'
 import Enchantments from '../dictionaries/Enchantments'
-import { ActiveRequirement, TargetRequirement } from '../structs/Requirement'
+import LeaderTechnique from './LeaderTechnique'
+import TechniqueCreation from './TechniqueCreation'
+import Moment from './Moment'
+

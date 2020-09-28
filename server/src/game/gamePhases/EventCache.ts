@@ -3,6 +3,7 @@ interface EventCache {
     death: DeathEvent[],
     play: PlayEvent[],
     action: ActionActionEvent[],
+    optionAction: OptionActionEvent[],
     // eurekaAction: EurekaActionEvent[],
     eventAction: EventActionEvent[],
     deathAction: DeathActionEvent[],
@@ -16,6 +17,7 @@ interface EventCache {
     startOfTurn: StartOfTurnEvent[],
     endOfTurn: EndOfTurnEvent[],
     spendMoney: SpendMoneyEvent[],
+    accrueDebt: AccrueDebtEvent[],
     trigger: TriggerEvent[],
     triggerAction: TriggerActionEvent[],
 }
@@ -40,4 +42,6 @@ import { TriggerEvent } from "./TriggerPhase";
 import { TriggerActionEvent } from "./TriggerActionPhase";
 import { DeathActionEvent } from "./DeathActionPhase";
 import { DrawEvent } from "./ProposedDrawPhase";
+import { OptionActionEvent } from "./OptionActionPhase";
+import { AccrueDebtEvent } from "./AccrueDebtPhase";
 // import { EurekaActionEvent } from "./EurekaActionPhase";

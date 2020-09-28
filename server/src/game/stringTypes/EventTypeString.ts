@@ -1,7 +1,8 @@
 type EventTypeString = 'death' 
                         | 'play' 
                         | 'action' 
-                        | 'eurekaAction'
+                        | 'optionAction'
+                        // | 'eurekaAction'
                         | 'eventAction'
                         | 'deathAction'
                         | 'attack' 
@@ -14,6 +15,7 @@ type EventTypeString = 'death'
                         | 'startOfTurn' 
                         | 'endOfTurn' 
                         | 'spendMoney'
+                        | 'accrueDebt'
                         | 'trigger'
 
 export default EventTypeString

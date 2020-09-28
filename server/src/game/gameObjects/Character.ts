@@ -17,6 +17,7 @@ abstract class Character extends DestroyableCard {
   rawHealth: number
   health: number
   ready: boolean
+  attackTargets: Character[]
 
   constructor(game: Game, owner: GamePlayer, data: CharacterData) {
     super(game, owner, data)
@@ -25,6 +26,7 @@ abstract class Character extends DestroyableCard {
     this.attack = this.rawAttack
     this.rawHealth = data.health
     this.health = this.rawHealth
+    this.attackTargets = []
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
@@ -43,13 +45,23 @@ abstract class Character extends DestroyableCard {
     }
   }
 
-  
+  attackTargetsReport(localisation: LocalisationString = 'english'): ManualTargetReport {
+    const localisations: LocalisedStringObject = {
+      english: 'Choose a target to attack.'
+    }
+    return this.attackTargets.length > 0 ? {
+      hostile: true,
+      text: localisations[localisation],
+      validTargets: this.attackTargets.map(target => target.objectID),
+    } : null
+  }
+
   canAttack(): boolean {
     return this.owner.myTurn() && this.ready && this.inPlay() && this.attack > 0
   }
 
   hasTargets(): boolean {
-    return this.validTargets.length > 0
+    return this.attackTargets.length > 0
   }
   
   charOwner(): Character {
@@ -86,8 +98,8 @@ abstract class Character extends DestroyableCard {
     }
   }
 
+  abstract updateAttackTargets(): void
   abstract getReady(): void
-  abstract updateValidTargets(): void
   abstract takeDamage(damage: number): number
   abstract receiveHealing(healing: number): number
   abstract missingHealth(): number
@@ -99,3 +111,5 @@ import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { StartOfTurnEvent } from '../gamePhases/StartOfTurnPhase'
 import { CharacterTypeString, CharacterSubtypeString } from '../stringTypes/ZoneTypeSubtypeString'
+import { ManualTargetReport } from '../structs/ObjectReport'
+import { LocalisationString, LocalisedStringObject } from '../structs/Localisation'

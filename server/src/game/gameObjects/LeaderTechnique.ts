@@ -32,7 +32,9 @@ abstract class LeaderTechnique extends PersistentCard {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-        // this.updateValidTargets()
+        this.updateActiveOptions()
+        this.updateActiveActions()
+        this.updateActiveEvents()
 
         return {
             name: this.name[localisation],
@@ -45,18 +47,10 @@ abstract class LeaderTechnique extends PersistentCard {
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
-            targeted: this.targeted,
-            validTargets: this.validTargetIDs(),
-            staticCardText: this.staticCardText[localisation],
-            dynamicCardText: this.generateDynamicCardText(localisation),
-        }
-    }
-
-    updateValidTargets(): void {
-        if (this.inPlay() && this.targeted) {
-            this.validTargets = this.targetRequirements.reduce((targets, requirement) => targets.filter(target => this.targetRequirement(requirement, target)), this.targetDomain())
-        } else {
-            this.validTargets = []
+            staticText: this.staticText[localisation],
+            text: this.generateDynamicText(this.text, localisation),
+            options: this.optionsReport(localisation),
+            actions: this.actionsReport(localisation),
         }
     }
 
@@ -80,7 +74,15 @@ abstract class LeaderTechnique extends PersistentCard {
     }
 
     canBeUsed(): boolean {
+        // if (this.id === 'OrkusTheOrkestSmash') {
+        //     console.log('ready', this.name.english, this.ready)
+        //     console.log('canUse', this.name.english, this.controller().canUse(this))
+        // }
         return this.ready && this.controller().canUse(this)
+    }
+
+    actionsActive(): boolean {
+        return this.controller().myTurn() && this.zone === 'leaderTechniqueZone'
     }
 }
 

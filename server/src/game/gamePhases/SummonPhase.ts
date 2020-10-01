@@ -64,7 +64,7 @@ class SummonPhase extends EventPhase {
             const enterPlayEvent = new EnterPlayEvent(this.game(), eventObj)
             this.startChild(new Phases.EnterPlayPhase(this, enterPlayEvent))
         } else {
-            card.moveZone('graveyard')
+            card.moveZone('legacy')
         }
     }
 

@@ -59,7 +59,7 @@ abstract class LeaderTechnique extends PersistentCard {
         this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
 
         if (destination === 'leaderTechniqueZone') {
-            if (this.owner.leaderTechniqueZone[0]) this.owner.leaderTechniqueZone[0].moveZone('graveyard')
+            if (this.owner.leaderTechniqueZone[0]) this.owner.leaderTechniqueZone[0].moveZone('legacy')
             this.game.inPlay.push(this)
         }
 

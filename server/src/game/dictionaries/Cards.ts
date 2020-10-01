@@ -77,6 +77,9 @@ import Archimedes from '../cards/Archimedes'
 import JohnFKennedy from '../cards/JohnFKennedy'
 import WallLabourer from '../cards/WallLabourer'
 import TechEntrepreneur from '../cards/TechEntrepreneur'
+import DivideAndConquer from '../cards/DivideAndConquer'
+import Orpheus from '../cards/Orpheus'
+import JohnTheBaptist from '../cards/JohnTheBaptist'
 
 export const NamelessFollowers = {
   Footman,
@@ -95,11 +98,14 @@ export const FamousFollowers = {
   PrinceTimothy,
   Archimedes,
   JohnFKennedy,
+  Orpheus,
+  JohnTheBaptist,
 }
 
 export const ActionMoments = {
   Fireburst,
   NapalmStrike,
+  DivideAndConquer,
 }
 
 export const EventMoments = {

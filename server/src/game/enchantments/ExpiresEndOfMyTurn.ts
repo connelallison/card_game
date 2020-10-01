@@ -11,7 +11,7 @@ const data: TriggerEnchantmentData = {
     subtype: 'Trigger',
     repeatable: false,
     wonderTrigger: false,
-    activeZones: ['board', 'creationZone', 'deck', 'graveyard', 'hand', 'leaderTechniqueZone', 'leaderZone', 'passiveZone', 'setAsideZone', 'global'],
+    activeZones: ['board', 'creationZone', 'deck', 'legacy', 'hand', 'leaderTechniqueZone', 'leaderZone', 'passiveZone', 'setAsideZone', 'global'],
     activeTypes: ['Enchantment'],
     triggerObjs: [{
         actionType: 'triggerAction',

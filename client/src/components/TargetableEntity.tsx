@@ -46,23 +46,30 @@ abstract class TargetableEntity extends Component {
             cost: 'M',
             charges: 'C',
             armour: 'A',
-        } 
-        return this.props.object.hasOwnProperty(stat) && this.props.object[stat] > 0 ? (
+        }
+        const hiddenCriterion = (
+            stat === 'armour' || stat === 'charges'
+            || this.props.object.type === 'BoardSlot'
+            || (this.props.object.type === 'Leader' && stat === 'attack')
+        )
+            ? this.props.object[stat] > 0
+            : this.props.object[stat] !== null
+        return this.props.object.hasOwnProperty(stat) && hiddenCriterion ? (
             <p className={`${stat}-label stat-label`}>{this.props.object[stat]}{abbreviations[stat]}</p>
-          ) : null
+        ) : null
     }
 
     handInfo(): JSX.Element | null {
         return this.props.object.zone === 'hand' ? (
             <div className="multicolour-line text-medium">
-              {this.statLabel('cost')}
-              <p>{this.props.object.subtype} {this.props.object.type}</p>
-              {this.props.object.subtype === 'Nameless' ? this.statLabel('charges') : null}
+                {this.statLabel('cost')}
+                <p>{this.props.object.subtype} {this.props.object.type}</p>
+                {this.props.object.subtype === 'Nameless' ? this.statLabel('charges') : null}
             </div>
-          ) : null
+        ) : null
     }
 
-    abstract render(): JSX.Element 
+    abstract render(): JSX.Element
 }
 
 export default TargetableEntity

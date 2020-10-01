@@ -41,7 +41,7 @@ abstract class Follower extends Character {
   }
 
   updateAttackTargets(): void {
-    this.attackTargets = this.inPlay() ? (this.owner.opponent.leaderZone as Character[]).concat(this.owner.opponent.boardFollowers()).filter(defender => {
+    this.attackTargets = this.inPlay() ? (this.owner.opponent.boardFollowers() as Character[]).concat(this.owner.opponent.leaderZone).filter(defender => {
       return Permissions.canAttack(this, defender)
     }) : []
   }
@@ -64,8 +64,6 @@ abstract class Follower extends Character {
       validTargets: this.validSlots.map(slot => slot.objectID),
     } : null
   }
-
-
   
   takeDamage(damage: number): number {
     this.rawHealth -= damage
@@ -108,6 +106,14 @@ abstract class Follower extends Character {
       growth: 0,
       income: 0,
       flags: this.baseFlags(),
+    }
+  }
+
+  applyInherited(): void {
+    if (this.inPlay()) {
+      this.attack += this.slot.attack
+      this.health += this.slot.health
+      Object.assign(this.flags, this.slot.flags)
     }
   }
 

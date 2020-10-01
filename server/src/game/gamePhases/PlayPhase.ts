@@ -87,7 +87,7 @@ class PlayPhase extends EventPhase {
             const enterPlayEvent = new EnterPlayEvent(this.game(), eventObj)
             this.startChild(new Phases.EnterPlayPhase(this, enterPlayEvent))
         } else {
-            event.card.moveZone('graveyard')
+            event.card.moveZone('legacy')
         }
     }
 
@@ -175,5 +175,4 @@ import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import { SpendMoneyEvent as AccrueDebtEvent } from "./SpendMoneyPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
-import { OptionActionEvent } from "./OptionActionPhase"; import { OptionChoice } from "../structs/Action";
-
+import { OptionActionEvent } from "./OptionActionPhase"; 

@@ -26,6 +26,10 @@ const KnightDeck: DeckObject = {
       'JohnFKennedy',
       'TechEntrepreneur',
       'TechEntrepreneur',
+      'Orpheus',
+      'Orpheus',
+      'JohnTheBaptist',
+      'JohnTheBaptist',
   ]
 }
 

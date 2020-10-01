@@ -17,6 +17,8 @@ import Debt from '../enchantments/Debt'
 import Rent from '../enchantments/Rent'
 import Fervour from '../enchantments/Fervour'
 import ExpiresEndOfMyTurn from '../enchantments/ExpiresEndOfMyTurn'
+import OrpheusTrigger from '../enchantments/OrpheusTrigger'
+import JohnTheBaptistAura from '../enchantments/JohnTheBaptistAura'
 
 export const StatStaticEnchantments = {
   Debt,
@@ -38,6 +40,7 @@ export const AuraEnchantments = {
   JuniorOrcAura,
   HolyProtectorsAura,
   CombatTrainingAura,
+  JohnTheBaptistAura,
 }
 
 export const TriggerEnchantments = {
@@ -45,6 +48,7 @@ export const TriggerEnchantments = {
   HolyBookTrigger,
   KnightAcademyTrigger,
   SingleMindedFuryTrigger,
+  OrpheusTrigger
 }
 
 export const EnchantmentExpiries = {

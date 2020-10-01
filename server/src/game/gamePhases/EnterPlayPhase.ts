@@ -78,4 +78,3 @@ import GameObject from "../gameObjects/GameObject";
 import Character from "../gameObjects/Character";
 import BoardSlot from "../gameObjects/BoardSlot";
 import Game from "./Game";
-import { EventActionEvent } from "./EventActionPhase";

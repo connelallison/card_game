@@ -39,6 +39,8 @@ class DeathActionPhase extends EventPhase {
     start(): void {
         const event = this.event
         const destroyedCard = event.objectSource as DestroyableCard
+        if (destroyedCard instanceof Follower) event.stored.deathSlot = event.event.slot
+
         this.emit('beforeDeathAction', event)
         event.generateLog()
         this.cacheEvent(event, 'deathAction')
@@ -57,4 +59,5 @@ import { DeathAction } from "../structs/Action"
 import Game from "./Game"
 import DestroyableCard from "../gameObjects/DestroyableCard"
 import { DeathEvent } from "./DeathPhase"
+import Follower from "../gameObjects/Follower"
 

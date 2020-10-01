@@ -3,7 +3,7 @@ import Enchantment, { EnchantmentData } from './Enchantment'
 export interface AuraEnchantmentData extends EnchantmentData {
     subtype: 'Aura'
     effectObjs: EffectFunctionObject[]
-    targets: DynamicTargetsFromTargetDomain
+    targets: DynamicTargetsObject
     // targetDomain: TargetsDomainString | TargetsDomainString[]
     // targetRequirements?: TargetRequirement[]
     priority: 1 | 2 | 3
@@ -15,7 +15,7 @@ abstract class AuraEnchantment extends Enchantment {
     subtype: 'Aura'
     priority: 0 | 1 | 2 | 3
     effects: EffectFunction[]
-    targets: DynamicTargetsFromTargetDomain
+    targets: DynamicTargetsObject
     // targetDomain: () => GameObject[]
     // targetRequirements: TargetRequirement[]
     emit: () => void
@@ -31,6 +31,7 @@ abstract class AuraEnchantment extends Enchantment {
     }
 
     active(): boolean {
+        this.zone = this.owner.zone
         const active = this.activeZones.includes(this.owner.zone)
             && this.activeTypes.includes(this.owner.type)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
@@ -40,16 +41,14 @@ abstract class AuraEnchantment extends Enchantment {
             this.game.event.removeListener(`auraEmit${this.priority}`, this.emit)
         }
         this.previousActive = active
+        this.updateEnchantments()
         return active
     }
 
     auraEmit(): void {
-        // const targets = this.targetDomain()
         const targets = this.dynamicTargets(this.targets)
         targets.forEach(target => {
-            // if (this.targetRequirements.every(requirement => this.targetRequirement(requirement, target))) {
                 this.effects.forEach(effect => target.auraEffects[this.priority].push(effect))
-            // }
         })
     }
 
@@ -68,5 +67,5 @@ import Game from '../gamePhases/Game'
 import EffectFunction from '../functionTypes/EffectFunction'
 import EffectFunctionObject from '../structs/EffectFunctionObject'
 import Enchantments from '../dictionaries/Enchantments'
-import { DynamicTargetsFromTargetDomain } from '../structs/DynamicValueObject'
+import { DynamicTargetsFromTargetDomain, DynamicTargetsObject } from '../structs/DynamicValueObject'
 

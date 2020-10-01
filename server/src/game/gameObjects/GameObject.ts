@@ -7,6 +7,7 @@ abstract class GameObject {
     type: ObjectTypeString
     subtype: ObjectSubtypeString
     objectID: string
+    memory: {[index: string]: any}
     flags: FlagsObject
     dataObj: GameObjectData
     enchantments: Enchantment[]
@@ -20,6 +21,7 @@ abstract class GameObject {
         this.subtype = subtype
         this.objectID = `${this.id}:${Math.random()}`
         this.game.gameObjects[this.objectID] = this
+        this.memory = {}
         this.flags = {}
         this.dataObj = null
         this.enchantments = []
@@ -29,6 +31,7 @@ abstract class GameObject {
         this.game.event.on('auraApply0', event => this.auraApply(0))
         this.game.event.on('auraApply1', event => this.auraApply(1))
         this.game.event.on('auraApply2', event => this.auraApply(2))
+        this.game.event.on('applyInherited', event => this.applyInherited())
         this.game.event.on('auraApply3', event => this.auraApply(3))
         this.game.event.on('updateArrays', event => this.updateArrays())
 
@@ -58,8 +61,13 @@ abstract class GameObject {
         this.auraApply(0)
         this.auraApply(1)
         this.auraApply(2)
+        this.applyInherited()
         this.auraApply(3)
         this.updateArrays()
+    }
+
+    applyInherited(): void {
+
     }
 
     updateArrays(): void {
@@ -195,14 +203,21 @@ abstract class GameObject {
         return this.dynamicValue(value)
     }
 
-    dynamicOrStoredValue(value: DynamicOrStoredValue, actionEvent: ActionEvent): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
-        if (typeof value === 'object' && (value as DynamicOrStoredValueObject).from === 'stored') {
-            return this.storedValue(value as StoredValueObject, actionEvent)
-        }
+    dynamicOrStoredValue(value: DynamicOrStoredValue, actionEvent: ActionEvent, step: ActionStep): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
+        if (typeof value === 'object') {
+            const obj = value as DynamicOrStoredValueObject
+            if (obj.from === 'stored') {
+                return this.storedValue(value as ValueFromStored, actionEvent, step)
+            } else if (obj.from === 'autoTarget') {
+                return (this.dynamicOrStoredValue(step.autoTargets[obj.autoTarget].targets, actionEvent, step) as GameObject[])
+            } else if (obj.from === 'manualTarget') {
+                return [(step as ActionActionStep).manualTargets[obj.manualTarget].chosenTarget]
+            }
+        } 
         return this.dynamicValue(value as DynamicValue)
     }
 
-    storedValue(value: StoredValueObject, actionEvent: ActionEvent): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
+    storedValue(value: ValueFromStored, actionEvent: ActionEvent, step: ActionStep): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
         const storedValue = actionEvent.stored[value.param]
         if (storedValue instanceof GameObject || storedValue instanceof GameEvent) return [storedValue] as GameObject[] | GameEvent[]
         else return storedValue
@@ -262,6 +277,10 @@ abstract class GameObject {
             const event = this.dynamicEvent(obj.event)[0]
             return [(EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event)]
         }
+        if (obj.from === 'memory') {
+            const target = obj.targetMemory ? [this.dynamicTarget(obj.targetMemory)[0].memory[obj.param]] : [this.memory[obj.param]]
+            return target[0] ? target : []
+        }
     }
 
     dynamicTargets(obj: DynamicTargetsObject): GameObject[] {
@@ -279,6 +298,10 @@ abstract class GameObject {
                 return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(requirement, target))), unfiltered)
             }
             return unfiltered
+        }
+        if (obj.from === 'memory') {
+            const target = obj.targetMemory ? [this.dynamicTarget(obj.targetMemory)[0].memory[obj.param]] : this.memory[obj.param]
+            return target[0] ? target : []
         }
     }
 
@@ -331,7 +354,7 @@ abstract class GameObject {
     actionFunction(actionEvent: ActionEvent, step: ActionStep, obj: ActionFunction): void {
         const values: ValuesObject = {}
         for (let property in obj.values) {
-            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent)
+            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
         }
         if (obj.functionType === 'autoAction') return this.autoActionFunction(actionEvent, step, obj, values)
         if (obj.functionType === 'manualAction') return this.manualActionFunction(actionEvent as ActionActionEvent, step as ActionActionStep, obj, values)
@@ -340,7 +363,7 @@ abstract class GameObject {
     }
 
     autoActionFunction(actionEvent: ActionEvent, step: ActionStep, obj: AutoActionFunction, values): void {
-        let targets = (this.dynamicOrStoredValue(step.autoTargets?.[obj.autoTarget ?? 0].targets, actionEvent) as GameObject[]) ?? []
+        let targets = (this.dynamicOrStoredValue(step.autoTargets?.[obj.autoTarget ?? 0].targets, actionEvent, step) as GameObject[]) ?? []
         if (obj.extraTargets && targets[0]) {
             if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
             else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
@@ -436,7 +459,7 @@ import { CardIDString, EnchantmentIDString, FollowerIDString, PersistentCardIDSt
 import { TargetsDomainString, EventsDomainString } from "../stringTypes/DomainString"
 import TargetDomains from "../dictionaries/TargetDomains"
 import EventDomains from "../dictionaries/EventDomains"
-import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, StoredValueObject, DynamicValueObject, DynamicLocalisedStringObject, DynamicBooleanObject, NumberModObject } from "../structs/DynamicValueObject"
+import { DynamicStringObject, DynamicTargetObject, DynamicTargetsObject, DynamicEventObject, DynamicEventsObject, DynamicNumberObject, DynamicNumbersObject, DynamicOrStoredValueObject, ValueFromStored, DynamicValueObject, DynamicLocalisedStringObject, DynamicBooleanObject, NumberModObject, DynamicTargetsFromAutoTarget } from "../structs/DynamicValueObject"
 import TargetToStringMaps from "../dictionaries/TargetToStringMaps"
 import TargetToStringMap from "../functionTypes/TargetToStringMap"
 import DynamicTargetReducers from "../dictionaries/DynamicTargetReducers"

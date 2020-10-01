@@ -19,6 +19,8 @@ class BoardSlot extends GameObject {
 
     baseData(): GameObjectData {
         return {
+            attack: 0,
+            health: 0,
             flags: this.baseFlags(),
         }
     }

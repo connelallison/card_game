@@ -9,7 +9,7 @@ const data: StaticEnchantmentData = {
     },
     type: 'Enchantment',
     subtype: 'Static',
-    activeZones: ['board', 'hand', 'deck', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'setAsideZone', 'global', 'graveyard'],
+    activeZones: ['board', 'hand', 'deck', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'setAsideZone', 'global', 'legacy'],
     activeTypes: ['Follower', 'Leader', 'Creation', 'LeaderTechnique', 'Moment', 'Passive', 'Player'],
     effectObjs: [
         {

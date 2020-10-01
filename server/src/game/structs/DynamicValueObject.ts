@@ -13,8 +13,8 @@ export type DynamicStringObject = DynamicStringFromTarget
 export type DynamicBooleanObject = DynamicBooleanFromNumber
 export type DynamicNumberObject = DynamicNumberFromFervour | DynamicNumberFromTarget | DynamicNumberFromTargets | DynamicNumberFromNumbers | DynamicNumberFromCompound
 export type DynamicNumbersObject = DynamicNumbersFromTargets
-export type DynamicTargetObject = DynamicTargetFromEvent | DynamicTargetFromTargets | DynamicTargetFromTargetDomain
-export type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFromTargetDomain
+export type DynamicTargetObject = DynamicTargetFromEvent | DynamicTargetFromTargets | DynamicTargetFromTargetDomain | DynamicTargetFromMemory
+export type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFromTargetDomain | DynamicTargetsFromMemory
 export type DynamicEventObject = DynamicEventFromEvents
 export type DynamicEventsObject = DynamicEventsFromEventDomain
 
@@ -23,20 +23,28 @@ export type DynamicOrStoredStringObject = DynamicStringObject | DynamicStringFro
 export type DynamicOrStoredBooleanObject = DynamicBooleanObject | DynamicBooleanFromStored
 export type DynamicOrStoredNumberObject = DynamicNumberObject | DynamicNumberFromStored
 export type DynamicOrStoredNumbersObject = DynamicNumbersObject | DynamicNumbersFromStored
-export type DynamicOrStoredTargetObject = DynamicTargetObject | DynamicTargetFromStored 
+export type DynamicOrStoredTargetObject = DynamicTargetObject | DynamicTargetFromStored | DynamicTargetFromAutoTarget | DynamicTargetFromManualTarget
 export type DynamicOrStoredTargetsObject = DynamicTargetsObject | DynamicTargetsFromStored
 export type DynamicOrStoredEventObject = DynamicEventObject | DynamicEventFromStored
 export type DynamicOrStoredEventsObject = DynamicEventsObject | DynamicEventsFromStored
-export type StoredValueObject = DynamicLocalisedStringFromStored
+export type ValueFromStored = DynamicLocalisedStringFromStored
                             | DynamicStringFromStored
                             | DynamicBooleanFromStored
                             | DynamicNumberFromStored
                             | DynamicNumbersFromStored
-                            | DynamicTargetFromStored
+                            | DynamicTargetFromStored 
                             | DynamicTargetsFromStored
                             | DynamicEventFromStored
                             | DynamicEventsFromStored
-export type DynamicOrStoredValueObject = DynamicValueObject | StoredValueObject
+export type DynamicOrStoredValueObject = DynamicOrStoredLocalisedStringObject 
+                            | DynamicOrStoredStringObject 
+                            | DynamicOrStoredBooleanObject 
+                            | DynamicOrStoredNumberObject
+                            | DynamicOrStoredNumbersObject
+                            | DynamicOrStoredTargetObject
+                            | DynamicOrStoredTargetsObject
+                            | DynamicOrStoredEventObject
+                            | DynamicOrStoredEventsObject
 
 export interface DynamicLocalisedStringFromTarget {
     valueType: 'localisedString',
@@ -146,14 +154,27 @@ export interface DynamicTargetFromTargetDomain {
     targetDomain: TargetDomainString,
 }
 
+export interface DynamicTargetFromMemory {
+    valueType: 'target',
+    from: 'memory',
+    param: string,
+    targetMemory?: DynamicTargetObject
+}
+
 export interface DynamicTargetFromStored {
     valueType: 'target',
     from: 'stored',
     param: string,
 }
 
+export interface DynamicTargetFromManualTarget {
+    valueType: 'target',
+    from: 'manualTarget',
+    manualTarget: number,
+}
+
 export interface DynamicTargetFromAutoTarget {
-    value: 'target',
+    valueType: 'target',
     from: 'autoTarget',
     autoTarget: number,
 }
@@ -171,6 +192,13 @@ export interface DynamicTargetsFromTargetDomain {
     from: 'targetDomain',
     requirements?: TargetRequirement[],
     targetDomain: TargetsDomainString | TargetsDomainString[],
+}
+
+export interface DynamicTargetsFromMemory {
+    valueType: 'targets',
+    from: 'memory',
+    param: string,
+    targetMemory?: DynamicTargetObject
 }
 
 export interface DynamicTargetsFromStored {

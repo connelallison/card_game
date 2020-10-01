@@ -207,25 +207,27 @@ abstract class Card extends GameObject {
   }
 
   actionStepActive(actionStep: ActionActionStep): boolean {
-    const active = actionStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
-    const autoTargets = actionStep.autoTargets?.every(autoTarget =>
-      autoTarget.optional
-      || autoTarget.targets.from === 'stored'
-      || (this.dynamicValue(autoTarget.targets) as GameObject[]).length > 0) ?? true
+    // const active = actionStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
+    // const autoTargets = actionStep.autoTargets?.every(autoTarget =>
+    //   autoTarget.optional
+    //   || autoTarget.targets.from === 'stored' || autoTarget.targets.from === 'manualTarget' || autoTarget.targets.from === 'autoTarget' 
+    //   || (this.dynamicValue(autoTarget.targets) as GameObject[]).length > 0) ?? true
+      
+    const active = this.eventStepActive(actionStep as EventActionStep)
     if (actionStep.manualTargets) {
       actionStep.manualTargets.forEach(manualTarget => manualTarget.validTargets = active ? this.dynamicValue(manualTarget.targets) as GameObject[] : [])
-      const manualTargets = actionStep.manualTargets?.every(manualTarget => manualTarget.validTargets.length > 0)
-      return active && autoTargets && manualTargets
+      const manualTargets = actionStep.manualTargets?.every(manualTarget => manualTarget.validTargets.length >= (manualTarget.minUnique ?? 1))
+      return active && manualTargets
     }
-    return active && autoTargets
+    return active
   }
 
   eventStepActive(eventStep: EventActionStep): boolean {
     const active = eventStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
     const autoTargets = eventStep.autoTargets?.every(autoTarget =>
       autoTarget.optional
-      || autoTarget.targets.from === 'stored'
-      || (this.dynamicValue(autoTarget.targets) as GameObject[]).length > 0) ?? true
+      || autoTarget.targets.from === 'stored' || autoTarget.targets.from === 'manualTarget' || autoTarget.targets.from === 'autoTarget' 
+      || (this.dynamicValue(autoTarget.targets) as GameObject[]).length >= (autoTarget.minUnique ?? 1)) ?? true
     return active && autoTargets
   }
 

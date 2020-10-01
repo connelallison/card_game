@@ -55,6 +55,7 @@ abstract class Leader extends Character {
   updateArrays(): void {
     // this.updateActiveOptions()
     // this.updateActiveActions()
+    this.toggleAttack()
     this.updateActiveEvents()
     this.updateActiveDeathEvents()
     this.updateAttackTargets()
@@ -100,15 +101,16 @@ abstract class Leader extends Character {
   }
 
   baseAttack(): number {
-    if (this.inPlay()) {
-      const weaponsAttack = (this.controller().creationZone
-        .filter(creation => creation instanceof WeaponCreation) as WeaponCreation[])
-        .map(weapon => weapon.attack)
-        .reduce((acc, val) => acc + val, 0)
-      return this.rawAttack + weaponsAttack
-    } else {
-      return this.rawAttack
-    }
+    return this.rawAttack
+    // if (this.inPlay()) {
+    //   const weaponsAttack = (this.controller().creationZone
+    //     .filter(creation => creation instanceof WeaponCreation) as WeaponCreation[])
+    //     .map(weapon => weapon.attack)
+    //     .reduce((acc, val) => acc + val, 0)
+    //   return this.rawAttack + weaponsAttack
+    // } else {
+    //   return this.rawAttack
+    // }
   }
 
   baseHealth(): number {
@@ -119,11 +121,24 @@ abstract class Leader extends Character {
     }
   }
 
-  baseFlags(): FlagsObject {
+  applyInherited(): void {
     if (this.inPlay()) {
+      const weaponsAttack = (this.controller().creationZone
+        .filter(creation => creation instanceof WeaponCreation) as WeaponCreation[])
+        .map(weapon => weapon.attack)
+        .reduce((acc, val) => acc + val, 0)
+      this.attack += weaponsAttack
+
       const weaponsFlags = this.controller().creationZone.filter(creation => creation instanceof WeaponCreation).map(weapon => weapon.flags)
-      return Object.assign({}, ...weaponsFlags)
-    }
+      Object.assign(this.flags, ...weaponsFlags)
+    } 
+  }
+
+  baseFlags(): FlagsObject {
+    // if (this.inPlay()) {
+    //   const weaponsFlags = this.controller().creationZone.filter(creation => creation instanceof WeaponCreation).map(weapon => weapon.flags)
+    //   return Object.assign({}, ...weaponsFlags)
+    // }
     return {}
   }
 
@@ -136,12 +151,12 @@ abstract class Leader extends Character {
   }
 
 
-  toggleAttack(dataObj: GameObjectData): void {
-    if (this.inPlay() && !this.controller().myTurn()) dataObj.attack = 0
+  toggleAttack(): void {
+    if (this.inPlay() && !this.controller().myTurn()) this.attack = 0
   }
 
   setData(dataObj: GameObjectData): void {
-    this.toggleAttack(dataObj)
+    this.toggleAttack()
     Object.assign(this, dataObj)
   }
 
@@ -150,7 +165,7 @@ abstract class Leader extends Character {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
 
     if (destination === 'leaderZone') {
-      if (this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('graveyard')
+      if (this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('legacy')
       this.game.inPlay.push(this)
     }
 

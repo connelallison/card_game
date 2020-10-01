@@ -53,7 +53,7 @@ const server = app.listen(port, function () {
 
 const io = socket(server)
 
-const connectedPlayers: {[index: string]: ServerPlayer} = {}
+const connectedPlayers: { [index: string]: ServerPlayer } = {}
 const connectedSockets = {}
 
 io.on('connection', function (socket) {
@@ -78,31 +78,50 @@ io.on('connection', function (socket) {
     console.log('updateDeckID request received')
     serverPlayer.deckID = data.deckID
   })
-  socket.on('requestTestGame', function (opponent: {opponentID: string}) {
+  socket.on('requestTestGame', function (opponent: { opponentID: string }) {
     // console.log(`server: newGameStatus:${socketID}`);
-    serverEvent.on(`newGameStatus:${socketID}`, function (gameState) {
+    const emitGameState = gameState => {
       // console.log(gameState);
       // console.log(`server: newGameStatus:${socketID}`)
       socket.emit('gameStateUpdate', gameState)
-    })
-
-    serverEvent.on(`newTurnTimer:${socketID}`, function (turnTimer) {
+    }
+    const emitTurnTimer = turnTimer => {
       socket.emit('turnTimerUpdate', turnTimer)
-    })
+    }
+    // const removeListeners = () => {
+    //   serverEvent.removeListener(`newGameStatus:${socketID}`, emitGameState)
+    //   serverEvent.removeListener(`newTurnTimer:${socketID}`, emitTurnTimer)
+    // }
+
+    serverEvent.removeAllListeners(`newGameStatus:${socketID}`)
+    serverEvent.removeAllListeners(`newTurnTimer:${socketID}`)
+    serverEvent.on(`newGameStatus:${socketID}`, emitGameState)
+    serverEvent.on(`newTurnTimer:${socketID}`, emitTurnTimer)
+    // serverEvent.on(`removeListeners:${socketID}`, removeListeners)
+
     // setTimeout(testGame, 1000, socketID);
     if (!opponent.opponentID || opponent.opponentID === 'TestBot') {
       testGame(serverPlayer)
     } else {
       const opponentPlayer = connectedPlayers[opponent.opponentID]
       const opponentSocket = connectedSockets[opponent.opponentID]
-      serverEvent.on(`newGameStatus:${opponent.opponentID}`, function (gameState) {
+      const emitOpponentGameState = gameState => {
         // console.log(gameState);
         console.log(`server: newGameStatus:${opponent.opponentID}`)
         opponentSocket.emit('gameStateUpdate', gameState)
-      })
-      serverEvent.on(`newTurnTimer:${opponent.opponentID}`, function (turnTimer) {
+      }
+      const emitOpponentTurnTimer = turnTimer => {
         opponentSocket.emit('turnTimerUpdate', turnTimer)
-      })
+      }
+      // const removeOpponentListeners = () => {
+      //   serverEvent.removeListener(`newGameStatus:${opponent.opponentID}`, emitOpponentGameState)
+      //   serverEvent.removeListener(`newTurnTimer:${opponent.opponentID}`, emitOpponentTurnTimer)
+      // }
+      serverEvent.removeAllListeners(`newGameStatus:${opponent.opponentID}`)
+      serverEvent.removeAllListeners(`newTurnTimer:${opponent.opponentID}`)
+      serverEvent.on(`newGameStatus:${opponent.opponentID}`, emitOpponentGameState)
+      serverEvent.on(`newTurnTimer:${opponent.opponentID}`, emitOpponentTurnTimer)
+      // serverEvent.on(`removeListeners:${opponent.opponentID}`, removeOpponentListeners)
       pvpGame(serverPlayer, opponentPlayer)
     }
   })

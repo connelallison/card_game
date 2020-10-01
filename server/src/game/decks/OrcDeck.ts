@@ -24,6 +24,8 @@ const OrcDeck: DeckObject = {
     'BodyDouble',
     'WallLabourer',
     'WallLabourer',
+    'DivideAndConquer',
+    'DivideAndConquer',
   ],
 }
 

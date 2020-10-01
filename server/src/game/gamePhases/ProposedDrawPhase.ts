@@ -72,7 +72,7 @@ class ProposedDrawPhase extends EventPhase {
                     this.afterDrawQueue.push(event)
                 } else {
                     // hand is full
-                    drawQueue[i].moveZone('graveyard')
+                    drawQueue[i].moveZone('legacy')
                     // this.fatigueDamage()
                 }
             } else {

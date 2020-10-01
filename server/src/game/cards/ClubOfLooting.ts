@@ -12,8 +12,8 @@ const data: WeaponCreationData = {
     classes: ['Empire'],
     collectable: true,
     cost: 2,
-    attack: 3,
-    charges: 3,
+    attack: 2,
+    charges: 2,
     staticText: {
         english: `Your Leader has Pillage.`,
     },

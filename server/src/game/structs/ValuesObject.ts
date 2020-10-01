@@ -29,11 +29,15 @@ interface ValuesObject {
     zone?: DynamicOrStoredZoneString
     // zones?: DynamicOrStoredZoneString[]
     split?: DynamicOrStoredBoolean
+    attackTarget?: DynamicOrStoredTarget
+    target?: DynamicOrStoredTarget
+    autoTarget?: number
+    manualTarget?: number
 }
 
 export default ValuesObject
 
 import { DynamicTargetObject, DynamicOrStoredTargetObject } from "./DynamicValueObject";
 import { DynamicOrStoredCardIDString, EnchantmentIDString, DynamicOrStoredPersistentCardIDString, StatStaticEnchantmentIDString, EnchantmentExpiryIDString } from "../stringTypes/DictionaryKeyString";
-import { DynamicNumber, DynamicString, DynamicValue, DynamicOrStoredNumber, DynamicOrStoredString, DynamicOrStoredValue, DynamicOrStoredBoolean, DynamicOrStoredLocalisedString } from "./DynamicValue";
+import { DynamicNumber, DynamicString, DynamicValue, DynamicOrStoredNumber, DynamicOrStoredString, DynamicOrStoredValue, DynamicOrStoredBoolean, DynamicOrStoredLocalisedString, DynamicOrStoredTarget, DynamicOrStoredTargets } from "./DynamicValue";
 import { DynamicZoneString, DynamicOrStoredZoneString, ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";

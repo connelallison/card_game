@@ -58,12 +58,13 @@ export interface ManualTarget {
     hostile?: boolean
     validTargets?: GameObject[]
     chosenTarget?: GameObject
+    minUnique?: number
 }
 
 export interface AutoTarget {
-    // targets: DynamicTargetObject | DynamicTargetsObject
     targets: DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject
     optional?: boolean
+    minUnique?: number
 }
 
 export type ActionStep = ActionActionStep | EventActionStep | TriggerActionStep

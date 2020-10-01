@@ -69,14 +69,10 @@ class Game extends GamePhase {
     if (!this.ended) {
       const player1report: any = {}
       const player2report: any = {}
-      if (this.player1.socketID) {
-        player1report.gameState = this.prepareGameState(this.player1)
-        player1report.eventsReport = this.prepareEventsReport(this.player1)
-      }
-      if (this.player2.socketID) {
-        player2report.gameState = this.prepareGameState(this.player2)
-        player2report.eventsReport = this.prepareEventsReport(this.player2)
-      }
+      player1report.gameState = this.prepareGameState(this.player1)
+      player1report.eventsReport = this.prepareEventsReport(this.player1)
+      player2report.gameState = this.prepareGameState(this.player2)
+      player2report.eventsReport = this.prepareEventsReport(this.player2)
       if (this.player1.socketID) {
         serverEvent.emit(`newGameStatus:${this.player1.socketID}`, player1report)
       }
@@ -92,7 +88,11 @@ class Game extends GamePhase {
   prepareGameState(player: GamePlayer) {
     const opponentHand = []
     for (let i = 0; i < player.opponent.hand.length; i++) {
-      opponentHand.push({ type: 'unknown' })
+      opponentHand.push({ name: 'Unknown Card', type: 'unknown' })
+    }
+    const opponentDeck = []
+    for (let i = 0; i < player.opponent.deck.length; i++) {
+      opponentDeck.push({ name: 'Unknown Card', type: 'unknown' })
     }
     const gameState = {
       started: true,
@@ -105,8 +105,9 @@ class Game extends GamePhase {
         board: player.boardReport(),
         leaderTechnique: player.leaderTechniqueReport(),
         leader: player.leaderReport(),
+        legacy: player.legacyReport(),
         hand: player.handReport(),
-        deck: player.deck.length
+        deck: player.deckReport(),
       },
       opponent: {
         name: player.opponent.playerName,
@@ -116,8 +117,9 @@ class Game extends GamePhase {
         board: player.opponent.boardReport(),
         leaderTechnique: player.opponent.leaderTechniqueReport(),
         leader: player.opponent.leaderReport(),
+        legacy: player.opponent.legacyReport(),
         hand: opponentHand,
-        deck: player.opponent.deck.length
+        deck: opponentDeck,
       },
       validSelections: player.validSelectionsReport(),
     }
@@ -180,6 +182,8 @@ class Game extends GamePhase {
     ) {
       // card in hand being played
       this.executePlayRequest(selected, options, actions, selectedSlot)
+    } else {
+      console.log(moveRequest)
     }
     this.announceGameState()
   }
@@ -241,7 +245,7 @@ class Game extends GamePhase {
     } else {
       this.player2.bot = false
     }
-    const player1deck = new Deck(this, this.player1, Decks[this.player1deckID]) 
+    const player1deck = new Deck(this, this.player1, Decks[this.player1deckID])
     const player2deck = new Deck(this, this.player2, Decks[this.player2deckID])
     player1deck.leader.putIntoPlay()
     player2deck.leader.putIntoPlay()
@@ -297,11 +301,15 @@ class Game extends GamePhase {
       serverEvent.removeAllListeners(`playerMoveRequest:${this.player1.socketID}`)
       serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player1.socketID}`)
       serverEvent.removeAllListeners(`playerDisconnected:${this.player1.socketID}`)
+      // serverEvent.removeAllListeners(`newGameStatus:${this.player1.socketID}`)
+      // serverEvent.removeAllListeners(`newTurnTimer:${this.player1.socketID}`)
     }
     if (this.player2.socketID) {
       serverEvent.removeAllListeners(`playerMoveRequest:${this.player2.socketID}`)
       serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player2.socketID}`)
       serverEvent.removeAllListeners(`playerDisconnected:${this.player2.socketID}`)
+      // serverEvent.removeAllListeners(`newGameStatus:${this.player2.socketID}`)
+      // serverEvent.removeAllListeners(`newTurnTimer:${this.player2.socketID}`)
     }
   }
 
@@ -365,6 +373,7 @@ class Game extends GamePhase {
     this.emit('auraApply1')
     this.emit('auraEmit2')
     this.emit('auraApply2')
+    this.emit('applyInherited')
     this.emit('auraEmit3')
     this.emit('auraApply3')
     this.emit('updateArrays')

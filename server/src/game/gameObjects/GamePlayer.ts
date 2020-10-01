@@ -28,7 +28,7 @@ class GamePlayer extends GameObject {
   creationZone: Creation[]
   passiveZone: Passive[]
   setAsideZone: GameObject[]
-  graveyard: Card[]
+  legacy: Card[]
   fatigueCounter: number
   max: {
     hand: number,
@@ -76,7 +76,7 @@ class GamePlayer extends GameObject {
     this.creationZone = []
     this.passiveZone = []
     this.setAsideZone = []
-    this.graveyard = []
+    this.legacy = []
     this.fatigueCounter = 0
     this.opponent
     this.bot
@@ -144,6 +144,14 @@ class GamePlayer extends GameObject {
 
   handReport(): ObjectReport[] {
     return this.hand.map(card => card.provideReport())
+  }
+
+  deckReport(): ObjectReport[] {
+    return [...this.deck].sort((first, second) => first.data.cost - second.data.cost).map(card => card.provideReport())
+  }
+
+  legacyReport(): ObjectReport[] {
+    return this.legacy.map(card => card.provideReport())
   }
 
   myTurn(): boolean {
@@ -233,8 +241,8 @@ class GamePlayer extends GameObject {
         card.updateEnchantments()
       } else {
         const card = this.deck.shift()
-        this.graveyard.push(card)
-        card.zone = 'graveyard'
+        this.legacy.push(card)
+        card.zone = 'legacy'
         card.updateEnchantments()
       }
     } else {

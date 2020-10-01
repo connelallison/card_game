@@ -1,25 +1,26 @@
 const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsDomainString[]) => {
     const targetDomain: GameObject[] = []
     if (typeof zones === 'string') zones = [zones]
+    const effectOwner = object.effectOwner()
     zones.forEach(zone => {
         switch (zone) {
             case 'self':
-                targetDomain.push(object.effectOwner())
+                targetDomain.push(effectOwner)
                 break
             case 'leftFollower':
-                if ((object instanceof Follower || object instanceof BoardSlot) && object.leftFollower()) targetDomain.push(object.leftFollower())
+                if ((effectOwner instanceof Follower || effectOwner instanceof BoardSlot) && effectOwner.leftFollower()) targetDomain.push(effectOwner.leftFollower())
                 break
             case 'rightFollower':
-                if ((object instanceof Follower || object instanceof BoardSlot) && object.rightFollower()) targetDomain.push(object.rightFollower())
+                if ((effectOwner instanceof Follower || effectOwner instanceof BoardSlot) && effectOwner.rightFollower()) targetDomain.push(effectOwner.rightFollower())
                 break
             case 'oppositeFollower':
-                if ((object instanceof Follower || object instanceof BoardSlot) && object.oppositeFollower()) targetDomain.push(object.oppositeFollower())
+                if ((effectOwner instanceof Follower || effectOwner instanceof BoardSlot) && effectOwner.oppositeFollower()) targetDomain.push(effectOwner.oppositeFollower())
                 break
             case 'adjacentFollowers':
-                if ((object instanceof Follower || object instanceof BoardSlot) && object.adjacentFollowers()) targetDomain.push(...object.adjacentFollowers())
+                if ((effectOwner instanceof Follower || effectOwner instanceof BoardSlot) && effectOwner.adjacentFollowers()) targetDomain.push(...effectOwner.adjacentFollowers())
                 break
             case 'neighbouringFollowers':
-                if ((object instanceof Follower || object instanceof BoardSlot) && object.neighbouringFollowers()) targetDomain.push(...object.neighbouringFollowers())
+                if ((effectOwner instanceof Follower || effectOwner instanceof BoardSlot) && effectOwner.neighbouringFollowers()) targetDomain.push(...effectOwner.neighbouringFollowers())
                 break
             case 'enemyBoard':
                 targetDomain.push(...object.controller().opponent.boardFollowers())
@@ -57,6 +58,10 @@ const TargetDomains = (object: GameObject, zones: TargetsDomainString | TargetsD
             case 'friendlyCreations':
                 targetDomain.push(...object.controller().creationZone)
                 break
+            case 'enemyLegacy': 
+                targetDomain.push(...object.controller().opponent.legacy)
+            case 'friendlyLegacy': 
+                targetDomain.push(...object.controller().legacy)
             default:
                 break
         }

@@ -3,35 +3,42 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEnchantmentData = {
-    id: 'ExpiresStartOfMyTurn',
+    id: 'OrpheusTrigger',
     name: {
-        english: `Expires Start Of My Turn`,
+        english: `Orpheus Trigger`,
     },
     type: 'Enchantment',
     subtype: 'Trigger',
+    activeTypes: ['Follower'],
+    activeZones: ['board'],
     repeatable: false,
     wonderTrigger: false,
-    activeZones: ['board', 'creationZone', 'deck', 'legacy', 'hand', 'leaderTechniqueZone', 'leaderZone', 'passiveZone', 'setAsideZone', 'global'],
-    activeTypes: ['Enchantment'],
     triggerObjs: [{
         actionType: 'triggerAction',
         eventType: 'startOfTurn',
         actionSteps: [{
             requirements: [{
-                activeRequirement: "isMyTurn"
+                activeRequirement: 'isMyTurn'
+            }],
+            autoTargets: [{
+                targets: {
+                    valueType: 'target',
+                    from: 'memory',
+                    param: 'target',
+                },
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'enchantmentExpiry',
+                operation: 'resurrect',
             }]
         }]
     }]
 }
 
-class ExpiresStartOfMyTurn extends TriggerEnchantment {
+class OrpheusTrigger extends TriggerEnchantment {
     static readonly data: TriggerEnchantmentData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default ExpiresStartOfMyTurn
+export default OrpheusTrigger

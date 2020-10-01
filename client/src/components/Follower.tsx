@@ -4,9 +4,6 @@ import TargetableEntity from './TargetableEntity'
 class Follower extends TargetableEntity {
   render() {
     const styleClasses = this.outlineStatus() + " follower card"
-    const chargeLabel = this.props.object.subtype === 'Nameless'
-      ? this.statLabel('charges')
-      : null
 
     return (
       <div onClick={event => this.props.handleSelection(this.props.object)} className={styleClasses}>

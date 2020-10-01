@@ -16,6 +16,7 @@ import PlayerStatus from '../components/PlayerStatus'
 import OptionSelections from '../components/OptionSelections'
 import EndGame from '../components/EndGame'
 import DeckSelection from '../components/DeckSelection'
+import Legacy from '../components/Legacy'
 
 class GameContainer extends Component {
   constructor(props) {
@@ -40,11 +41,11 @@ class GameContainer extends Component {
             fervour: 0,
           },
           leader: {
-            attack: 0,
-            health: 0,
-            armour: 0,
-            currentMoney: 0,
-            maxMoney: 0,
+            attack: null,
+            health: null,
+            armour: null,
+            currentMoney: null,
+            maxMoney: null,
             canBeSelected: false,
             name: '',
           },
@@ -55,8 +56,9 @@ class GameContainer extends Component {
           board: [],
           creations: [],
           passives: [],
+          legacy: [],
           hand: [],
-          deck: 0
+          deck: [],
         },
         opponent: {
           name: '',
@@ -69,10 +71,10 @@ class GameContainer extends Component {
             fervour: 0,
           },
           leader: {
-            attack: 0,
-            health: 0,
-            currentMoney: 0,
-            maxMoney: 0,
+            attack: null,
+            health: null,
+            currentMoney: null,
+            maxMoney: null,
             canBeSelected: false,
             name: '',
           },
@@ -83,8 +85,9 @@ class GameContainer extends Component {
           board: [],
           creations: [],
           passives: [],
+          legacy: [],
           hand: [],
-          deck: 0
+          deck: [],
         }
       },
       serverPlayers: [],
@@ -110,6 +113,7 @@ class GameContainer extends Component {
   }
 
   updateGameState(report) {
+    // console.log('updatingGameState')
     this.resetMoveRequest()
     this.setState({ gameState: report.gameState, selected: null }, this.updateTargetSelection)
     report.eventsReport.forEach(log => console.log(log))
@@ -121,6 +125,7 @@ class GameContainer extends Component {
   }
 
   updateTurnTimer(turnTimer) {
+    // console.log('updatingTurnTimer')
     this.setState({ turnTimer })
   }
 
@@ -185,17 +190,17 @@ class GameContainer extends Component {
   }
 
   checkMoveRequest() {
-    console.log('checking move')
+    // console.log('checking move')
     if (this.moveRequest.selected && this.findNextTargetSelection() === null) this.announceMove()
   }
 
   nextOption() {
     const slotChoiceRequired = this.moveRequest.validSlots && !this.moveRequest.validSlots.chosenTarget
     const nextOption = (
-      !slotChoiceRequired 
-      && this.moveRequest.options 
-      && this.moveRequest.options.find(option => !option.chosenTarget|| option.actionTargets[option.chosenTarget.objectID].some(target => !target.chosenTarget))
-      ) || null
+      !slotChoiceRequired
+      && this.moveRequest.options
+      && this.moveRequest.options.find(option => !option.chosenTarget || option.actionTargets[option.chosenTarget.objectID].some(target => !target.chosenTarget))
+    ) || null
     return nextOption
   }
 
@@ -210,7 +215,7 @@ class GameContainer extends Component {
       if (!nextOption.chosenTarget) {
         return nextOption
       } else return nextOption.actionTargets[nextOption.chosenTarget.objectID].find(target => !target.chosenTarget)
-    } 
+    }
     return null
   }
 
@@ -231,17 +236,50 @@ class GameContainer extends Component {
 
   updateTargetSelection() {
     const targetSelection = this.findNextTargetSelection()
-    if (targetSelection !== this.state.targetSelection) this.setState({ targetSelection }, this.checkMoveRequest)
+    if (targetSelection !== this.state.targetSelection) {
+      const selected = this.currentSelected()
+      this.setState({ targetSelection, selected }, this.checkMoveRequest)
+    }
+  }
+
+  currentSelected() {
+    const selected = []
+    if (this.moveRequest.selected) selected.push(this.moveRequest.selected)
+    if (this.moveRequest.validSlots && this.moveRequest.validSlots.chosenTarget) selected.push(this.moveRequest.validSlots.chosenTarget)
+    selected.push(...this.currentStepSelections())
+    return selected.length > 0 ? selected : null
+  }
+
+  currentStep() {
+    const targetSelection = this.findNextTargetSelection()
+    if (targetSelection && targetSelection.step) return targetSelection.step
+    else return null
+  }
+
+  currentStepSelections() {
+    const currentStep = this.currentStep()
+    if (currentStep) return currentStep.manualTargets.flatMap(target => target.chosenTarget ? [target.chosenTarget] : [])
+    else return []
   }
 
   handleClearSelected(selected) {
     if (selected === this.moveRequest.selected) {
       this.resetMoveRequest()
-      this.setState({
-        selected: null,
-      }, this.updateTargetSelection)
+      // this.setState({
+      //   selected: null,
+      // }, this.updateTargetSelection)
+      this.updateTargetSelection()
     } else if (this.moveRequest.validSlots && selected === this.moveRequest.validSlots.chosenTarget) {
       return this.handleChooseSelected(this.moveRequest.selected)
+    } else {
+      const currentStep = this.currentStep()
+      // console.log('currentStep', currentStep)
+      const startIndex = currentStep.manualTargets.findIndex(target => target.chosenTarget === selected)
+      // console.log('startIndex', startIndex)
+      for (let i = startIndex; i < currentStep.manualTargets.length; i++) {
+        currentStep.manualTargets[i].chosenTarget = undefined
+      }
+      this.updateTargetSelection()
     }
   }
 
@@ -251,19 +289,21 @@ class GameContainer extends Component {
 
   handleChooseSelected(selected) {
     this.initMoveRequest(selected)
-    this.setState({
-      selected: [selected],
-    }, this.updateTargetSelection)
+    this.updateTargetSelection()
+    // this.setState({
+    //   selected: [selected],
+    // }, this.updateTargetSelection)
   }
 
   handleChooseTarget(target) {
     const targetSelection = this.findNextTargetSelection()
     targetSelection.chosenTarget = target
-    if (targetSelection === this.moveRequest.validSlots) {
-      this.setState({
-        selected: [this.moveRequest.selected, target],
-      }, this.updateTargetSelection)
-    } else this.updateTargetSelection()
+    // if (targetSelection === this.moveRequest.validSlots) {
+    //   this.setState({
+    //     selected: [this.moveRequest.selected, target],
+    //   }, this.updateTargetSelection)
+    // } else this.updateTargetSelection()
+    this.updateTargetSelection()
   }
 
   handleConfirmation() {
@@ -351,36 +391,40 @@ class GameContainer extends Component {
           <DisplayName currentName={currentName} handleSubmit={this.handleUpdateDisplayName} />
           <DeckSelection deckID={this.state.deckID} updateDeck={this.handleUpdateDeck} />
           {
-            this.state.inGame 
-            ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name}/>
-            : <StartGame startGame={this.handleStartGame} opponents={this.state.serverPlayers} socketID={socket.id} />
+            this.state.inGame
+              ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name} />
+              : <StartGame startGame={this.handleStartGame} opponents={this.state.serverPlayers} socketID={socket.id} />
           }
           <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
         </div>
         <PlayerStatus stats={this.state.gameState.opponent.stats} />
         <OpponentHand cards={this.state.gameState.opponent.hand} />
         <PlayArea targetSelection={this.state.targetSelection} requiresConfirmation={this.requiresConfirmation} handleSelection={this.handleSelection}>
-          <Deck mine={false} cardNumber={this.state.gameState.opponent.deck} />
-          <div className='leaderDiv'>
+          <div className='outerPlayArea'>
             <PassiveZone mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
             <Leader mine={false} selected={this.state.selected} object={this.state.gameState.opponent.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
             <LeaderTechnique mine={false} selected={this.state.selected} object={this.state.gameState.opponent.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
             <CreationZone mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           </div>
-          <br />
-          <BoardHalf mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+          <div className="innerPlayArea">
+            <Legacy mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.legacy} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <BoardHalf mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <Deck mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.deck} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+          </div>
           <div className='anchor'>
             <OptionSelections mine={true} selected={this.state.selected} contents={this.nextOptionActionSelection()} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           </div>
-          <BoardHalf mine selected={this.state.selected} contents={this.state.gameState.my.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-          <br />
-          <div className='leaderDiv'>
+          <div className="innerPlayArea">
+            <Legacy mine selected={this.state.selected} contents={this.state.gameState.my.legacy} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <BoardHalf mine selected={this.state.selected} contents={this.state.gameState.my.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <Deck mine selected={this.state.selected} contents={this.state.gameState.my.deck} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+          </div>
+          <div className='outerPlayArea'>
             <PassiveZone mine selected={this.state.selected} contents={this.state.gameState.my.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
             <Leader mine selected={this.state.selected} object={this.state.gameState.my.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
             <LeaderTechnique mine selected={this.state.selected} object={this.state.gameState.my.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
             <CreationZone mine selected={this.state.selected} contents={this.state.gameState.my.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
           </div>
-          <Deck mine cardNumber={this.state.gameState.my.deck} />
         </PlayArea>
         <PlayerHand mine contents={this.state.gameState.my.hand} selected={this.state.selected} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
         <PlayerStatus stats={this.state.gameState.my.stats} />

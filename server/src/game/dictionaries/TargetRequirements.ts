@@ -9,6 +9,8 @@ const TargetRequirements = {
     isNotSpecificCardClass: (source: GameObject, target: GameObject, values: {cardID: string}): boolean => (target.id !== values.cardID),
     isType: (source: GameObject, target: GameObject, values: {type: string}): boolean => (target.type === values.type),
     isNotType: (source: GameObject, target: GameObject, values: {type: string}): boolean => (target.type !== values.type),
+    isSubtype: (source: GameObject, target: GameObject, values: {subtype: string}): boolean => (target.subtype === values.subtype),
+    isNotSubtype: (source: GameObject, target: GameObject, values: {subtype: string}): boolean => (target.subtype !== values.subtype),
     isDynamicTarget: (source: GameObject, target: GameObject, values: {dynamicTarget: GameObject[]}): boolean => (target === values.dynamicTarget[0]),
     isNotDynamicTarget: (source: GameObject, target: GameObject, values: {dynamicTarget: GameObject[]}): boolean => (target !== values.dynamicTarget[0]),
     inZone: (source: GameObject, target: GameObject, values: {zone: string}): boolean => (target.zone === values.zone),

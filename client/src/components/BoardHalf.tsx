@@ -16,10 +16,8 @@ class BoardHalf extends EntityContainer {
     }
 
     return (
-      <div className="boardhalf">
-        <div className='cardList'>
-          {slotList}
-        </div>
+      <div className='cardList'>
+        {slotList}
       </div>
     )
   }

@@ -1,6 +1,6 @@
 const EventModOperations = {
     incrementNumberParam: (source: GameObject, event: GameEvent, values: { param: string, value: number }) => {
-            event[values.param] += values.value
+        event[values.param] += values.value
     }
 }
 

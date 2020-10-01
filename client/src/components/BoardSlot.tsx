@@ -9,7 +9,13 @@ class BoardSlot extends TargetableEntity {
         if (this.props.object.follower) {
             slot = <Follower object={this.props.object.follower} selected={this.props.selected} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
         } else {
-            slot = <div onClick={event => this.props.handleSelection(this.props.object)} className={styleClasses}>Empty Slot</div>
+            slot = <div onClick={event => this.props.handleSelection(this.props.object)} className={styleClasses}>
+                <p>Empty Slot</p>
+                <div className="multicolour-line">
+                    {this.statLabel('attack')}
+                    {this.statLabel('health')}
+                </div>
+            </div>
         }
         return slot
     }

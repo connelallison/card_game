@@ -61,6 +61,32 @@ const ActionOperations = {
         }
     },
 
+    healToFull: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        if (targets.length === 1) {
+            const healingEvent = new HealingEvent(source.game, {
+                objectSource: source,
+                charSource: source.charOwner(),
+                target: targets[0],
+                healing: targets[0].missingHealth(),
+            })
+            source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
+        } else if (targets.length > 1) {
+            const healingEvents: HealingEvent[] = []
+            for (const target of targets) {
+                const healingEvent = new HealingEvent(source.game, {
+                    objectSource: source,
+                    charSource: source.charOwner(),
+                    target,
+                    healing: target.missingHealth(),
+                })
+                healingEvents.push(healingEvent)
+            }
+            source.game.startNewDeepestPhase('HealMultiplePhase', healingEvents)
+        }
+    },
+
     gainArmour: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { armour: number, opponent?: boolean }) => {
         const player = values.opponent ? source.controller().opponent : source.controller()
         player.gainArmour(values.armour)
@@ -77,9 +103,18 @@ const ActionOperations = {
         source.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
     },
 
+    addTargetedEnchantment: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { enchantmentID: EnchantmentIDString, target: GameObject[], expires?: EnchantmentExpiryIDString[] }) => {
+        targetObjs.forEach(target => {
+            const enchantment = new Enchantments[values.enchantmentID](source.game, target)
+            ActionOperations.rememberTarget(enchantment, event, values.target, { param: 'target' })
+            if (values.expires) enchantment.addExpiries(values.expires)
+            target.addEnchantment(enchantment)
+        })
+    },
+
     addStatEnchantment: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { statEnchantmentID: StatStaticEnchantmentIDString, statValue: number, expires?: EnchantmentExpiryIDString[] }) => {
         targetObjs.forEach(target => {
-            const enchantment = new StatStaticEnchantments[values.statEnchantmentID](source.game, target, {statValue: values.statValue})
+            const enchantment = new StatStaticEnchantments[values.statEnchantmentID](source.game, target, { statValue: values.statValue })
             if (values.expires) enchantment.addExpiries(values.expires)
             target.addEnchantment(enchantment)
         })
@@ -87,7 +122,7 @@ const ActionOperations = {
 
     addEnchantment: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { enchantmentID: EnchantmentIDString, expires?: EnchantmentExpiryIDString[] }) => {
         targetObjs.forEach(target => {
-            console.log(values.enchantmentID)            
+            // console.log(values.enchantmentID)
             const enchantment = new Enchantments[values.enchantmentID](source.game, target)
             if (values.expires) enchantment.addExpiries(values.expires)
             target.addEnchantment(enchantment)
@@ -210,23 +245,56 @@ const ActionOperations = {
         targetObjs.forEach(target => target.update())
     },
 
+    forceAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attackTarget: Character[] }) => {
+        const attackers = targetObjs as Character[]
+        const defender = values.attackTarget[0]
+        attackers.forEach(attacker => {
+            const attackEvent = new AttackEvent(source.game, {
+                attacker,
+                defender,
+            })
+            source.game.startNewDeepestPhase('AttackPhase', attackEvent)
+        })
+    },
+
     banish: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
         const targets = targetObjs as PersistentCard[]
         targets.forEach(target => target.moveZone('setAsideZone'))
     },
 
+    resurrect: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        const charOwner = source.charOwner()
+        const targetSlot = (charOwner instanceof Follower && charOwner.inPlay()) ? charOwner.slot : null
+        const targets = targetObjs as PersistentCard[]
+        for (const target of targets) {
+            if (target.zone === 'legacy' && target.controller().canSummon(target)) {
+                if (target instanceof Follower) target.rawHealth = target.maxHealth
+                if (target instanceof Creation) target.charges = target.data.charges
+                const eventObj = Object.assign({
+                    controller: target.controller(),
+                    card: target,
+                    objectSource: source,
+                    charSource: source.charOwner(),
+                }, targetSlot && { targetSlot })
+                const summonEvent = new SummonEvent(source.game, eventObj)
+                source.game.startNewDeepestPhase('SummonPhase', summonEvent)
+            }
+        }
+    },
+
     selfTransform: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
         if (targetObjs[0] && source.effectOwner() instanceof Card) {
-            const transformTarget = targetObjs[0] as Card
+            const transformTarget = targetObjs as Card[]
             ActionOperations.transform(source, event, [source.effectOwner()], { transformTarget })
         }
     },
 
-    transform: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { transformTarget: Card }) => {
+    transform: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { transformTarget: Card[] }) => {
         const targets = targetObjs as Card[]
+        const transformTarget = values.transformTarget[0]
         targets.forEach(target => {
-            const index = (target.type !== values.transformTarget.type && target instanceof PersistentCard && target.inPlay()) ? null : target.index()
-            const clone = values.transformTarget.clone()
+            const index = (target.type !== transformTarget.type && target instanceof PersistentCard && target.inPlay()) ? null : target.index()
+            const clone = transformTarget.clone()
             clone.owner = target.owner
             if (target instanceof PersistentCard && target.inPlay()) {
                 const targetSlot = target instanceof Follower ? target.slot : null
@@ -253,6 +321,10 @@ const ActionOperations = {
                 target.owner[zone].splice(index, 0, clone)
             }
         })
+    },
+
+    rememberTarget: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string }) => {
+        if (targetObjs[0]) source.memory[values.param] = targetObjs[0]
     },
 
     storeValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: number }) => {
@@ -290,3 +362,6 @@ import Card from '../gameObjects/Card'
 import Enchantment from '../gameObjects/Enchantment'
 import { TargetRequirement } from '../structs/Requirement'
 import SpendMoneyPhase, { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'
+import { AttackEvent } from '../gamePhases/AttackPhase'
+import Creation from '../gameObjects/Creation'
+

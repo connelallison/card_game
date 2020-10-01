@@ -29,15 +29,12 @@ class DeathPhase extends EventPhase {
     }
 
     start(): void {
-        const inPlay = this.game().inPlay
         const deathQueue = this.currentSequence().deathQueue
-        inPlay.filter(card => card instanceof DestroyableCard).forEach((card: DestroyableCard) => {
+        this.game().inPlay.filter(card => card instanceof DestroyableCard).forEach((card: DestroyableCard) => {
             if (card.isDestroyed()) {
                 if (card instanceof Leader) {
-                    // inPlay.splice(inPlay.indexOf(card), 1)
                     this.game().end()
                 } else {
-                    // inPlay.splice(inPlay.indexOf(card), 1)
                     const deathEvent = (card instanceof Follower) 
                     ? new DeathEvent(this.game(), {
                         died: card,
@@ -51,7 +48,8 @@ class DeathPhase extends EventPhase {
                     deathEvent.generateLog()
                     this.cacheEvent(deathEvent, 'death')
                     deathQueue.push(deathEvent)
-                    card.moveZone('graveyard')
+                    if (card instanceof Follower) card.memory.deathSlot = card.slot
+                    card.moveZone('legacy')
                     this.deathActionPhase(card, deathEvent)
                 }
             }
@@ -71,7 +69,6 @@ class DeathPhase extends EventPhase {
                 deathAction,
                 event,
             })
-            if (card instanceof Follower) deathActionEvent.stored.deathSlot = event.slot
             this.startChild(new Phases.DeathActionPhase(this, deathActionEvent))
         })
     }

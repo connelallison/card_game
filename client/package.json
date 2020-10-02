@@ -13,7 +13,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npx pm2 start 'npx serve -s build -l 3000' --name client"
+    "deploy": "npx pm2 start 'sudo npx serve -s build -l 80' --name client"
   },
   "eslintConfig": {
     "extends": "react-app"

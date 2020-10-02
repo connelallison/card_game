@@ -8,7 +8,7 @@
     "dev": "npx run-s compile start",
     "compile": "npx tsc",
     "start": "nodemon -r source-map-support/register built/server.js",
-    "deploy": "npx pm2 start 'npm run dev' --name server"
+    "deploy": "npx pm2 start built/server.js --name server"
   },
   "keywords": [],
   "author": "",

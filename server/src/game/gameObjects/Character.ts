@@ -40,7 +40,7 @@ abstract class Character extends DestroyableCard {
   }
 
   startOfTurn(event: StartOfTurnEvent): void {
-    if (event.activePlayer === this.controller() && this.inPlay()) {
+    if (event.activePlayer === this.controller()) {
       this.getReady()
     }
   }

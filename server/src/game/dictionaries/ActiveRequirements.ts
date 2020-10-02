@@ -10,6 +10,7 @@ const ActiveRequirements = {
     eureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() ?? false),
     notEureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() === false ?? false),
     canAfford: (object: GameObject, values: {cost: number}) => (object.controller().money >= values.cost),
+    charOwnerAlive: (object: GameObject) => (!object.charOwner().isDestroyed())
 }
 
 export default ActiveRequirements

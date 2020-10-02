@@ -12,7 +12,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npx pm2 start 'npx serve -s build -l 3000' --name client"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -24,6 +25,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "standard": "^14.3.3"
+    "@types/react": "^16.9.50",
+    "pm2": "^4.5.0",
+    "serve": "^11.3.2",
+    "standard": "^14.3.3",
+    "typescript": "^4.0.3"
   }
 }

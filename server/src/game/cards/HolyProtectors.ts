@@ -27,7 +27,10 @@ const data: PermanentPassiveData = {
                 default: '',
                 templates: {
                     english: '(+$ Health)'
-                }
+                },
+                requirements: [{
+                    activeRequirement: 'charOwnerAlive',
+                }]
             }
         ]
     },

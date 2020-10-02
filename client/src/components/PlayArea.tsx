@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { TargetSelection } from './TargetableEntity'
+import { Selections, TargetSelection } from './TargetableEntity'
 
 interface PlayAreaProps {
   children: JSX.Element[]
-  targetSelection: TargetSelection
-  handleSelection: (object: any) => void
+  selections: Selections
 }
 
 class PlayArea extends Component {
@@ -15,11 +14,11 @@ class PlayArea extends Component {
   }
 
   canBeTargeted() {
-    return this.props.targetSelection && this.props.targetSelection.validTargets.includes('confirm')
+    return this.props.selections.selectionsEnabled && this.props.selections.targetSelection && this.props.selections.targetSelection.validTargets.includes('confirm')
   }
 
   targetType(): string {
-    return this.props.targetSelection && this.props.targetSelection.hostile ? 'hostileTarget' : 'nonHostileTarget'
+    return this.props.selections.targetSelection && this.props.selections.targetSelection.hostile ? 'hostileTarget' : 'nonHostileTarget'
   }
 
   outlineStatus(): string {
@@ -29,7 +28,7 @@ class PlayArea extends Component {
   render() {
     const styleClasses = this.outlineStatus() + " playarea"
     return (
-      <div onClick={event => {if (this.canBeTargeted()) this.props.handleSelection('confirm')}} className={styleClasses}>
+      <div onClick={event => {if (this.canBeTargeted()) this.props.selections.handleSelection('confirm')}} className={styleClasses}>
         {this.props.children}
       </div>
     )

@@ -64,7 +64,7 @@ abstract class Follower extends Character {
       validTargets: this.validSlots.map(slot => slot.objectID),
     } : null
   }
-  
+
   takeDamage(damage: number): number {
     this.rawHealth -= damage
     this.health -= damage
@@ -85,11 +85,9 @@ abstract class Follower extends Character {
   }
 
   getReady(): void {
+    this.ready = true
     if (this.inPlay()) {
-      this.ready = true
       this.summonSickness = false
-    } else {
-      throw new Error(`getReady() is being called on a character (${this.name}) while not in play`)
     }
   }
 

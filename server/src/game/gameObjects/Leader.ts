@@ -131,7 +131,7 @@ abstract class Leader extends Character {
 
       const weaponsFlags = this.controller().creationZone.filter(creation => creation instanceof WeaponCreation).map(weapon => weapon.flags)
       Object.assign(this.flags, ...weaponsFlags)
-    } 
+    }
   }
 
   baseFlags(): FlagsObject {
@@ -143,11 +143,7 @@ abstract class Leader extends Character {
   }
 
   getReady(): void {
-    if (this.inPlay()) {
-      this.ready = true
-    } else {
-      throw new Error(`getReady() is being called on a character (${this.name}) while not in play`)
-    }
+    this.ready = true
   }
 
 

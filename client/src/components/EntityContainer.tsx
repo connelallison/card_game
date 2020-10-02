@@ -1,12 +1,10 @@
 import { Component } from 'react'
-import { TargetSelection } from './TargetableEntity'
+import { Selections } from './TargetableEntity'
 
 export interface EntityContainerProps {
     mine: boolean
-    selected: any[]
     contents: any[]
-    targetSelection: TargetSelection
-    handleSelection: (object: any) => void
+    selections: Selections
 }
 
 abstract class EntityContainer extends Component {

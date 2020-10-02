@@ -7,7 +7,7 @@ class OptionSelections extends EntityContainer {
         let optionActions
         if (this.props.contents) {
             optionActions = (this.props.contents).map(optionAction =>
-                <OptionAction object={optionAction} selected={this.props.selected} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
+                <OptionAction object={optionAction} selections={this.props.selections} />
             )
         } else {
             optionActions = null

@@ -7,7 +7,7 @@ class BoardHalf extends EntityContainer {
     let slotList
     if (this.props.contents.length > 0) {
       slotList = this.props.contents.map((slot) =>
-        <BoardSlot object={slot} selected={this.props.selected} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
+        <BoardSlot object={slot} selections={this.props.selections} />
       )
     } else {
       slotList = [

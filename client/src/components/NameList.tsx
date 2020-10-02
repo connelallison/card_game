@@ -6,7 +6,7 @@ class NameList extends EntityContainer {
     render() {
         if (this.props.contents.length > 0) {
             const nameList = this.props.contents.map(object =>
-                <CardName object={object} selected={this.props.selected} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
+                <CardName object={object} selections={this.props.selections} />
             )
             return (
                 <div className='nameList'>

@@ -8,7 +8,7 @@ class Leader extends TargetableEntity {
       ? <p className='cost-label stat-label'>{this.props.object.currentMoney}/{this.props.object.maxMoney}M</p>
       : null
     return (
-      <div onClick={event => this.props.handleSelection(this.props.object)} className={styleClasses} >
+      <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={styleClasses} >
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         <p className={`card-text`}>{this.props.object.text}</p>
         <div className="multicolour-line">

@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 
 interface EntityProps {
-    selected: any[]
     object: any
+    selections: Selections
+}
+
+export interface Selections {
+    selectionsEnabled: boolean
+    selected: any[]
     targetSelection: TargetSelection
     handleSelection: (object: any) => void
 }
@@ -28,15 +33,15 @@ abstract class TargetableEntity extends Component {
     }
 
     targetType(): string {
-        return this.props.targetSelection && this.props.targetSelection.hostile ? 'hostileTarget' : 'nonHostileTarget'
+        return this.props.selections.targetSelection && this.props.selections.targetSelection.hostile ? 'hostileTarget' : 'nonHostileTarget'
     }
 
     outlineStatus(): string {
-        return this.props.selected && this.props.selected.includes(this.props.object) ? 'isSelected' : this.canBeTargeted() ? this.targetType() : ''
+        return this.props.selections.selectionsEnabled && this.props.selections.selected && this.props.selections.selected.includes(this.props.object) ? 'isSelected' : this.canBeTargeted() ? this.targetType() : ''
     }
 
     canBeTargeted(): boolean {
-        return this.props.targetSelection && this.props.targetSelection.validTargets.includes(this.props.object.objectID)
+        return this.props.selections.selectionsEnabled && this.props.selections.targetSelection && this.props.selections.targetSelection.validTargets.includes(this.props.object.objectID)
     }
 
     statLabel(stat: 'attack' | 'health' | 'cost' | 'charges' | 'armour'): JSX.Element | null {

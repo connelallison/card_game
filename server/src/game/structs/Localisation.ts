@@ -1,5 +1,6 @@
 import { DynamicValueObject } from "./DynamicValueObject";
 import { ZoneString } from "../stringTypes/ZoneTypeSubtypeString";
+import { ActiveRequirement } from "./Requirement";
 
 export interface LocalisedStringObject {
     english: string
@@ -11,6 +12,7 @@ export interface DynamicTextValueObject {
     default: string | number
     activeZones: ZoneString[]
     templates?: LocalisedStringObject
+    requirements?: ActiveRequirement[]
     fervour?: boolean
 }
 

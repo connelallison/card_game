@@ -22,10 +22,12 @@ class GameContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      displayName: localStorage.getItem('displayName') || 'Anonymous',
       deckID: localStorage.getItem('deckID') || 'KnightDeck',
+      selectionsEnabled: false,
+      inGame: false,
       targetSelection: null,
       selected: null,
-      inGame: false,
       gameState: {
         validSelections: null,
         started: null,
@@ -101,6 +103,7 @@ class GameContainer extends Component {
     this.actionTargets = null
     this.requiresConfirmation = null
 
+    this.handleUpdateDisplayName = this.handleUpdateDisplayName.bind(this)
     this.handleUpdateDeck = this.handleUpdateDeck.bind(this)
     this.handleStartGame = this.handleStartGame.bind(this)
     this.handleEndGame = this.handleEndGame.bind(this)
@@ -115,13 +118,19 @@ class GameContainer extends Component {
   updateGameState(report) {
     // console.log('updatingGameState')
     this.resetMoveRequest()
-    this.setState({ gameState: report.gameState, selected: null }, this.updateTargetSelection)
-    report.eventsReport.forEach(log => console.log(log))
-    if (this.state.gameState.started && !this.state.gameState.winner) {
-      this.setState({ inGame: true })
-    } else {
-      this.setState({ inGame: false })
+    const newState = { 
+      gameState: report.gameState, 
+      selected: null,
+      inGame: (report.gameState.started && !report.gameState.winner),
+      selectionsEnabled: (report.gameState.started && !report.gameState.winner && report.gameState.myTurn),
     }
+    this.setState(newState, this.updateTargetSelection)
+    report.eventsReport.forEach(log => console.log(log))
+    // if (this.state.gameState.started && !this.state.gameState.winner) {
+    //   this.setState({ inGame: true })
+    // } else {
+    //   this.setState({ inGame: false })
+    // }
   }
 
   updateTurnTimer(turnTimer) {
@@ -139,6 +148,7 @@ class GameContainer extends Component {
       displayName: displayName
     })
     localStorage.setItem('displayName', displayName)
+    this.setState({ displayName })
   }
 
   handleUpdateDeck(deckID) {
@@ -312,6 +322,7 @@ class GameContainer extends Component {
   }
 
   handleSelection(selection) {
+    if (!this.state.selectionsEnabled) return
     if (this.state.selected && this.state.selected.includes(selection)) return this.handleClearSelected(selection)
     else if (selection === 'confirm') return this.handleConfirmation()
     else if (!this.state.targetSelection || !this.state.targetSelection.validTargets.includes(selection.objectID)) return this.handleInvalidMove()
@@ -320,6 +331,7 @@ class GameContainer extends Component {
   }
 
   announceMove() {
+    this.setState({selectionsEnabled: false})
     const moveRequest = {
       selected: this.moveRequest.selected.objectID,
       attackTarget: this.moveRequest.attackTargets && this.moveRequest.attackTargets.chosenTarget.objectID,
@@ -378,17 +390,17 @@ class GameContainer extends Component {
   }
 
   render() {
-    let currentName
-    if (localStorage.getItem('displayName')) {
-      currentName = localStorage.getItem('displayName')
-    } else {
-      currentName = 'Anonymous'
+    const selections = {
+      selectionsEnabled: this.state.selectionsEnabled,
+      selected: this.state.selected,
+      targetSelection: this.state.targetSelection,
+      handleSelection: this.handleSelection,
     }
 
     return (
       <>
         <div className='topBar'>
-          <DisplayName currentName={currentName} handleSubmit={this.handleUpdateDisplayName} />
+          <DisplayName displayName={this.state.displayName} handleSubmit={this.handleUpdateDisplayName} />
           <DeckSelection deckID={this.state.deckID} updateDeck={this.handleUpdateDeck} />
           {
             this.state.inGame
@@ -399,34 +411,34 @@ class GameContainer extends Component {
         </div>
         <PlayerStatus stats={this.state.gameState.opponent.stats} />
         <OpponentHand cards={this.state.gameState.opponent.hand} />
-        <PlayArea targetSelection={this.state.targetSelection} requiresConfirmation={this.requiresConfirmation} handleSelection={this.handleSelection}>
+        <PlayArea selections={selections} requiresConfirmation={this.requiresConfirmation}>
           <div className='outerPlayArea'>
-            <PassiveZone mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <Leader mine={false} selected={this.state.selected} object={this.state.gameState.opponent.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <LeaderTechnique mine={false} selected={this.state.selected} object={this.state.gameState.opponent.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <CreationZone mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <PassiveZone mine={false} selections={selections}  contents={this.state.gameState.opponent.passives} />
+            <Leader mine={false} selections={selections} object={this.state.gameState.opponent.leader} />
+            <LeaderTechnique mine={false} selections={selections} object={this.state.gameState.opponent.leaderTechnique} />
+            <CreationZone mine={false} selections={selections} contents={this.state.gameState.opponent.creations} />
           </div>
           <div className="innerPlayArea">
-            <Legacy mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.legacy} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <BoardHalf mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <Deck mine={false} selected={this.state.selected} contents={this.state.gameState.opponent.deck} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <Legacy mine={false} selections={selections} contents={this.state.gameState.opponent.legacy} />
+            <BoardHalf mine={false} selections={selections} contents={this.state.gameState.opponent.board} />
+            <Deck mine={false} selections={selections} contents={this.state.gameState.opponent.deck} />
           </div>
           <div className='anchor'>
-            <OptionSelections mine={true} selected={this.state.selected} contents={this.nextOptionActionSelection()} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <OptionSelections mine={true} selections={selections} contents={this.nextOptionActionSelection()} />
           </div>
           <div className="innerPlayArea">
-            <Legacy mine selected={this.state.selected} contents={this.state.gameState.my.legacy} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <BoardHalf mine selected={this.state.selected} contents={this.state.gameState.my.board} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <Deck mine selected={this.state.selected} contents={this.state.gameState.my.deck} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <Legacy mine selections={selections} contents={this.state.gameState.my.legacy} />
+            <BoardHalf mine selections={selections} contents={this.state.gameState.my.board} />
+            <Deck mine selections={selections} contents={this.state.gameState.my.deck} />
           </div>
           <div className='outerPlayArea'>
-            <PassiveZone mine selected={this.state.selected} contents={this.state.gameState.my.passives} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <Leader mine selected={this.state.selected} object={this.state.gameState.my.leader} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <LeaderTechnique mine selected={this.state.selected} object={this.state.gameState.my.leaderTechnique} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
-            <CreationZone mine selected={this.state.selected} contents={this.state.gameState.my.creations} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+            <PassiveZone mine selections={selections} contents={this.state.gameState.my.passives} />
+            <Leader mine selections={selections} object={this.state.gameState.my.leader} />
+            <LeaderTechnique mine selections={selections} object={this.state.gameState.my.leaderTechnique} />
+            <CreationZone mine selections={selections} contents={this.state.gameState.my.creations} />
           </div>
         </PlayArea>
-        <PlayerHand mine contents={this.state.gameState.my.hand} selected={this.state.selected} targetSelection={this.state.targetSelection} handleSelection={this.handleSelection} />
+        <PlayerHand mine selections={selections} contents={this.state.gameState.my.hand} />
         <PlayerStatus stats={this.state.gameState.my.stats} />
       </>
     )

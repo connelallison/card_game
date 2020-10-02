@@ -7,9 +7,9 @@ class BoardSlot extends TargetableEntity {
         const styleClasses = this.outlineStatus() + ' card boardSlot'
         let slot
         if (this.props.object.follower) {
-            slot = <Follower object={this.props.object.follower} selected={this.props.selected} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
+            slot = <Follower object={this.props.object.follower} selections={this.props.selections} />
         } else {
-            slot = <div onClick={event => this.props.handleSelection(this.props.object)} className={styleClasses}>
+            slot = <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={styleClasses}>
                 <p>Empty Slot</p>
                 <div className="multicolour-line">
                     {this.statLabel('attack')}

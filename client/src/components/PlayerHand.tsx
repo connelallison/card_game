@@ -14,19 +14,19 @@ const PlayerHand = (props: EntityContainerProps) => {
         return (<Unknown />)
       } else if (card.type === 'Follower') {
         return (
-          <Follower object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Follower object={card} selections={props.selections} />
         )
       } else if (card.type === 'Moment') {
         return (
-          <Moment object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Moment object={card} selections={props.selections} />
         )
       } else if (card.type === 'Creation') {
         return (
-          <Creation object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Creation object={card} selections={props.selections} />
         )
       } else if (card.type === 'Passive') {
         return  (
-          <Passive object={card} selected={props.selected} targetSelection={props.targetSelection} handleSelection={props.handleSelection} />
+          <Passive object={card} selections={props.selections} />
         )
       } else {
         return new Error('card is not a follower, moment, or creation')

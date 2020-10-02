@@ -6,7 +6,7 @@ class CardName extends TargetableEntity {
         const styleClasses = this.outlineStatus() + ' cardName'
         const callback = event => {
             event.stopPropagation()
-            this.props.handleSelection(this.props.object)
+            this.props.selections.handleSelection(this.props.object)
         }
         return (
             <div className={styleClasses} onClick={callback}>

@@ -31,7 +31,7 @@ class Game extends GamePhase {
   constructor(player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
     super()
     this.event = new EventEmitter()
-    this.event.setMaxListeners(250)
+    this.event.setMaxListeners(1000)
     this.botPlayer1 = botPlayer1
     this.botPlayer2 = botPlayer2
     this.debug = debug

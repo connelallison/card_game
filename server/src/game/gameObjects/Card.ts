@@ -232,7 +232,7 @@ abstract class Card extends GameObject {
   }
 
   dynamicTextValue(valueObj: DynamicTextValueObject, localisation: LocalisationString = 'english'): string {
-    if (valueObj.activeZones.includes(this.zone)) {
+    if (valueObj.activeZones.includes(this.zone) && (valueObj.requirements?.every(requirement => this.requirement(requirement)) ?? true)) {
       const value = this.localisedDynamicValue(valueObj.value, localisation)
       if (value) {
         if (valueObj.templates) {

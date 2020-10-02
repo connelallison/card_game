@@ -20,7 +20,7 @@ abstract class DeckLegacy extends EntityContainer {
     nameList() {
         return this.state.nameListHidden
             ? null
-            : <NameList mine={this.props.mine} selected={this.props.selected} contents={this.props.contents} targetSelection={this.props.targetSelection} handleSelection={this.props.handleSelection} />
+            : <NameList mine={this.props.mine} contents={this.props.contents} selections={this.props.selections}/>
     }
 }
 

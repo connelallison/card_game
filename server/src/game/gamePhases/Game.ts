@@ -162,7 +162,9 @@ class Game extends GamePhase {
     const options: OptionChoice[] = moveRequest.options?.map(optionChoice => this.parseOptionChoice(optionChoice)) ?? []
     const actions: GameObject[][][] = moveRequest.actions?.map(actionTargets => this.parseActionTargets(actionTargets)) ?? [[[]]]
 
-    if (selected instanceof Character && selected.inPlay() && attackTarget instanceof Character && attackTarget.inPlay()) {
+    if (!selected) {
+      console.log('Move request with no selected: ', JSON.stringify(moveRequest))
+    } else if (selected instanceof Character && selected.inPlay() && attackTarget instanceof Character && attackTarget.inPlay()) {
       // character in play attacking
       this.executeAttackRequest(selected, attackTarget)
     } else if (

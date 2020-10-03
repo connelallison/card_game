@@ -38,8 +38,8 @@ abstract class PersistentCard extends Card {
 
     baseData(): GameObjectData {
         return {
-            id: this.originalID,
-            name: this.originalName,
+            id: this.data.id,
+            name: this.data.name,
             cost: this.rawCost,
             debt: 0,
             rent: 0,
@@ -50,10 +50,10 @@ abstract class PersistentCard extends Card {
         }
     }
 
-    addBaseStatEnchantments(data: PersistentCardData): void {
-        if (data.debt) this.addEnchantment(new Enchantments.Debt(this.game, this, { statValue: data.debt }))
-        if (data.rent) this.addEnchantment(new Enchantments.Rent(this.game, this, { statValue: data.rent }))
-        if (data.fervour) this.addEnchantment(new Enchantments.Fervour(this.game, this, { statValue: data.fervour }))
+    addBaseStatEffects(data: PersistentCardData): void {
+        if (data.debt) this.addBaseEffect(new Effects.Debt(this.game, this, { statValue: data.debt }))
+        if (data.rent) this.addBaseEffect(new Effects.Rent(this.game, this, { statValue: data.rent }))
+        if (data.fervour) this.addBaseEffect(new Effects.Fervour(this.game, this, { statValue: data.fervour }))
     }
 }
 
@@ -63,4 +63,4 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { PersistentCardSubtypeString, PersistentCardTypeString, PlayZoneString } from "../stringTypes/ZoneTypeSubtypeString";
 import GameObjectData from "../structs/GameObjectData";
-import Enchantments from "../dictionaries/Enchantments";
+import Effects from "../dictionaries/Effects";

@@ -24,7 +24,7 @@ const data: NamelessFollowerData = {
           english: `Guard`,
       },
   },
-  enchantments: ['Guard'],
+  effects: ['Guard'],
 }
 
 class RoyalGuard extends NamelessFollower {

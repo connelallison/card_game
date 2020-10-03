@@ -16,6 +16,7 @@ export interface ObjectReport {
   // validTargets: string[],
   staticText: string
   text: string
+  addedText: LocalisedNameAndText[]
   options: OptionActionReport[]
   actions: ActionActionReport[]
   validSlots?: ManualTargetReport
@@ -68,3 +69,4 @@ export interface MoveRequest {
 
 import { ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
 import { OptionChoiceRequest } from "./Action";
+import { LocalisedNameAndText } from "./Localisation";

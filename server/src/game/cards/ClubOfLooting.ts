@@ -22,7 +22,7 @@ const data: WeaponCreationData = {
             english: `Your Leader has Pillage.`,
         },
     },
-    enchantments: ['Pillage'],
+    effects: ['Pillage'],
 }
 
 class ClubOfLooting extends WeaponCreation {

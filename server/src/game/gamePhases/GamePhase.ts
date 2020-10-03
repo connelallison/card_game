@@ -76,20 +76,20 @@ abstract class GamePhase {
     }
 
 
-    createEnchantment(enchantmentID: EnchantmentIDString, owner: GameObject): Enchantment {
-        return new Enchantments[enchantmentID](this.game(), owner)
+    createEffect(effectID: EffectIDString, owner: GameObject): Effect {
+        return new Effects[effectID](this.game(), owner)
     }
-    createStaticEnchantment(enchantmentID: StaticEnchantmentIDString, owner: GameObject): StaticEnchantment {
-        return this.createEnchantment(enchantmentID, owner) as StaticEnchantment
+    createStaticEffect(effectID: StaticEffectIDString, owner: GameObject): StaticEffect {
+        return this.createEffect(effectID, owner) as StaticEffect
     }
-    createAuraEnchantment(enchantmentID: AuraEnchantmentIDString, owner: GameObject): AuraEnchantment {
-        return this.createEnchantment(enchantmentID, owner) as AuraEnchantment
+    createAuraEffect(effectID: AuraEffectIDString, owner: GameObject): AuraEffect {
+        return this.createEffect(effectID, owner) as AuraEffect
     }
-    createTriggerEnchantment(enchantmentID: TriggerEnchantmentIDString, owner: GameObject): TriggerEnchantment {
-        return this.createEnchantment(enchantmentID, owner) as TriggerEnchantment
+    createTriggerEffect(effectID: TriggerEffectIDString, owner: GameObject): TriggerEffect {
+        return this.createEffect(effectID, owner) as TriggerEffect
     }
-    createEnchantmentExpiry(enchantmentID: EnchantmentExpiryIDString, owner: GameObject): TriggerEnchantment {
-        return this.createEnchantment(enchantmentID, owner) as TriggerEnchantment
+    createEffectExpiry(effectID: EffectExpiryIDString, owner: GameObject): TriggerEffect {
+        return this.createEffect(effectID, owner) as TriggerEffect
     }
 
     game(): Game {
@@ -159,7 +159,7 @@ import EventPhase from "./EventPhase"
 import EventTypeString from "../stringTypes/EventTypeString"
 import {
     CardIDString,
-    EnchantmentIDString,
+    EffectIDString,
     FollowerIDString,
     LeaderIDString,
     MomentIDString,
@@ -174,16 +174,16 @@ import {
     WeaponCreationIDString,
     WonderCreationIDString,
     TechniqueCreationIDString,
-    StaticEnchantmentIDString,
-    AuraEnchantmentIDString,
-    TriggerEnchantmentIDString,
-    EnchantmentExpiryIDString,
+    StaticEffectIDString,
+    AuraEffectIDString,
+    TriggerEffectIDString,
+    EffectExpiryIDString,
 } from "../stringTypes/DictionaryKeyString"
 import GamePlayer from "../gameObjects/GamePlayer"
 import Card from "../gameObjects/Card"
 import Cards from "../dictionaries/Cards"
-import Enchantment from "../gameObjects/Enchantment"
-import Enchantments from "../dictionaries/Enchantments"
+import Effect from "../gameObjects/Effect"
+import Effects from "../dictionaries/Effects"
 import TriggerTypeString from "../stringTypes/TriggerTypeString"
 import Follower from "../gameObjects/Follower"
 import Leader from "../gameObjects/Leader"
@@ -199,6 +199,6 @@ import WorkCreation from "../gameObjects/WorkCreation"
 import WeaponCreation from "../gameObjects/WeaponCreation"
 import WonderCreation from "../gameObjects/WonderCreation"
 import TechniqueCreation from "../gameObjects/TechniqueCreation"
-import StaticEnchantment from "../gameObjects/StaticEnchantment"
-import AuraEnchantment from "../gameObjects/AuraEnchantment"
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment"
+import StaticEffect from "../gameObjects/StaticEffect"
+import AuraEffect from "../gameObjects/AuraEffect"
+import TriggerEffect from "../gameObjects/TriggerEffect"

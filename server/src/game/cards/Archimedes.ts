@@ -46,9 +46,9 @@ const data: FamousFollowerData = {
       }],
       actionFunctions: [{
         functionType: 'autoAction',
-        operation: 'addEnchantment',
+        operation: 'addEffect',
         values: {
-          enchantmentID: 'Rush'
+          effectID: 'Rush'
         }
       }]
     }]

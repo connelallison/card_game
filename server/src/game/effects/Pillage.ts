@@ -1,14 +1,15 @@
-import StaticEnchantment, { StaticEnchantmentData } from "../gameObjects/StaticEnchantment";
+import StaticEffect, { StaticEffectData } from "../gameObjects/StaticEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
-const data: StaticEnchantmentData = {
+const data: StaticEffectData = {
     id: 'Pillage',
     name: {
         english: `Pillage`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Static',
+    text: { templates: { english: `Pillage` } },
     activeZones: ['board', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone'],
     activeTypes: ['Follower', 'Creation', 'Leader', 'LeaderTechnique', 'Moment'],
     effectObjs: [{
@@ -17,8 +18,8 @@ const data: StaticEnchantmentData = {
     }]
 }
 
-class Pillage extends StaticEnchantment {
-    static readonly data: StaticEnchantmentData = data
+class Pillage extends StaticEffect {
+    static readonly data: StaticEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

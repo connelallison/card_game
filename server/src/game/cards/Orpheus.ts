@@ -58,9 +58,9 @@ const data: FamousFollowerData = {
         }],
         actionFunctions: [{
             functionType: "autoAction",
-            operation: 'addTargetedEnchantment',
+            operation: 'addTargetedEffect',
             values: {
-                enchantmentID: 'OrpheusTrigger',
+                effectID: 'OrpheusTrigger',
                 target: {
                     valueType: 'target',
                     from: "manualTarget",

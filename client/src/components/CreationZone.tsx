@@ -7,7 +7,7 @@ class CreationZone extends EntityContainer {
     let creationList
     if (this.props.contents.length > 0) {
       creationList = this.props.contents.map((creation) => 
-        <Creation object={creation} selections={this.props.selections} />
+        <Creation big={false} object={creation} selections={this.props.selections} />
       )
     } else {
       creationList = [

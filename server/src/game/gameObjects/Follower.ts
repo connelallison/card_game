@@ -93,8 +93,8 @@ abstract class Follower extends Character {
 
   baseData(): GameObjectData {
     return {
-      id: this.originalID,
-      name: this.originalName,
+      id: this.data.id,
+      name: this.data.name,
       attack: this.rawAttack,
       health: this.rawHealth,
       cost: this.rawCost,

@@ -21,7 +21,7 @@ const data: PermanentPassiveData = {
             english: `Passive: Your Knights have +1 Attack.`,
         },
     },
-    enchantments: ['CombatTrainingAura'],
+    effects: ['CombatTrainingAura'],
 }
 
 class CombatTraining extends PermanentPassive {

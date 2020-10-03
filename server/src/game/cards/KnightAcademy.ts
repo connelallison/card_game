@@ -21,7 +21,7 @@ const data: WonderCreationData = {
             english: `After you draw a follower, summon a 2/2 Knight.`,
         },
     },
-    enchantments: ['KnightAcademyTrigger'],
+    effects: ['KnightAcademyTrigger'],
 }
 
 class KnightAcademy extends WonderCreation {

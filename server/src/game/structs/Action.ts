@@ -104,6 +104,7 @@ export interface ActionAction {
     text: DynamicTextObject
     actionSteps: ActionActionStep[]
     activeSteps?: ActionActionStep[]
+    active?: boolean
     // requirements?: ActiveRequirement[]
 }
 
@@ -114,6 +115,7 @@ export interface EventAction {
     text: DynamicTextObject
     actionSteps: EventActionStep[]
     activeSteps?: EventActionStep[]
+    active?: boolean
     // requirements?: ActiveRequirement[]
 }
 
@@ -124,6 +126,7 @@ export interface DeathAction {
     text: DynamicTextObject
     actionSteps: EventActionStep[]
     activeSteps?: EventActionStep[]
+    active?: boolean
     // requirements?: ActiveRequirement[]
 }
 
@@ -144,6 +147,7 @@ export interface OptionAction {
     actions: ActionAction[]
     activeActions?: ActionAction[]
     chosenActions?: ActionAction[]
+    active?: boolean
 }
 
 export interface OptionChoice {

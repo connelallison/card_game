@@ -1,14 +1,15 @@
-import StaticEnchantment, { StaticEnchantmentData } from "../gameObjects/StaticEnchantment";
+import StaticEffect, { StaticEffectData } from "../gameObjects/StaticEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
-const data: StaticEnchantmentData = {
+const data: StaticEffectData = {
     id: 'Guard',
     name: {
         english: `Guard`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Static',
+    text: { templates: { english: `Guard` } },
     activeZones: ['board'],
     activeTypes: ['Follower'],
     effectObjs: [{
@@ -17,8 +18,8 @@ const data: StaticEnchantmentData = {
     }]
 }
 
-class Guard extends StaticEnchantment {
-    static readonly data: StaticEnchantmentData = data
+class Guard extends StaticEffect {
+    static readonly data: StaticEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

@@ -43,9 +43,9 @@ const data: FamousFollowerData = {
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'addStatEnchantment',
+                operation: 'addStatEffect',
                 values: {
-                    statEnchantmentID: 'Fervour',
+                    statEffectID: 'Fervour',
                     statValue: 2,
                     expires: ['ExpiresEndOfMyTurn']
                 },
@@ -72,9 +72,9 @@ const data: FamousFollowerData = {
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'addStatEnchantment',
+                operation: 'addStatEffect',
                 values: {
-                    statEnchantmentID: 'Fervour',
+                    statEffectID: 'Fervour',
                     statValue: 2,
                     expires: ['ExpiresEndOfMyTurn']
                 },

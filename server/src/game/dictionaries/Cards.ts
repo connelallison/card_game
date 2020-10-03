@@ -1,5 +1,5 @@
 import GameObject from '../gameObjects/GameObject'
-import Enchantment from '../gameObjects/Enchantment'
+import Effect from '../gameObjects/Effect'
 import Card from '../gameObjects/Card'
 import PersistentCard from '../gameObjects/PersistentCard'
 import DestroyableCard from '../gameObjects/DestroyableCard'
@@ -9,9 +9,9 @@ import Moment from '../gameObjects/Moment'
 import LeaderTechnique from '../gameObjects/LeaderTechnique'
 import Passive from '../gameObjects/Passive'
 import Creation from '../gameObjects/Creation'
-import StaticEnchantment from '../gameObjects/StaticEnchantment'
-import AuraEnchantment from '../gameObjects/AuraEnchantment'
-import TriggerEnchantment from '../gameObjects/TriggerEnchantment'
+import StaticEffect from '../gameObjects/StaticEffect'
+import AuraEffect from '../gameObjects/AuraEffect'
+import TriggerEffect from '../gameObjects/TriggerEffect'
 import NamelessFollower from '../gameObjects/NamelessFollower'
 import FamousFollower from '../gameObjects/FamousFollower'
 import PermanentPassive from '../gameObjects/PermanentPassive'
@@ -25,10 +25,10 @@ import ActionMoment from '../gameObjects/ActionMoment'
 import EventMoment from '../gameObjects/EventMoment'
 GameObject
 Card
-Enchantment
-StaticEnchantment
-AuraEnchantment
-TriggerEnchantment
+Effect
+StaticEffect
+AuraEffect
+TriggerEffect
 PersistentCard
 DestroyableCard
 Creation

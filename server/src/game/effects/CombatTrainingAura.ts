@@ -1,21 +1,26 @@
-import AuraEnchantment, { AuraEnchantmentData } from "../gameObjects/AuraEnchantment";
+import AuraEffect, { AuraEffectData } from "../gameObjects/AuraEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
-const data: AuraEnchantmentData = {
+const data: AuraEffectData = {
     id: 'CombatTrainingAura',
     name: {
         english: `Combat Training Aura`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Aura',
+    text: { templates: { english: `Passive: Your Knights have +1 Attack.` } },
     priority: 1,
     activeZones: ['passiveZone'],
     activeTypes: ['Passive'],
-    effectObjs: [{
-        operation: 'incrementAttack',
-        value: 1,
-    }],
+    effectFunction: {
+        name: { english: `Combat Training` },
+        text: { templates: { english: `+1 Attack` } },
+        functions: [{
+            operation: 'incrementAttack',
+            value: 1,
+        }]
+    },
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
@@ -29,8 +34,8 @@ const data: AuraEnchantmentData = {
     },
 }
 
-class CombatTrainingAura extends AuraEnchantment {
-    static readonly data: AuraEnchantmentData = data
+class CombatTrainingAura extends AuraEffect {
+    static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

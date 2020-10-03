@@ -21,7 +21,7 @@ abstract class Moment extends Card {
     if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
     else this.owner[destination].push(this)
     this.zone = destination
-    this.updateEnchantments()
+    this.updateEffects()
   }
 }
 

@@ -10,12 +10,14 @@ abstract class DestroyableCard extends PersistentCard {
     static readonly data: DestroyableCardData
     readonly data: DestroyableCardData
     deathEvents: DeathAction[]
+    addedDeathEvents: DeathAction[]
     activeDeathEvents: DeathAction[]
     pendingDestroy: boolean
 
     constructor(game: Game, owner: GamePlayer, data: DestroyableCardData) {
         super(game, owner, data)
         this.deathEvents = data.deathEvents || []
+        this.addedDeathEvents = []
         this.activeDeathEvents = []
         this.pendingDestroy = false
     }
@@ -28,10 +30,26 @@ abstract class DestroyableCard extends PersistentCard {
             cost: this.cost,
             actions: JSON.parse(JSON.stringify(this.actions)),
             events: JSON.parse(JSON.stringify(this.events)),
-            enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
+            effects: this.effects.map(effect => effect.clone(clone)),
             auraEffects: this.auraEffects.splice(0),
             flags: JSON.parse(JSON.stringify(this.flags)),
         }
+    }
+
+    // addBaseDeathEvent(deathEvent: DeathAction): void {
+    //     this.deathEvents.push(deathEvent)
+    // }
+
+    addDeathEvent(deathEvent: DeathAction): void {
+        this.deathEvents.push(deathEvent)
+        this.addedDeathEvents.push(deathEvent)
+        this.addedText.push(deathEvent)
+    }
+
+    removeDeathEvent(deathEvent: DeathAction): void {
+        this.deathEvents = this.deathEvents.filter(item => item !== deathEvent)
+        this.addedDeathEvents = this.addedDeathEvents.filter(item => item !== deathEvent)
+        this.addedText = this.addedText.filter(item => item !== deathEvent)
     }
 
     updateActiveDeathEvents(): void {

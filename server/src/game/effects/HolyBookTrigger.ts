@@ -1,14 +1,15 @@
-import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import TriggerEffect, { TriggerEffectData } from "../gameObjects/TriggerEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
-const data: TriggerEnchantmentData = {
+const data: TriggerEffectData = {
     id: 'HolyBookTrigger',
     name: {
         english: `Holy Book Trigger`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Trigger',
+    text: { templates: { english: `At the end of your turn, restore 2 Health to all friendly characters.` } },
     repeatable: true,
     wonderTrigger: false,
     activeZones: ['creationZone'],
@@ -38,8 +39,8 @@ const data: TriggerEnchantmentData = {
     }]
 }
 
-class HolyBookTrigger extends TriggerEnchantment {
-    static readonly data: TriggerEnchantmentData = data
+class HolyBookTrigger extends TriggerEffect {
+    static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

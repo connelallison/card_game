@@ -1,15 +1,35 @@
-import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import TriggerEffect, { TriggerEffectData } from "../gameObjects/TriggerEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 import { lastEnemyFollowerEnteredPlay } from "../dictionaries/DynamicValueShortcuts";
 
-const data: TriggerEnchantmentData = {
+const data: TriggerEffectData = {
     id: 'SingleMindFuryTrigger',
     name: {
         english: `Single-Minded Fury Trigger`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Trigger',
+    text: {
+        templates: {
+            english: `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources. $0`,
+        },
+        dynamicValues: [
+            {
+                value: {
+                    valueType: 'localisedString',
+                    from: "target",
+                    stringMap: "name",
+                    target: lastEnemyFollowerEnteredPlay,
+                },
+                activeZones: ['passiveZone'],
+                default: '',
+                templates: {
+                    english: '($)'
+                }
+            }
+        ]
+    },
     activeZones: ['passiveZone'],
     activeTypes: ['Passive'],
     repeatable: true,
@@ -37,8 +57,8 @@ const data: TriggerEnchantmentData = {
     }]
 }
 
-class SingleMindedFuryTrigger extends TriggerEnchantment {
-    static readonly data: TriggerEnchantmentData = data
+class SingleMindedFuryTrigger extends TriggerEffect {
+    static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

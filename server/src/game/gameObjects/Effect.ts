@@ -1,37 +1,40 @@
 import GameObject from './GameObject'
 
-export interface EnchantmentData {
+export interface EffectData {
     id: string
     name: LocalisedStringObject
-    type: 'Enchantment'
-    subtype: EnchantmentSubtypeString
+    type: 'Effect'
+    subtype: EffectSubtypeString
+    text: DynamicTextObject
     activeZones: ZoneString[]
     activeTypes: ObjectTypeString[]
     activeRequirements?: ActiveRequirement[]
-    expires?: EnchantmentExpiryIDString[]
+    expires?: EffectExpiryIDString[]
 }
 
-abstract class Enchantment extends GameObject {
-    static readonly data: EnchantmentData
-    readonly data: EnchantmentData
-    id: EnchantmentIDString
+abstract class Effect extends GameObject {
+    static readonly data: EffectData
+    readonly data: EffectData
+    id: EffectIDString
     owner: GameObject
-    type: 'Enchantment'
-    subtype: EnchantmentSubtypeString
+    type: 'Effect'
+    subtype: EffectSubtypeString
+    text: DynamicTextObject
     activeZones: ZoneString[]
     activeTypes: ObjectTypeString[]
     activeRequirements: ActiveRequirement[]
-    previousActive: boolean
+    active: boolean
 
-    constructor(game: Game, owner: GameObject, data: EnchantmentData) {
-        super(game, data.id, data.name, 'Enchantment', data.subtype)
+    constructor(game: Game, owner: GameObject, data: EffectData) {
+        super(game, data.id, data.name, 'Effect', data.subtype)
         this.owner = owner
         this.zone = this.owner.zone
+        this.text = data.text
         this.activeZones = data.activeZones
         this.activeTypes = data.activeTypes
         this.activeRequirements = data.activeRequirements || []
         if (data.expires) this.addExpiries(data.expires)
-        this.previousActive = false
+        this.active = false
         this.data = data
     }
 
@@ -39,17 +42,17 @@ abstract class Enchantment extends GameObject {
         return effectObjs.map(effectObj => (data: GameObjectData): void => (EffectOperations[effectObj.operation] as EffectOperation)(data, this.dynamicValue(effectObj.value) as number | boolean))
     }
 
-    addExpiries(expiries: EnchantmentExpiryIDString[]): void {
-        expiries.forEach(enchantment => this.addEnchantment(this.createEnchantment(enchantment, this)))
+    addExpiries(expiries: EffectExpiryIDString[]): void {
+        expiries.forEach(effect => this.addBaseEffect(this.createEffect(effect, this)))
       }
 
-    active(): boolean {
+    updateActive(): boolean {
         this.zone = this.owner.zone
         const active = this.activeZones.includes(this.owner.zone)
             && this.activeTypes.includes(this.owner.type)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
-        this.previousActive = active
-        this.updateEnchantments()
+        this.active = active
+        this.updateEffects()
         return active
     }
 
@@ -68,25 +71,25 @@ abstract class Enchantment extends GameObject {
     }
 
     expire(): void {
-        this.owner.removeEnchantment(this)
+        this.owner.removeEffect(this)
         this.owner = null
     }
 
-    abstract clone(newOwner): Enchantment 
+    abstract clone(newOwner): Effect 
 }
 
-export default Enchantment
+export default Effect
 
 import Game from '../gamePhases/Game'
-import { EnchantmentSubtypeString, ObjectTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
+import { EffectSubtypeString, ObjectTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import EffectFunctionObject from '../structs/EffectFunctionObject'
 import EffectFunction from '../functionTypes/EffectFunction'
 import GameObjectData from '../structs/GameObjectData'
 import EffectOperations from '../dictionaries/EffectOperations'
 import EffectOperation from '../functionTypes/EffectOperation'
 import Character from './Character'
-import { EnchantmentIDString, EnchantmentExpiryIDString } from '../stringTypes/DictionaryKeyString'
-import { LocalisedStringObject } from '../structs/Localisation'
+import { EffectIDString, EffectExpiryIDString } from '../stringTypes/DictionaryKeyString'
+import { DynamicTextObject, LocalisedStringObject } from '../structs/Localisation'
 import { ActiveRequirement, ActiveRequirementShortcut } from '../structs/Requirement'
 
 

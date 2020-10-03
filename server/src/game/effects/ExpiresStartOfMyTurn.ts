@@ -1,18 +1,19 @@
-import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import TriggerEffect, { TriggerEffectData } from "../gameObjects/TriggerEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
-const data: TriggerEnchantmentData = {
+const data: TriggerEffectData = {
     id: 'ExpiresStartOfMyTurn',
     name: {
         english: `Expires Start Of My Turn`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Trigger',
+    text: { templates: { english: `Expires at the start of my turn.` } },
     repeatable: false,
     wonderTrigger: false,
     activeZones: ['board', 'creationZone', 'deck', 'legacy', 'hand', 'leaderTechniqueZone', 'leaderZone', 'passiveZone', 'setAsideZone', 'global'],
-    activeTypes: ['Enchantment'],
+    activeTypes: ['Effect'],
     triggerObjs: [{
         actionType: 'triggerAction',
         eventType: 'startOfTurn',
@@ -22,14 +23,14 @@ const data: TriggerEnchantmentData = {
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'enchantmentExpiry',
+                operation: 'effectExpiry',
             }]
         }]
     }]
 }
 
-class ExpiresStartOfMyTurn extends TriggerEnchantment {
-    static readonly data: TriggerEnchantmentData = data
+class ExpiresStartOfMyTurn extends TriggerEffect {
+    static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

@@ -1,14 +1,15 @@
-import AuraEnchantment, { AuraEnchantmentData } from "../gameObjects/AuraEnchantment"
+import AuraEffect, { AuraEffectData } from "../gameObjects/AuraEffect"
 import Game from "../gamePhases/Game"
 import GameObject from "../gameObjects/GameObject"
 
-const data: AuraEnchantmentData = {
+const data: AuraEffectData = {
     id: 'FootmanAura',
     name: {
         english: `Footman Aura`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Aura',
+    text: { templates: { english: `+2 Attack` } },
     priority: 1,
     activeZones: ['board'],
     activeTypes: ['Follower'],
@@ -20,16 +21,18 @@ const data: AuraEnchantmentData = {
     activeRequirements: [{
         activeRequirement: 'isMyTurn'
     }],
-    effectObjs: [
-        {
+    effectFunction: {
+        name: { english: `Footman Aura` },
+        text: { templates: { english: `+2 Attack` } },
+        functions: [{
             operation: 'incrementAttack',
             value: 2
-        }
-    ],
+        }],
+    }
 }
 
-class FootmanAura extends AuraEnchantment {
-    static readonly data: AuraEnchantmentData = data
+class FootmanAura extends AuraEffect {
+    static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

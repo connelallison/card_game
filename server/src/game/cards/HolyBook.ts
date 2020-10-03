@@ -21,7 +21,7 @@ const data: WorkCreationData = {
             english: `At the end of your turn, restore 2 Health to all friendly characters.`,
         },
     },
-    enchantments: ['HolyBookTrigger'],
+    effects: ['HolyBookTrigger'],
 }
 
 class HolyBook extends WorkCreation {

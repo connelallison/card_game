@@ -1,15 +1,18 @@
 import React from 'react'
-import TargetableEntity from './TargetableEntity'
+import Card from './Card'
 
-class Creation extends TargetableEntity {
+class Creation extends Card {
+  bigCard() {
+    return this.props.big ? null : <Creation big object={this.props.object} selections={this.props.selections} />
+  }
+
   render() {
-    const styleClasses = this.outlineStatus() + " creation card"
     const costLabel = this.props.object.subtype === 'Technique' && this.props.object.zone === 'creationZone'
       ? this.statLabel('cost')
       : null
 
     return (
-      <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={styleClasses}>
+      <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={this.styleClasses()}>
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
         <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
@@ -21,7 +24,6 @@ class Creation extends TargetableEntity {
       </div>
     )
   }
-
 }
 
 export default Creation

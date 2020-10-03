@@ -238,12 +238,12 @@ class GamePlayer extends GameObject {
         const card = this.deck.shift()
         this.hand.push(card)
         card.zone = 'hand'
-        card.updateEnchantments()
+        card.updateEffects()
       } else {
         const card = this.deck.shift()
         this.legacy.push(card)
         card.zone = 'legacy'
-        card.updateEnchantments()
+        card.updateEffects()
       }
     } else {
       // throw "overdrew and died"

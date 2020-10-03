@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Leader from '../components/Leader'
-import OpponentHand from '../components/OpponentHand'
+// import OpponentHand from '../components/OpponentHand'
 import PlayerHand from '../components/PlayerHand'
 import Deck from '../components/Deck'
 import BoardHalf from '../components/BoardHalf'
@@ -50,6 +50,7 @@ class GameContainer extends Component {
             maxMoney: null,
             canBeSelected: false,
             name: '',
+            type: 'Leader',
           },
           leaderTechnique: {
             text: '',
@@ -79,6 +80,7 @@ class GameContainer extends Component {
             maxMoney: null,
             canBeSelected: false,
             name: '',
+            type: 'Leader',
           },
           leaderTechnique: {
             text: '',
@@ -118,8 +120,8 @@ class GameContainer extends Component {
   updateGameState(report) {
     // console.log('updatingGameState')
     this.resetMoveRequest()
-    const newState = { 
-      gameState: report.gameState, 
+    const newState = {
+      gameState: report.gameState,
       selected: null,
       inGame: (report.gameState.started && !report.gameState.winner),
       selectionsEnabled: (report.gameState.started && !report.gameState.winner && report.gameState.myTurn),
@@ -331,7 +333,7 @@ class GameContainer extends Component {
   }
 
   announceMove() {
-    this.setState({selectionsEnabled: false})
+    this.setState({ selectionsEnabled: false })
     const moveRequest = {
       selected: this.moveRequest.selected.objectID,
       attackTarget: this.moveRequest.attackTargets && this.moveRequest.attackTargets.chosenTarget.objectID,
@@ -348,6 +350,7 @@ class GameContainer extends Component {
     option.validTargets = option.actions.map((action, index) => index)
     option.actions.forEach((action, index) => {
       action.objectID = index
+      action.type = 'OptionAction'
       option.actionTargets[index] = this.flatMappedAction(action)
     })
     return option
@@ -410,10 +413,11 @@ class GameContainer extends Component {
           <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.gameState.myTurn} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
         </div>
         <PlayerStatus stats={this.state.gameState.opponent.stats} />
-        <OpponentHand cards={this.state.gameState.opponent.hand} />
+        <PlayerHand mine={false} selections={selections} contents={this.state.gameState.opponent.hand} />
+        {/* <OpponentHand cards={this.state.gameState.opponent.hand} /> */}
         <PlayArea selections={selections} requiresConfirmation={this.requiresConfirmation}>
           <div className='outerPlayArea'>
-            <PassiveZone mine={false} selections={selections}  contents={this.state.gameState.opponent.passives} />
+            <PassiveZone mine={false} selections={selections} contents={this.state.gameState.opponent.passives} />
             <Leader mine={false} selections={selections} object={this.state.gameState.opponent.leader} />
             <LeaderTechnique mine={false} selections={selections} object={this.state.gameState.opponent.leaderTechnique} />
             <CreationZone mine={false} selections={selections} contents={this.state.gameState.opponent.creations} />

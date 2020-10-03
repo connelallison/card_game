@@ -1,5 +1,5 @@
-interface DynamicNumberOperator {
-    (number: number): number
-}
+// interface DynamicNumberOperator {
+//     (number: number): number
+// }
 
-export default DynamicNumberOperator
+// export default DynamicNumberOperator

@@ -1,14 +1,19 @@
-import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import TriggerEffect, { TriggerEffectData } from "../gameObjects/TriggerEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
-const data: TriggerEnchantmentData = {
+const data: TriggerEffectData = {
     id: 'SavageWolfTrigger',
     name: {
         english: `Savage Wolf Trigger`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Trigger',
+    text: {
+        templates: {
+            english: `After a friendly follower dies, gain +2/+1.`,
+        },
+    },
     activeTypes: ['Follower'],
     activeZones: ['board'],
     repeatable: true,
@@ -49,8 +54,8 @@ const data: TriggerEnchantmentData = {
     }]
 }
 
-class SavageWolfTrigger extends TriggerEnchantment {
-    static readonly data: TriggerEnchantmentData = data
+class SavageWolfTrigger extends TriggerEffect {
+    static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

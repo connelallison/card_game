@@ -80,10 +80,10 @@ const data: NamelessFollowerData = {
                     }],
                     actionFunctions: [{
                         functionType: 'autoAction',
-                        operation: 'addStatEnchantment',
+                        operation: 'addStatEffect',
                         values: {
                             statValue: 2,
-                            statEnchantmentID: 'Debt',
+                            statEffectID: 'Debt',
                         },
                     },
                     {
@@ -106,10 +106,10 @@ const data: NamelessFollowerData = {
                     }],
                     actionFunctions: [{
                         functionType: 'autoAction',
-                        operation: 'addStatEnchantment',
+                        operation: 'addStatEffect',
                         values: {
                             statValue: 1,
-                            statEnchantmentID: 'Rent',
+                            statEffectID: 'Rent',
                         },
                     }]
                 }]

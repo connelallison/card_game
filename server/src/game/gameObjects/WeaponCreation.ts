@@ -46,6 +46,7 @@ abstract class WeaponCreation extends Creation {
             canBeSelected: this.canBeSelected(),
             staticText: this.staticText[localisation],
             text: this.generateDynamicText(this.text, localisation),
+            addedText: this.addedTextReport(),
             options: this.optionsReport(localisation),
             actions: this.actionsReport(localisation),
         }
@@ -53,8 +54,8 @@ abstract class WeaponCreation extends Creation {
 
     baseData(): GameObjectData {
         return {
-            id: this.originalID,
-            name: this.originalName,
+            id: this.data.id,
+            name: this.data.name,
             attack: this.rawAttack,
             charges: this.charges,
             cost: this.rawCost,

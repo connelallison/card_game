@@ -1,14 +1,19 @@
-import TriggerEnchantment, { TriggerEnchantmentData } from "../gameObjects/TriggerEnchantment";
+import TriggerEffect, { TriggerEffectData } from "../gameObjects/TriggerEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
-const data: TriggerEnchantmentData = {
+const data: TriggerEffectData = {
     id: 'KnightAcademyTrigger',
     name: {
         english: `Knight Academy Trigger`,
     },
-    type: 'Enchantment',
+    type: 'Effect',
     subtype: 'Trigger',
+    text: {
+        templates: {
+            english: `After you draw a follower, summon a 2/2 Knight.`,
+        },
+    },
     repeatable: true,
     wonderTrigger: true,
     activeZones: ['creationZone'],
@@ -47,8 +52,8 @@ const data: TriggerEnchantmentData = {
     }]
 }
 
-class KnightAcademyTrigger extends TriggerEnchantment {
-    static readonly data: TriggerEnchantmentData = data
+class KnightAcademyTrigger extends TriggerEffect {
+    static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }

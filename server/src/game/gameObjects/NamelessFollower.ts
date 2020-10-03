@@ -37,6 +37,7 @@ abstract class NamelessFollower extends Follower {
             canBeSelected: this.canBeSelected(),
             staticText: this.staticText[localisation],
             text: this.generateDynamicText(this.text, localisation),
+            addedText: this.addedTextReport(),
             options: this.optionsReport(localisation),
             actions: this.actionsReport(localisation),
             attackTargets: this.attackTargetsReport(),
@@ -81,7 +82,7 @@ abstract class NamelessFollower extends Follower {
             else this.owner[destination].push(this)
         }
         this.zone = destination
-        this.updateEnchantments()
+        this.updateEffects()
     }
 
     cloneData(clone) {
@@ -98,7 +99,7 @@ abstract class NamelessFollower extends Follower {
             charges: this.charges,
             actions: JSON.parse(JSON.stringify(this.actions)),
             events: JSON.parse(JSON.stringify(this.events)),
-            enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
+            effects: this.effects.map(effect => effect.clone(clone)),
             auraEffects: this.auraEffects.splice(0),
             flags: JSON.parse(JSON.stringify(this.flags)),
         }

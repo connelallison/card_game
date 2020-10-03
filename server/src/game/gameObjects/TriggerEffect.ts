@@ -1,37 +1,37 @@
-import Enchantment, { EnchantmentData } from './Enchantment'
+import Effect, { EffectData } from './Effect'
 
-export interface TriggerEnchantmentData extends EnchantmentData {
+export interface TriggerEffectData extends EffectData {
     subtype: 'Trigger'
     triggerObjs: TriggerAction[]
     repeatable: boolean
     wonderTrigger: boolean
 }
 
-abstract class TriggerEnchantment extends Enchantment {
-    static readonly data: TriggerEnchantmentData
-    readonly data: TriggerEnchantmentData
+abstract class TriggerEffect extends Effect {
+    static readonly data: TriggerEffectData
+    readonly data: TriggerEffectData
     subtype: 'Trigger'
     repeatable: boolean
     wonderTrigger: boolean
     triggers: Trigger[]
 
-    constructor(game: Game, owner: GameObject, data: TriggerEnchantmentData) {
+    constructor(game: Game, owner: GameObject, data: TriggerEffectData) {
         super(game, owner, data)
         this.repeatable = data.repeatable
         this.wonderTrigger = data.wonderTrigger
         this.triggers = this.wrapTriggers(data.triggerObjs)
     }
 
-    active(): boolean {
+    updateActive(): boolean {
         const active = this.activeZones.includes(this.owner.zone)
             && this.activeTypes.includes(this.owner.type)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
-        if (!this.previousActive && active) {
+        if (!this.active && active) {
             this.enableListeners()
-        } else if (this.previousActive && !active) {
+        } else if (this.active && !active) {
             this.disableListeners()
         }
-        this.previousActive = active
+        this.active = active
         return active
     }
 
@@ -49,7 +49,7 @@ abstract class TriggerEnchantment extends Enchantment {
 
     expire(): void {
         this.disableListeners()
-        this.owner.removeEnchantment(this)
+        this.owner.removeEffect(this)
         this.owner = null
     }
 
@@ -78,15 +78,15 @@ abstract class TriggerEnchantment extends Enchantment {
         }
     }
 
-    clone(newOwner): TriggerEnchantment {
-        const clone = new Enchantments[this.id](this.game, newOwner) as TriggerEnchantment
+    clone(newOwner): TriggerEffect {
+        const clone = new Effects[this.id](this.game, newOwner) as TriggerEffect
         clone.data.triggerObjs = JSON.parse(JSON.stringify(this.data.triggerObjs))
         clone.triggers = clone.wrapTriggers(clone.data.triggerObjs)
         return clone
     }
 }
 
-export default TriggerEnchantment
+export default TriggerEffect
 
 import GameObject from './GameObject'
 import Game from '../gamePhases/Game'
@@ -101,5 +101,5 @@ import { TriggerEvent } from '../gamePhases/TriggerPhase'
 import { TriggerActionEvent } from '../gamePhases/TriggerActionPhase'
 import { TriggerActionFunction, ActionFunction, EventModActionFunction, TriggerAction } from '../structs/Action'
 import ActionEvent from '../gamePhases/ActionEvent'
-import Enchantments from '../dictionaries/Enchantments'
+import Effects from '../dictionaries/Effects'
 import { TriggerRequirement, TargetRequirement, ActiveRequirementShortcut } from '../structs/Requirement'

@@ -34,7 +34,7 @@ const data: PermanentPassiveData = {
             }
         ]
     },
-    enchantments: ['HolyProtectorsAura'],
+    effects: ['HolyProtectorsAura'],
     ethos: true,
 }
 

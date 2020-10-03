@@ -40,6 +40,7 @@ abstract class Creation extends DestroyableCard {
             canBeSelected: this.canBeSelected(),
             staticText: this.staticText[localisation],
             text: this.generateDynamicText(this.text, localisation),
+            addedText: this.addedTextReport(),
             options: this.optionsReport(localisation),
             actions: this.actionsReport(localisation),
         }
@@ -57,8 +58,8 @@ abstract class Creation extends DestroyableCard {
 
     baseData(): GameObjectData {
         return {
-            id: this.originalID,
-            name: this.originalName,
+            id: this.data.id,
+            name: this.data.name,
             charges: this.charges,
             cost: this.rawCost,
             debt: 0,
@@ -77,7 +78,7 @@ abstract class Creation extends DestroyableCard {
         if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
         else this.zone = destination
         if (destination === 'creationZone') this.game.inPlay.push(this)
-        this.updateEnchantments()
+        this.updateEffects()
     }
 }
 

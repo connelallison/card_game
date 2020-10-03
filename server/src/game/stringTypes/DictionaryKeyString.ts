@@ -35,14 +35,14 @@ export type DynamicOrStoredMomentIDString = MomentIDString | DynamicOrStoredStri
 export type DynamicOrStoredPassiveIDString = PassiveIDString | DynamicOrStoredStringObject
 export type DynamicOrStoredLeaderTechniqueIDString = LeaderTechniqueIDString | DynamicOrStoredStringObject
 
-export type EnchantmentIDString = keyof typeof Enchantments
-export type CardEnchantmentIDString = keyof typeof CardEnchantments
-export type StatStaticEnchantmentIDString = keyof typeof StatStaticEnchantments
-export type StaticEnchantmentIDString = keyof typeof StaticEnchantments
-export type AuraEnchantmentIDString = keyof typeof AuraEnchantments
-export type TriggerEnchantmentIDString = keyof typeof TriggerEnchantments
-export type EnchantmentExpiryIDString = keyof typeof EnchantmentExpiries
-// // export type DynamicOrStoredEnchantmentIDString = EnchantmentIDString | DynamicOrStoredStringObject
+export type EffectIDString = keyof typeof Effects
+export type CardEffectIDString = keyof typeof CardEffects
+export type StatStaticEffectIDString = keyof typeof StatStaticEffects
+export type StaticEffectIDString = keyof typeof StaticEffects
+export type AuraEffectIDString = keyof typeof AuraEffects
+export type TriggerEffectIDString = keyof typeof TriggerEffects
+export type EffectExpiryIDString = keyof typeof EffectExpiries
+// // export type DynamicOrStoredEffectIDString = EffectIDString | DynamicOrStoredStringObject
 
 export type EffectOperationString = keyof typeof EffectOperations
 export type EventModOperationString = keyof typeof EventModOperations
@@ -83,7 +83,7 @@ import Cards, {
 } from "../dictionaries/Cards"
 import { DynamicOrStoredStringObject } from "../structs/DynamicValueObject"
 import EffectOperations from "../dictionaries/EffectOperations"
-import Enchantments, { EnchantmentExpiries, CardEnchantments, StaticEnchantments, AuraEnchantments, TriggerEnchantments, StatStaticEnchantments } from "../dictionaries/Enchantments"
+import Effects, { EffectExpiries, CardEffects, StaticEffects, AuraEffects, TriggerEffects, StatStaticEffects } from "../dictionaries/Effects"
 import EventModOperations from "../dictionaries/EventModOperations"
 import DynamicEventReducers from "../dictionaries/DynamicEventReducers"
 import EventToTargetMaps from "../dictionaries/EventToTargetMaps"

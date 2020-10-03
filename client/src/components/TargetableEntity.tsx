@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
+import Card from './Card'
+import Creation from './Creation'
+import Follower from './Follower'
+import Moment from './Moment'
+import Passive from './Passive'
+import Unknown from './Unknown'
 
-interface EntityProps {
+export interface EntityProps {
     object: any
     selections: Selections
 }
@@ -22,14 +28,6 @@ abstract class TargetableEntity extends Component {
     props!: EntityProps
     constructor(props: EntityProps) {
         super(props)
-    }
-
-    textLength(): string {
-        return this.props.object.text.length > 70 ? 'text-long' : this.props.object.text.length > 35 ? 'text-medium' : 'text-short'
-    }
-
-    nameLength(): string {
-        return this.props.object.name.length > 22 ? 'name-long' : this.props.object.name.length > 17 ? 'name-medium' : 'name-short'
     }
 
     targetType(): string {
@@ -64,15 +62,7 @@ abstract class TargetableEntity extends Component {
         ) : null
     }
 
-    handInfo(): JSX.Element | null {
-        return this.props.object.zone === 'hand' ? (
-            <div className="multicolour-line text-medium">
-                {this.statLabel('cost')}
-                <p>{this.props.object.subtype} {this.props.object.type}</p>
-                {this.props.object.subtype === 'Nameless' ? this.statLabel('charges') : null}
-            </div>
-        ) : null
-    }
+    abstract bigCard(): JSX.Element | null 
 
     abstract render(): JSX.Element
 }

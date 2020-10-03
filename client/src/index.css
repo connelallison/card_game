@@ -81,18 +81,6 @@ input {
   flex-direction: row-reverse;
 }
 
-.leader {
-  /* background-image: url("./images/dogecropped.jpg"); */
-  display: flex;
-  flex-direction: column;
-  background-color: lightgrey;
-  text-align: center;
-  border: 1px solid black;
-  border-radius: 3px;
-  width: 160px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
 
 .playarea {
   /* padding: 5px; */
@@ -110,6 +98,19 @@ input {
   height: 140px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.outerPlayArea .Leader {
+  /* background-image: url("./images/dogecropped.jpg"); */
+  display: flex;
+  flex-direction: column;
+  background-color: lightgrey;
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 3px;
+  width: 160px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .innerPlayArea {
@@ -143,6 +144,10 @@ input {
   height: 140px;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.cardList.big {
+  height: 195px;
 }
 
 .cardList.playerHand {
@@ -191,6 +196,7 @@ input {
 }
 
 .card {
+  /* transition: all .1s ease-in-out; */
   /* background-image: url("./images/dogecropped.jpg"); */
   width: 150px;
   /* width: 7%; */
@@ -203,6 +209,16 @@ input {
   flex-direction: column;
   justify-items: center;
   position: relative;
+}
+
+/* .card:hover { 
+  transform: perspective(1px) scale(1.05) translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+} */
+
+.card.big {
+  width: 200px;
 }
 
 .legacy .nameList {
@@ -234,7 +250,7 @@ input {
   /* align-items: center; */
 }
 
-.card.boardSlot {
+.card.BoardSlot {
   background-color: darkgrey;
 }
 
@@ -243,16 +259,33 @@ input {
   font-weight: 600;
 }
 
+.card-name.big {
+  margin-bottom: 12px;
+  /* font-weight: 700; */
+}
+
 .name-long {
   font-size: 12px;
+}
+
+.name-long.big {
+  font-size: 15px;
 }
 
 .name-medium {
   font-size: 14px;
 }
 
+.name-medium.big {
+  font-size: 18px;
+}
+
 .name-short {
   font-size: 16px;
+}
+
+.name-short.big {
+  font-size: 20px;
 }
 
 .card-text {
@@ -266,12 +299,24 @@ input {
   font-size: 12px;
 }
 
+.text-long.big {
+  font-size: 14px;
+}
+
 .text-medium {
   font-size: 14px;
 }
 
+.text-medium.big {
+  font-size: 16px;
+}
+
 .text-short {
   font-size: 16px;
+}
+
+.text-short.big {
+  font-size: 18px;
 }
 
 .stat-label {

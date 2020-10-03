@@ -49,6 +49,7 @@ abstract class LeaderTechnique extends PersistentCard {
             canBeSelected: this.canBeSelected(),
             staticText: this.staticText[localisation],
             text: this.generateDynamicText(this.text, localisation),
+            addedText: this.addedTextReport(),
             options: this.optionsReport(localisation),
             actions: this.actionsReport(localisation),
         }
@@ -66,7 +67,7 @@ abstract class LeaderTechnique extends PersistentCard {
         if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
         else this.owner[destination].push(this)
         this.zone = destination
-        this.updateEnchantments()
+        this.updateEffects()
     }
 
     canBeSelected(): boolean {

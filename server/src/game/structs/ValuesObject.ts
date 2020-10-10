@@ -2,13 +2,14 @@ interface ValuesObject {
     // [index: string]: string | boolean | number | DynamicValueObject
     cardID?: DynamicOrStoredCardIDString
     persistentCardID?: DynamicOrStoredPersistentCardIDString
-    // enchantmentID?: DynamicOrStoredEnchantmentIDString
-    enchantmentID?: EnchantmentIDString
-    statEnchantmentID?: StatStaticEnchantmentIDString
+    // effectID?: DynamicOrStoredEffectIDString
+    effectID?: EffectIDString
+    statEffectID?: StatStaticEffectIDString
     statValue?: DynamicOrStoredNumber
-    expires?: EnchantmentExpiryIDString[]
+    expires?: EffectExpiryIDString[]
     type?: ObjectTypeString
     subtype?: ObjectSubtypeString
+    category?: FollowerCategoryString
     dynamicTarget?: DynamicOrStoredTargetObject
     damage?: DynamicOrStoredNumber
     healing?: DynamicOrStoredNumber
@@ -22,9 +23,11 @@ interface ValuesObject {
     cost?: DynamicOrStoredNumber
     debt?: DynamicOrStoredNumber
     rent?: DynamicOrStoredNumber
+    stat?: StatString
     fervour?: DynamicOrStoredNumber
     param?: DynamicOrStoredString
     name?: DynamicOrStoredLocalisedString
+    buffName?: LocalisedStringObject
     value?: DynamicOrStoredValue
     zone?: DynamicOrStoredZoneString
     // zones?: DynamicOrStoredZoneString[]
@@ -33,11 +36,14 @@ interface ValuesObject {
     target?: DynamicOrStoredTarget
     autoTarget?: number
     manualTarget?: number
+    index?: number
 }
 
 export default ValuesObject
 
 import { DynamicTargetObject, DynamicOrStoredTargetObject } from "./DynamicValueObject";
-import { DynamicOrStoredCardIDString, EnchantmentIDString, DynamicOrStoredPersistentCardIDString, StatStaticEnchantmentIDString, EnchantmentExpiryIDString } from "../stringTypes/DictionaryKeyString";
+import { DynamicOrStoredCardIDString, EffectIDString, DynamicOrStoredPersistentCardIDString, StatStaticEffectIDString, EffectExpiryIDString, StatString } from "../stringTypes/DictionaryKeyString";
 import { DynamicNumber, DynamicString, DynamicValue, DynamicOrStoredNumber, DynamicOrStoredString, DynamicOrStoredValue, DynamicOrStoredBoolean, DynamicOrStoredLocalisedString, DynamicOrStoredTarget, DynamicOrStoredTargets } from "./DynamicValue";
 import { DynamicZoneString, DynamicOrStoredZoneString, ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
+import { LocalisedStringObject } from "./Localisation";import FollowerCategoryString from "../stringTypes/FollowerCategoryString";
+

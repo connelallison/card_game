@@ -9,7 +9,6 @@ const fervourValue: DynamicTextValueObject = {
     from: 'fervour',
     base: 4,
   },
-  activeZones: ['hand'],
   default: 4,
   fervour: true,
 }
@@ -35,6 +34,7 @@ const data: ActionMomentData = {
   },
   actions: [{
     actionType: 'actionAction',
+    id: 'FireburstAction',
     name: {
       english: 'Fireburst'
     },

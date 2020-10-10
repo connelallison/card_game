@@ -3,7 +3,7 @@ import EventPhase from "./EventPhase";
 
 interface TriggerActionEventObject {
     controller: GamePlayer,
-    objectSource: TriggerEnchantment
+    objectSource: TriggerEffect
     targets: GameObject[]
     event: GameEvent
     actionSteps: TriggerActionStep[]
@@ -11,7 +11,7 @@ interface TriggerActionEventObject {
 
 export class TriggerActionEvent extends GameEvent {
     controller: GamePlayer
-    objectSource: TriggerEnchantment
+    objectSource: TriggerEffect
     targets: GameObject[]
     event: GameEvent
     actionSteps: TriggerActionStep[]
@@ -52,7 +52,7 @@ class TriggerActionPhase extends EventPhase {
 export default TriggerActionPhase
 
 import GamePlayer from "../gameObjects/GamePlayer";
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
+import TriggerEffect from "../gameObjects/TriggerEffect";
 import { TriggerActionStep } from "../structs/Action";
 import Game from "./Game";
 import GameObject from "../gameObjects/GameObject";

@@ -6,11 +6,21 @@ export interface LocalisedStringObject {
     english: string
 }
 
+export interface NameAndTextObject {
+    name: LocalisedStringObject
+    text: DynamicTextObject
+    active?: boolean
+}
+
+export interface LocalisedNameAndText {
+    name: string
+    text: string
+}
 
 export interface DynamicTextValueObject {
     value: DynamicValueObject
-    default: string | number
-    activeZones: ZoneString[]
+    default: string | number | LocalisedStringObject
+    activeZones?: ZoneString[] | 'inPlay'
     templates?: LocalisedStringObject
     requirements?: ActiveRequirement[]
     fervour?: boolean

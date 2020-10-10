@@ -5,28 +5,33 @@ import Unknown from './Unknown'
 import Creation from './Creation'
 import Passive from './Passive'
 import { EntityContainerProps } from './EntityContainer'
+import Leader from './Leader'
 
 const PlayerHand = (props: EntityContainerProps) => {
   let cardList
   if (props.contents.length > 0) {
     cardList = props.contents.map((card) => {
       if (card.type === 'unknown') {
-        return (<Unknown />)
+        return (<Unknown big={false} hover={false} object={card} selections={props.selections} />)
       } else if (card.type === 'Follower') {
         return (
-          <Follower object={card} selections={props.selections} />
+          <Follower big={false} hover={false} object={card} selections={props.selections} />
         )
       } else if (card.type === 'Moment') {
         return (
-          <Moment object={card} selections={props.selections} />
+          <Moment big={false} hover={false} object={card} selections={props.selections} />
         )
       } else if (card.type === 'Creation') {
         return (
-          <Creation object={card} selections={props.selections} />
+          <Creation big={false} hover={false} object={card} selections={props.selections} />
         )
       } else if (card.type === 'Passive') {
-        return  (
-          <Passive object={card} selections={props.selections} />
+        return (
+          <Passive big={false} hover={false} object={card} selections={props.selections} />
+        )
+      } else if (card.type === 'Leader') {
+        return (
+          <Leader big={false} hover={false} object={card} selections={props.selections} />
         )
       } else {
         return new Error('card is not a follower, moment, or creation')
@@ -34,11 +39,11 @@ const PlayerHand = (props: EntityContainerProps) => {
     })
   } else {
     cardList = [
-      <p>No cards in hand.</p>,
-      <br />,
-      <br />,
-      <br />,
-      <br />
+      <p className='emptyZone'>No cards in hand.</p>,
+      // <br />,
+      // <br />,
+      // <br />,
+      // <br />
     ]
   }
 

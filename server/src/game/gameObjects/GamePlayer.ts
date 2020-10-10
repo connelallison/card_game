@@ -1,5 +1,12 @@
 import GameObject from './GameObject'
 
+interface GamePlayerStats {
+  rent: number
+  fervour: number
+  growth: number
+  income: number
+}
+
 class GamePlayer extends GameObject {
   game: Game
   owner: GamePlayer
@@ -11,15 +18,16 @@ class GamePlayer extends GameObject {
   currentHealth: number
   armour: number
   rawGrowth: number
-  growth: number
+  // growth: number
   rawIncome: number
-  income: number
+  // income: number
   rawMoney: number
   money: number
   currentDebt: number
   queuedDebt: number
-  rent: number
-  fervour: number
+  // rent: number
+  // fervour: number
+  stats: GamePlayerStats
   leaderZone: Leader[]
   leaderTechniqueZone: LeaderTechnique[]
   board: BoardSlot[]
@@ -37,7 +45,7 @@ class GamePlayer extends GameObject {
     creationZone: number,
     passiveZone: number
   }
-  opponent: GamePlayer
+  opponentPlayer: GamePlayer
   bot: boolean
   disconnected: boolean
   conceded: boolean
@@ -52,15 +60,12 @@ class GamePlayer extends GameObject {
     this.currentHealth = this.maxHealth
     this.armour = 0
     this.rawGrowth = 1
-    this.growth = this.rawGrowth
     this.rawIncome = 2
-    this.income = this.rawIncome
-    this.rawMoney = this.income
+    this.rawMoney = this.rawIncome
     this.money = this.rawMoney
+    this.stats = this.baseStats()
     this.currentDebt = 0
     this.queuedDebt = 0
-    this.rent = 0
-    this.fervour = 0
     this.leaderZone = []
     this.leaderTechniqueZone = []
     this.max = {
@@ -78,7 +83,7 @@ class GamePlayer extends GameObject {
     this.setAsideZone = []
     this.legacy = []
     this.fatigueCounter = 0
-    this.opponent
+    this.opponentPlayer
     this.bot
     this.disconnected = false
 
@@ -94,15 +99,17 @@ class GamePlayer extends GameObject {
   validSelectionsReport(localisation: LocalisationString = 'english'): ManualTargetReport {
     if (this.myTurn()) {
       const validSelections = [...this.leaderZone, ...this.leaderTechniqueZone, ...this.hand, ...this.boardFollowers(), ...this.creationZone]
-      .filter(card => card.canBeSelected())
-      .map(card => card.objectID)
-      
+        .filter(card => card.canBeSelected())
+      const highlightedSelections = validSelections.filter(card => card.highlighted())
+      const validObjectIDs = validSelections.map(card => card.objectID)
+      const highlightedObjectIDs = highlightedSelections.map(card => card.objectID)
       return {
         hostile: false,
         text: {
           english: 'Choose a card.'
         }[localisation],
-        validTargets: validSelections,
+        validTargets: validObjectIDs,
+        highlightedTargets: highlightedObjectIDs
       }
     } else return null
   }
@@ -110,16 +117,16 @@ class GamePlayer extends GameObject {
   statsReport() {
     return {
       money: this.money,
-      income: this.income,
-      growth: this.growth,
       debt: this.queuedDebt,
-      rent: this.rent,
-      fervour: this.fervour,
+      income: this.stats.income,
+      growth: this.stats.growth,
+      rent: this.stats.rent,
+      fervour: this.stats.fervour,
     }
   }
 
   leaderReport() {
-    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.income, currentMoney: this.money, armour: this.armour })
+    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.stats.income, currentMoney: this.money, armour: this.armour })
   }
 
   leaderTechniqueReport() {
@@ -174,7 +181,7 @@ class GamePlayer extends GameObject {
 
   endOfTurn(event): void {
     if (this.myTurn()) {
-      this.increaseIncome(this.growth)
+      this.increaseIncome(this.stats.growth)
       this.refillMoney()
       this.payDebt()
       this.payRent()
@@ -185,6 +192,10 @@ class GamePlayer extends GameObject {
     return this
   }
 
+  // opponent(): GamePlayer {
+  //   return this.opponentPlayer
+  // }
+
   // effectOwner(): GamePlayer {
   //   return this
   // }
@@ -193,14 +204,19 @@ class GamePlayer extends GameObject {
     return this.rawMoney - this.currentDebt
   }
 
-  baseData(): GameObjectData {
+  baseStats(): GamePlayerStats {
     return {
       growth: this.rawGrowth,
       income: this.rawIncome,
-      money: this.baseMoney(),
-      debt: 0,
       rent: 0,
       fervour: 0,
+    }
+  }
+
+  baseData(): GameObjectData {
+    return {
+      money: this.baseMoney(),
+      stats: this.baseStats(),
       flags: this.baseFlags(),
     }
   }
@@ -211,10 +227,10 @@ class GamePlayer extends GameObject {
 
   calculateGlobals(): void {
     this.inPlay().forEach(card => {
-      if (card.growth) this.growth += card.growth
-      if (card.income) this.income += card.income
-      if (card.rent) this.rent += card.rent
-      if (card.fervour) this.fervour += card.fervour
+      if (card.stats.growth) this.stats.growth += card.stats.growth
+      if (card.stats.income) this.stats.income += card.stats.income
+      if (card.stats.rent) this.stats.rent += card.stats.rent
+      if (card.stats.fervour) this.stats.fervour += card.stats.fervour
     })
   }
 
@@ -238,12 +254,12 @@ class GamePlayer extends GameObject {
         const card = this.deck.shift()
         this.hand.push(card)
         card.zone = 'hand'
-        card.updateEnchantments()
+        card.updateEffects()
       } else {
         const card = this.deck.shift()
         this.legacy.push(card)
         card.zone = 'legacy'
-        card.updateEnchantments()
+        card.updateEffects()
       }
     } else {
       // throw "overdrew and died"
@@ -323,12 +339,12 @@ class GamePlayer extends GameObject {
   }
 
   refillMoney(): void {
-    this.rawMoney = this.income
+    this.rawMoney = this.stats.income
   }
 
   increaseIncome(number): void {
     this.rawIncome += number
-    this.income += number
+    this.stats.income += number
   }
 
   decreaseIncome(number): void {
@@ -350,10 +366,10 @@ class GamePlayer extends GameObject {
 
   payRent(): void {
     this.inPlay().forEach(card => {
-      if (card.rent > 0) {
+      if (card.stats.rent > 0) {
         const spendMoneyEvent = new SpendMoneyEvent(this.game, {
           player: this,
-          money: card.rent,
+          money: card.stats.rent,
           card,
         })
         this.game.startNewDeepestPhase('SpendMoneyPhase', spendMoneyEvent)
@@ -372,7 +388,7 @@ export default GamePlayer
 
 import Game from '../gamePhases/Game'
 import Leader from './Leader'
-import Card from './Card'
+import Card, { CardStats } from './Card'
 import Follower from './Follower'
 import Permissions from '../dictionaries/Permissions'
 import LeaderTechnique from './LeaderTechnique'

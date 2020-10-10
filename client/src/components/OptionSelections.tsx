@@ -7,7 +7,7 @@ class OptionSelections extends EntityContainer {
         let optionActions
         if (this.props.contents) {
             optionActions = (this.props.contents).map(optionAction =>
-                <OptionAction object={optionAction} selections={this.props.selections} />
+                <OptionAction big hover={false} object={optionAction} selections={this.props.selections} />
             )
         } else {
             optionActions = null
@@ -15,7 +15,7 @@ class OptionSelections extends EntityContainer {
 
         return (
             <div className="optionSelections">
-                <div className='cardList optionActions'>
+                <div className='big cardList optionActions'>
                     {optionActions}
                 </div>
             </div>

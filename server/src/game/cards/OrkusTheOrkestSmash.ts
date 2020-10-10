@@ -26,13 +26,13 @@ const data: ActiveLeaderTechniqueData = {
                 from: 'fervour',
                 base: 2
             },
-            activeZones: ['hand', 'leaderTechniqueZone'],
             default: 2,
             fervour: true,
         }],
     },
     actions: [{
         actionType: 'actionAction',
+        id: 'OrkusTheOrkestSmash',
         name: {
             english: 'Smash'
         },
@@ -46,7 +46,6 @@ const data: ActiveLeaderTechniqueData = {
                     from: 'fervour',
                     base: 2
                 },
-                activeZones: ['hand', 'leaderTechniqueZone'],
                 default: 2,
                 fervour: true,
             }],
@@ -69,7 +68,6 @@ const data: ActiveLeaderTechniqueData = {
                             from: 'fervour',
                             base: 2
                         },
-                        activeZones: ['hand', 'leaderTechniqueZone'],
                         default: 2,
                         fervour: true,
                     }],

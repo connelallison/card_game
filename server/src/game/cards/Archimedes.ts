@@ -23,8 +23,10 @@ const data: FamousFollowerData = {
       english: `Eureka: Gain Rush.`,
     },
   },
+  tooltips: ['rush'],
   actions: [{
     actionType: 'actionAction',
+    id: 'ArchimedesEureka',
     name: {
       english: 'Archimedes Eureka'
     },
@@ -33,6 +35,9 @@ const data: FamousFollowerData = {
         english: 'Eureka: Gain Rush.'
       }
     },
+    eureka: true,
+    unique: true,
+    activeTypes: ['Follower'],
     actionSteps: [{
       autoTargets: [{
         targets: {
@@ -44,11 +49,12 @@ const data: FamousFollowerData = {
       requirements: [{
         activeRequirement: 'eureka'
       }],
+      // activeHighlight: true,
       actionFunctions: [{
         functionType: 'autoAction',
-        operation: 'addEnchantment',
+        operation: 'addEffect',
         values: {
-          enchantmentID: 'Rush'
+          effectID: 'Rush'
         }
       }]
     }]

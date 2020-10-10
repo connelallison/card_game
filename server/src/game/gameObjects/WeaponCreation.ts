@@ -40,30 +40,63 @@ abstract class WeaponCreation extends Creation {
             charges: this.charges,
             type: this.type,
             subtype: this.subtype,
+            classes: this.classes,
             zone: this.zone,
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
             staticText: this.staticText[localisation],
             text: this.generateDynamicText(this.text, localisation),
+            tooltips: this.tooltipsReport(),
+            addedText: this.addedTextReport(),
+            relatedCard: this.relatedCardReport(),
             options: this.optionsReport(localisation),
             actions: this.actionsReport(localisation),
         }
     }
 
+    static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
+        return {
+          name: this.data.name[localisation],
+          id: this.data.id[localisation],
+          cost: this.data.cost,
+          charges: this.data.charges,
+          attack: this.data.attack,
+          type: this.data.type,
+          subtype: this.data.subtype,
+          text: this.data.staticText[localisation],
+          classes: this.data.classes,
+        }
+      }
+
     baseData(): GameObjectData {
         return {
-            id: this.originalID,
-            name: this.originalName,
+            id: this.data.id,
+            name: this.data.name,
             attack: this.rawAttack,
             charges: this.charges,
             cost: this.rawCost,
-            debt: 0,
-            rent: 0,
-            fervour: 0,
-            growth: 0,
-            income: 0,
+            stats: this.baseStats(),
             flags: this.baseFlags(),
+        }
+    }
+
+    cloneData(clone) {
+        return {
+            clonedFrom: this,
+            pendingDestroy: this.pendingDestroy,
+            rawCost: this.rawCost,
+            cost: this.cost,
+            rawAttack: this.rawAttack,
+            attack: this.attack,
+            charges: this.charges,
+            // options: JSON.parse(JSON.stringify(this.options)),
+            // actions: JSON.parse(JSON.stringify(this.actions)),
+            // events: JSON.parse(JSON.stringify(this.events)),
+            // deathEvents: JSON.parse(JSON.stringify(this.deathEvents)),
+            // effects: this.effects.map(effect => effect.clone(clone)),
+            auraEffects: this.auraEffects.splice(0),
+            flags: JSON.parse(JSON.stringify(this.flags)),
         }
     }
 }
@@ -72,6 +105,6 @@ export default WeaponCreation
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { ObjectReport } from "../structs/ObjectReport";
+import { ObjectReport, StaticObjectReport } from "../structs/ObjectReport";
 import GameObjectData from "../structs/GameObjectData";
 import { LocalisationString } from "../structs/Localisation";

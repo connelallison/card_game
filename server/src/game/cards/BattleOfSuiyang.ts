@@ -23,6 +23,7 @@ const data: EventMomentData = {
     },
     events: [{
         actionType: 'eventAction',
+        id: 'BattleOfSuiyangEvent',
         name: {
             english: 'Battle of Suiyang'
         },
@@ -71,6 +72,7 @@ const data: EventMomentData = {
                     operation: 'buffStats',
                     autoTarget: 1, 
                     values: {
+                        buffName: { english: 'Battle of Suiyang Buff' },
                         'stats': {
                             valueType: 'number',
                             from: 'stored',

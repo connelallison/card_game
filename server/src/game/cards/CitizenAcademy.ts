@@ -1,0 +1,33 @@
+import WonderCreation, { WonderCreationData } from "../gameObjects/WonderCreation"
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";
+
+const data: WonderCreationData = {
+    id: 'CitizenAcademy',
+    name: {
+        english: `Citizen Academy`,
+    },
+    type: 'Creation',
+    subtype: 'Wonder',
+    classes: ['The People'],
+    collectable: true,
+    cost: 2,
+    charges: 3,
+    staticText: {
+        english: `After you draw a follower, summon a 2/2 Citizen.`,
+    },
+    text: {
+        templates: {
+            english: `After you draw a follower, summon a 2/2 Citizen.`,
+        },
+    },
+    effects: ['CitizenAcademyTrigger'],
+}
+
+class CitizenAcademy extends WonderCreation {
+    static readonly data: WonderCreationData = data
+    constructor(game: Game, owner: GamePlayer) {
+        super(game, owner, data)
+    }
+}
+export default CitizenAcademy

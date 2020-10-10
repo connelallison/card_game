@@ -25,7 +25,7 @@ abstract class Passive extends PersistentCard {
         this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
         this.owner[destination].push(this)
         this.zone = destination
-        this.updateEnchantments()
+        this.updateEffects()
     }
 }
 

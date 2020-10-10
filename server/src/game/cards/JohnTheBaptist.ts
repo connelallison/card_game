@@ -23,7 +23,7 @@ const data: FamousFollowerData = {
             english: `Legacy: The slot where this died has +2/+2.`,
         },
     },
-    enchantments: ['JohnTheBaptistAura'],
+    effects: ['JohnTheBaptistAura'],
 }
 
 class JohnTheBaptist extends FamousFollower {

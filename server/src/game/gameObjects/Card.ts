@@ -8,20 +8,25 @@ export interface CardData {
   classes: PlayerClassString[]
   collectable: boolean
   cost: number
-  debt?: number
+  stats?: {
+    Debt?: number
+  }
   staticText: LocalisedStringObject
   text: DynamicTextObject
-  actions?: ActionAction[]
-  events?: EventAction[]
-  options?: OptionAction[]
-  enchantments?: EnchantmentIDString[]
+  tooltips?: TooltipString[]
+  actions?: ActionActionData[]
+  events?: EventActionData[]
+  options?: OptionActionData[]
+  effects?: EffectIDString[]
+}
+
+export interface CardStats {
+  debt: number
 }
 
 abstract class Card extends GameObject {
   static readonly data: CardData
   readonly data: CardData
-  readonly originalID: CardIDString
-  readonly originalName: LocalisedStringObject
   readonly originalOwner: GamePlayer
   id: CardIDString
   owner: GamePlayer
@@ -31,40 +36,55 @@ abstract class Card extends GameObject {
   collectable: boolean
   rawCost: number
   cost: number
-  debt: number
+  stats: CardStats
   staticText: LocalisedStringObject
   text: DynamicTextObject
   options: OptionAction[]
+  baseOptions: OptionAction[]
+  addedOptions: OptionAction[]
   activeOptions: OptionAction[]
   actions: ActionAction[]
+  baseActions: ActionAction[]
+  addedActions: ActionAction[]
   activeActions: ActionAction[]
   events: EventAction[]
+  baseEvents: EventAction[]
+  addedEvents: EventAction[]
   activeEvents: EventAction[]
-  // tags: CardTagString[]
+  addedText: NameAndTextObject[]
+  tooltips: TooltipString[]
   clonedFrom: Card
 
   constructor(game: Game, owner: GamePlayer, data: CardData) {
     super(game, data.id, data.name, data.type, data.subtype)
     this.classes = data.classes
-    this.originalID = this.id
-    this.originalName = this.name
+    // this.originalID = this.id
+    // this.originalName = this.name
     this.owner = owner
     this.originalOwner = owner
     this.zone = 'setAsideZone'
     this.collectable = data.collectable
     this.rawCost = data.cost
     this.cost = data.cost
-    this.debt = 0
+    this.stats = this.baseStats()
     this.staticText = data.staticText
     this.text = data.text
-    this.options = data.options || []
+    this.tooltips = data.tooltips ?? []
+    this.baseOptions = data.options ?? []
+    this.options = [...this.baseOptions]
+    this.addedOptions = []
     this.activeOptions = []
-    this.actions = data.actions || []
+    this.baseActions = data.actions ?? []
+    this.actions = [...this.baseActions]
+    this.addedActions = []
     this.activeActions = []
-    this.events = data.events || []
+    this.baseEvents = data.events ?? []
+    this.events = [...this.baseEvents]
+    this.addedEvents = []
     this.activeEvents = []
-    this.addBaseStatEnchantments(data)
-    this.addBaseEnchantments(data.enchantments || [])
+    this.addedText = []
+    this.addBaseStatEffects(data)
+    this.addBaseEffects(data.effects ?? [])
     this.data = data
   }
 
@@ -80,14 +100,30 @@ abstract class Card extends GameObject {
       cost: this.cost,
       type: this.type,
       subtype: this.subtype,
+      classes: this.classes,
       zone: this.zone,
       ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
       staticText: this.staticText[localisation],
       text: this.generateDynamicText(this.text, localisation),
+      tooltips: this.tooltipsReport(),
+      addedText: this.addedTextReport(),
+      relatedCard: this.relatedCardReport(),
       options: this.optionsReport(localisation),
       actions: this.actionsReport(localisation),
+    }
+  }
+
+  static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
+    return {
+      name: this.data.name[localisation],
+      id: this.data.id[localisation],
+      cost: this.data.cost,
+      type: this.data.type,
+      subtype: this.data.subtype,
+      text: this.data.staticText[localisation],
+      classes: this.data.classes,
     }
   }
 
@@ -123,10 +159,18 @@ abstract class Card extends GameObject {
   }
 
   manualTargetReport(manualTarget: ManualTarget, localisation: LocalisationString = 'english'): ManualTargetReport {
+    const highlightedTargets = (
+      manualTarget.highlightRequirements
+      && manualTarget.validTargets
+        .filter(target => manualTarget.highlightRequirements.every(requirement => this.targetRequirement(requirement, target)))
+        .map(target => target.objectID)
+    ) ?? []
+
     return {
       text: this.generateDynamicText(manualTarget.text, localisation),
       validTargets: manualTarget.validTargets.map(target => target.objectID),
       hostile: manualTarget.hostile ?? false,
+      highlightedTargets,
     }
   }
 
@@ -175,6 +219,10 @@ abstract class Card extends GameObject {
     return (this.activeOptions.length + this.activeActions.length + this.activeEvents.length) > 0
   }
 
+  highlighted(): boolean {
+    return this.activeOptions.some(option => option.highlighted) || this.activeActions.some(action => action.highlighted) || this.activeEvents.some(event => event.highlighted)
+  }
+
   actionsActive(): boolean {
     return this.controller().myTurn() && this.zone === 'hand'
   }
@@ -191,32 +239,42 @@ abstract class Card extends GameObject {
     this.activeEvents = this.events.filter(event => this.eventActive(event))
   }
 
-  optionActive(optionAction: OptionAction): boolean {
-    optionAction.activeActions = optionAction.actions.filter(action => this.actionActive(action))
-    return optionAction.activeActions.length > 0
+  optionActive(option: OptionAction): boolean {
+    option.activeActions = option.actions.filter(action => this.actionActive(action))
+    option.active = option.activeActions.length > 0
+      && ((option.activeTypes && this.parseActiveTypes(option.activeTypes).includes(this.type)) ?? true)
+      && ((option.activeSubtypes && this.parseActiveSubtypes(option.activeSubtypes).includes(this.subtype)) ?? true)
+
+    option.highlighted = option.active && option.activeActions.some(action => action.highlighted)
+    return option.active
   }
 
   actionActive(action: ActionAction): boolean {
     action.activeSteps = action.actionSteps.filter(actionStep => this.actionStepActive(actionStep))
-    return action.activeSteps.length > 0
+    action.active = action.activeSteps.length > 0
+      && ((action.activeTypes && this.parseActiveTypes(action.activeTypes).includes(this.type)) ?? true)
+      && ((action.activeSubtypes && this.parseActiveSubtypes(action.activeSubtypes).includes(this.subtype)) ?? true)
+
+    action.highlighted = action.active && action.activeSteps.some(step => step.highlighted) || (action.eureka && this.eureka())
+    return action.active
   }
 
   eventActive(event: EventAction | DeathAction): boolean {
     event.activeSteps = event.actionSteps.filter(actionStep => this.eventStepActive(actionStep))
-    return event.activeSteps.length > 0
+    event.active = event.activeSteps.length > 0
+      && ((event.activeTypes && this.parseActiveTypes(event.activeTypes).includes(this.type)) ?? true)
+      && ((event.activeSubtypes && this.parseActiveSubtypes(event.activeSubtypes).includes(this.subtype)) ?? true)
+
+    event.highlighted = event.active && event.activeSteps.some(step => step.highlighted)
+    return event.active
   }
 
   actionStepActive(actionStep: ActionActionStep): boolean {
-    // const active = actionStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
-    // const autoTargets = actionStep.autoTargets?.every(autoTarget =>
-    //   autoTarget.optional
-    //   || autoTarget.targets.from === 'stored' || autoTarget.targets.from === 'manualTarget' || autoTarget.targets.from === 'autoTarget' 
-    //   || (this.dynamicValue(autoTarget.targets) as GameObject[]).length > 0) ?? true
-      
     const active = this.eventStepActive(actionStep as EventActionStep)
     if (actionStep.manualTargets) {
       actionStep.manualTargets.forEach(manualTarget => manualTarget.validTargets = active ? this.dynamicValue(manualTarget.targets) as GameObject[] : [])
-      const manualTargets = actionStep.manualTargets?.every(manualTarget => manualTarget.validTargets.length >= (manualTarget.minUnique ?? 1))
+      const manualTargets = actionStep.manualTargets.every(manualTarget => manualTarget.validTargets.length >= (manualTarget.minUnique ?? 1))
+      actionStep.highlighted = active && manualTargets && actionStep.activeHighlight
       return active && manualTargets
     }
     return active
@@ -226,34 +284,11 @@ abstract class Card extends GameObject {
     const active = eventStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
     const autoTargets = eventStep.autoTargets?.every(autoTarget =>
       autoTarget.optional
-      || autoTarget.targets.from === 'stored' || autoTarget.targets.from === 'manualTarget' || autoTarget.targets.from === 'autoTarget' 
+      || autoTarget.targets.from === 'stored' || autoTarget.targets.from === 'manualTarget' || autoTarget.targets.from === 'autoTarget'
       || (this.dynamicValue(autoTarget.targets) as GameObject[]).length >= (autoTarget.minUnique ?? 1)) ?? true
+
+    eventStep.highlighted = active && autoTargets && eventStep.activeHighlight
     return active && autoTargets
-  }
-
-  dynamicTextValue(valueObj: DynamicTextValueObject, localisation: LocalisationString = 'english'): string {
-    if (valueObj.activeZones.includes(this.zone) && (valueObj.requirements?.every(requirement => this.requirement(requirement)) ?? true)) {
-      const value = this.localisedDynamicValue(valueObj.value, localisation)
-      if (value) {
-        if (valueObj.templates) {
-          return valueObj.templates[localisation].replace('$', value.toString())
-        } else if (valueObj.fervour && this.controller().fervour > 0) {
-          return `*${value.toString()}*`
-        } else {
-          return value.toString()
-        }
-      }
-    }
-    return valueObj.default.toString()
-  }
-
-  generateDynamicText(text: DynamicTextObject, localisation: LocalisationString = 'english'): string {
-    let template = text.templates[localisation]
-    const values = text.dynamicValues || []
-    for (let i = 0; i < values.length; i++) {
-      template = template.replace(`$${i}`, this.dynamicTextValue(values[i], localisation))
-    }
-    return template
   }
 
   updateArrays(): void {
@@ -274,44 +309,185 @@ abstract class Card extends GameObject {
     return this.zone === 'hand' && (this.index() === 0 || this.index() === this.owner[this.zone].length - 1)
   }
 
+  baseStats(): CardStats {
+    return {
+      debt: 0
+    }
+  }
+
   baseData(): GameObjectData {
     return {
-      id: this.originalID,
-      name: this.originalName,
+      id: this.data.id,
+      name: this.data.name,
       cost: this.rawCost,
-      debt: 0,
+      stats: this.baseStats(),
       flags: this.baseFlags(),
     }
+  }
+
+  setData(dataObj: GameObjectData) {
+    if (dataObj.cost < 0) dataObj.cost = 0
+    Object.assign(this, dataObj)
   }
 
   index(): number {
     return (this.controller()[this.zone] as Card[]).indexOf(this)
   }
 
-  addBaseStatEnchantments(data: CardData): void {
-    if (data.debt) this.addEnchantment(new Enchantments.Debt(this.game, this, { statValue: data.debt }))
+  addedTextReport(localisation: LocalisationString = 'english'): LocalisedNameAndText[] {
+    const slotText = (this instanceof Follower && this.slot && (this.slot.attack !== 0 || this.slot.health !== 0)) ? [this.slot.statsReport()] : []
+    // const activeAddedText = this.addedText.filter(text => text.active)
+    const auraText = this.auraEffects.flat()
+    // const activeText = [...slotText, ...activeAddedText, ...auraText]
+    const activeText = [...slotText, ...this.addedText, ...auraText]
+    return activeText.map(text => {
+      if (text instanceof Effect) return text.localiseNameAndTextObject(text, localisation)
+      else return this.localiseNameAndTextObject(text, localisation)
+    })
   }
 
-  addBaseEnchantments(enchantments: EnchantmentIDString[]): void {
-    enchantments.forEach(enchantment => this.addEnchantment(this.createEnchantment(enchantment, this)))
+  tooltipsReport(localisation: LocalisationString = 'english'): LocalisedNameAndText[] {
+    const rawTooltips: NameAndTextObject[] = []
+    if (this.options.length > 0 || this.tooltips.includes('option')) rawTooltips.push(Tooltips.option)
+    if (this.actions.filter(action => !action.eureka).length > 0 || this.tooltips.includes('action')) rawTooltips.push(Tooltips.action)
+    if (this.events.length > 0 || this.tooltips.includes('event')) rawTooltips.push(Tooltips.event)
+    if (this.actions.filter(action => action.eureka).length > 0 || this.tooltips.includes('eureka')) rawTooltips.push(Tooltips.eureka)
+    if (this['deathEvents']?.length > 0 || this.tooltips.includes('deathEvent')) rawTooltips.push(Tooltips.deathEvent)
+    if (this.flags.guard || this.tooltips.includes('guard')) rawTooltips.push(Tooltips.guard)
+    if (this.flags.pillage || this.tooltips.includes('pillage')) rawTooltips.push(Tooltips.pillage)
+    if (this.flags.rush || this.tooltips.includes('rush')) rawTooltips.push(Tooltips.rush)
+    if (this.flags.mob || this.tooltips.includes('mob')) rawTooltips.push(Tooltips.mob)
+    if (this.flags.passionate || this.tooltips.includes('passionate')) rawTooltips.push(Tooltips.passionate)
+    if (this.stats['debt'] || this.tooltips.includes('debt')) rawTooltips.push(Tooltips.debt)
+    if (this.stats['rent'] || this.tooltips.includes('rent')) rawTooltips.push(Tooltips.rent)
+    if (this.stats['income'] || this.tooltips.includes('income')) rawTooltips.push(Tooltips.income)
+    if (this.stats['growth'] || this.tooltips.includes('growth')) rawTooltips.push(Tooltips.growth)
+    if (this.stats['fervour'] || this.tooltips.includes('fervour')) rawTooltips.push(Tooltips.fervour)
+    if (this.tooltips.includes('money')) rawTooltips.push(Tooltips.money)
+    const tooltips = rawTooltips.map(tooltip => this.localiseNameAndTextObject(tooltip, localisation))
+    return tooltips
+}
+
+relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
+  return null
+}
+
+  addEffect(effect: Effect): void {
+    this.effects.push(effect)
+    this.addedEffects.push(effect)
+    this.addedText.push(effect)
+    this.updateEffects()
   }
 
-  cloneData(clone) {
+  removeEffect(effect: Effect): void {
+    this.effects = this.effects.filter(item => item !== effect)
+    this.addedEffects = this.addedEffects.filter(item => item !== effect)
+    this.addedText = this.addedText.filter(item => item !== effect)
+    this.updateEffects()
+  }
+
+  addBaseStatEffects(data: CardData): void {
+    if (data.stats) for (const stat in data.stats) {
+      this.addBaseEffect(new Effects[stat](this.game, this, { statValue: data.stats[stat] }))
+    }
+  }
+
+  addBaseEffects(effects: EffectIDString[]): void {
+    effects.forEach(effect => this.addBaseEffect(this.createEffect(effect, this)))
+  }
+
+  addBaseOption(option: OptionAction): void {
+    if (option.unique && this.options.map(option => option.id).includes(option.id)) return
+    this.options.push(option)
+    this.baseOptions.push(option)
+  }
+
+  addOption(option: OptionAction): void {
+    if (option.unique && this.options.map(option => option.id).includes(option.id)) return
+    this.options.push(option)
+    this.addedOptions.push(option)
+    this.addedText.push(option)
+  }
+
+  removeOption(option: OptionAction): void {
+    this.options = this.options.filter(item => item !== option)
+    this.addedOptions = this.addedOptions.filter(item => item !== option)
+    this.addedText = this.addedText.filter(item => item !== option)
+  }
+
+  addBaseAction(action: ActionAction): void {
+    if (action.unique && this.actions.map(action => action.id).includes(action.id)) return
+    this.actions.push(action)
+    this.baseActions.push(action)
+  }
+
+  addAction(action: ActionAction): void {
+    if (action.unique && this.actions.map(action => action.id).includes(action.id)) return
+    this.actions.push(action)
+    this.addedActions.push(action)
+    this.addedText.push(action)
+  }
+
+  removeAction(action: ActionAction): void {
+    this.actions = this.actions.filter(item => item !== action)
+    this.addedActions = this.addedActions.filter(item => item !== action)
+    this.addedText = this.addedText.filter(item => item !== action)
+  }
+
+  addBaseEvent(event: EventAction): void {
+    if (event.unique && this.events.map(event => event.id).includes(event.id)) return
+    this.events.push(event)
+    this.baseEvents.push(event)
+  }
+
+  addEvent(event: EventAction): void {
+    if (event.unique && this.events.map(event => event.id).includes(event.id)) return
+    this.events.push(event)
+    this.addedEvents.push(event)
+    this.addedText.push(event)
+  }
+
+  removeEvent(event: EventAction): void {
+    this.events = this.events.filter(item => item !== event)
+    this.addedEvents = this.addedEvents.filter(item => item !== event)
+    this.addedText = this.addedText.filter(item => item !== event)
+  }
+
+  cloneText(clone: Card) {
+    const baseEffects = this.baseEffects.map(effect => effect.clone(clone))
+    const addedEffects = this.addedEffects.map(effect => effect.clone(clone))
+    const effects = [...baseEffects, ...addedEffects]
+    // const baseOptions
+  }
+
+  cloneAddedText(clone: Card, addedText: NameAndTextObject) {
+    if (addedText instanceof Effect) clone.addEffect(addedText.clone(clone))
+    else {
+      const action = addedText as ActionAction | OptionAction | EventAction
+      if (action.actionType === 'actionAction') clone.addAction(JSON.parse(JSON.stringify(action)))
+      else if (action.actionType === 'optionAction') clone.addOption(JSON.parse(JSON.stringify(action)))
+      else if (action.actionType === 'eventAction') clone.addEvent(JSON.parse(JSON.stringify(action)))
+    }
+  }
+
+  cloneData(clone: Card) {
     return {
       clonedFrom: this,
       rawCost: this.rawCost,
       cost: this.cost,
-      actions: JSON.parse(JSON.stringify(this.actions)),
-      events: JSON.parse(JSON.stringify(this.events)),
-      enchantments: this.enchantments.map(enchantment => enchantment.clone(clone)),
+      // options: JSON.parse(JSON.stringify(this.options)),
+      // actions: JSON.parse(JSON.stringify(this.actions)),
+      // events: JSON.parse(JSON.stringify(this.events)),
+      // effects: this.effects.map(effect => effect.clone(clone)),
       auraEffects: this.auraEffects.splice(0),
       flags: JSON.parse(JSON.stringify(this.flags)),
     }
   }
 
   clone(): Card {
-    const clone = new Cards[this.originalID](this.game, this.owner)
+    const clone = new Cards[this.data.id](this.game, this.owner)
     Object.assign(clone, this.cloneData(clone))
+    this.addedText.forEach(addedText => this.cloneAddedText(clone, addedText))
 
     return clone
   }
@@ -323,16 +499,20 @@ export default Card
 
 import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
-import { CardIDString, EnchantmentIDString } from '../stringTypes/DictionaryKeyString'
-import { ActionAction, ActionActionStep, DeathAction, EventAction, EventActionStep, ManualTarget, OptionAction, OptionChoice, } from '../structs/Action'
-import { ActionActionReport, ActionActionStepReport, ManualTargetReport, ObjectReport, OptionActionReport } from '../structs/ObjectReport'
+import { CardIDString, EffectIDString, TooltipString } from '../stringTypes/DictionaryKeyString'
+import { ActionAction, ActionActionData, ActionActionStep, DeathAction, EventAction, EventActionData, EventActionStep, ManualTarget, OptionAction, OptionActionData, OptionChoice, } from '../structs/Action'
+import { ActionActionReport, ActionActionStepReport, ManualTargetReport, ObjectReport, OptionActionReport, StaticObjectReport } from '../structs/ObjectReport'
 import GameObjectData from '../structs/GameObjectData'
 import { CardSubtypeString, CardTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import Cards from '../dictionaries/Cards'
-import { LocalisedStringObject, LocalisationString, DynamicTextObject, DynamicTextValueObject } from '../structs/Localisation'
+import { LocalisedStringObject, LocalisationString, DynamicTextObject, DynamicTextValueObject, NameAndTextObject, LocalisedNameAndText } from '../structs/Localisation'
 import PlayerClassString from '../stringTypes/PlayerClassString'
-import Enchantments from '../dictionaries/Enchantments'
+import Effects from '../dictionaries/Effects'
 import LeaderTechnique from './LeaderTechnique'
 import TechniqueCreation from './TechniqueCreation'
 import Moment from './Moment'
+import Effect from './Effect'
+import Follower from './Follower'
+import { setPriority } from 'os'
+import Tooltips from '../dictionaries/Tooltips'
 

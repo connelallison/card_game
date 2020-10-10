@@ -6,7 +6,7 @@ interface TriggerEventObject {
     event: GameEvent
     triggerType: TriggerTypeString
     actionSteps: TriggerActionStep[]
-    objectSource: TriggerEnchantment
+    objectSource: TriggerEffect
     triggerOwner: GameObject
 }
 
@@ -15,7 +15,7 @@ export class TriggerEvent extends GameEvent {
     event: GameEvent
     triggerType: TriggerTypeString
     actionSteps: TriggerActionStep[]
-    objectSource: TriggerEnchantment
+    objectSource: TriggerEffect
     triggerOwner: GameObject
 
     constructor(game: Game, object: TriggerEventObject) {
@@ -61,7 +61,7 @@ import WonderCreation from "../gameObjects/WonderCreation";
 import GamePlayer from "../gameObjects/GamePlayer";
 import TriggerTypeString from "../stringTypes/TriggerTypeString";
 import { TriggerActionFunction, TriggerActionStep } from "../structs/Action";
-import TriggerEnchantment from "../gameObjects/TriggerEnchantment";
+import TriggerEffect from "../gameObjects/TriggerEffect";
 import Card from "../gameObjects/Card";
 import Game from "./Game";
 import { TriggerActionEvent } from "./TriggerActionPhase";

@@ -1,8 +1,8 @@
-interface EventMod {
-    (source: GameObject, event: GameEvent): void
-}
+// interface EventMod {
+//     (source: GameObject, event: GameEvent): void
+// }
 
-export default EventMod
+// export default EventMod
 
-import GameEvent from "../gamePhases/GameEvent";
-import GameObject from "../gameObjects/GameObject";
+// import GameEvent from "../gamePhases/GameEvent";
+// import GameObject from "../gameObjects/GameObject";

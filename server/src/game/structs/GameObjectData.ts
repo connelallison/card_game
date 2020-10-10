@@ -6,6 +6,8 @@ export interface StatsObject {
     debt?: number
     rent?: number
     fervour?: number
+    income?: number
+    growth?: number
 }
 
 interface GameObjectData {
@@ -15,11 +17,12 @@ interface GameObjectData {
     money?: number
     charges?: number
     cost?: number
-    debt?: number
-    rent?: number
-    income?: number
-    growth?: number
-    fervour?: number
+    // debt?: number
+    // rent?: number
+    // income?: number
+    // growth?: number
+    // fervour?: number
+    stats?: StatsObject
     flags: FlagsObject
     id?: string
     name?: LocalisedStringObject

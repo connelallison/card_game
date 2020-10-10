@@ -24,7 +24,7 @@ const data: NamelessFollowerData = {
           english: `After a friendly follower dies, gain +2/+1.`,
       },
   },
-  enchantments: ['SavageWolfTrigger'],
+  effects: ['SavageWolfTrigger'],
 }
 
 class SavageWolf extends NamelessFollower {

@@ -7,11 +7,11 @@ class CreationZone extends EntityContainer {
     let creationList
     if (this.props.contents.length > 0) {
       creationList = this.props.contents.map((creation) => 
-        <Creation object={creation} selections={this.props.selections} />
+        <Creation big={false} hover={false} object={creation} selections={this.props.selections} />
       )
     } else {
       creationList = [
-        <p>No creations in play.</p>,
+        <p className='emptyZone'>No creations in play.</p>,
       ]
     }
 

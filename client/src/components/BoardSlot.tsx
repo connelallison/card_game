@@ -1,21 +1,23 @@
 import React from 'react'
+import Card from './Card'
 import Follower from './Follower'
-import TargetableEntity from './TargetableEntity'
 
-class BoardSlot extends TargetableEntity {
+class BoardSlot extends Card {
     render() {
-        const styleClasses = this.outlineStatus() + ' card boardSlot'
         let slot
         if (this.props.object.follower) {
-            slot = <Follower object={this.props.object.follower} selections={this.props.selections} />
+            slot = <Follower big={false} hover={false} object={this.props.object.follower} selections={this.props.selections} />
         } else {
-            slot = <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={styleClasses}>
-                <p>Empty Slot</p>
-                <div className="multicolour-line">
-                    {this.statLabel('attack')}
-                    {this.statLabel('health')}
+            slot = (
+                <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={this.styleClasses()}>
+                    <p>Empty Slot</p>
+                    <div className="multicolour-line">
+                        {this.statLabel('attack')}
+                        {this.statLabel('health')}
+                    </div>
+                    {this.addedText()}
                 </div>
-            </div>
+            )
         }
         return slot
     }

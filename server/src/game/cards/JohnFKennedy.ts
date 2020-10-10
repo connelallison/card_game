@@ -23,8 +23,10 @@ const data: FamousFollowerData = {
             english: `Event and Death: Gain +2 Fervour until the end of your turn.`,
         },
     },
+    tooltips: ['fervour'],
     events: [{
         actionType: 'eventAction',
+        id: 'JohnFKennedyEvent',
         name: {
             english: 'John F. Kennedy Event'
         },
@@ -43,9 +45,9 @@ const data: FamousFollowerData = {
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'addStatEnchantment',
+                operation: 'addStatEffect',
                 values: {
-                    statEnchantmentID: 'Fervour',
+                    statEffectID: 'Fervour',
                     statValue: 2,
                     expires: ['ExpiresEndOfMyTurn']
                 },
@@ -54,6 +56,7 @@ const data: FamousFollowerData = {
     }],
     deathEvents: [{
         actionType: 'deathAction',
+        id: 'JohnFKennedyDeathEvent',
         name: {
             english: 'John F. Kennedy Death Event'
         },
@@ -72,9 +75,9 @@ const data: FamousFollowerData = {
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'addStatEnchantment',
+                operation: 'addStatEffect',
                 values: {
-                    statEnchantmentID: 'Fervour',
+                    statEffectID: 'Fervour',
                     statValue: 2,
                     expires: ['ExpiresEndOfMyTurn']
                 },

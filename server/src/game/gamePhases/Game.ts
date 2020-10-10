@@ -87,11 +87,11 @@ class Game extends GamePhase {
 
   prepareGameState(player: GamePlayer) {
     const opponentHand = []
-    for (let i = 0; i < player.opponent.hand.length; i++) {
+    for (let i = 0; i < player.opponentPlayer.hand.length; i++) {
       opponentHand.push({ name: 'Unknown Card', type: 'unknown' })
     }
     const opponentDeck = []
-    for (let i = 0; i < player.opponent.deck.length; i++) {
+    for (let i = 0; i < player.opponentPlayer.deck.length; i++) {
       opponentDeck.push({ name: 'Unknown Card', type: 'unknown' })
     }
     const gameState = {
@@ -110,14 +110,14 @@ class Game extends GamePhase {
         deck: player.deckReport(),
       },
       opponent: {
-        name: player.opponent.playerName,
-        stats: player.opponent.statsReport(),
-        passives: player.opponent.passivesReport(),
-        creations: player.opponent.creationsReport(),
-        board: player.opponent.boardReport(),
-        leaderTechnique: player.opponent.leaderTechniqueReport(),
-        leader: player.opponent.leaderReport(),
-        legacy: player.opponent.legacyReport(),
+        name: player.opponentPlayer.playerName,
+        stats: player.opponentPlayer.statsReport(),
+        passives: player.opponentPlayer.passivesReport(),
+        creations: player.opponentPlayer.creationsReport(),
+        board: player.opponentPlayer.boardReport(),
+        leaderTechnique: player.opponentPlayer.leaderTechniqueReport(),
+        leader: player.opponentPlayer.leaderReport(),
+        legacy: player.opponentPlayer.legacyReport(),
         hand: opponentHand,
         deck: opponentDeck,
       },
@@ -132,10 +132,10 @@ class Game extends GamePhase {
 
   announceNewTurn() {
     if (this.player1.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.activeChild.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.activeChild.turnEnd)
     }
     if (this.player2.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.activeChild.turnLength)
+      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.activeChild.turnEnd)
     }
     //  else {
     //   serverEvent.emit("newTurnTimer", this.turnLength);
@@ -162,7 +162,9 @@ class Game extends GamePhase {
     const options: OptionChoice[] = moveRequest.options?.map(optionChoice => this.parseOptionChoice(optionChoice)) ?? []
     const actions: GameObject[][][] = moveRequest.actions?.map(actionTargets => this.parseActionTargets(actionTargets)) ?? [[[]]]
 
-    if (selected instanceof Character && selected.inPlay() && attackTarget instanceof Character && attackTarget.inPlay()) {
+    if (!selected) {
+      console.log('Move request with no selected: ', JSON.stringify(moveRequest))
+    } else if (selected instanceof Character && selected.inPlay() && attackTarget instanceof Character && attackTarget.inPlay()) {
       // character in play attacking
       this.executeAttackRequest(selected, attackTarget)
     } else if (
@@ -233,8 +235,8 @@ class Game extends GamePhase {
   initPlayers() {
     this.player1 = new GamePlayer(this, this.player1name, this.player1socketID)
     this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
-    this.player1.opponent = this.player2
-    this.player2.opponent = this.player1
+    this.player1.opponentPlayer = this.player2
+    this.player2.opponentPlayer = this.player1
     if (this.botPlayer1) {
       this.player1.bot = true
     } else {
@@ -259,17 +261,21 @@ class Game extends GamePhase {
 
   initListeners() {
     if (this.player1.socketID) {
+      serverEvent.removeAllListeners(`playerMoveRequest:${this.player1.socketID}`)
       serverEvent.on(`playerMoveRequest:${this.player1.socketID}`, (moveRequest) => {
         this.executeMoveRequest(moveRequest, this.player1)
       })
+      serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player1.socketID}`)
       serverEvent.on(`playerEndTurnRequest:${this.player1.socketID}`, () => {
         this.executeEndTurnRequest(this.player1)
       })
+      serverEvent.removeAllListeners(`playerEndGameRequest:${this.player1.socketID}`)
       serverEvent.on(`playerEndGameRequest:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} conceded - ending game`)
         this.player1.conceded = true
         this.end()
       })
+      serverEvent.removeAllListeners(`playerDisconnected:${this.player1.socketID}`)
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} disconnected - ending game`)
         this.player1.disconnected = true
@@ -277,17 +283,21 @@ class Game extends GamePhase {
       })
     }
     if (this.player2.socketID) {
+      serverEvent.removeAllListeners(`playerMoveRequest:${this.player2.socketID}`)
       serverEvent.on(`playerMoveRequest:${this.player2.socketID}`, (moveRequest) => {
         this.executeMoveRequest(moveRequest, this.player2)
       })
+      serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player2.socketID}`)
       serverEvent.on(`playerEndTurnRequest:${this.player2.socketID}`, () => {
         this.executeEndTurnRequest(this.player2)
       })
+      serverEvent.removeAllListeners(`playerEndGameRequest:${this.player2.socketID}`)
       serverEvent.on(`playerEndGameRequest:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} conceded - ending game`)
         this.player2.conceded = true
         this.end()
       })
+      serverEvent.removeAllListeners(`playerDisconnected:${this.player2.socketID}`)
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} disconnected - ending game`)
         this.player2.disconnected = true
@@ -301,6 +311,7 @@ class Game extends GamePhase {
       serverEvent.removeAllListeners(`playerMoveRequest:${this.player1.socketID}`)
       serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player1.socketID}`)
       serverEvent.removeAllListeners(`playerDisconnected:${this.player1.socketID}`)
+      serverEvent.removeAllListeners(`playerEndGameRequest:${this.player1.socketID}`)
       // serverEvent.removeAllListeners(`newGameStatus:${this.player1.socketID}`)
       // serverEvent.removeAllListeners(`newTurnTimer:${this.player1.socketID}`)
     }
@@ -308,6 +319,7 @@ class Game extends GamePhase {
       serverEvent.removeAllListeners(`playerMoveRequest:${this.player2.socketID}`)
       serverEvent.removeAllListeners(`playerEndTurnRequest:${this.player2.socketID}`)
       serverEvent.removeAllListeners(`playerDisconnected:${this.player2.socketID}`)
+      serverEvent.removeAllListeners(`playerEndGameRequest:${this.player2.socketID}`)
       // serverEvent.removeAllListeners(`newGameStatus:${this.player2.socketID}`)
       // serverEvent.removeAllListeners(`newTurnTimer:${this.player2.socketID}`)
     }

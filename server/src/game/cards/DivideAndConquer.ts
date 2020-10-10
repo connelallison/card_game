@@ -22,6 +22,7 @@ const data: ActionMomentData = {
     },
     actions: [{
         actionType: 'actionAction',
+        id: 'DivideAndConquer',
         name: {
             english: 'Divide And Conquer'
         },

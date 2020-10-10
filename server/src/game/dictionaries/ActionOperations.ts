@@ -88,7 +88,7 @@ const ActionOperations = {
     },
 
     gainArmour: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { armour: number, opponent?: boolean }) => {
-        const player = values.opponent ? source.controller().opponent : source.controller()
+        const player = values.opponent ? source.opponent() : source.controller()
         player.gainArmour(values.armour)
     },
 
@@ -103,89 +103,116 @@ const ActionOperations = {
         source.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
     },
 
-    addTargetedEnchantment: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { enchantmentID: EnchantmentIDString, target: GameObject[], expires?: EnchantmentExpiryIDString[] }) => {
+    addTargetedEffect: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { effectID: EffectIDString, target: GameObject[], expires?: EffectExpiryIDString[] }) => {
         targetObjs.forEach(target => {
-            const enchantment = new Enchantments[values.enchantmentID](source.game, target)
-            ActionOperations.rememberTarget(enchantment, event, values.target, { param: 'target' })
-            if (values.expires) enchantment.addExpiries(values.expires)
-            target.addEnchantment(enchantment)
+            const effect = new Effects[values.effectID](source.game, target)
+            ActionOperations.rememberTarget(effect, event, values.target, { param: 'target' })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
         })
     },
 
-    addStatEnchantment: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { statEnchantmentID: StatStaticEnchantmentIDString, statValue: number, expires?: EnchantmentExpiryIDString[] }) => {
+    addStatEffect: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { statEffectID: StatStaticEffectIDString, statValue: number, expires?: EffectExpiryIDString[] }) => {
         targetObjs.forEach(target => {
-            const enchantment = new StatStaticEnchantments[values.statEnchantmentID](source.game, target, { statValue: values.statValue })
-            if (values.expires) enchantment.addExpiries(values.expires)
-            target.addEnchantment(enchantment)
+            const effect = new StatStaticEffects[values.statEffectID](source.game, target, { statValue: values.statValue })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
         })
     },
 
-    addEnchantment: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { enchantmentID: EnchantmentIDString, expires?: EnchantmentExpiryIDString[] }) => {
+    addEffect: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { effectID: EffectIDString, expires?: EffectExpiryIDString[] }) => {
         targetObjs.forEach(target => {
-            // console.log(values.enchantmentID)
-            const enchantment = new Enchantments[values.enchantmentID](source.game, target)
-            if (values.expires) enchantment.addExpiries(values.expires)
-            target.addEnchantment(enchantment)
+            // console.log(values.effectID)
+            const effect = new Effects[values.effectID](source.game, target)
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
         })
     },
 
-    buffAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EnchantmentExpiryIDString[] }) => {
+    copyEurekasToTarget: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        const sourceCard = source as Card
+        targetObjs.forEach((target: Card) => {
+            sourceCard.actions.filter(action => action.eureka).forEach(eureka => {
+                target.addAction(JSON.parse(JSON.stringify(eureka)))
+            })
+        })
+    },
+
+    buffAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
         if (attack === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const enchantment = new Enchantments.AttackBuff(source.game, target, { attack: attack })
-            if (values.expires) enchantment.addExpiries(values.expires)
-            target.addEnchantment(enchantment)
+            const effect = new Effects.AttackBuff(source.game, target, { attack, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
         })
     },
 
-    buffHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EnchantmentExpiryIDString[] }) => {
+    buffHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
         if (health === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const enchantment = new Enchantments.HealthBuff(source.game, target, { health: health })
-            if (values.expires) enchantment.addExpiries(values.expires)
-            target.addEnchantment(enchantment)
+            const effect = new Effects.HealthBuff(source.game, target, { health, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
         })
     },
 
-    buffStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EnchantmentExpiryIDString[] }) => {
+    buffStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const stats = values.stats <= 0 ? 0 : split ? truncate(values.stats / targets.length) : values.stats
         if (stats === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const enchantment = new Enchantments.AttackAndHealthBuff(source.game, target, { attack: stats, health: stats })
-            if (values.expires) enchantment.addExpiries(values.expires)
-            target.addEnchantment(enchantment)
+            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack: stats, health: stats, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
         })
     },
 
-    buffAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EnchantmentExpiryIDString[] }) => {
+    buffAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
         const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
         if (attack === 0 && health === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const enchantment = new Enchantments.AttackAndHealthBuff(source.game, target, { attack: attack, health: health })
-            if (values.expires) enchantment.addExpiries(values.expires)
-            target.addEnchantment(enchantment)
+            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack, health, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    reduceCost: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Card[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const money = values.money <= 0 ? 0 : split ? truncate(values.money / targets.length) : values.money
+        if (money === 0) return
+        const buffName = values.buffName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.CostReduction(source.game, target, { money, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
         })
     },
 
     createAndSummonCard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cardID: string, number?: number, forOpponent?: boolean }) => {
         const targetSlot = (targetObjs && targetObjs[0] instanceof BoardSlot) ? targetObjs[0] as BoardSlot
             : (source instanceof Follower && source.inPlay()) ? source.slot : null
-        const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.controller().opponent
+        const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
         const number = values.number === undefined ? 1 : values.number
         const cardID = values.cardID as PersistentCardIDString
         if (typeof cardID !== 'string') throw ('cardID is not a string')
@@ -219,7 +246,7 @@ const ActionOperations = {
     // },
 
     spendMoney: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, forOpponent?: boolean }) => {
-        const player = values.forOpponent ? source.controller().opponent : source.controller()
+        const player = values.forOpponent ? source.opponent() : source.controller()
         if (!(source instanceof Card)) throw Error(`spending money on something other than a card: ${source.name.english}`)
         const spendMoneyEvent = new SpendMoneyEvent(source.game, {
             player,
@@ -254,6 +281,14 @@ const ActionOperations = {
                 defender,
             })
             source.game.startNewDeepestPhase('AttackPhase', attackEvent)
+        })
+    },
+
+    setIndex: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { index: number }) => {
+        targetObjs.forEach((target: Card) => {
+            const moveTarget = (target instanceof Follower && target.zone === 'board') ? target.slot : target
+            const zone = moveTarget.controller()[moveTarget.zone] as GameObject[]
+            zone.splice(values.index, 0, zone.splice(moveTarget.index(), 1)[0])
         })
     },
 
@@ -335,10 +370,10 @@ const ActionOperations = {
         if (targetObjs[0]) event.stored[values.param] = targetObjs[0]
     },
 
-    enchantmentExpiry: (source: GameObject, event: ActionEvent) => {
-        const expiryTrigger = source as Enchantment
-        const enchantment = expiryTrigger.owner as Enchantment
-        enchantment.expire()
+    effectExpiry: (source: GameObject, event: ActionEvent) => {
+        const expiryTrigger = source as Effect
+        const effect = expiryTrigger.owner as Effect
+        effect.expire()
     },
 }
 
@@ -346,22 +381,24 @@ export default ActionOperations
 
 import GameObject from '../gameObjects/GameObject'
 import Character from '../gameObjects/Character'
-import Enchantments, { StatStaticEnchantments } from './Enchantments'
+import Effects, { StatStaticEffects } from './Effects'
 import PersistentCard from '../gameObjects/PersistentCard'
 import ActionEvent from '../gamePhases/ActionEvent'
 import { DamageEvent } from '../gamePhases/DamageSinglePhase'
 import { HealingEvent } from '../gamePhases/HealSinglePhase'
 import { ProposedDrawEvent } from '../gamePhases/ProposedDrawPhase'
-import { CardIDString, EnchantmentExpiryIDString, EnchantmentIDString, PersistentCardIDString, StatStaticEnchantmentIDString } from '../stringTypes/DictionaryKeyString'
+import { CardIDString, EffectExpiryIDString, EffectIDString, PersistentCardIDString, StatStaticEffectIDString } from '../stringTypes/DictionaryKeyString'
 import { SummonEvent } from '../gamePhases/SummonPhase'
 import { EnterPlayEvent } from '../gamePhases/EnterPlayPhase'
 import DestroyableCard from '../gameObjects/DestroyableCard'
 import Follower from '../gameObjects/Follower'
 import BoardSlot from '../gameObjects/BoardSlot'
 import Card from '../gameObjects/Card'
-import Enchantment from '../gameObjects/Enchantment'
+import Effect from '../gameObjects/Effect'
 import { TargetRequirement } from '../structs/Requirement'
 import SpendMoneyPhase, { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'
 import { AttackEvent } from '../gamePhases/AttackPhase'
 import Creation from '../gameObjects/Creation'
+import { LocalisedStringObject } from '../structs/Localisation'
+import Game from '../gamePhases/Game'
 

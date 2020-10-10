@@ -24,7 +24,7 @@ const data: NamelessFollowerData = {
           english: `Your other followers have +1 Attack.`,
       },
   },
-  enchantments: ['JuniorOrcAura'],
+  effects: ['JuniorOrcAura'],
 }
 
 class JuniorOrc extends NamelessFollower {

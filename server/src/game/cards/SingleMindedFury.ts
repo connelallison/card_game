@@ -14,7 +14,7 @@ const data: PermanentPassiveData = {
     collectable: true,
     cost: 4,
     ethos: true,
-    enchantments: ['SingleMindedFuryTrigger'],
+    effects: ['SingleMindedFuryTrigger'],
     staticText: {
         english: `Passive: Your opponent's most recently summoned minion takes 1 extra damage from all sources.`,
     },
@@ -30,7 +30,7 @@ const data: PermanentPassiveData = {
                     stringMap: "name",
                     target: lastEnemyFollowerEnteredPlay,
                 },
-                activeZones: ['passiveZone'],
+                activeZones: 'inPlay',
                 default: '',
                 templates: {
                     english: '($)'

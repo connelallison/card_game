@@ -16,21 +16,22 @@ const data: FamousFollowerData = {
   attack: 3,
   health: 5,
   staticText: {
-    english: `Event: Give all followers in your hand +1/+1 for every Knight you control.`,
+    english: `Event: Give all followers in your hand +1/+1 for every Citizen you control.`,
   },
   text: {
     templates: {
-      english: `Event: Give all followers in your hand +1/+1 for every Knight you control.`,
+      english: `Event: Give all followers in your hand +1/+1 for every Citizen you control.`,
     },
   },
   events: [{
     actionType: 'eventAction',
+    id: 'PrinceTimothyEvent',
     name: {
       english: 'Prince Timothy Event'
     },
     text: {
       templates: {
-        english: `Event: Give all followers in your hand +1/+1 for every Knight you control.`,
+        english: `Event: Give all followers in your hand +1/+1 for every Citizen you control.`,
       },
     },
     actionSteps: [{
@@ -51,6 +52,7 @@ const data: FamousFollowerData = {
         functionType: 'autoAction',
         operation: 'buffStats',
         values: {
+          buffName: { english: 'Prince Timothy Buff'},
           stats: {
             valueType: 'number',
             from: 'numbers',
@@ -65,7 +67,7 @@ const data: FamousFollowerData = {
                 requirements: [{
                   targetRequirement: 'isSpecificCardClass',
                   values: {
-                    cardID: 'Knight',
+                    cardID: 'Citizen',
                   }
                 }],
                 targetDomain: 'friendlyBoard',

@@ -12,7 +12,6 @@ const data: LeaderData = {
   classes: ['Empire'],
   collectable: true,
   cost: 0,
-  attack: 1,
   health: 4,
   leaderTechniqueID: 'OrkusTheOrkestSmash',
   staticText: {

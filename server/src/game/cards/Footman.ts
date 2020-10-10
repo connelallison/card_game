@@ -24,7 +24,7 @@ const data: NamelessFollowerData = {
           english: `Has +2 Attack during your turn.`,
       },
   },
-  enchantments: ['FootmanAura'],
+  effects: ['FootmanAura'],
 }
 
 class Footman extends NamelessFollower {

@@ -103,6 +103,7 @@ io.on('connection', function (socket) {
       }
     }
   })
+  
   socket.on('newMoveRequest', function (moveRequest) {
     // console.log(moveRequest)
     serverEvent.emit(`playerMoveRequest:${socketID}`, moveRequest)

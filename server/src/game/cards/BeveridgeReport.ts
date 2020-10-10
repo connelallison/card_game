@@ -3,31 +3,34 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: WorkCreationData = {
-    id: 'HolyBook',
+    id: 'BeveridgeReport',
     name: {
-        english: `Holy Book`,
+        english: `Beveridge Report`,
     },
     type: 'Creation',
     subtype: 'Work',
     classes: ['Economy'],
     collectable: true,
-    cost: 2,
+    cost: 1,
     charges: 3,
     staticText: {
-        english: `At the end of your turn, restore 2 Health to all friendly characters.`,
+        english: `Rent 1 \nAt the end of your turn, give your followers +1 Health.`,
     },
     text: {
         templates: {
-            english: `At the end of your turn, restore 2 Health to all friendly characters.`,
+            english: `Rent 1 \nAt the end of your turn, give your followers +1 Health.`,
         },
     },
-    effects: ['HolyBookTrigger'],
+    stats: {
+        Rent: 1,
+    },
+    effects: ['BeveridgeReportTrigger'],
 }
 
-class HolyBook extends WorkCreation {
+class BeveridgeReport extends WorkCreation {
     static readonly data: WorkCreationData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default HolyBook
+export default BeveridgeReport

@@ -2,7 +2,7 @@ import React from 'react'
 
 const GameStatus = (props) => {
   const activePlayer = props.mine ? 'My' : "Opponent's"
-  const turnTime = Math.max(0, props.turnEnd / 1000).toFixed(1)
+  const turnTime = Math.ceil(Math.max(0, props.turnEnd / 1000))
 
   let gameStatus
   if (!props.started) {

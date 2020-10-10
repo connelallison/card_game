@@ -25,6 +25,7 @@ const data: FamousFollowerData = {
   },
   actions: [{
     actionType: 'actionAction',
+    id: 'OrpheusAction',
     name: {
       english: 'Orpheus Action'
     },

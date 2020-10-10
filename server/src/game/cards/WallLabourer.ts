@@ -9,7 +9,7 @@ const data: NamelessFollowerData = {
     },
     type: 'Follower',
     subtype: 'Nameless',
-    classes: ['All'],
+    classes: ['Infamy'],
     categories: [],
     collectable: true,
     cost: 1,
@@ -29,13 +29,13 @@ const data: NamelessFollowerData = {
                 from: 'fervour',
                 base: 3
             },
-            activeZones: ['hand'],
             default: 3,
             fervour: true,
         }]
     },
     actions: [{
         actionType: 'actionAction',
+        id: 'WallLabourerAction',
         name: {
             english: 'Wall Labourer Action'
         },
@@ -49,12 +49,12 @@ const data: NamelessFollowerData = {
                     from: 'fervour',
                     base: 3
                 },
-                activeZones: ['hand'],
                 default: 3,
                 fervour: true,
             }]
         },
         actionSteps: [{
+            activeHighlight: true,
             requirements: [{
                 customRequirement: {
                     valueType: 'boolean',

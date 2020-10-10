@@ -11,8 +11,8 @@ const data: AuraEffectData = {
     subtype: 'Aura',
     text: { templates: { english: `+2 Attack` } },
     priority: 1,
-    activeZones: ['board'],
-    activeTypes: ['Follower'],
+    activeZones: 'inPlay',
+    activeTypes: 'Character',
     targets: {
         valueType: 'targets',
         from: 'targetDomain',

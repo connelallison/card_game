@@ -10,7 +10,6 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Rush` } },
-    activeZones: ['board', 'hand', 'deck'],
     activeTypes: ['Follower'],
     effectObjs: [{
         operation: 'rush',

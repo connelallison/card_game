@@ -6,8 +6,9 @@ export interface EffectData {
     type: 'Effect'
     subtype: EffectSubtypeString
     text: DynamicTextObject
-    activeZones: ZoneString[]
-    activeTypes: ObjectTypeString[]
+    activeZones?: ActiveZones
+    activeTypes?: ActiveTypes
+    activeSubtypes?: ActiveSubtypes
     activeRequirements?: ActiveRequirement[]
     expires?: EffectExpiryIDString[]
 }
@@ -22,6 +23,7 @@ abstract class Effect extends GameObject {
     text: DynamicTextObject
     activeZones: ZoneString[]
     activeTypes: ObjectTypeString[]
+    activeSubtypes: ObjectSubtypeString[]
     activeRequirements: ActiveRequirement[]
     active: boolean
 
@@ -30,8 +32,9 @@ abstract class Effect extends GameObject {
         this.owner = owner
         this.zone = this.owner.zone
         this.text = data.text
-        this.activeZones = data.activeZones
-        this.activeTypes = data.activeTypes
+        this.activeZones = this.parseActiveZones(data.activeZones)
+        this.activeTypes = this.parseActiveTypes(data.activeTypes)
+        this.activeSubtypes = this.parseActiveSubtypes(data.activeSubtypes)
         this.activeRequirements = data.activeRequirements || []
         if (data.expires) this.addExpiries(data.expires)
         this.active = false
@@ -44,12 +47,13 @@ abstract class Effect extends GameObject {
 
     addExpiries(expiries: EffectExpiryIDString[]): void {
         expiries.forEach(effect => this.addBaseEffect(this.createEffect(effect, this)))
-      }
+    }
 
     updateActive(): boolean {
         this.zone = this.owner.zone
         const active = this.activeZones.includes(this.owner.zone)
             && this.activeTypes.includes(this.owner.type)
+            && this.activeSubtypes.includes(this.owner.subtype)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
         this.active = active
         this.updateEffects()
@@ -75,13 +79,13 @@ abstract class Effect extends GameObject {
         this.owner = null
     }
 
-    abstract clone(newOwner): Effect 
+    abstract clone(newOwner): Effect
 }
 
 export default Effect
 
 import Game from '../gamePhases/Game'
-import { EffectSubtypeString, ObjectTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
+import { ActiveSubtypes, ActiveTypes, ActiveZones, EffectSubtypeString, ObjectSubtypeString, ObjectTypeString, ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import EffectFunctionObject from '../structs/EffectFunctionObject'
 import EffectFunction from '../functionTypes/EffectFunction'
 import GameObjectData from '../structs/GameObjectData'
@@ -90,6 +94,4 @@ import EffectOperation from '../functionTypes/EffectOperation'
 import Character from './Character'
 import { EffectIDString, EffectExpiryIDString } from '../stringTypes/DictionaryKeyString'
 import { DynamicTextObject, LocalisedStringObject } from '../structs/Localisation'
-import { ActiveRequirement, ActiveRequirementShortcut } from '../structs/Requirement'
-
-
+import { ActiveRequirement } from '../structs/Requirement'

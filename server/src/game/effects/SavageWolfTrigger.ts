@@ -14,8 +14,8 @@ const data: TriggerEffectData = {
             english: `After a friendly follower dies, gain +2/+1.`,
         },
     },
+    activeZones: 'inPlay',
     activeTypes: ['Follower'],
-    activeZones: ['board'],
     repeatable: true,
     wonderTrigger: false,
     triggerObjs: [{
@@ -46,6 +46,7 @@ const data: TriggerEffectData = {
                 functionType: 'autoAction',
                 operation: 'buffAttackAndHealth',
                 values: {
+                    buffName: { english: 'Savage Wolf Buff' },
                     attack: 2,
                     health: 1,
                 },

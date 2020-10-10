@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: WonderCreationData = {
-    id: 'KnightAcademy',
+    id: 'CitizenAcademy',
     name: {
-        english: `Knight Academy`,
+        english: `Citizen Academy`,
     },
     type: 'Creation',
     subtype: 'Wonder',
@@ -14,20 +14,20 @@ const data: WonderCreationData = {
     cost: 2,
     charges: 3,
     staticText: {
-        english: `After you draw a follower, summon a 2/2 Knight.`,
+        english: `After you draw a follower, summon a 2/2 Citizen.`,
     },
     text: {
         templates: {
-            english: `After you draw a follower, summon a 2/2 Knight.`,
+            english: `After you draw a follower, summon a 2/2 Citizen.`,
         },
     },
-    effects: ['KnightAcademyTrigger'],
+    effects: ['CitizenAcademyTrigger'],
 }
 
-class KnightAcademy extends WonderCreation {
+class CitizenAcademy extends WonderCreation {
     static readonly data: WonderCreationData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default KnightAcademy
+export default CitizenAcademy

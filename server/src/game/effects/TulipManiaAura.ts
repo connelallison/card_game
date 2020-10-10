@@ -4,9 +4,9 @@ import GameObject from "../gameObjects/GameObject";
 import { sumFriendlyFollowersHealth } from "../dictionaries/DynamicValueShortcuts";
 
 const data: AuraEffectData = {
-    id: 'HolyProtectorsAura',
+    id: 'TulipManiaAura',
     name: {
-        english: `Holy Protectors Aura`,
+        english: `Tulip Mania Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
@@ -17,7 +17,7 @@ const data: AuraEffectData = {
         dynamicValues: [
             {
                 value: sumFriendlyFollowersHealth,
-                activeZones: ['passiveZone'],
+                activeZones: 'inPlay',
                 default: '',
                 templates: {
                     english: '(+$ Health)'
@@ -29,21 +29,23 @@ const data: AuraEffectData = {
         ]
     },
     priority: 3,
-    activeZones: ['passiveZone'],
-    activeTypes: ['Passive'],
+    activeZones: 'inPlay',
     effectFunction: {
         name: { english: `Holy Protectors Aura` },
         text: {
             templates: {
-                english: `Passive: Your leader gains (temporary) Health equal to the total Health of your followers. $0`,
+                english: `$0`,
             },
             dynamicValues: [
                 {
                     value: sumFriendlyFollowersHealth,
-                    activeZones: ['passiveZone'],
+                    activeZones: ['leaderZone'],
+                    // default: {
+                    //     english: '+0 Health'
+                    // },
                     default: '',
                     templates: {
-                        english: '(+$ Health)'
+                        english: '+$ Health'
                     },
                     requirements: [{
                         activeRequirement: 'charOwnerAlive',
@@ -63,10 +65,10 @@ const data: AuraEffectData = {
     }
 }
 
-class HolyProtectorsAura extends AuraEffect {
+class TulipManiaAura extends AuraEffect {
     static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default HolyProtectorsAura
+export default TulipManiaAura

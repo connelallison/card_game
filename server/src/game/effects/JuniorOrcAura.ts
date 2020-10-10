@@ -15,8 +15,7 @@ const data: AuraEffectData = {
         },
     },
     priority: 1,
-    activeZones: ['board'],
-    activeTypes: ['Follower'],
+    activeZones: 'inPlay',
     effectFunction: {
         name: {
             english: `Junior Orc Aura`,

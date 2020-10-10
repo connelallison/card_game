@@ -22,6 +22,7 @@ export interface TargetSelection {
     text: string
     hostile: boolean
     validTargets: string[]
+    highlightedTargets: string[]
 }
 
 abstract class TargetableEntity extends Component {
@@ -31,15 +32,30 @@ abstract class TargetableEntity extends Component {
     }
 
     targetType(): string {
-        return this.props.selections.targetSelection && this.props.selections.targetSelection.hostile ? 'hostileTarget' : 'nonHostileTarget'
+        return this.props.selections.targetSelection
+            && this.props.selections.targetSelection.highlightedTargets.includes(this.props.object.objectID)
+            ? 'highlightedTarget'
+            : this.props.selections.targetSelection.hostile
+                ? 'hostileTarget'
+                : 'nonHostileTarget'
     }
 
     outlineStatus(): string {
-        return this.props.selections.selectionsEnabled && this.props.selections.selected && this.props.selections.selected.includes(this.props.object) ? 'isSelected' : this.canBeTargeted() ? this.targetType() : ''
+        return (
+            this.props.selections.selectionsEnabled
+            && this.props.selections.selected
+            && this.props.selections.selected.includes(this.props.object)
+        )
+            ? 'isSelected'
+            : this.canBeTargeted()
+                ? this.targetType()
+                : 'notTargetable'
     }
 
     canBeTargeted(): boolean {
-        return this.props.selections.selectionsEnabled && this.props.selections.targetSelection && this.props.selections.targetSelection.validTargets.includes(this.props.object.objectID)
+        return this.props.selections.selectionsEnabled
+            && this.props.selections.targetSelection
+            && this.props.selections.targetSelection.validTargets.includes(this.props.object.objectID)
     }
 
     statLabel(stat: 'attack' | 'health' | 'cost' | 'charges' | 'armour'): JSX.Element | null {
@@ -54,6 +70,7 @@ abstract class TargetableEntity extends Component {
             stat === 'armour' || stat === 'charges'
             || this.props.object.type === 'BoardSlot'
             || (this.props.object.type === 'Leader' && stat === 'attack')
+            || (this.props.object.type === 'Passive')
         )
             ? this.props.object[stat] > 0
             : this.props.object[stat] !== null
@@ -62,7 +79,7 @@ abstract class TargetableEntity extends Component {
         ) : null
     }
 
-    abstract bigCard(): JSX.Element | null 
+    abstract hoverCard(object): JSX.Element | null 
 
     abstract render(): JSX.Element
 }

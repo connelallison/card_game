@@ -26,6 +26,7 @@ const data: NamelessFollowerData = {
     },
     actions: [{
         actionType: 'actionAction',
+        id: 'BodyDoubleAction',
         name: {
             english: 'Body Double Action'
         },

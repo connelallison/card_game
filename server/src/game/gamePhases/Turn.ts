@@ -9,13 +9,14 @@ class Turn extends GamePhase {
     nextActivePlayer: GamePlayer
     turnNumber: number
     turnLength: number
+    turnEnd: number
     endPromise: Promise<unknown>
 
     constructor(parent: Game, activePlayer: GamePlayer, turnNumber: number) {
         super()
         this.parent = parent
         this.activePlayer = activePlayer
-        this.nextActivePlayer = activePlayer.opponent
+        this.nextActivePlayer = activePlayer.opponentPlayer
         this.turnNumber = turnNumber
         this.turnLength = 45000
         this.endPromise = this.endTurnPromise()
@@ -30,8 +31,9 @@ class Turn extends GamePhase {
         promise.resolve = res;
         return promise;
     }
-
+    
     start() {
+        this.turnEnd = Date.now() + this.turnLength
         this.wait()
         this.startChild(this.startOfTurnSequence())
     }
@@ -80,7 +82,7 @@ class Turn extends GamePhase {
     }
 
     nextTurn(): Turn {
-        return new Turn(this.game(), this.activePlayer.opponent, this.turnNumber + 1)
+        return new Turn(this.game(), this.activePlayer.opponentPlayer, this.turnNumber + 1)
     }
 }
 

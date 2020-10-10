@@ -44,6 +44,8 @@ export type TriggerEffectIDString = keyof typeof TriggerEffects
 export type EffectExpiryIDString = keyof typeof EffectExpiries
 // // export type DynamicOrStoredEffectIDString = EffectIDString | DynamicOrStoredStringObject
 
+export type StatString = keyof StatsObject
+
 export type EffectOperationString = keyof typeof EffectOperations
 export type EventModOperationString = keyof typeof EventModOperations
 export type EventReducerString = keyof typeof DynamicEventReducers
@@ -57,6 +59,8 @@ export type TargetReducerString = keyof typeof DynamicTargetReducers
 export type TargetRequirementString = keyof typeof TargetRequirements
 export type TargetToNumberMapString = keyof typeof TargetToNumberMaps
 export type TargetToStringMapString = keyof typeof TargetToStringMaps
+export type TooltipString = keyof typeof Tooltips
+
 
 import ActionOperations from "../dictionaries/ActionOperations"
 import ActiveRequirements from "../dictionaries/ActiveRequirements"
@@ -96,3 +100,5 @@ import Phases from "../dictionaries/Phases"
 import EventRequirements from "../dictionaries/EventRequirements"
 import NumberToBooleanMaps from "../dictionaries/NumberToBooleanMaps"
 import DynamicNumberOperators from "../dictionaries/DynamicNumberOperators"
+import { StatsObject } from "../structs/GameObjectData"
+import Tooltips from "../dictionaries/Tooltips"

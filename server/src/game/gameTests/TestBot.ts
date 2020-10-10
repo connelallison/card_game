@@ -19,7 +19,7 @@ const TestBot = async (game: Game) => {
     if (!game.ended && game.activeChild.activePlayer.bot) {
         const player = game.activeChild.activePlayer
         await game.sleep(2500)
-        while (player.playableCards().length > 0) {
+        while (!game.ended && player.playableCards().length > 0) {
             const playableCard = player.playableCards()[0]
             const moveRequest: MoveRequest = {
                 selected: playableCard.objectID,
@@ -34,7 +34,7 @@ const TestBot = async (game: Game) => {
             game.executeMoveRequest(moveRequest, player)
             await game.sleep(1000)
         }
-        while (player.leaderTechniqueZone[0].canBeUsed()) {
+        while (!game.ended && player.leaderTechniqueZone[0].canBeUsed()) {
             const leaderTechnique = player.leaderTechniqueZone[0]
             const moveRequest: MoveRequest = {
                 selected: leaderTechnique.objectID,
@@ -48,7 +48,7 @@ const TestBot = async (game: Game) => {
             game.executeMoveRequest(moveRequest, player)
             await game.sleep(1000)
         }
-        while (player.creationZone.filter(creation => creation.subtype === 'Technique').filter((technique: TechniqueCreation) => technique.canBeUsed()).length > 0) {
+        while (!game.ended && player.creationZone.filter(creation => creation.subtype === 'Technique').filter((technique: TechniqueCreation) => technique.canBeUsed()).length > 0) {
             const useableTechnique = player.creationZone.filter(creation => creation.subtype === 'Technique').filter((technique: TechniqueCreation) => technique.canBeUsed())[0] as TechniqueCreation
             const moveRequest: MoveRequest = {
                 selected: useableTechnique.objectID,
@@ -62,7 +62,7 @@ const TestBot = async (game: Game) => {
             game.executeMoveRequest(moveRequest, player)
             await game.sleep(1000)
         }
-        while (player.boardFollowers().filter(follower => follower.attackTargets.length > 0).length > 0) {
+        while (!game.ended && player.boardFollowers().filter(follower => follower.attackTargets.length > 0).length > 0) {
             const follower = player.boardFollowers().filter(follower => follower.attackTargets.length > 0)[0]
             const moveRequest: MoveRequest = {
                 selected: follower.objectID,
@@ -76,24 +76,6 @@ const TestBot = async (game: Game) => {
             await game.sleep(1000)
         }
     }
-    // if (!game.ended && game.activeChild.activePlayer.bot) {
-    //     const readyFollowers = game.activeChild.activePlayer.boardFollowers().filter(follower => follower.canAttack())
-    //     for (const follower of readyFollowers) {
-    //         const targets = (follower.owner.opponent.boardFollowers() as Character[]).concat(follower.owner.opponent.leaderZone as Character[])
-    //         for (const target of targets) {
-    //             if (Permissions.canAttack(follower, target)) {
-    //                 await game.sleep(1000)
-    //                 const attackEvent = new AttackEvent(game, {
-    //                     attacker: follower,
-    //                     defender: target,
-    //                 })
-    //                 game.startSequence('ProposedAttackPhase', attackEvent)
-    //                 game.announceGameState()
-    //                 break
-    //             }
-    //         }
-    //     }
-    // }
     if (!game.ended && game.activeChild.activePlayer.bot) {
         // await game.sleep(2500)
         await game.sleep(500)

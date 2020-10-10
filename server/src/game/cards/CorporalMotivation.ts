@@ -26,7 +26,6 @@ const data: TechniqueCreationData = {
         from: 'fervour',
         base: 1,
       },
-      activeZones: ['hand', 'creationZone'],
       default: 1,
       fervour: true,
     }]
@@ -34,6 +33,7 @@ const data: TechniqueCreationData = {
   repeatable: false,
   actions: [{
     actionType: 'actionAction',
+    id: 'CorporalMotivationAction',
     name: {
       english: 'Corporal Motivation'
     },
@@ -47,7 +47,6 @@ const data: TechniqueCreationData = {
           from: 'fervour',
           base: 1,
         },
-        activeZones: ['hand', 'creationZone'],
         default: 1,
         fervour: true,
       }]
@@ -70,7 +69,6 @@ const data: TechniqueCreationData = {
               from: 'fervour',
               base: 1,
             },
-            activeZones: ['hand', 'creationZone'],
             default: 1,
             fervour: true,
           }]
@@ -90,6 +88,7 @@ const data: TechniqueCreationData = {
         functionType: 'manualAction',
         operation: 'buffAttack',
         values: {
+          buffName: { english: 'Corporal Motivation Buff' },
           attack: 3,
         },
       }]

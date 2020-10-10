@@ -4,9 +4,9 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import { sumFriendlyFollowersHealth } from "../dictionaries/DynamicValueShortcuts";
 
 const data: PermanentPassiveData = {
-    id: 'HolyProtectors',
+    id: 'TulipMania',
     name: {
-        english: `Holy Protectors`,
+        english: `Tulip Mania`,
     },
     type: 'Passive',
     subtype: 'Permanent',
@@ -23,7 +23,7 @@ const data: PermanentPassiveData = {
         dynamicValues: [
             {
                 value: sumFriendlyFollowersHealth,
-                activeZones: ['passiveZone'],
+                activeZones: 'inPlay',
                 default: '',
                 templates: {
                     english: '(+$ Health)'
@@ -34,14 +34,14 @@ const data: PermanentPassiveData = {
             }
         ]
     },
-    effects: ['HolyProtectorsAura'],
+    effects: ['TulipManiaAura'],
     ethos: true,
 }
 
-class HolyProtectors extends PermanentPassive {
+class TulipMania extends PermanentPassive {
     static readonly data: PermanentPassiveData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default HolyProtectors
+export default TulipMania

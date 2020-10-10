@@ -1,3 +1,17 @@
+export interface StaticObjectReport {
+  name: string
+  id: string
+  cost: number
+  attack?: number
+  health?: number
+  charges?: number
+  type: ObjectTypeString
+  subtype: ObjectSubtypeString
+  classes?: PlayerClassString[]
+  text: string
+  categories?: string[]
+}
+
 export interface ObjectReport {
   name: string
   id: string
@@ -8,6 +22,7 @@ export interface ObjectReport {
   charges?: number
   type: ObjectTypeString
   subtype: ObjectSubtypeString
+  classes?: PlayerClassString[]
   zone: string
   ownerName: string
   playerID: string
@@ -16,7 +31,10 @@ export interface ObjectReport {
   // validTargets: string[],
   staticText: string
   text: string
+  tooltips: LocalisedNameAndText[]
   addedText: LocalisedNameAndText[]
+  relatedCard: StaticObjectReport
+  categories?: string[]
   options: OptionActionReport[]
   actions: ActionActionReport[]
   validSlots?: ManualTargetReport
@@ -24,17 +42,18 @@ export interface ObjectReport {
 }
 
 export interface BoardSlotReport {
-  name: string,
-  id: string,
-  objectID: string,
-  attack: number,
-  health: number,
-  type: ObjectTypeString,
+  name: string
+  id: string
+  objectID: string
+  attack: number
+  health: number
+  type: ObjectTypeString
   subtype: ObjectSubtypeString
-  zone: string,
-  ownerName: string,
-  playerID: string,
-  follower: ObjectReport,
+  zone: string
+  ownerName: string
+  addedText: LocalisedNameAndText[]
+  playerID: string
+  follower: ObjectReport
 }
 
 export interface OptionActionReport {
@@ -57,6 +76,7 @@ export interface ManualTargetReport {
   text: string
   validTargets: string[]
   hostile: boolean
+  highlightedTargets: string[]
 }
 
 export interface MoveRequest {
@@ -67,6 +87,7 @@ export interface MoveRequest {
   actions: string[][][]
 }
 
+import PlayerClassString from "../stringTypes/PlayerClassString";
 import { ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
 import { OptionChoiceRequest } from "./Action";
 import { LocalisedNameAndText } from "./Localisation";

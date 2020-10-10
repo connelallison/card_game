@@ -20,7 +20,7 @@ export interface LocalisedNameAndText {
 export interface DynamicTextValueObject {
     value: DynamicValueObject
     default: string | number | LocalisedStringObject
-    activeZones: ZoneString[]
+    activeZones?: ZoneString[] | 'inPlay'
     templates?: LocalisedStringObject
     requirements?: ActiveRequirement[]
     fervour?: boolean

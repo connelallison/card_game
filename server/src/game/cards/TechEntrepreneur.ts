@@ -10,7 +10,7 @@ const data: NamelessFollowerData = {
     type: 'Follower',
     subtype: 'Nameless',
     classes: ['Economy'],
-    categories: [],
+    categories: ['Tech'],
     collectable: false,
     cost: 2,
     attack: 4,
@@ -24,13 +24,16 @@ const data: NamelessFollowerData = {
             english: `Option: Pay 1 Money now; or Debt 2; or Rent 1.`,
         },
     },
+    tooltips: ['debt', 'rent'],
     options: [{
         actionType: 'optionAction',
+        id: 'TechEntrepreneurOption',
         name: { english: 'Tech Entrepreneur Option' },
         text: { templates: { english: 'Option: Pay 1 Money now; or Debt 2; or Rent 1.' } },
         actions: [
             {
                 actionType: 'actionAction',
+                id: 'TechEntrepreneurBootstrap',
                 name: { english: 'Bootstrap' },
                 text: { templates: { english: 'Pay 1 Money now.' } },
                 actionSteps: [{
@@ -68,6 +71,7 @@ const data: NamelessFollowerData = {
             },
             {
                 actionType: 'actionAction',
+                id: 'TechEntrepreneurLoan',
                 name: { english: 'Loan' },
                 text: { templates: { english: 'Debt 2' } },
                 actionSteps: [{
@@ -94,8 +98,10 @@ const data: NamelessFollowerData = {
             },
             {
                 actionType: 'actionAction',
+                id: 'TechEntrepreneurVentureCapital',
                 name: { english: 'Venture Capital' },
                 text: { templates: { english: 'Rent 1' } },
+                activeTypes: 'Persistent',
                 actionSteps: [{
                     autoTargets: [{
                         targets: {

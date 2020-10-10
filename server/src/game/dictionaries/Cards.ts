@@ -50,23 +50,23 @@ EventMoment
 Leader
 
 import Footman from '../cards/Footman'
-import RoyalGuard from '../cards/RoyalGuard'
+import Lictor from '../cards/Lictor'
 import JuniorOrc from '../cards/JuniorOrc'
 import SavageWolf from '../cards/SavageWolf'
 import Fireburst from '../cards/Fireburst'
 import Consume from '../cards/Consume'
-import HolyBook from '../cards/HolyBook'
+import BeveridgeReport from '../cards/BeveridgeReport'
 import ClubOfLooting from '../cards/ClubOfLooting'
-import KnightAcademy from '../cards/KnightAcademy'
-import Knight from '../cards/Knight'
+import CitizenAcademy from '../cards/CitizenAcademy'
+import Citizen from '../cards/Citizen'
 import CorporalMotivation from '../cards/CorporalMotivation'
 import Orcissimus from '../cards/Orcissimus'
-import KingFredTheSaintlyRecruit from '../cards/KingFredTheSaintlyRecruit'
+import NapoleonBonaparteLeveeEnMasse from '../cards/NapoleonBonaparteLeveeEnMasse'
 import OrkusTheOrkest from '../cards/OrkusTheOrkest'
 import OrkusTheOrkestSmash from '../cards/OrkusTheOrkestSmash'
-import KingFredTheSaintly from '../cards/KingFredTheSaintly'
+import NapoleonBonaparte from '../cards/NapoleonBonaparte'
 import PrinceTimothy from '../cards/PrinceTimothy'
-import HolyProtectors from '../cards/HolyProtectors'
+import TulipMania from '../cards/TulipMania'
 import SingleMindedFury from '../cards/SingleMindedFury'
 import CombatTraining from '../cards/CombatTraining'
 import BattleOfSuiyang from '../cards/BattleOfSuiyang'
@@ -80,17 +80,26 @@ import TechEntrepreneur from '../cards/TechEntrepreneur'
 import DivideAndConquer from '../cards/DivideAndConquer'
 import Orpheus from '../cards/Orpheus'
 import JohnTheBaptist from '../cards/JohnTheBaptist'
+import Slave from '../cards/Slave'
+import Spartacus from '../cards/Spartacus'
+import SpartacusSolidarity from '../cards/SpartacusSolidarity'
+import JohannesGutenberg from '../cards/JohannesGutenberg'
+import MelvilDewey from '../cards/MelvilDewey'
+import NikolaTesla from '../cards/NikolaTesla'
+import Konigstiger from '../cards/Konigstiger'
 
 export const NamelessFollowers = {
   Footman,
-  RoyalGuard,
+  Lictor,
   SavageWolf,
   JuniorOrc,
-  Knight,
+  Citizen,
   SuicideBomber,
   BodyDouble,
   WallLabourer,
   TechEntrepreneur,
+  Slave,
+  Konigstiger,
 }
 
 export const FamousFollowers = {
@@ -100,6 +109,9 @@ export const FamousFollowers = {
   JohnFKennedy,
   Orpheus,
   JohnTheBaptist,
+  JohannesGutenberg,
+  MelvilDewey,
+  NikolaTesla,
 }
 
 export const ActionMoments = {
@@ -114,7 +126,7 @@ export const EventMoments = {
 }
 
 export const WorkCreations = {
-  HolyBook,
+  BeveridgeReport,
 }
 
 export const WeaponCreations = {
@@ -122,7 +134,7 @@ export const WeaponCreations = {
 }
 
 export const WonderCreations = {
-  KnightAcademy,
+  CitizenAcademy,
 }
 
 export const TechniqueCreations = {
@@ -134,24 +146,33 @@ export const PermanentPassives = {
 }
 
 export const EthosPassives = {
-  HolyProtectors,
+  TulipMania,
   SingleMindedFury,
 }
 
 export const ActiveLeaderTechniques = {
   OrkusTheOrkestSmash,
-  KingFredTheSaintlyRecruit,
+  NapoleonBonaparteLeveeEnMasse,
+}
+
+export const PassiveLeaderTechniques = {
+  SpartacusSolidarity,
+}
+
+export const StarterLeaders = {
+  OrkusTheOrkest,
+  NapoleonBonaparte,
 }
 
 export const Leaders = {
-  OrkusTheOrkest,
-  KingFredTheSaintly,
+  ...StarterLeaders,
+  Spartacus,
 }
 
 export const Followers =  {...NamelessFollowers, ...FamousFollowers}
 export const Characters = {...Leaders, ...Followers}
 export const Creations = {...WorkCreations, ...WeaponCreations, ...WonderCreations, ...TechniqueCreations}
-export const LeaderTechniques = {...ActiveLeaderTechniques}
+export const LeaderTechniques = {...ActiveLeaderTechniques, ...PassiveLeaderTechniques}
 export const Passives = {...PermanentPassives, ...EthosPassives}
 export const Moments = {...ActionMoments, ...EventMoments}
 export const DestroyableCards = {...Characters, ...Creations}

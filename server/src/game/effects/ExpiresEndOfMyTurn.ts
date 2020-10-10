@@ -12,7 +12,6 @@ const data: TriggerEffectData = {
     text: { templates: { english: `Expires at the end of my turn.` } },
     repeatable: false,
     wonderTrigger: false,
-    activeZones: ['board', 'creationZone', 'deck', 'legacy', 'hand', 'leaderTechniqueZone', 'leaderZone', 'passiveZone', 'setAsideZone', 'global'],
     activeTypes: ['Effect'],
     triggerObjs: [{
         actionType: 'triggerAction',

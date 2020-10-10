@@ -10,7 +10,6 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Guard` } },
-    activeZones: ['board'],
     activeTypes: ['Follower'],
     effectObjs: [{
         operation: 'guard',

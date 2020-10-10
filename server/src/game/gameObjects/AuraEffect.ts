@@ -6,7 +6,7 @@ export interface AuraEffectData extends EffectData {
     targets: DynamicTargetsObject
     // targetDomain: TargetsDomainString | TargetsDomainString[]
     // targetRequirements?: TargetRequirement[]
-    priority: 1 | 2 | 3
+    priority: 0 | 1 | 2 | 3
 }
 
 abstract class AuraEffect extends Effect {
@@ -40,6 +40,7 @@ abstract class AuraEffect extends Effect {
         this.zone = this.owner.zone
         const active = this.activeZones.includes(this.owner.zone)
             && this.activeTypes.includes(this.owner.type)
+            && this.activeSubtypes.includes(this.owner.subtype)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
         if (!this.active && active) {
             this.game.event.on(`auraEmit${this.priority}`, this.emit)
@@ -63,6 +64,10 @@ abstract class AuraEffect extends Effect {
         const clone = new Effects[this.id](this.game, newOwner) as AuraEffect
         clone.data.effectFunction = JSON.parse(JSON.stringify(this.data.effectFunction))
         clone.effectFunction = clone.wrappedEffectFunction(clone.data.effectFunction)
+        clone.data.name = JSON.parse(JSON.stringify(this.data.name))
+        clone.name = JSON.parse(JSON.stringify(this.name))
+        clone.data.text = JSON.parse(JSON.stringify(this.data.text))
+        clone.text = JSON.parse(JSON.stringify(this.text))
         return clone
     }
 }

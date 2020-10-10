@@ -1,6 +1,6 @@
 interface EffectFunctionObject {
     operation: EffectOperationString
-    value: DynamicBoolean | DynamicNumber
+    value: DynamicBoolean | DynamicNumber | DynamicString | LocalisedStringObject
   }
 
 export default EffectFunctionObject
@@ -19,5 +19,5 @@ export interface AuraEffectFunction {
 
 import EffectFunction from "../functionTypes/EffectFunction";
 import { EffectOperationString } from "../stringTypes/DictionaryKeyString";
-import { DynamicNumber, DynamicBoolean } from "./DynamicValue";
+import { DynamicNumber, DynamicBoolean, DynamicString } from "./DynamicValue";
 import { DynamicTextObject, LocalisedStringObject } from "./Localisation";

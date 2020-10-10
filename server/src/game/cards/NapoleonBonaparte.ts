@@ -3,18 +3,17 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: LeaderData = {
-    id: 'KingFredTheSaintly',
+    id: 'NapoleonBonaparte',
     name: {
-        english: `King Fred, the Saintly`,
+        english: `Napoleon Bonaparte`,
     },
     type: 'Leader',
     subtype: 'Leader',
     classes: ['The People'],
     collectable: true,
     cost: 0,
-    attack: 1,
     health: 8,
-    leaderTechniqueID: 'KingFredTheSaintlyRecruit',
+    leaderTechniqueID: 'NapoleonBonaparteLeveeEnMasse',
     staticText: {
         english: ``,
     },
@@ -26,10 +25,10 @@ const data: LeaderData = {
     starter: true
 }
 
-class KingFredTheSaintly extends Leader {
+class NapoleonBonaparte extends Leader {
     static readonly data: LeaderData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default KingFredTheSaintly
+export default NapoleonBonaparte

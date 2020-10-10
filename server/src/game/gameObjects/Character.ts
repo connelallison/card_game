@@ -1,10 +1,21 @@
-import DestroyableCard, { DestroyableCardData } from './DestroyableCard'
+import DestroyableCard, { DestroyableCardData, DestroyableCardStats } from './DestroyableCard'
 
 export interface CharacterData extends DestroyableCardData {
   type: CharacterTypeString
   subtype: CharacterSubtypeString
-  attack: number
   health: number
+  stats?: {
+    Debt?: number
+    Rent?: number
+    Fervour?: number
+    Growth?: number
+    Income?: number
+    DamageReduction?: number
+  }
+}
+
+export interface CharacterStats extends DestroyableCardStats {
+  damageReduction: number
 }
 
 abstract class Character extends DestroyableCard {
@@ -18,12 +29,11 @@ abstract class Character extends DestroyableCard {
   health: number
   ready: boolean
   attackTargets: Character[]
+  stats: CharacterStats
 
   constructor(game: Game, owner: GamePlayer, data: CharacterData) {
     super(game, owner, data)
     this.ready = true
-    this.rawAttack = data.attack
-    this.attack = this.rawAttack
     this.rawHealth = data.health
     this.health = this.rawHealth
     this.attackTargets = []
@@ -53,21 +63,22 @@ abstract class Character extends DestroyableCard {
       hostile: true,
       text: localisations[localisation],
       validTargets: this.attackTargets.map(target => target.objectID),
+      highlightedTargets: [],
     } : null
   }
 
   canAttack(): boolean {
-    return this.owner.myTurn() && this.ready && this.inPlay() && this.attack > 0
+    return this.owner.myTurn() && this.ready && this.inPlay() && !this.flags.cantAttack && this.attack > 0
   }
 
   hasTargets(): boolean {
     return this.attackTargets.length > 0
   }
-  
+
   charOwner(): Character {
     return this
   }
-  
+
   isDamaged(): boolean {
     return this.missingHealth() > 0
   }
@@ -80,6 +91,17 @@ abstract class Character extends DestroyableCard {
     return this.flags.guard || this.controller().boardFollowers().every(follower => follower.flags.guard !== true)
   }
 
+  baseStats(): CharacterStats {
+    return {
+      damageReduction: 0,
+      debt: 0,
+      fervour: 0,
+      growth: 0,
+      income: 0,
+      rent: 0,
+    }
+  }
+
   cloneData(clone) {
     return {
       clonedFrom: this,
@@ -90,9 +112,11 @@ abstract class Character extends DestroyableCard {
       attack: this.attack,
       rawHealth: this.rawHealth,
       health: this.health,
-      actions: JSON.parse(JSON.stringify(this.actions)),
-      events: JSON.parse(JSON.stringify(this.events)),
-      effects: this.effects.map(effect => effect.clone(clone)),
+      // options: JSON.parse(JSON.stringify(this.options)),
+      // actions: JSON.parse(JSON.stringify(this.actions)),
+      // events: JSON.parse(JSON.stringify(this.events)),
+      // deathEvents: JSON.parse(JSON.stringify(this.deathEvents)),
+      // effects: this.effects.map(effect => effect.clone(clone)),
       auraEffects: this.auraEffects.splice(0),
       flags: JSON.parse(JSON.stringify(this.flags)),
     }

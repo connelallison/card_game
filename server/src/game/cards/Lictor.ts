@@ -3,33 +3,34 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-  id: 'Knight',
+  id: 'Lictor',
   name: {
-    english: `Knight`,
+    english: `Lictor`,
   },
   type: 'Follower',
   subtype: 'Nameless',
-  classes: ['The People'],
+  classes: ['All'],
   categories: [],
-  collectable: false,
-  cost: 2,
-  attack: 2,
-  health: 2,
-  charges: 1,
+  collectable: true,
+  cost: 3,
+  attack: 3,
+  health: 4,
+  charges: 2,
   staticText: {
-    english: ``,
+    english: `Guard`,
   },
   text: {
-    templates: {
-      english: ``,
-    },
+      templates: {
+          english: `Guard`,
+      },
   },
+  effects: ['Guard'],
 }
 
-class Knight extends NamelessFollower {
+class Lictor extends NamelessFollower {
   static readonly data: NamelessFollowerData = data
   constructor(game: Game, owner: GamePlayer) {
     super(game, owner, data)
   }
 }
-export default Knight
+export default Lictor

@@ -11,27 +11,26 @@ const data: TriggerEffectData = {
     subtype: 'Trigger',
     text: {
         templates: {
-          english: `At the start of your turn, resurrect $0.`,
+            english: `At the start of your turn, resurrect $0.`,
         },
         dynamicValues: [
             {
-              value: {
-                valueType: 'localisedString',
-                from: 'target',
-                target: {
-                    valueType: 'target',
-                    from: 'memory',
-                    param: 'target',
+                value: {
+                    valueType: 'localisedString',
+                    from: 'target',
+                    target: {
+                        valueType: 'target',
+                        from: 'memory',
+                        param: 'target',
+                    },
+                    stringMap: 'name'
                 },
-                stringMap: 'name'
-              },
-              default: { english: `(nothing)`},
-              activeZones: ['legacy', 'board', 'hand', 'deck']
+                default: { english: `(nothing)` },
             }
-          ]
-      },
-    activeTypes: ['Follower'],
-    activeZones: ['board'],
+        ]
+    },
+    activeZones: 'inPlay',
+    activeTypes: 'Persistent',
     repeatable: false,
     wonderTrigger: false,
     triggerObjs: [{

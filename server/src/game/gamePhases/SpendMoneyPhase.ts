@@ -32,13 +32,13 @@ class SpendMoneyPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        if (event.money > 0) {
+        if (event.money !== 0) {
             this.emit('beforeSpendMoney', event)
             event.player.spendMoney(event.money)
             event.generateLog()
             this.cacheEvent(event, 'spendMoney')
             this.emit('afterSpendMoney', event)
-            if (event.player.money < 0) {
+            if (event.player.money < 0 && event.money > 0) {
                 this.fatigueDamage()
             }
             this.queueSteps()

@@ -14,11 +14,11 @@ const data: PermanentPassiveData = {
     ethos: false,
     cost: 3,
     staticText: {
-        english: `Passive: Your Knights have +1 Attack.`,
+        english: `Passive: Your Citizens have +1 Attack.`,
     },
     text: {
         templates: {
-            english: `Passive: Your Knights have +1 Attack.`,
+            english: `Passive: Your Citizens have +1 Attack.`,
         },
     },
     effects: ['CombatTrainingAura'],

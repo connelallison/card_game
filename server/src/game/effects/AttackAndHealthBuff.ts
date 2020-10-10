@@ -1,6 +1,7 @@
 import StaticEffect, { StaticEffectData } from "../gameObjects/StaticEffect"
 import Game from "../gamePhases/Game"
 import GameObject from "../gameObjects/GameObject"
+import { LocalisedStringObject } from "../structs/Localisation"
 
 const data: StaticEffectData = {
     id: 'AttackAndHealthBuff',
@@ -10,8 +11,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `+0/+0` } },
-    activeZones: ['board', 'hand', 'deck', 'leaderZone'],
-    activeTypes: ['Follower', 'Leader'],
+    activeTypes: 'Character',
     effectObjs: [
         {
             operation: 'incrementAttack',
@@ -26,10 +26,11 @@ const data: StaticEffectData = {
 
 class AttackAndHealthBuff extends StaticEffect {
     static readonly data: StaticEffectData = data
-    constructor(game: Game, owner: GameObject, values: { attack: number, health: number } = { attack: 0, health: 0 }) {
+    constructor(game: Game, owner: GameObject, values: { attack: number, health: number, buffName?: LocalisedStringObject } = { attack: 0, health: 0 }) {
         const moddedData = JSON.parse(JSON.stringify(data))
         moddedData.effectObjs[0].value = values.attack || 0
         moddedData.effectObjs[1].value = values.health || 0
+        moddedData.name = values.buffName ?? moddedData.name
         for (const localisation in moddedData.text.templates) {
             moddedData.text.templates[localisation] = moddedData.text.templates[localisation].replace(`+0/+0`, `+${moddedData.effectObjs[0].value}/+${moddedData.effectObjs[1].value}`)
         }

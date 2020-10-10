@@ -22,6 +22,7 @@ const data: EventMomentData = {
   },
   events: [{
     actionType: 'eventAction',
+    id: 'Consume',
     name: {
       english: 'Consume'
     },

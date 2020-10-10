@@ -3,21 +3,21 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEffectData = {
-    id: 'KnightAcademyTrigger',
+    id: 'CitizenAcademyTrigger',
     name: {
-        english: `Knight Academy Trigger`,
+        english: `Citizen Academy Trigger`,
     },
     type: 'Effect',
     subtype: 'Trigger',
     text: {
         templates: {
-            english: `After you draw a follower, summon a 2/2 Knight.`,
+            english: `After you draw a follower, summon a 2/2 Citizen.`,
         },
     },
     repeatable: true,
     wonderTrigger: true,
-    activeZones: ['creationZone'],
-    activeTypes: ['Creation'],
+    activeZones: 'inPlay',
+    activeTypes: 'Persistent',
     triggerObjs: [{
         actionType: 'triggerAction',
         eventType: 'afterDraw',
@@ -45,17 +45,17 @@ const data: TriggerEffectData = {
                 functionType: 'autoAction',
                 operation: 'createAndSummonCard',
                 values: {
-                    'cardID': 'Knight'
+                    'cardID': 'Citizen'
                 }
             }]
         }]
     }]
 }
 
-class KnightAcademyTrigger extends TriggerEffect {
+class CitizenAcademyTrigger extends TriggerEffect {
     static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default KnightAcademyTrigger
+export default CitizenAcademyTrigger

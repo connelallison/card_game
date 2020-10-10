@@ -32,7 +32,6 @@ const data: FamousFollowerData = {
           stringMap: 'name'
         },
         default: '',
-        activeZones: ['hand'],
         templates: {
           english: '($)'
         }
@@ -41,6 +40,7 @@ const data: FamousFollowerData = {
   },
   events: [{
     actionType: 'eventAction',
+    id: 'OrcissimusEvent',
     name: {
       english: 'Orcissimus Event'
     },
@@ -57,7 +57,6 @@ const data: FamousFollowerData = {
             stringMap: 'name'
           },
           default: '',
-          activeZones: ['hand'],
           templates: {
             english: '($)'
           }

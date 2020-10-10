@@ -7,9 +7,9 @@ import HealthBuff from '../effects/HealthBuff'
 import AttackAndHealthBuff from '../effects/AttackAndHealthBuff'
 import JuniorOrcAura from '../effects/JuniorOrcAura'
 import SavageWolfTrigger from '../effects/SavageWolfTrigger'
-import HolyBookTrigger from '../effects/HolyBookTrigger'
-import KnightAcademyTrigger from '../effects/KnightAcademyTrigger'
-import HolyProtectorsAura from '../effects/HolyProtectorsAura'
+import BeveridgeReportTrigger from '../effects/BeveridgeReportTrigger'
+import CitizenAcademyTrigger from '../effects/CitizenAcademyTrigger'
+import TulipManiaAura from '../effects/TulipManiaAura'
 import SingleMindedFuryTrigger from  '../effects/SingleMindedFuryTrigger'
 import CombatTrainingAura from '../effects/CombatTrainingAura'
 import ExpiresStartOfMyTurn from '../effects/ExpiresStartOfMyTurn'
@@ -19,34 +19,45 @@ import Fervour from '../effects/Fervour'
 import ExpiresEndOfMyTurn from '../effects/ExpiresEndOfMyTurn'
 import OrpheusTrigger from '../effects/OrpheusTrigger'
 import JohnTheBaptistAura from '../effects/JohnTheBaptistAura'
+import Mob from '../effects/Mob'
+import SlaveAura from '../effects/SlaveAura'
+import SpartacusSolidarityAura from '../effects/SpartacusSolidarityAura'
+import CostReduction from '../effects/CostReduction'
+import DamageReduction from '../effects/DamageReduction'
 
 export const StatStaticEffects = {
   Debt,
   Rent,
   Fervour,
+  DamageReduction,
 }
 
-export const StaticEffects = Object.assign({
+export const StaticEffects = {
   AttackBuff,
   HealthBuff,
   AttackAndHealthBuff,
+  CostReduction,
   Guard,
   Pillage,
   Rush,
-}, StatStaticEffects)
+  Mob,
+  ...StatStaticEffects,
+}
 
 export const AuraEffects = {
   FootmanAura,
   JuniorOrcAura,
-  HolyProtectorsAura,
+  TulipManiaAura,
   CombatTrainingAura,
   JohnTheBaptistAura,
+  SlaveAura,
+  SpartacusSolidarityAura,
 }
 
 export const TriggerEffects = {
   SavageWolfTrigger,
-  HolyBookTrigger,
-  KnightAcademyTrigger,
+  BeveridgeReportTrigger,
+  CitizenAcademyTrigger,
   SingleMindedFuryTrigger,
   OrpheusTrigger
 }
@@ -56,8 +67,8 @@ export const EffectExpiries = {
   ExpiresEndOfMyTurn,
 }
 
-export const CardEffects = Object.assign({}, StaticEffects, AuraEffects, TriggerEffects)
+export const CardEffects = { ...StaticEffects, ...AuraEffects, ...TriggerEffects}
 
-const Effects = Object.assign({}, CardEffects, EffectExpiries)
+const Effects = { ...CardEffects, ...EffectExpiries }
 
 export default Effects

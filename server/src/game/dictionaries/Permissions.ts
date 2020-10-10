@@ -3,12 +3,14 @@ const Permissions = {
         return (
             attacker.canAttack()
             && defender.inPlay()
-            && defender.controller() === attacker.controller().opponent
+            && defender.controller() === attacker.opponent()
             && defender.notBehindGuard()
+            && !(attacker.flags.mob && defender instanceof Leader && !defender.unprotected())
             && (
                 !(attacker instanceof Follower)
                 || !attacker.summonSickness
-                || attacker.flags.rush && defender instanceof Follower
+                || (defender instanceof Follower && attacker.flags.rush)
+                || attacker.flags.mob
             )
         )
     },
@@ -51,7 +53,7 @@ const Permissions = {
             && card.zone === 'hand'
             && card.cost <= player.money
             && ((card instanceof Moment || card instanceof TechniqueCreation) ? card.active() : true)
-            && ((card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? player[card.inPlayZone].length < player.max[card.inPlayZone] : true))
+            && ((card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? Permissions.canSummon(player, card) : true))
         )
     },
 
@@ -92,3 +94,4 @@ import LeaderTechnique from "../gameObjects/LeaderTechnique"
 import Follower from "../gameObjects/Follower"
 import Moment from "../gameObjects/Moment"
 import { PersistentCardTypeString } from "../stringTypes/ZoneTypeSubtypeString"
+import Leader from "../gameObjects/Leader"

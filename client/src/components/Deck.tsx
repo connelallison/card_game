@@ -4,7 +4,7 @@ import DeckLegacy from './DeckLegacy'
 class Deck extends DeckLegacy {
     render() {
         return (
-            <div className='card deck' onClick={event => this.toggleNameList()}>
+            <div className={`${this.styleClasses()} zone deck`} onClick={event => this.toggleNameList()}>
                 <p>Deck</p>
                 <p>{this.props.contents.length} cards</p>
                 <br />

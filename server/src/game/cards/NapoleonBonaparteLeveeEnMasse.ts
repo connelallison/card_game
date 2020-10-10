@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: ActiveLeaderTechniqueData = {
-    id: 'KingFredTheSaintlyRecruit',
+    id: 'NapoleonBonaparteLeveeEnMasse',
     name: {
-        english: `Recruit`,
+        english: `Leveé en masse`,
     },
     type: 'LeaderTechnique',
     subtype: 'Active',
@@ -14,21 +14,22 @@ const data: ActiveLeaderTechniqueData = {
     cost: 2,
     repeatable: false,
     staticText: {
-        english: `Event: Summon a 2/2 Knight.`,
+        english: `Event: Summon a 2/2 Citizen.`,
     },
     text: {
         templates: {
-            english: `Event: Summon a 2/2 Knight.`,
+            english: `Event: Summon a 2/2 Citizen.`,
         },
     },
     events: [{
         actionType: 'eventAction',
+        id: 'NapoleonBonaparteLeveeEnMasseEvent',
         name: {
-            english: 'Recruit'
+            english: 'Leveé en masse'
         },
         text: {
             templates: {
-                english: `Event: Summon a 2/2 Knight.`,
+                english: `Event: Summon a 2/2 Citizen.`,
             },
         },
         actionSteps: [{
@@ -36,7 +37,7 @@ const data: ActiveLeaderTechniqueData = {
                 functionType: 'autoAction',
                 operation: 'createAndSummonCard',
                 values: {
-                    cardID: 'Knight',
+                    cardID: 'Citizen',
                 }
             }],
             requirements: [{
@@ -50,10 +51,10 @@ const data: ActiveLeaderTechniqueData = {
 
 }
 
-class KingFredTheSaintlyRecruit extends ActiveLeaderTechnique {
+class NapoleonBonaparteLeveeEnMasse extends ActiveLeaderTechnique {
     static readonly data: ActiveLeaderTechniqueData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default KingFredTheSaintlyRecruit
+export default NapoleonBonaparteLeveeEnMasse

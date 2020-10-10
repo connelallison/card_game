@@ -3,17 +3,17 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEffectData = {
-    id: 'HolyBookTrigger',
+    id: 'BeveridgeReportTrigger',
     name: {
-        english: `Holy Book Trigger`,
+        english: `Beveridge Report Trigger`,
     },
     type: 'Effect',
     subtype: 'Trigger',
-    text: { templates: { english: `At the end of your turn, restore 2 Health to all friendly characters.` } },
+    text: { templates: { english: `At the end of your turn, give your followers +1 Health.` } },
     repeatable: true,
     wonderTrigger: false,
-    activeZones: ['creationZone'],
-    activeTypes: ['Creation'],
+    activeZones: 'inPlay',
+    activeTypes: 'Persistent',
     triggerObjs: [{
         actionType: 'triggerAction',
         eventType: 'endOfTurn',
@@ -25,24 +25,25 @@ const data: TriggerEffectData = {
                 targets: {
                     valueType: 'targets',
                     from: 'targetDomain',
-                    targetDomain: ['friendlyBoard', 'friendlyLeader']
+                    targetDomain: ['friendlyBoard']
                 }
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'heal',
+                operation: 'buffHealth',
                 values: {
-                    'healing': 2,
+                    buffName: { english: 'Beveridge Report Buff' },
+                    health: 1,
                 },
             }]
         }]
     }]
 }
 
-class HolyBookTrigger extends TriggerEffect {
+class BeveridgeReportTrigger extends TriggerEffect {
     static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default HolyBookTrigger
+export default BeveridgeReportTrigger

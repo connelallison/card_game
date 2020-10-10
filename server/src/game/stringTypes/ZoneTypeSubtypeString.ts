@@ -1,6 +1,6 @@
-export const AllZones = ['hand', 'board', 'deck', 'legacy', 'leaderZone', 'creationZone', 'leaderTechniqueZone','passiveZone', 'setAsideZone', 'global'] as const
+export const AllZones = ['hand', 'board', 'deck', 'legacy', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'setAsideZone', 'global'] as const
 export const PlayZones = ['board', 'leaderZone', 'creationZone', 'leaderTechniqueZone', 'passiveZone', 'global'] as const
-export const InGameZones = ['hand', 'board', 'deck', 'leaderZone', 'creationZone', 'leaderTechniqueZone','passiveZone', 'global'] as const
+export const InGameZones = ['hand', 'board', 'deck', 'legacy', 'leaderZone', 'creationZone', 'leaderTechniqueZone','passiveZone', 'global'] as const
 export const LeaderZones = ['leaderZone', 'hand', 'deck', 'legacy', 'setAsideZone'] as const
 export const FollowerZones = ['board', 'hand', 'deck', 'legacy', 'setAsideZone'] as const
 export const CreationZones = ['creationZone', 'hand', 'deck', 'legacy', 'setAsideZone'] as const
@@ -58,3 +58,7 @@ export type MomentSubtypeString = typeof MomentSubtypes[number]
 export type CardSubtypeString = typeof CardSubtypes[number]
 export type EffectSubtypeString = typeof EffectSubtypes[number]
 export type ObjectSubtypeString = typeof ObjectSubtypes[number]
+
+export type ActiveZones = ZoneString[] | 'inPlay'
+export type ActiveTypes = ObjectTypeString[] | 'Persistent' | 'Character' | 'Card' | 'inPlay'
+export type ActiveSubtypes = ObjectSubtypeString[]

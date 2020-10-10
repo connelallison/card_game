@@ -25,13 +25,13 @@ const data: ActionMomentData = {
         from: 'fervour',
         base: 9
       },
-      activeZones: ['hand'],
       default: 9,
       fervour: true,
     }]
   },
   actions: [{
     actionType: 'actionAction',
+    id: 'NapalmStrikeAction',
     name: {
       english: 'Napalm Strike'
     },
@@ -45,7 +45,6 @@ const data: ActionMomentData = {
           from: 'fervour',
           base: 9
         },
-        activeZones: ['hand'],
         default: 9,
         fervour: true,
       }]
@@ -68,7 +67,6 @@ const data: ActionMomentData = {
               from: 'fervour',
               base: 9
             },
-            activeZones: ['hand'],
             default: 9,
             fervour: true,
           }]

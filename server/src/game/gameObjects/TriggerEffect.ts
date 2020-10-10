@@ -25,6 +25,7 @@ abstract class TriggerEffect extends Effect {
     updateActive(): boolean {
         const active = this.activeZones.includes(this.owner.zone)
             && this.activeTypes.includes(this.owner.type)
+            && this.activeSubtypes.includes(this.owner.subtype)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
         if (!this.active && active) {
             this.enableListeners()
@@ -82,6 +83,10 @@ abstract class TriggerEffect extends Effect {
         const clone = new Effects[this.id](this.game, newOwner) as TriggerEffect
         clone.data.triggerObjs = JSON.parse(JSON.stringify(this.data.triggerObjs))
         clone.triggers = clone.wrapTriggers(clone.data.triggerObjs)
+        clone.data.name = JSON.parse(JSON.stringify(this.data.name))
+        clone.name = JSON.parse(JSON.stringify(this.name))
+        clone.data.text = JSON.parse(JSON.stringify(this.data.text))
+        clone.text = JSON.parse(JSON.stringify(this.text))
         return clone
     }
 }

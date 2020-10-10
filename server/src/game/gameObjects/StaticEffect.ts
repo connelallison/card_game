@@ -20,6 +20,10 @@ abstract class StaticEffect extends Effect {
         const clone = new Effects[this.id](this.game, newOwner) as StaticEffect
         clone.data.effectObjs = JSON.parse(JSON.stringify(this.data.effectObjs))
         clone.effectFunctions = clone.wrappedEffects(clone.data.effectObjs)
+        clone.data.name = JSON.parse(JSON.stringify(this.data.name))
+        clone.name = JSON.parse(JSON.stringify(this.name))
+        clone.data.text = JSON.parse(JSON.stringify(this.data.text))
+        clone.text = JSON.parse(JSON.stringify(this.text))
         return clone
     }
 }

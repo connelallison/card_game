@@ -11,6 +11,7 @@ abstract class GameObject {
     flags: FlagsObject
     dataObj: GameObjectData
     effects: Effect[]
+    baseEffects: Effect[]
     addedEffects: Effect[]
     auraEffects: AuraEffectFunction[][]
 
@@ -26,6 +27,7 @@ abstract class GameObject {
         this.flags = {}
         this.dataObj = null
         this.effects = []
+        this.baseEffects = []
         this.addedEffects = []
         this.auraEffects = [[], [], [], []]
         this.game.event.on('auraReset', event => this.auraReset())
@@ -88,6 +90,7 @@ abstract class GameObject {
 
     addBaseEffect(effect: Effect): void {
         this.effects.push(effect)
+        this.baseEffects.push(effect)
         this.updateEffects()
     }
 
@@ -99,6 +102,7 @@ abstract class GameObject {
 
     removeEffect(effect: Effect): void {
         this.effects = this.effects.filter(item => item !== effect)
+        this.baseEffects = this.baseEffects.filter(item => item !== effect)
         this.addedEffects = this.addedEffects.filter(item => item !== effect)
         this.updateEffects()
     }
@@ -111,9 +115,9 @@ abstract class GameObject {
         return this.owner.controller()
     }
 
-    // opponent(): GamePlayer {
-    //     return this.controller().opponent
-    // }
+    opponent(): GamePlayer {
+        return this.controller().opponentPlayer
+    }
 
     charOwner(): Character {
         return this.controller().leaderZone[0]
@@ -193,12 +197,12 @@ abstract class GameObject {
     }
 
     dynamicTextValue(valueObj: DynamicTextValueObject, localisation: LocalisationString = 'english'): string {
-        if (valueObj.activeZones.includes(this.zone) && (valueObj.requirements?.every(requirement => this.requirement(requirement)) ?? true)) {
+        if (this.parseActiveZones(valueObj.activeZones).includes(this.zone) && (valueObj.requirements?.every(requirement => this.requirement(requirement)) ?? true)) {
             const value = this.localisedDynamicValue(valueObj.value, localisation)
             if (value) {
                 if (valueObj.templates) {
                     return valueObj.templates[localisation].replace('$', value.toString())
-                } else if (valueObj.fervour && this.controller().fervour > 0) {
+                } else if (valueObj.fervour && this.controller().stats.fervour > 0) {
                     return `*${value.toString()}*`
                 } else {
                     return value.toString()
@@ -222,6 +226,28 @@ abstract class GameObject {
         const name = object.name[localisation]
         const text = this.generateDynamicText(object.text, localisation)
         return { name, text }
+    }
+
+    parseActiveZones(activeZones: ActiveZones): ZoneString[] {
+        return !activeZones ? [...InGameZones] : activeZones === 'inPlay' ? [...PlayZones] : activeZones
+    }
+
+    parseActiveTypes(activeTypes: ActiveTypes): ObjectTypeString[] {
+        return !activeTypes 
+        ? [...ObjectTypes] 
+        : activeTypes === 'Persistent' 
+        ? [...PersistentCardTypes] 
+        : activeTypes === 'Character' 
+        ? [...CharacterTypes] 
+        : activeTypes === 'Card'
+        ? [...CardTypes]
+        : activeTypes === 'inPlay'
+        ? [...PersistentCardTypes, 'Player']
+        : activeTypes
+    }
+
+    parseActiveSubtypes(activeSubtypes: ActiveSubtypes): ObjectSubtypeString[] {
+        return !activeSubtypes ? [...ObjectSubtypes] : activeSubtypes
     }
 
     targetDomains(targetDomain: TargetsDomainString | TargetsDomainString[]): GameObject[] {
@@ -362,7 +388,7 @@ abstract class GameObject {
     dynamicNumber(obj: DynamicNumberObject): number {
         if (obj.from === 'fervour') {
             const base = typeof obj.base === 'number' ? obj.base : this.dynamicNumber(obj.base)
-            const fervour = obj.scaling ? this.controller().fervour * obj.scaling : this.controller().fervour
+            const fervour = obj.scaling ? this.controller().stats.fervour * obj.scaling : this.controller().stats.fervour
             return base + fervour
         }
         if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.dynamicNumbers(obj.numbers))
@@ -489,7 +515,7 @@ import Game from "../gamePhases/Game"
 import GamePlayer from "./GamePlayer"
 import Effect from "./Effect"
 import Card from "./Card"
-import { ObjectSubtypeString, ObjectTypeString, ZoneString } from "../stringTypes/ZoneTypeSubtypeString"
+import { ActiveSubtypes, ActiveTypes, ActiveZones, CardTypes, CharacterTypes, InGameZones, ObjectSubtypes, ObjectSubtypeString, ObjectTypes, ObjectTypeString, PersistentCardTypes, PlayZones, ZoneString } from "../stringTypes/ZoneTypeSubtypeString"
 import EffectFunction from "../functionTypes/EffectFunction"
 import StaticEffect from "./StaticEffect"
 import GameObjectData, { FlagsObject } from "../structs/GameObjectData"

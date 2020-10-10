@@ -9,10 +9,10 @@ const data: AuraEffectData = {
     },
     type: 'Effect',
     subtype: 'Aura',
-    text: { templates: { english: `Passive: Your Knights have +1 Attack.` } },
+    text: { templates: { english: `Passive: Your Citizens have +1 Attack.` } },
     priority: 1,
-    activeZones: ['passiveZone'],
-    activeTypes: ['Passive'],
+    activeZones: 'inPlay',
+    activeTypes: 'Persistent',
     effectFunction: {
         name: { english: `Combat Training` },
         text: { templates: { english: `+1 Attack` } },
@@ -28,7 +28,7 @@ const data: AuraEffectData = {
         requirements: [{
             targetRequirement: 'isSpecificCardClass',
             values: {
-                'cardID': 'Knight',
+                'cardID': 'Citizen',
             }
         }]
     },

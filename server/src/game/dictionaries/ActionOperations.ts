@@ -88,7 +88,7 @@ const ActionOperations = {
     },
 
     gainArmour: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { armour: number, opponent?: boolean }) => {
-        const player = values.opponent ? source.controller().opponent : source.controller()
+        const player = values.opponent ? source.opponent() : source.controller()
         player.gainArmour(values.armour)
     },
 
@@ -129,54 +129,81 @@ const ActionOperations = {
         })
     },
 
-    buffAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[] }) => {
+    copyEurekasToTarget: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        const sourceCard = source as Card
+        targetObjs.forEach((target: Card) => {
+            sourceCard.actions.filter(action => action.eureka).forEach(eureka => {
+                target.addAction(JSON.parse(JSON.stringify(eureka)))
+            })
+        })
+    },
+
+    buffAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
         if (attack === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const effect = new Effects.AttackBuff(source.game, target, { attack: attack })
+            const effect = new Effects.AttackBuff(source.game, target, { attack, buffName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    buffHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[] }) => {
+    buffHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
         if (health === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const effect = new Effects.HealthBuff(source.game, target, { health: health })
+            const effect = new Effects.HealthBuff(source.game, target, { health, buffName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    buffStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[] }) => {
+    buffStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const stats = values.stats <= 0 ? 0 : split ? truncate(values.stats / targets.length) : values.stats
         if (stats === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack: stats, health: stats })
+            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack: stats, health: stats, buffName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    buffAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[] }) => {
+    buffAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
         const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
         if (attack === 0 && health === 0) return
+        const buffName = values.buffName ?? null
         targets.forEach(target => {
-            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack: attack, health: health })
+            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack, health, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    reduceCost: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Card[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const money = values.money <= 0 ? 0 : split ? truncate(values.money / targets.length) : values.money
+        if (money === 0) return
+        const buffName = values.buffName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.CostReduction(source.game, target, { money, buffName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
@@ -185,7 +212,7 @@ const ActionOperations = {
     createAndSummonCard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cardID: string, number?: number, forOpponent?: boolean }) => {
         const targetSlot = (targetObjs && targetObjs[0] instanceof BoardSlot) ? targetObjs[0] as BoardSlot
             : (source instanceof Follower && source.inPlay()) ? source.slot : null
-        const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.controller().opponent
+        const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
         const number = values.number === undefined ? 1 : values.number
         const cardID = values.cardID as PersistentCardIDString
         if (typeof cardID !== 'string') throw ('cardID is not a string')
@@ -219,7 +246,7 @@ const ActionOperations = {
     // },
 
     spendMoney: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, forOpponent?: boolean }) => {
-        const player = values.forOpponent ? source.controller().opponent : source.controller()
+        const player = values.forOpponent ? source.opponent() : source.controller()
         if (!(source instanceof Card)) throw Error(`spending money on something other than a card: ${source.name.english}`)
         const spendMoneyEvent = new SpendMoneyEvent(source.game, {
             player,
@@ -254,6 +281,14 @@ const ActionOperations = {
                 defender,
             })
             source.game.startNewDeepestPhase('AttackPhase', attackEvent)
+        })
+    },
+
+    setIndex: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { index: number }) => {
+        targetObjs.forEach((target: Card) => {
+            const moveTarget = (target instanceof Follower && target.zone === 'board') ? target.slot : target
+            const zone = moveTarget.controller()[moveTarget.zone] as GameObject[]
+            zone.splice(values.index, 0, zone.splice(moveTarget.index(), 1)[0])
         })
     },
 
@@ -364,4 +399,6 @@ import { TargetRequirement } from '../structs/Requirement'
 import SpendMoneyPhase, { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'
 import { AttackEvent } from '../gamePhases/AttackPhase'
 import Creation from '../gameObjects/Creation'
+import { LocalisedStringObject } from '../structs/Localisation'
+import Game from '../gamePhases/Game'
 

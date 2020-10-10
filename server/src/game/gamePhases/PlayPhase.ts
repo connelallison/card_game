@@ -149,7 +149,7 @@ class PlayPhase extends EventPhase {
 
     accrueDebtPhase(): void {
         const event = this.event
-        if (event.card.debt > 0) {
+        if (event.card.stats.debt > 0) {
             const accrueDebtEvent = new AccrueDebtEvent(this.game(), {
                 player: event.player,
                 card: event.card,

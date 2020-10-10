@@ -26,6 +26,7 @@ const data: NamelessFollowerData = {
     },
     deathEvents: [{
         actionType: 'deathAction',
+        id: 'SuicideBomberEvent',
         name: {
             english: 'Suicide Bomber Death Event'
         },
@@ -34,6 +35,7 @@ const data: NamelessFollowerData = {
                 english: `Death: Deal 3 damage in this and neighbouring slots.`,
             },
         },
+        activeTypes: ['Follower'],
         actionSteps: [{
             autoTargets: [{
                 targets: {

@@ -22,7 +22,7 @@ const data: TriggerEffectData = {
                     stringMap: "name",
                     target: lastEnemyFollowerEnteredPlay,
                 },
-                activeZones: ['passiveZone'],
+                activeZones: 'inPlay',
                 default: '',
                 templates: {
                     english: '($)'
@@ -30,8 +30,7 @@ const data: TriggerEffectData = {
             }
         ]
     },
-    activeZones: ['passiveZone'],
-    activeTypes: ['Passive'],
+    activeZones: 'inPlay',
     repeatable: true,
     wonderTrigger: false,
     triggerObjs: [{

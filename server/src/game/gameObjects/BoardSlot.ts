@@ -37,9 +37,31 @@ class BoardSlot extends GameObject {
             zone: this.zone,
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
+            addedText: this.addedTextReport(),
             follower: this.follower ? this.follower.provideReport() : null
         }
     }
+
+    statsReport(): NameAndTextObject {
+        const attack = `${this.attack > 0 ? `+${this.attack}` : this.attack < 0 ? this.attack : ''}`
+        // const slash = (this.attack !== 0 && this.health !== 0) ? '/' : ''
+        const health = `${this.health > 0 ? `+${this.health}` : this.health < 0 ? this.health : ''}`
+        const english = (this.attack !== 0 && this.health !== 0) ? `${attack}/${health}` : this.attack !== 0 ? `${attack} Attack` : `${health} Health`
+
+        const name = { english: 'Slot Stats' }
+        const text: DynamicTextObject = { templates: { english } }
+        return { name, text }
+    }
+
+    addedTextReport(localisation: LocalisationString = 'english'): LocalisedNameAndText[] {
+        const activeEffects = this.effects.filter(text => text.active)
+        const auraText = this.auraEffects.flat()
+        const activeText = [...activeEffects, ...auraText]
+        return activeText.map(text => {
+          if (text instanceof Effect) return text.localiseNameAndTextObject(text, localisation)
+          else return this.localiseNameAndTextObject(text, localisation)
+        })
+      }
 
     isEmpty(): boolean {
         return this.follower === null
@@ -67,7 +89,7 @@ class BoardSlot extends GameObject {
 
     oppositeSlot(): BoardSlot {
         if (this.zone === 'board') {
-            const slot = this.controller().opponent.board[this.index()]
+            const slot = this.opponent().board[this.index()]
             return slot !== undefined ? slot : null
         }
         return null
@@ -155,4 +177,5 @@ import GamePlayer from "./GamePlayer";
 import GameObjectData from "../structs/GameObjectData";
 import Follower from "./Follower";
 import { BoardSlotReport } from "../structs/ObjectReport";
-import { LocalisationString } from "../structs/Localisation";
+import { DynamicTextObject, LocalisationString, LocalisedNameAndText, NameAndTextObject } from "../structs/Localisation";import Effect from "./Effect";
+

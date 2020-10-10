@@ -30,7 +30,7 @@ const data: PermanentPassiveData = {
                     stringMap: "name",
                     target: lastEnemyFollowerEnteredPlay,
                 },
-                activeZones: ['passiveZone'],
+                activeZones: 'inPlay',
                 default: '',
                 templates: {
                     english: '($)'

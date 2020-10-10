@@ -1,22 +1,26 @@
-import PersistentCard, { PersistentCardData } from "./PersistentCard";
+import PersistentCard, { PersistentCardData, PersistentCardStats } from "./PersistentCard";
 
 export interface DestroyableCardData extends PersistentCardData {
     type: DestroyableCardTypeString
     subtype: DestroyableCardSubtypeString
-    deathEvents?: DeathAction[]
+    deathEvents?: DeathActionData[]
 }
+
+export interface DestroyableCardStats extends PersistentCardStats {}
 
 abstract class DestroyableCard extends PersistentCard {
     static readonly data: DestroyableCardData
     readonly data: DestroyableCardData
     deathEvents: DeathAction[]
+    baseDeathEvents: DeathAction[]
     addedDeathEvents: DeathAction[]
     activeDeathEvents: DeathAction[]
     pendingDestroy: boolean
 
     constructor(game: Game, owner: GamePlayer, data: DestroyableCardData) {
         super(game, owner, data)
-        this.deathEvents = data.deathEvents || []
+        this.baseDeathEvents = data.deathEvents || []
+        this.deathEvents = [...this.baseDeathEvents]
         this.addedDeathEvents = []
         this.activeDeathEvents = []
         this.pendingDestroy = false
@@ -28,19 +32,30 @@ abstract class DestroyableCard extends PersistentCard {
             pendingDestroy: this.pendingDestroy,
             rawCost: this.rawCost,
             cost: this.cost,
-            actions: JSON.parse(JSON.stringify(this.actions)),
-            events: JSON.parse(JSON.stringify(this.events)),
-            effects: this.effects.map(effect => effect.clone(clone)),
             auraEffects: this.auraEffects.splice(0),
             flags: JSON.parse(JSON.stringify(this.flags)),
         }
     }
 
-    // addBaseDeathEvent(deathEvent: DeathAction): void {
-    //     this.deathEvents.push(deathEvent)
-    // }
+    cloneAddedText(clone: DestroyableCard, addedText: NameAndTextObject) {
+        if (addedText instanceof Effect) clone.addEffect(addedText.clone(clone))
+        else {
+          const action = addedText as ActionAction | OptionAction | EventAction | DeathAction
+          if (action.actionType === 'actionAction') clone.addAction(JSON.parse(JSON.stringify(action)))
+          else if (action.actionType === 'optionAction') clone.addOption(JSON.parse(JSON.stringify(action)))
+          else if (action.actionType === 'eventAction') clone.addEvent(JSON.parse(JSON.stringify(action)))
+          else if (action.actionType === 'deathAction') clone.addDeathEvent(JSON.parse(JSON.stringify(action)))
+        }
+      }
+
+    addBaseDeathEvent(deathEvent: DeathAction): void {
+        if (deathEvent.unique && this.deathEvents.map(deathEvent => deathEvent.id).includes(deathEvent.id)) return
+        this.deathEvents.push(deathEvent)
+        this.baseDeathEvents.push(deathEvent)
+    }
 
     addDeathEvent(deathEvent: DeathAction): void {
+        if (deathEvent.unique && this.deathEvents.map(deathEvent => deathEvent.id).includes(deathEvent.id)) return
         this.deathEvents.push(deathEvent)
         this.addedDeathEvents.push(deathEvent)
         this.addedText.push(deathEvent)
@@ -70,6 +85,10 @@ export default DestroyableCard
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { DeathAction } from "../structs/Action";
+import { ActionAction, DeathAction, DeathActionData, EventAction, OptionAction } from "../structs/Action";
 import { DestroyableCardTypeString, DestroyableCardSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
+import { LocalisationString, LocalisedNameAndText, NameAndTextObject } from "../structs/Localisation";
+import Card from "./Card";
+import Effect from "./Effect";
+import Tooltips from "../dictionaries/Tooltips";
 

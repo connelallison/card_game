@@ -7,7 +7,7 @@ class PassiveZone extends EntityContainer {
         let passiveList
         if (this.props.contents.length > 0) {
             passiveList = this.props.contents.map((passive) =>
-                <Passive big={false} object={passive} selections={this.props.selections} />
+                <Passive big={false} hover={false} object={passive} selections={this.props.selections} />
             )
         } else {
             passiveList = [

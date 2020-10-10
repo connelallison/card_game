@@ -3,7 +3,8 @@ import Character, { CharacterData } from './Character'
 export interface FollowerData extends CharacterData {
   type: 'Follower'
   subtype: FollowerSubtypeString,
-  categories: FollowerCategoryString[]
+  attack: number
+  categories?: FollowerCategoryString[]
 }
 
 abstract class Follower extends Character {
@@ -21,10 +22,12 @@ abstract class Follower extends Character {
 
   constructor(game: Game, owner: GamePlayer, data: FollowerData) {
     super(game, owner, data)
+    this.rawAttack = data.attack
+    this.attack = this.rawAttack
     this.maxHealth = this.rawHealth
     this.inPlayZone = 'board'
     this.slot = null
-    this.categories = data.categories
+    this.categories = data.categories ?? []
     this.validSlots = []
     this.summonSickness = false
 
@@ -41,7 +44,7 @@ abstract class Follower extends Character {
   }
 
   updateAttackTargets(): void {
-    this.attackTargets = this.inPlay() ? (this.owner.opponent.boardFollowers() as Character[]).concat(this.owner.opponent.leaderZone).filter(defender => {
+    this.attackTargets = this.inPlay() ? (this.owner.opponentPlayer.boardFollowers() as Character[]).concat(this.owner.opponentPlayer.leaderZone).filter(defender => {
       return Permissions.canAttack(this, defender)
     }) : []
   }
@@ -62,14 +65,20 @@ abstract class Follower extends Character {
       hostile: false,
       text: localisations[localisation],
       validTargets: this.validSlots.map(slot => slot.objectID),
+      highlightedTargets: [],
     } : null
   }
 
+  categoriesReport(localisation: LocalisationString = 'english'): string[] {
+    return this.categories.map(category => CategoryIcons[category])
+  }
+
   takeDamage(damage: number): number {
-    this.rawHealth -= damage
-    this.health -= damage
+    const reducedDamage = this.stats.damageReduction ? damage - this.stats.damageReduction : damage
+    this.rawHealth -= reducedDamage
+    this.health -= reducedDamage
     this.update()
-    return damage
+    return reducedDamage
   }
 
   receiveHealing(rawHealing: number): number {
@@ -98,11 +107,7 @@ abstract class Follower extends Character {
       attack: this.rawAttack,
       health: this.rawHealth,
       cost: this.rawCost,
-      debt: 0,
-      rent: 0,
-      fervour: 0,
-      growth: 0,
-      income: 0,
+      stats: this.baseStats(),
       flags: this.baseFlags(),
     }
   }
@@ -145,7 +150,7 @@ abstract class Follower extends Character {
 
   oppositeSlot(): BoardSlot {
     if (this.zone === 'board') {
-      const slot = this.controller().opponent.board[this.index()]
+      const slot = this.opponent().board[this.index()]
       return slot !== undefined ? slot : null
     }
     return null
@@ -232,7 +237,7 @@ import Game from '../gamePhases/Game'
 import GamePlayer from './GamePlayer'
 import { FollowerSubtypeString, FollowerZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import BoardSlot from './BoardSlot'
-import FollowerCategoryString from '../stringTypes/FollowerCategoryString'
+import FollowerCategoryString, { CategoryIcons } from '../stringTypes/FollowerCategoryString'
 import GameObjectData from '../structs/GameObjectData'
 import Permissions from '../dictionaries/Permissions'
 import { ManualTargetReport } from '../structs/ObjectReport'

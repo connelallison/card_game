@@ -57,17 +57,17 @@ abstract class WeaponCreation extends Creation {
 
     static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
         return {
-          name: this.data.name[localisation],
-          id: this.data.id[localisation],
-          cost: this.data.cost,
-          charges: this.data.charges,
-          attack: this.data.attack,
-          type: this.data.type,
-          subtype: this.data.subtype,
-          text: this.data.staticText[localisation],
-          classes: this.data.classes,
+            name: this.data.name[localisation],
+            id: this.data.id[localisation],
+            cost: this.data.cost,
+            charges: this.data.charges,
+            attack: this.data.attack,
+            type: this.data.type,
+            subtype: this.data.subtype,
+            text: this.data.staticText[localisation],
+            classes: this.data.classes,
         }
-      }
+    }
 
     baseData(): GameObjectData {
         return {
@@ -99,6 +99,17 @@ abstract class WeaponCreation extends Creation {
             flags: JSON.parse(JSON.stringify(this.flags)),
         }
     }
+
+    passionateText(): NameAndTextObject[] {
+        return (this.inPlay() && this.flags.passionate && this.fervour() > 0) ? [{
+            name: { english: 'Passionate' },
+            text: { templates: { english: `+${this.fervour()} Attack from Fervour.` } },
+        }] : []
+    }
+
+    applyPassionate(): void {
+        if (this.inPlay() && this.flags.passionate) this.attack += this.fervour()
+    }
 }
 
 export default WeaponCreation
@@ -107,4 +118,4 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { ObjectReport, StaticObjectReport } from "../structs/ObjectReport";
 import GameObjectData from "../structs/GameObjectData";
-import { LocalisationString } from "../structs/Localisation";
+import { LocalisationString, NameAndTextObject } from "../structs/Localisation";

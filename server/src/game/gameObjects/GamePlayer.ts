@@ -173,7 +173,6 @@ class GamePlayer extends GameObject {
       const proposedDrawEvent = new ProposedDrawEvent(this.game, {
         player: this,
         number: 1,
-        criteria: [],
       })
       this.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
     }
@@ -190,6 +189,10 @@ class GamePlayer extends GameObject {
 
   controller(): GamePlayer {
     return this
+  }
+
+  weapons(): WeaponCreation[] {
+    return this.creationZone.filter(creation => creation instanceof WeaponCreation) as WeaponCreation[]
   }
 
   // opponent(): GamePlayer {
@@ -319,11 +322,15 @@ class GamePlayer extends GameObject {
     this.armour += armour
   }
 
-  takeDamage(damage: number): number {
-    const remainingDamage = damage > this.armour ? damage - this.armour : 0
-    const remainingArmour = this.armour > damage ? this.armour - damage : 0
-    this.armour = remainingArmour
+  takeDamage(damage: number, rot?: boolean): number {
+    let remainingDamage = damage
+    if (!rot) {
+      remainingDamage = damage > this.armour ? damage - this.armour : 0
+      const remainingArmour = this.armour > damage ? this.armour - damage : 0
+      this.armour = remainingArmour
+    }
     this.currentHealth -= remainingDamage
+    if (rot) this.maxHealth -= remainingDamage
     // this.update()
     return remainingDamage
   }
@@ -340,6 +347,7 @@ class GamePlayer extends GameObject {
 
   refillMoney(): void {
     this.rawMoney = this.stats.income
+    this.money = this.baseMoney()
   }
 
   increaseIncome(number): void {
@@ -403,4 +411,5 @@ import { LocalisationString, LocalisedStringObject } from '../structs/Localisati
 import GameObjectData from '../structs/GameObjectData'
 import { PersistentCardTypeString } from '../stringTypes/ZoneTypeSubtypeString'
 import { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'
+import WeaponCreation from './WeaponCreation'
 

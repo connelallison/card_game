@@ -65,10 +65,17 @@ abstract class NamelessFollower extends Follower {
         }
     }
 
-    loseCharge() {
-        this.charges--
-        if (this.charges <= 0 && !this.inPlay()) this.moveZone('setAsideZone')
+    gainCharge() {
+        this.charges++
         this.update()
+    }
+
+    loseCharge() {
+        if (!this.flags.immune) {
+            this.charges--
+            if (this.charges <= 0 && !this.inPlay()) this.moveZone('setAsideZone')
+            this.update()
+        }
     }
 
     setCharges(number: number) {

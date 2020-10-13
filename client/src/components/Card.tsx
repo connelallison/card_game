@@ -1,12 +1,5 @@
 import React from 'react'
 import AddedText from './AddedText'
-import Creation from './Creation'
-import Follower from './Follower'
-import Leader from './Leader'
-import LeaderTechnique from './LeaderTechnique'
-import Moment from './Moment'
-import Passive from './Passive'
-import Unknown from './Unknown'
 import TargetableEntity, { EntityProps, Selections } from './TargetableEntity'
 
 interface CardProps extends EntityProps {

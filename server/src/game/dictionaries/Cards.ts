@@ -57,7 +57,7 @@ import Fireburst from '../cards/Fireburst'
 import Consume from '../cards/Consume'
 import BeveridgeReport from '../cards/BeveridgeReport'
 import ClubOfLooting from '../cards/ClubOfLooting'
-import CitizenAcademy from '../cards/CitizenAcademy'
+import TwelveTables from '../cards/TwelveTables'
 import Citizen from '../cards/Citizen'
 import CorporalMotivation from '../cards/CorporalMotivation'
 import Orcissimus from '../cards/Orcissimus'
@@ -65,10 +65,10 @@ import NapoleonBonaparteLeveeEnMasse from '../cards/NapoleonBonaparteLeveeEnMass
 import OrkusTheOrkest from '../cards/OrkusTheOrkest'
 import OrkusTheOrkestSmash from '../cards/OrkusTheOrkestSmash'
 import NapoleonBonaparte from '../cards/NapoleonBonaparte'
-import PrinceTimothy from '../cards/PrinceTimothy'
+import VladimirLenin from '../cards/VladimirLenin'
 import TulipMania from '../cards/TulipMania'
 import SingleMindedFury from '../cards/SingleMindedFury'
-import CombatTraining from '../cards/CombatTraining'
+import SecondAmendment from '../cards/SecondAmendment'
 import BattleOfSuiyang from '../cards/BattleOfSuiyang'
 import NapalmStrike from '../cards/NapalmStrike'
 import SuicideBomber from '../cards/SuicideBomber'
@@ -87,6 +87,43 @@ import JohannesGutenberg from '../cards/JohannesGutenberg'
 import MelvilDewey from '../cards/MelvilDewey'
 import NikolaTesla from '../cards/NikolaTesla'
 import Konigstiger from '../cards/Konigstiger'
+import HenryVIIIRemarriage from '../cards/HenryVIIIRemarriage'
+import HenryVIII from '../cards/HenryVIII'
+import DavidHumeOrganiseThoughts from '../cards/DavidHumeOrganiseThoughts'
+import DavidHume from '../cards/DavidHume'
+import UniversityOfOxford from '../cards/UniversityOfOxford'
+import M1Abrams from '../cards/M1Abrams'
+import AlexanderFleming from '../cards/AlexanderFleming'
+import Dolly from '../cards/Dolly'
+import Sputnik from '../cards/Sputnik'
+import ThrillOfDiscovery from '../cards/ThrillOfDiscovery'
+import UnarmedSoviet from '../cards/UnarmedSoviet'
+import SelmaMarcher from '../cards/SelmaMarcher'
+import FrenchRevolution from '../cards/FrenchRevolution'
+import MahatmaGandhi from '../cards/MahatmaGandhi'
+import SaintJust from '../cards/SaintJust'
+import LesMiserables from '../cards/LesMiserables'
+import NelsonMandelaTruthAndReconciliation from '../cards/NelsonMandelaTruthAndReconciliation'
+import NelsonMandela from '../cards/NelsonMandela'
+import PeacefulResistance from '../cards/PeacefulResistance'
+import StonewallRioter from '../cards/StonewallRioter'
+import LudwigII from '../cards/LudwigII'
+import SubprimeBorrower from '../cards/SubprimeBorrower'
+import TankMan from '../cards/TankMan'
+import Cleon from '../cards/Cleon'
+import GeneralStrike1926 from '../cards/GeneralStrike1926'
+import SpartacusGladiator from '../cards/SpartacusGladiator'
+import Robespierre from '../cards/Robespierre'
+import AugusteEscoffier from '../cards/AugusteEscoffier'
+import IsaacNewton from '../cards/IsaacNewton'
+import LibraryOfAlexandria from '../cards/LibraryOfAlexandria'
+import Chemotherapy from '../cards/Chemotherapy'
+import AlfredNobel from '../cards/AlfredNobel'
+import ThomasBodley from '../cards/ThomasBodley'
+import JamesMadison from '../cards/JamesMadison'
+import StatueOfLiberty from '../cards/StatueOfLiberty'
+import Collectivisation from '../cards/Collectivisation'
+// insert import here
 
 export const NamelessFollowers = {
   Footman,
@@ -100,11 +137,19 @@ export const NamelessFollowers = {
   TechEntrepreneur,
   Slave,
   Konigstiger,
+  M1Abrams,
+  Sputnik,
+  UnarmedSoviet,
+  SelmaMarcher,
+  StonewallRioter,
+  SubprimeBorrower,
+  TankMan,
+  // insert NamelessFollower here
 }
 
 export const FamousFollowers = {
   Orcissimus,
-  PrinceTimothy,
+  VladimirLenin,
   Archimedes,
   JohnFKennedy,
   Orpheus,
@@ -112,73 +157,115 @@ export const FamousFollowers = {
   JohannesGutenberg,
   MelvilDewey,
   NikolaTesla,
+  AlexanderFleming,
+  Dolly,
+  MahatmaGandhi,
+  SaintJust,
+  LudwigII,
+  Cleon,
+  SpartacusGladiator,
+  Robespierre,
+  AugusteEscoffier,
+  IsaacNewton,
+  AlfredNobel,
+  ThomasBodley,
+  JamesMadison,
+  // insert FamousFollower here
 }
 
 export const ActionMoments = {
   Fireburst,
   NapalmStrike,
   DivideAndConquer,
+  // insert ActionMoment here
 }
 
 export const EventMoments = {
   Consume,
   BattleOfSuiyang,
+  FrenchRevolution,
+  GeneralStrike1926,
+  Collectivisation,
+  // insert EventMoment here
 }
 
 export const WorkCreations = {
   BeveridgeReport,
+  LesMiserables,
+  // insert WorkCreation here
 }
 
 export const WeaponCreations = {
   ClubOfLooting,
+  // insert WeaponCreation here
 }
 
 export const WonderCreations = {
-  CitizenAcademy,
+  TwelveTables,
+  UniversityOfOxford,
+  LibraryOfAlexandria,
+  StatueOfLiberty,
+  // insert WonderCreation here
 }
 
 export const TechniqueCreations = {
   CorporalMotivation,
+  Chemotherapy,
+  // insert TechniqueCreation here
 }
 
 export const PermanentPassives = {
-  CombatTraining,
+  SecondAmendment,
+  // insert PermanentPassive here
 }
 
 export const EthosPassives = {
   TulipMania,
   SingleMindedFury,
+  ThrillOfDiscovery,
+  PeacefulResistance,
+  // insert EthosPassive here 
 }
 
 export const ActiveLeaderTechniques = {
   OrkusTheOrkestSmash,
   NapoleonBonaparteLeveeEnMasse,
+  DavidHumeOrganiseThoughts,
+  // insert ActiveLeaderTechnique here
 }
 
 export const PassiveLeaderTechniques = {
   SpartacusSolidarity,
+  HenryVIIIRemarriage,
+  NelsonMandelaTruthAndReconciliation,
+  // insert PassiveLeaderTechnique here
 }
 
 export const StarterLeaders = {
   OrkusTheOrkest,
   NapoleonBonaparte,
+  DavidHume,
+  NelsonMandela,
+  // insert StarterLeader here
 }
 
 export const Leaders = {
   ...StarterLeaders,
   Spartacus,
+  HenryVIII,
+  // insert Leader here
 }
 
-export const Followers =  {...NamelessFollowers, ...FamousFollowers}
-export const Characters = {...Leaders, ...Followers}
-export const Creations = {...WorkCreations, ...WeaponCreations, ...WonderCreations, ...TechniqueCreations}
-export const LeaderTechniques = {...ActiveLeaderTechniques, ...PassiveLeaderTechniques}
-export const Passives = {...PermanentPassives, ...EthosPassives}
-export const Moments = {...ActionMoments, ...EventMoments}
-export const DestroyableCards = {...Characters, ...Creations}
-export const PersistentCards = {...DestroyableCards, ...Passives, ...LeaderTechniques}
+export const Followers = { ...NamelessFollowers, ...FamousFollowers }
+export const Characters = { ...Leaders, ...Followers }
+export const Creations = { ...WorkCreations, ...WeaponCreations, ...WonderCreations, ...TechniqueCreations }
+export const LeaderTechniques = { ...ActiveLeaderTechniques, ...PassiveLeaderTechniques }
+export const Passives = { ...PermanentPassives, ...EthosPassives }
+export const Moments = { ...ActionMoments, ...EventMoments }
+export const DestroyableCards = { ...Characters, ...Creations }
+export const PersistentCards = { ...DestroyableCards, ...Passives, ...LeaderTechniques }
 
-const Cards = {...PersistentCards, ...Moments}
+const Cards = { ...PersistentCards, ...Moments }
 // const Cards = {...Followers, ...Leaders, ...Creations, ...LeaderTechniques, ...Passives, ...Moments}
 
 export default Cards

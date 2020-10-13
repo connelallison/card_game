@@ -10,7 +10,7 @@ const data: LeaderData = {
     type: 'Leader',
     subtype: 'Leader',
     classes: ['The People'],
-    collectable: true,
+    collectable: false,
     cost: 5,
     health: 5,
     leaderTechniqueID: 'SpartacusSolidarity',

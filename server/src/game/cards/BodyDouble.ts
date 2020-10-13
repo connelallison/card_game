@@ -47,6 +47,7 @@ const data: NamelessFollowerData = {
                         english: `Choose a follower to transform into.`,
                     },
                 },
+                hostile: false,
             }],
             actionFunctions: [{
                 functionType: 'manualAction',

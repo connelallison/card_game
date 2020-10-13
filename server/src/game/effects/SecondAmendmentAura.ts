@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEffectData = {
-    id: 'CombatTrainingAura',
+    id: 'SecondAmendmentAura',
     name: {
-        english: `Combat Training Aura`,
+        english: `Second Amendment Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
@@ -14,7 +14,7 @@ const data: AuraEffectData = {
     activeZones: 'inPlay',
     activeTypes: 'Persistent',
     effectFunction: {
-        name: { english: `Combat Training` },
+        name: { english: `Second Amendment` },
         text: { templates: { english: `+1 Attack` } },
         functions: [{
             operation: 'incrementAttack',
@@ -34,10 +34,10 @@ const data: AuraEffectData = {
     },
 }
 
-class CombatTrainingAura extends AuraEffect {
+class SecondAmendmentAura extends AuraEffect {
     static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default CombatTrainingAura
+export default SecondAmendmentAura

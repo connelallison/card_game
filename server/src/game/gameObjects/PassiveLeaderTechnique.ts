@@ -2,6 +2,7 @@ import LeaderTechnique, { LeaderTechniqueData } from "./LeaderTechnique";
 
 export interface PassiveLeaderTechniqueData extends LeaderTechniqueData {
     subtype: 'Passive'
+    repeatable?: false
 }
 
 abstract class PassiveLeaderTechnique extends LeaderTechnique {

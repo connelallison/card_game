@@ -92,9 +92,21 @@ abstract class Leader extends Character {
     }) : []
   }
 
-  takeDamage(damage: number): number {
-    const reducedDamage = damage - (this.stats.damageReduction ?? 0) > 0 ? damage - (this.stats.damageReduction ?? 0) : 0
-    const actualDamage = this.owner.takeDamage(reducedDamage)
+  takeDamage(damage: number, rot?: boolean): number {
+    let reducedDamage = damage - this.stats.damageReduction >= 0 ? damage - this.stats.damageReduction : 0
+    if (this.flags.immune && !rot) reducedDamage = 0
+    if (reducedDamage > 0 && this.flags.fortune && !rot) {
+      reducedDamage = 0
+      this.flags.fortune = false
+      this.effects = this.effects.filter(effect => !(effect instanceof Fortune))
+    }
+    let actualDamage = reducedDamage
+    if (this.inPlay()) {
+      actualDamage = this.owner.takeDamage(reducedDamage, rot)
+    } else {
+      this.health -= actualDamage
+      this.rawHealth -= actualDamage
+    }
     this.update()
     return actualDamage
   }
@@ -149,13 +161,13 @@ abstract class Leader extends Character {
 
   applyInherited(): void {
     if (this.inPlay()) {
-      const weaponsAttack = (this.controller().creationZone
-        .filter(creation => creation instanceof WeaponCreation) as WeaponCreation[])
+      const weaponsAttack = this.controller().weapons()
         .map(weapon => weapon.attack)
         .reduce((acc, val) => acc + val, 0)
+
       this.attack += weaponsAttack
 
-      const weaponsFlags = this.controller().creationZone.filter(creation => creation instanceof WeaponCreation).map(weapon => weapon.flags)
+      const weaponsFlags = this.controller().weapons().map(weapon => weapon.flags)
       Object.assign(this.flags, ...weaponsFlags)
     }
   }
@@ -179,6 +191,7 @@ abstract class Leader extends Character {
   setData(dataObj: GameObjectData): void {
     if (dataObj.cost < 0) dataObj.cost = 0
     this.toggleAttack()
+    this.healthStatic = dataObj.health
     Object.assign(this, dataObj)
   }
 
@@ -187,31 +200,27 @@ abstract class Leader extends Character {
     this.owner[this.zone].splice(this.owner[this.zone].indexOf(this), 1)
 
     if (destination === 'leaderZone') {
+      const health = this.health
       if (this.owner.leaderZone[0]) this.owner.leaderZone[0].moveZone('legacy')
       this.game.inPlay.push(this)
+      this.owner.maxHealth += health
+      this.owner.currentHealth += health
+      if (this.game.activeChild) {
+        const leaderTechnique = this.createCard(this.leaderTechniqueID, this.controller()) as LeaderTechnique
+        const summonEvent = new SummonEvent(this.game, {
+          controller: this.controller(),
+          card: leaderTechnique,
+          objectSource: this,
+          charSource: this
+        })
+        this.game.startNewDeepestPhase('SummonPhase', summonEvent)
+      }
     }
 
     if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
     else this.owner[destination].push(this)
     this.zone = destination
     this.updateEffects()
-  }
-
-  putIntoPlay(): void {
-    const health = this.health
-    this.moveZone(this.inPlayZone)
-    this.owner.maxHealth += health
-    this.owner.currentHealth += health
-    if (this.game.activeChild) {
-      const leaderTechnique = this.createCard(this.leaderTechniqueID, this.controller()) as LeaderTechnique
-      const summonEvent = new SummonEvent(this.game, {
-        controller: this.controller(),
-        card: leaderTechnique,
-        objectSource: this,
-        charSource: this
-      })
-      this.game.startNewDeepestPhase('SummonPhase', summonEvent)
-    }
   }
 }
 
@@ -229,4 +238,5 @@ import { SummonEvent } from '../gamePhases/SummonPhase'
 import { LocalisationString } from '../structs/Localisation'
 import LeaderTechnique from './LeaderTechnique'
 import Cards from '../dictionaries/Cards'
+import Fortune from '../effects/Fortune'
 

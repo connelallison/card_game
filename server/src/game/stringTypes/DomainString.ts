@@ -1,4 +1,4 @@
-export type EventsDomainString = 'deathEvents' | 'enterPlayEvents'
+export type EventsDomainString = 'deathEvents' | 'enterPlayEvents' | 'playEvents'
 export type TargetDomainString = 'self' | 'enemyLeader' | 'friendlyLeader' | 'leftFollower' | 'rightFollower' | 'oppositeFollower' | 'friendlyPlayer' | 'enemyPlayer'
 export type TargetsDomainString = TargetDomainString 
                                 | 'enemyBoard' 

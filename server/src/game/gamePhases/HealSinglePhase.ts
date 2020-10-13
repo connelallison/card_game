@@ -15,6 +15,7 @@ export class HealingEvent extends GameEvent {
     target: Character
     healing: number
     actualHealing: number
+    overhealing: number
     split?: boolean
 
     constructor(game: Game, object: HealingEventObject) {
@@ -24,7 +25,8 @@ export class HealingEvent extends GameEvent {
 
     generateLog() {
         const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name.english}`
-        this.log = `${this.target.name.english} receives ${this.actualHealing} healing from ${this.charSource.name.english}${source}.`
+        const overhealing = this.overhealing > 0 ? ` (${this.overhealing} overhealing)`: ''
+        this.log = `${this.target.name.english} receives ${this.actualHealing} healing from ${this.charSource.name.english}${source}${overhealing}.`
     }
 }
 
@@ -38,13 +40,15 @@ class HealSinglePhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        if (event.healing > 0 && event.target.isDamaged()) {
+        if (event.healing > 0) {
             this.emit('beforeHealing', event)
             const actualHealing = event.target.receiveHealing(event.healing)
             event.actualHealing = actualHealing
+            event.overhealing = event.healing - actualHealing
             event.generateLog()
             this.cacheEvent(event, 'healing')
             if (event.actualHealing > 0) this.emit('afterHealing', event)
+            if (event.overhealing > 0) this.emit('afterOverhealing', event)
             this.queueSteps()
         }
         this.end()

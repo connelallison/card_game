@@ -44,7 +44,7 @@ const data: NamelessFollowerData = {
                             money: 1
                         }
                     }],
-                    requirements: [{
+                    activeRequirements: [{
                         activeRequirement: "canAfford",
                         values: {
                             cost: {

@@ -62,10 +62,17 @@ abstract class Creation extends DestroyableCard {
         }
     }
 
-    loseCharge() {
-        this.charges--
-        if (this.charges <= 0) this.pendingDestroy = true
+    gainCharge() {
+        this.charges++
         this.update()
+    }
+
+    loseCharge() {
+        if (!this.flags.immune) {
+            this.charges--
+            if (this.charges <= 0) this.pendingDestroy = true
+            this.update()
+        }
     }
 
     isDestroyed(): boolean {

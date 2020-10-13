@@ -4,13 +4,13 @@ import EventPhase from "./EventPhase";
 interface ProposedDrawEventObject {
     player: GamePlayer,
     number?: number,
-    criteria?: TargetRequirement[]
+    targets?: Card[]
 }
 
 export class ProposedDrawEvent extends GameEvent {
     player: GamePlayer
     number?: number = 1
-    criteria?: TargetRequirement[]
+    targets?: Card[]
     
     constructor(game: Game, object: ProposedDrawEventObject) {
         super(game) 
@@ -54,8 +54,8 @@ class ProposedDrawPhase extends EventPhase {
     start(): void {
         const event = this.event
         this.emit('proposedDrawEvent', event)
-        const { player } = event
-        const drawQueue = event.criteria.reduce((queue, requirement) => queue.filter(card => player.targetRequirement(requirement, card)), player.deck)
+        const { player, targets } = event
+        const drawQueue = targets ?? player.deck
         for (let i = 0; i < event.number; i++) {
             if (i < drawQueue.length) {
                 if (player.hand.length < player.max.hand) {

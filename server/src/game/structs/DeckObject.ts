@@ -1,11 +1,11 @@
 interface DeckObject {
     id: string
     name: string
-    leader: LeaderIDString
+    leader: StarterLeaderIDString
     passive: EthosPassiveIDString
     cards: CardIDString[]
 }
 
 export default DeckObject
 
-import { CardIDString, LeaderIDString, EthosPassiveIDString } from "../stringTypes/DictionaryKeyString";
+import { CardIDString, EthosPassiveIDString, StarterLeaderIDString } from "../stringTypes/DictionaryKeyString";

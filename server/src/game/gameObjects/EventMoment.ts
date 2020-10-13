@@ -1,7 +1,7 @@
 import Moment, { MomentData } from "./Moment";
 
 export interface EventMomentData extends MomentData {
-  events: EventAction[]
+  events: EventActionData[]
 }
 
 abstract class EventMoment extends Moment {
@@ -22,4 +22,4 @@ export default EventMoment
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { EventAction } from "../structs/Action";
+import { EventActionData } from "../structs/Action";

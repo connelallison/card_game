@@ -14,10 +14,11 @@ export interface CardData {
   staticText: LocalisedStringObject
   text: DynamicTextObject
   tooltips?: TooltipString[]
+  successor?: CardIDString
+  effects?: EffectIDString[]
+  options?: OptionActionData[]
   actions?: ActionActionData[]
   events?: EventActionData[]
-  options?: OptionActionData[]
-  effects?: EffectIDString[]
 }
 
 export interface CardStats {
@@ -39,6 +40,7 @@ abstract class Card extends GameObject {
   stats: CardStats
   staticText: LocalisedStringObject
   text: DynamicTextObject
+  successor: CardIDString
   options: OptionAction[]
   baseOptions: OptionAction[]
   addedOptions: OptionAction[]
@@ -69,6 +71,7 @@ abstract class Card extends GameObject {
     this.stats = this.baseStats()
     this.staticText = data.staticText
     this.text = data.text
+    this.successor = data.successor ?? null
     this.tooltips = data.tooltips ?? []
     this.baseOptions = data.options ?? []
     this.options = [...this.baseOptions]
@@ -281,7 +284,7 @@ abstract class Card extends GameObject {
   }
 
   eventStepActive(eventStep: EventActionStep): boolean {
-    const active = eventStep.requirements?.every(requirement => this.requirement(requirement)) ?? true
+    const active = eventStep.activeRequirements?.every(requirement => this.requirement(requirement)) ?? true
     const autoTargets = eventStep.autoTargets?.every(autoTarget =>
       autoTarget.optional
       || autoTarget.targets.from === 'stored' || autoTarget.targets.from === 'manualTarget' || autoTarget.targets.from === 'autoTarget'
@@ -334,12 +337,19 @@ abstract class Card extends GameObject {
     return (this.controller()[this.zone] as Card[]).indexOf(this)
   }
 
+  slotText(): NameAndTextObject[] {
+    return []
+  }
+  
+  passionateText(): NameAndTextObject[] {
+    return []
+  }
+
   addedTextReport(localisation: LocalisationString = 'english'): LocalisedNameAndText[] {
-    const slotText = (this instanceof Follower && this.slot && (this.slot.attack !== 0 || this.slot.health !== 0)) ? [this.slot.statsReport()] : []
-    // const activeAddedText = this.addedText.filter(text => text.active)
+    const slotText = this.slotText()
+    const passionateText = this.passionateText()
     const auraText = this.auraEffects.flat()
-    // const activeText = [...slotText, ...activeAddedText, ...auraText]
-    const activeText = [...slotText, ...this.addedText, ...auraText]
+    const activeText = [...this.addedText, ...auraText, ...passionateText, ...slotText]
     return activeText.map(text => {
       if (text instanceof Effect) return text.localiseNameAndTextObject(text, localisation)
       else return this.localiseNameAndTextObject(text, localisation)
@@ -357,13 +367,17 @@ abstract class Card extends GameObject {
     if (this.flags.pillage || this.tooltips.includes('pillage')) rawTooltips.push(Tooltips.pillage)
     if (this.flags.rush || this.tooltips.includes('rush')) rawTooltips.push(Tooltips.rush)
     if (this.flags.mob || this.tooltips.includes('mob')) rawTooltips.push(Tooltips.mob)
+    if (this.flags.snipe || this.tooltips.includes('snipe')) rawTooltips.push(Tooltips.snipe)
     if (this.flags.passionate || this.tooltips.includes('passionate')) rawTooltips.push(Tooltips.passionate)
+    if (this.flags.fortune || this.tooltips.includes('fortune')) rawTooltips.push(Tooltips.fortune)
+    if (this.flags.bloodthirst || this.tooltips.includes('bloodthirst')) rawTooltips.push(Tooltips.bloodthirst)
     if (this.stats['debt'] || this.tooltips.includes('debt')) rawTooltips.push(Tooltips.debt)
     if (this.stats['rent'] || this.tooltips.includes('rent')) rawTooltips.push(Tooltips.rent)
     if (this.stats['income'] || this.tooltips.includes('income')) rawTooltips.push(Tooltips.income)
     if (this.stats['growth'] || this.tooltips.includes('growth')) rawTooltips.push(Tooltips.growth)
     if (this.stats['fervour'] || this.tooltips.includes('fervour')) rawTooltips.push(Tooltips.fervour)
     if (this.tooltips.includes('money')) rawTooltips.push(Tooltips.money)
+    if (this.tooltips.includes('rotDamage')) rawTooltips.push(Tooltips.rotDamage)
     const tooltips = rawTooltips.map(tooltip => this.localiseNameAndTextObject(tooltip, localisation))
     return tooltips
 }

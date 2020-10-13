@@ -5,6 +5,7 @@ export interface TriggerEffectData extends EffectData {
     triggerObjs: TriggerAction[]
     repeatable: boolean
     wonderTrigger: boolean
+    memory?: {[index: string]: any}
 }
 
 abstract class TriggerEffect extends Effect {
@@ -18,12 +19,14 @@ abstract class TriggerEffect extends Effect {
     constructor(game: Game, owner: GameObject, data: TriggerEffectData) {
         super(game, owner, data)
         this.repeatable = data.repeatable
+        if (data.memory) Object.assign(this.memory, data.memory)
         this.wonderTrigger = data.wonderTrigger
         this.triggers = this.wrapTriggers(data.triggerObjs)
     }
 
     updateActive(): boolean {
-        const active = this.activeZones.includes(this.owner.zone)
+        this.zone = this.owner?.zone ?? null
+        const active = this.activeZones.includes(this.zone)
             && this.activeTypes.includes(this.owner.type)
             && this.activeSubtypes.includes(this.owner.subtype)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
@@ -52,6 +55,7 @@ abstract class TriggerEffect extends Effect {
         this.disableListeners()
         this.owner.removeEffect(this)
         this.owner = null
+        this.updateActive()
     }
 
     wrapTriggers(triggerObjs: TriggerAction[]): Trigger[] {
@@ -61,7 +65,7 @@ abstract class TriggerEffect extends Effect {
     wrapTrigger(triggerAction: TriggerAction): Trigger {
         const actionSteps = triggerAction.actionSteps
         const action = (event: GameEvent) => {
-            if (actionSteps.some(step => step.requirements.every(requirement => this.requirement(requirement, event)))) {
+            if (actionSteps.some(step => step.requirements?.every(requirement => this.requirement(requirement, event)) ?? true)) {
                 const triggerEvent = new TriggerEvent(this.game, {
                     controller: this.controller(),
                     event,

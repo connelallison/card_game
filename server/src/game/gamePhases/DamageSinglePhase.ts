@@ -7,6 +7,7 @@ interface DamageEventObject {
     target: Character
     damage: number
     split?: boolean
+    rot?: boolean
 }
 
 export class DamageEvent extends GameEvent {
@@ -16,6 +17,7 @@ export class DamageEvent extends GameEvent {
     damage: number
     actualDamage: number
     split?: boolean
+    rot?: boolean
 
     constructor(game: Game, object: DamageEventObject) {
         super(game) 
@@ -24,7 +26,7 @@ export class DamageEvent extends GameEvent {
 
     generateLog() {
         const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name.english}`
-        this.log = `${this.target.name.english} takes ${this.damage} damage from ${this.charSource.name.english}${source}.`
+        this.log = `${this.target.name.english} takes ${this.actualDamage} damage from ${this.charSource.name.english}${source}.`
     }
 }
 
@@ -39,7 +41,7 @@ class DamageSinglePhase extends EventPhase {
         const event = this.event
         if (event.damage > 0) {
             this.emit('beforeDamage', event)
-            const actualDamage = event.target.takeDamage(event.damage)
+            const actualDamage = event.target.takeDamage(event.damage, !!event.rot)
             event.actualDamage = actualDamage
             event.generateLog()
             this.cacheEvent(event, 'damage')

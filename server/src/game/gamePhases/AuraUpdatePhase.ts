@@ -15,6 +15,7 @@ class AuraUpdatePhase extends EventPhase {
         this.emit('auraApply1')
         this.emit('auraEmit2')
         this.emit('auraApply2')
+        this.emit('applyPassionate')
         this.emit('applyInherited')
         this.emit('auraEmit3')
         this.emit('auraApply3')

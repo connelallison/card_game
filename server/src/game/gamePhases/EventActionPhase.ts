@@ -44,7 +44,7 @@ class EventActionPhase extends EventPhase {
         event.generateLog()
         this.cacheEvent(event, 'eventAction')
         event.eventAction.actionSteps.forEach(step => {
-            if (step.requirements?.every(requirement => actionCard.requirement(requirement, event.event)) ?? true)
+            if (step.activeRequirements?.every(requirement => actionCard.requirement(requirement, event.event)) ?? true)
             actionCard.actionStep(event, step)
         })
         this.emit('afterEventAction', event)

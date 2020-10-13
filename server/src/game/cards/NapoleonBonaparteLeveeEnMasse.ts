@@ -11,14 +11,14 @@ const data: ActiveLeaderTechniqueData = {
     subtype: 'Active',
     classes: ['The People'],
     collectable: false,
-    cost: 2,
+    cost: 1,
     repeatable: false,
     staticText: {
-        english: `Event: Summon a 2/2 Citizen.`,
+        english: `Event: Summon a 1/1 Citizen.`,
     },
     text: {
         templates: {
-            english: `Event: Summon a 2/2 Citizen.`,
+            english: `Event: Summon a 1/1 Citizen.`,
         },
     },
     events: [{
@@ -29,7 +29,7 @@ const data: ActiveLeaderTechniqueData = {
         },
         text: {
             templates: {
-                english: `Event: Summon a 2/2 Citizen.`,
+                english: `Event: Summon a 1/1 Citizen.`,
             },
         },
         actionSteps: [{
@@ -40,7 +40,7 @@ const data: ActiveLeaderTechniqueData = {
                     cardID: 'Citizen',
                 }
             }],
-            requirements: [{
+            activeRequirements: [{
                 activeRequirement: 'canSummonType',
                 values: {
                     type: 'Follower',
@@ -48,7 +48,7 @@ const data: ActiveLeaderTechniqueData = {
             }],
         }],
     }],
-
+    
 }
 
 class NapoleonBonaparteLeveeEnMasse extends ActiveLeaderTechnique {

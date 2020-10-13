@@ -10,6 +10,7 @@ GameObject
 // import Cards from './game/dictionaries/Cards'
 // Cards
 import Game from './game/gamePhases/Game'
+import Decks from './game/dictionaries/Decks'
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 function testGame(player: ServerPlayer) {
@@ -76,7 +77,7 @@ io.on('connection', function (socket) {
   })
   socket.on('updateDeckID', data => {
     console.log('updateDeckID request received')
-    serverPlayer.deckID = data.deckID
+    if (Object.keys(Decks).includes(data.deckID)) serverPlayer.deckID = data.deckID
   })
   socket.on('requestTestGame', function (opponent: { opponentID: string }) {
     const emitGameState = gameState => socket.emit('gameStateUpdate', gameState)
@@ -103,7 +104,7 @@ io.on('connection', function (socket) {
       }
     }
   })
-  
+
   socket.on('newMoveRequest', function (moveRequest) {
     // console.log(moveRequest)
     serverEvent.emit(`playerMoveRequest:${socketID}`, moveRequest)

@@ -36,6 +36,7 @@ const data: PermanentPassiveData = {
     },
     effects: ['TulipManiaAura'],
     ethos: true,
+    
 }
 
 class TulipMania extends PermanentPassive {

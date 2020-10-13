@@ -14,7 +14,8 @@ const data: StaticEffectData = {
     effectObjs: [{
         operation: 'guard',
         value: true
-    }]
+    }],
+    
 }
 
 class Guard extends StaticEffect {

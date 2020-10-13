@@ -294,10 +294,11 @@ abstract class Card extends GameObject {
     return active && autoTargets
   }
 
-  updateArrays(): void {
+  finishUpdate(): void {
     // this.updateActiveOptions()
     // this.updateActiveActions()
     // this.updateActiveEvents()
+    this.cost = this.truncate(this.cost)
   }
 
   canBeSelected(): boolean {
@@ -383,7 +384,7 @@ abstract class Card extends GameObject {
 }
 
 relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
-  return null
+  return this.successor && Cards[this.successor].provideReport(localisation)
 }
 
   addEffect(effect: Effect): void {

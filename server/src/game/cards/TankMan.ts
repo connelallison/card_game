@@ -17,11 +17,11 @@ const data: NamelessFollowerData = {
     health: 1,
     charges: 2,
     staticText: {
-        english: `Fortune. The follower opposite can't attack.`,
+        english: `Fortune\nThe follower opposite can't attack.`,
     },
     text: {
         templates: {
-            english: `Fortune. The follower opposite can't attack.`,
+            english: `Fortune\nThe follower opposite can't attack.`,
         },
     },
     tooltips: [],

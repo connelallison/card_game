@@ -18,11 +18,7 @@ const data: FamousFollowerData = {
     staticText: {
         english: `Passionate\nAction: Deal this card's Attack split between enemy followers.`,
     },
-    text: {
-        templates: {
-            english: `Passionate\nAction: Deal this card's Attack split between enemy followers.`,
-        },
-    },
+    text: { templates: { english: `Passionate\nAction: Deal this card's Attack split between enemy followers.`, }, },
     tooltips: [],
     stats: {},
     effects: ['Passionate'],
@@ -31,7 +27,7 @@ const data: FamousFollowerData = {
         {
             id: 'SaintJustAction',
             name: { english: 'Saint-Just Action' },
-            text: { templates: { english: `Action: Deal this card's Attack split between enemy followers.` } },
+            text: { templates: { english: `Action: Deal this card's Attack split between enemy followers.` }, },
             actionType: 'actionAction',
             activeSubtypes: 'hasAttack',
             actionSteps: [
@@ -55,7 +51,7 @@ const data: FamousFollowerData = {
                                             targetDomain: 'self',
                                         }
                                     }
-                                }
+                                },
                             },
                         },
                     ],

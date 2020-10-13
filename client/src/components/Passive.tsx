@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import Card from './Card'
+import HoverCard from './HoverCard'
 
 class Passive extends Card {
-  // hoverCard() {
-  //   return this.props.big ? null : <Passive big hover={false} object={this.props.object} selections={this.props.selections} />
-  // }
+  hoverCard(object): JSX.Element | null {
+    return <HoverCard object={object} selections={this.props.selections}></HoverCard>
+  }
 
   render() {
     return (
@@ -15,6 +16,7 @@ class Passive extends Card {
         <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
         {this.addedText()}
         {this.tooltips()}
+        {this.relatedCard()}
       </div>
     )
   }

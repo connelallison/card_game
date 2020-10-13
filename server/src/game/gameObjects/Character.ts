@@ -70,16 +70,16 @@ abstract class Character extends DestroyableCard {
   }
 
   passionateText(): NameAndTextObject[] {
-    return (this.inPlay() && this.flags.passionate && this.fervour() > 0) ? [{
+    return (this.flags.passionate && this.fervour() > 0) ? [{
       name: { english: 'Passionate' },
       text: { templates: { english: `+${this.fervour()} Attack from Fervour.` } },
     }] : []
   }
 
   applyPassionate(): void {
-    if (this.inPlay()) {
+    // if (this.inPlay()) {
       if (this.flags.passionate) this.attack += this.fervour()
-    }
+    // }
   }
 
   hasAttack():  boolean {

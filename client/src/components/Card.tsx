@@ -31,23 +31,17 @@ abstract class Card extends TargetableEntity {
 
     hoverCard(object): JSX.Element | null  { return null }
 
-    // hoverCard(object): JSX.Element | null {
-    //     if (object.type === 'unknown') {
-    //         return <Unknown big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Follower') {
-    //         return <Follower big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Moment') {
-    //         return <Moment big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Creation') {
-    //         return <Creation big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Passive') {
-    //         return <Passive big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Leader') {
-    //         return <Leader big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'LeaderTechnique') {
-    //         return <LeaderTechnique big={false} hover object={object} selections={this.props.selections} />
-    //     } else return null
-    // }
+    fortuneOverlay(): JSX.Element | null {
+        return this.props.object.fortune && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' ? (
+            <div className='fortuneOverlay'></div>
+        ) : null
+    }
+
+    guardOverlay(): JSX.Element | null {
+        return this.props.object.guard && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' ? (
+            <div className='guardOverlay'></div>
+        ) : null
+    }
 
     textLength(): string {
         return `${this.isBig()} ${this.props.object.text.length > 70 ? 'text-long' : this.props.object.text.length > 35 ? 'text-medium' : 'text-short'}`
@@ -97,6 +91,11 @@ abstract class Card extends TargetableEntity {
 
     relatedCard() {
         return (this.props.object && this.props.object.relatedCard) ? this.hoverCard(this.props.object.relatedCard) : null
+    }
+
+    boldedText() {
+        // const text = (this.props.object.text as string).split()
+        return <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
     }
 
     handInfo(): JSX.Element | null {

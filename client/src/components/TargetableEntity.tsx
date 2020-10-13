@@ -74,12 +74,20 @@ abstract class TargetableEntity extends Component {
         )
             ? this.props.object[stat] > 0
             : this.props.object[stat] !== null
+
+        const integer = Math.floor(this.props.object[stat])
+        const decimal = Math.floor((this.props.object[stat] % 1) * 10)
+        const decimalSpan = decimal > 0 ? <span className='decimal'>.{decimal}</span> : null
         return this.props.object.hasOwnProperty(stat) && hiddenCriterion ? (
-            <p className={`${stat}-label stat-label`}>{this.props.object[stat]}{abbreviations[stat]}</p>
+            <p className={`${stat}-label stat-label`}>
+                {integer}
+                {decimalSpan}
+                {abbreviations[stat]}
+                </p>
         ) : null
     }
 
-    abstract hoverCard(object): JSX.Element | null 
+    abstract hoverCard(object): JSX.Element | null
 
     abstract render(): JSX.Element
 }

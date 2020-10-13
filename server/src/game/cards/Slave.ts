@@ -12,7 +12,7 @@ const data: NamelessFollowerData = {
   classes: ['All'],
   categories: ['Underclass'],
   collectable: false,
-  cost: 0,
+  cost: 0.5,
   attack: 2,
   health: 2,
   charges: 2,

@@ -34,13 +34,17 @@ abstract class Follower extends Character {
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
-  updateArrays(): void {
+  finishUpdate(): void {
     // this.updateActiveOptions()
     // this.updateActiveActions()
     this.updateActiveEvents()
     this.updateActiveDeathEvents()
     this.updateAttackTargets()
     this.updateValidSlots()
+    this.attack = this.truncate(this.attack)
+    this.health = this.truncate(this.health)
+    this.cost = this.truncate(this.cost)
+    this.healthStatic = this.truncate(this.healthStatic)
   }
 
   updateAttackTargets(): void {
@@ -129,7 +133,7 @@ abstract class Follower extends Character {
 
   setData(dataObj: GameObjectData): void {
     if (dataObj.cost < 0) dataObj.cost = 0
-    this.healthStatic = dataObj.health
+    this.healthStatic = this.truncate(dataObj.health)
     Object.assign(this, dataObj)
   }
 

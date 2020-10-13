@@ -14,11 +14,11 @@ const data: PermanentPassiveData = {
     ethos: true,
     cost: 4,
     staticText: {
-        english: `Passive: Before you play a famous follower from the far left or right of your hand, give it +1/+1.`,
+        english: `Passive: Before you play a famous follower from the far left or right of your hand, give it +0.5/+0.5.`,
     },
     text: {
         templates: {
-            english: `Passive: Before you play a famous follower from the far left or right of your hand, give it +1/+1.`,
+            english: `Passive: Before you play a famous follower from the far left or right of your hand, give it +0.5/+0.5.`,
         },
     },
     tooltips: [],

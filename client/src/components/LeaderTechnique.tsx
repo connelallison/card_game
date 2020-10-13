@@ -18,6 +18,7 @@ class LeaderTechnique extends Card {
                     {costLabel}
                     {this.addedText()}
                     {this.tooltips()}
+                    {this.relatedCard()}
                 </div>
             )
         } else {

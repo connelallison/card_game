@@ -30,7 +30,7 @@ class SetAttackAndHealth extends StaticEffect {
     constructor(game: Game, owner: GameObject, values: { attack: number, health: number, buffName?: LocalisedStringObject } = { attack: 0, health: 0 }) {
         const moddedData = JSON.parse(JSON.stringify(data))
         moddedData.effectObjs[0].value = values.attack ?? 0
-        const healthDif = (values.health ?? 0) - (owner as Character).healthStatic
+        const healthDif = GameObject.round((values.health ?? 0) - (owner as Character).healthStatic)
         const sign = healthDif >= 0 ? '+' : ''
         moddedData.effectObjs[1].operation = healthDif >= 0 ? 'incrementHealth' : 'decrementHealth'
         moddedData.effectObjs[1].value = Math.abs(healthDif)

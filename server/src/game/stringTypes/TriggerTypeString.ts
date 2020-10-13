@@ -43,6 +43,6 @@ type TriggerTypeString = 'afterDeath'
                         | 'applyInherited'
                         | 'auraEmit3'
                         | 'auraApply3'
-                        | 'updateArrays'
+                        | 'finishUpdate'
 
 export default TriggerTypeString                        

@@ -71,7 +71,7 @@ abstract class DestroyableCard extends PersistentCard {
         this.activeDeathEvents = this.deathEvents.filter(deathEvent => this.eventActive(deathEvent))
     }
 
-    updateArrays(): void {
+    finishUpdate(): void {
         // this.updateActiveOptions()
         // this.updateActiveActions()
         this.updateActiveEvents()

@@ -244,7 +244,7 @@ class GamePlayer extends GameObject {
     this.auraApply(1)
     this.auraApply(2)
     this.auraApply(3)
-    this.updateArrays()
+    this.finishUpdate()
   }
 
   // setData(dataObj) {

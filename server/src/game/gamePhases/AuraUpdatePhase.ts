@@ -19,7 +19,7 @@ class AuraUpdatePhase extends EventPhase {
         this.emit('applyInherited')
         this.emit('auraEmit3')
         this.emit('auraApply3')
-        this.emit('updateArrays')
+        this.emit('finishUpdate')
         this.end()
     }
 }

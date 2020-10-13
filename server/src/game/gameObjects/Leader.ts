@@ -44,6 +44,8 @@ abstract class Leader extends Character {
       subtype: this.subtype,
       classes: this.classes,
       zone: this.zone,
+      fortune: this.flags.fortune,
+      guard: this.flags.guard,
       ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
@@ -61,7 +63,7 @@ abstract class Leader extends Character {
   static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
     return {
       name: this.data.name[localisation],
-      id: this.data.id[localisation],
+      id: this.data.id,
       cost: this.data.cost,
       type: this.data.type,
       attack: 1,
@@ -77,13 +79,17 @@ abstract class Leader extends Character {
     else return null
   }
 
-  updateArrays(): void {
+  finishUpdate(): void {
     // this.updateActiveOptions()
     // this.updateActiveActions()
     this.toggleAttack()
     this.updateActiveEvents()
     this.updateActiveDeathEvents()
     this.updateAttackTargets()
+    this.attack = this.truncate(this.attack)
+    this.health = this.truncate(this.health)
+    this.cost = this.truncate(this.cost)
+    this.healthStatic = this.truncate(this.healthStatic)
   }
 
   updateAttackTargets(): void {
@@ -191,7 +197,7 @@ abstract class Leader extends Character {
   setData(dataObj: GameObjectData): void {
     if (dataObj.cost < 0) dataObj.cost = 0
     this.toggleAttack()
-    this.healthStatic = dataObj.health
+    this.healthStatic = this.truncate(dataObj.health)
     Object.assign(this, dataObj)
   }
 

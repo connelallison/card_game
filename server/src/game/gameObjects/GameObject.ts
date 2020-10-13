@@ -38,7 +38,7 @@ abstract class GameObject {
         this.game.event.on('applyPassionate', event => this.applyPassionate())
         this.game.event.on('applyInherited', event => this.applyInherited())
         this.game.event.on('auraApply3', event => this.auraApply(3))
-        this.game.event.on('updateArrays', event => this.updateArrays())
+        this.game.event.on('finishUpdate', event => this.finishUpdate())
 
     }
 
@@ -68,7 +68,7 @@ abstract class GameObject {
         this.auraApply(2)
         this.applyInherited()
         this.auraApply(3)
-        this.updateArrays()
+        this.finishUpdate()
     }
 
     applyPassionate(): void {
@@ -79,7 +79,7 @@ abstract class GameObject {
 
     }
 
-    updateArrays(): void {
+    finishUpdate(): void {
 
     }
 
@@ -138,6 +138,22 @@ abstract class GameObject {
 
     currentTurn(): Turn {
         return this.game.currentTurn()
+    }
+    
+    static truncate(number: number): number {
+        return Math.floor(number * 10) / 10
+    } 
+
+    truncate(number: number): number {
+        return GameObject.truncate(number)
+    } 
+    
+    static round(number: number): number {
+        return Math.round(number * 10) / 10
+    }
+
+    round(number: number): number {
+        return GameObject.round(number)
     }
 
     createCard(cardID: CardIDString, owner: GamePlayer): Card {
@@ -272,7 +288,7 @@ abstract class GameObject {
     }
 
     localisedDynamicValue(value: DynamicValue, localisation: LocalisationString = 'english') {
-        if (typeof value === 'number') return value
+        if (typeof value === 'number') return this.truncate(value)
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
         if (value instanceof Array) return value
@@ -300,7 +316,7 @@ abstract class GameObject {
 
     dynamicValue(value: DynamicValue, actionEvent?: ActionEvent, step?: ActionStep): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
         if (typeof value === 'undefined') return value
-        if (typeof value === 'number') return value
+        if (typeof value === 'number') return this.truncate(value)
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
         if (value instanceof Array) return value
@@ -406,20 +422,25 @@ abstract class GameObject {
         if (obj.from === 'fervour') {
             const base = typeof obj.base === 'number' ? obj.base : this.dynamicNumber(obj.base, actionEvent, step)
             const fervour = obj.scaling ? this.fervour() * obj.scaling : this.fervour()
-            return base + fervour
+            return this.truncate(base + fervour)
+        }
+        if (obj.from === 'scaling') {
+            const base = typeof obj.base === 'number' ? obj.base : this.dynamicNumber(obj.base, actionEvent, step)
+            const scaling = typeof obj.scaling === 'number' ? obj.scaling : this.dynamicNumber(obj.scaling, actionEvent, step)
+            return this.truncate(base * scaling)
         }
         if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.dynamicNumbers(obj.numbers, actionEvent, step))
         if (obj.from === 'target') {
             const target = this.dynamicTarget(obj.target, actionEvent, step)[0]
-            if (target) return (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)
+            if (target) return this.truncate((TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target))
             return null
         }
         if (obj.from === 'targets') return this.dynamicTargets(obj.targets, actionEvent, step).length
         if (obj.from === 'events') return this.dynamicEvents(obj.events, actionEvent, step).length
-        if (obj.from === 'compound') return obj.numberMods.reduce((acc, mod) => this.numberMod(acc, mod), obj.base)
+        if (obj.from === 'compound') return this.truncate(obj.numberMods.reduce((acc, mod) => this.numberMod(acc, mod), obj.base))
         if (obj.from === 'event') {
             const event = this.dynamicEvent(obj.event, actionEvent, step)[0]
-            if (event) return (EventToNumberMaps[obj.numberMap] as EventToNumberMap)(event) as number
+            if (event) return this.truncate((EventToNumberMaps[obj.numberMap] as EventToNumberMap)(event)) as number
             return null
         }
         if (obj.from === 'memory') {
@@ -431,7 +452,7 @@ abstract class GameObject {
     dynamicNumbers(obj: DynamicNumbersObject, actionEvent?: ActionEvent, step?: ActionStep): number[] {
         if (obj.from === 'targets') {
             const targets = this.dynamicTargets(obj.targets, actionEvent, step)
-            return targets.map(target => (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target))
+            return targets.map(target => this.truncate((TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)))
         }
         if (obj.from === 'memory') {
             const numbers = obj.targetMemory ? this.dynamicTarget(obj.targetMemory, actionEvent, step)[0].memory[obj.param] : this.memory[obj.param]

@@ -314,6 +314,34 @@ input {
   background-color: var(--card-background-colour);
 }
 
+.fortuneOverlay {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 4px 4px rgba(230, 230, 141, 0.719);
+  border-radius: 30px;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(230, 230, 141, 0.281);
+}
+
+.guardOverlay {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 0px 6px rgb(83, 83, 83);
+  background-color: transparent;
+  border-radius: 5px;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
 /* .allClasses {
 } */
 
@@ -526,12 +554,25 @@ input {
   background-color: rgba(25, 10, 231, 0.5);
 }
 
+.stat-label .decimal {
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .cardName .stat-label {
   font-size: 12px;
 }
 
+.cardName .stat-label .decimal {
+  font-size: 10px;
+}
+
 .hoverCard .stat-label {
   font-size: 16px;
+}
+
+.hoverCard .stat-label .decimal {
+  font-size: 12px;
 }
 
 /* .hoverCard .stat-label .text-medium {
@@ -651,6 +692,10 @@ input {
   margin-top: 2px;
   margin-bottom: 2px;
   border-radius: 7px;
+}
+
+.decimal {
+  background-color: transparent;
 }
 
 .cost-label {

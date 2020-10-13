@@ -1,12 +1,10 @@
-const truncate = number => Math.floor(number * 10) / 10
-
 const ActionOperations = {
     damage: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { damage: number, split?: boolean, rot?: boolean }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ?? false
         const rot = values.rot ?? false
-        const damage = values.damage <= 0 ? 0 : split ? truncate(values.damage / targets.length) : values.damage
+        const damage = values.damage <= 0 ? 0 : split ? source.truncate(values.damage / targets.length) : values.damage
         if (targets.length === 1) {
             const damageEvent = new DamageEvent(source.game, {
                 objectSource: source,
@@ -38,7 +36,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ?? false
-        const healing = values.healing <= 0 ? 0 : split ? truncate(values.healing / targets.length) : values.healing
+        const healing = values.healing <= 0 ? 0 : split ? source.truncate(values.healing / targets.length) : values.healing
         if (targets.length === 1) {
             const healingEvent = new HealingEvent(source.game, {
                 objectSource: source,
@@ -179,7 +177,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
         if (attack === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -193,7 +191,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (health === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -207,7 +205,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const stats = values.stats <= 0 ? 0 : split ? truncate(values.stats / targets.length) : values.stats
+        const stats = values.stats <= 0 ? 0 : split ? source.truncate(values.stats / targets.length) : source.truncate(values.stats)
         if (stats === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -221,8 +219,8 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
-        const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (attack === 0 && health === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -236,7 +234,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
         if (attack === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -250,7 +248,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (health === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -264,7 +262,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const stats = values.stats <= 0 ? 0 : split ? truncate(values.stats / targets.length) : values.stats
+        const stats = values.stats <= 0 ? 0 : split ? source.truncate(values.stats / targets.length) : source.truncate(values.stats)
         if (stats === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -278,8 +276,8 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
-        const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (attack === 0 && health === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -293,7 +291,7 @@ const ActionOperations = {
         const targets = targetObjs as Card[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const money = values.money <= 0 ? 0 : split ? truncate(values.money / targets.length) : values.money
+        const money = values.money <= 0 ? 0 : split ? source.truncate(values.money / targets.length) : values.money
         if (money === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -321,7 +319,7 @@ const ActionOperations = {
         const number = values.number ?? 1
         const param = values.param ?? 'copiedCards'
         const cards: Card[] = []
-        targetObjs.forEach(target => {
+        targetObjs?.forEach(target => {
             if (target instanceof Card) {
                 for (let i = 0; i < number; i++) {
                     cards.push(source.createCard(target.id, controller))
@@ -336,7 +334,7 @@ const ActionOperations = {
         const number = values.number ?? 1
         const param = values.param ?? 'clonedCards'
         const cards: Card[] = []
-        targetObjs.forEach(target => {
+        targetObjs?.forEach(target => {
             if (target instanceof Card) {
                 for (let i = 0; i < number; i++) {
                     const clone = target.clone()
@@ -352,7 +350,7 @@ const ActionOperations = {
         const targetSlot = (targetObjs?.[0] instanceof BoardSlot) ? targetObjs[0] as BoardSlot
             : (source instanceof Follower && source.inPlay()) ? source.slot : null
 
-        values.cards.forEach(card => {
+        values.cards?.forEach(card => {
             if (card instanceof PersistentCard) {
                 const eventObj = Object.assign({
                     controller: card.controller(),
@@ -495,7 +493,8 @@ const ActionOperations = {
     },
 
     rememberValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: any }) => {
-        source.memory[values.param] = values.value
+        const value = typeof values.value === 'number' ? source.truncate(values.value) : values.value
+        source.memory[values.param] = value
     },
 
     modRememberedNumber: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, number: number }) => {
@@ -507,7 +506,8 @@ const ActionOperations = {
     },
 
     storeValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: any }) => {
-        event.stored[values.param] = values.value
+        const value = typeof values.value === 'number' ? source.truncate(values.value) : values.value
+        event.stored[values.param] = value
     },
 
     storeTargets: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string }) => {

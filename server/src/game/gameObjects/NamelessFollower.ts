@@ -33,6 +33,8 @@ abstract class NamelessFollower extends Follower {
             subtype: this.subtype,
             classes: this.classes,
             zone: this.zone,
+            fortune: this.flags.fortune,
+            guard: this.flags.guard,
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),

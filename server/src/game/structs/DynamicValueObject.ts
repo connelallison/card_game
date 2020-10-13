@@ -11,7 +11,7 @@ export type DynamicValueObject = DynamicLocalisedStringObject
 export type DynamicLocalisedStringObject = DynamicLocalisedStringFromTarget 
 export type DynamicStringObject = DynamicStringFromTarget
 export type DynamicBooleanObject = DynamicBooleanFromNumber
-export type DynamicNumberObject = DynamicNumberFromFervour | DynamicNumberFromTarget | DynamicNumberFromEvent | DynamicNumberFromTargets | DynamicNumberFromEvents | DynamicNumberFromNumbers | DynamicNumberFromCompound | DynamicNumberFromMemory
+export type DynamicNumberObject = DynamicNumberFromFervour | DynamicNumberFromScaling | DynamicNumberFromTarget | DynamicNumberFromEvent | DynamicNumberFromTargets | DynamicNumberFromEvents | DynamicNumberFromNumbers | DynamicNumberFromCompound | DynamicNumberFromMemory
 export type DynamicNumbersObject = DynamicNumbersFromTargets | DynamicNumbersFromNumberArray | DynamicNumbersFromNumbersArray | DynamicNumbersFromMemory
 export type DynamicTargetObject = DynamicTargetFromEvent | DynamicTargetFromTargets | DynamicTargetFromTargetDomain | DynamicTargetFromMemory | DynamicTargetFromSelf  | DynamicTargetFromAutoTarget | DynamicTargetFromManualTarget
 export type DynamicTargetsObject = DynamicTargetsFromEvents | DynamicTargetsFromTargetDomain | DynamicTargetsFromMemory
@@ -91,6 +91,13 @@ export interface DynamicNumberFromFervour {
     from: 'fervour',
     base: DynamicNumber
     scaling?: number
+}
+
+export interface DynamicNumberFromScaling {
+    valueType: 'number'
+    from: 'scaling'
+    scaling: DynamicNumber
+    base: DynamicNumber
 }
 
 export interface DynamicNumberFromTarget {

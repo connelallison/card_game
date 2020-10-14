@@ -3,31 +3,32 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: PermanentPassiveData = {
-    id: 'CombatTraining',
+    id: 'PeacefulResistance',
     name: {
-        english: `Combat Training`,
+        english: `Peaceful Resistance`,
     },
     type: 'Passive',
     subtype: 'Permanent',
     classes: ['The People'],
     collectable: true,
-    ethos: false,
-    cost: 3,
+    ethos: true,
+    cost: 4,
     staticText: {
-        english: `Passive: Your Citizens have +1 Attack.`,
+        english: `Passive: If your followers don't attack, you restore Health to your Leader equal to their Attack.`,
     },
     text: {
         templates: {
-            english: `Passive: Your Citizens have +1 Attack.`,
+            english: `Passive: If your followers don't attack, you restore Health to your Leader equal to their Attack.`,
         },
     },
-    effects: ['CombatTrainingAura'],
+    tooltips: [],
+    effects: ['PeacefulResistanceTrigger'],
 }
 
-class CombatTraining extends PermanentPassive {
+class PeacefulResistance extends PermanentPassive {
     static readonly data: PermanentPassiveData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default CombatTraining
+export default PeacefulResistance

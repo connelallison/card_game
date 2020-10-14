@@ -12,15 +12,15 @@ const data: FamousFollowerData = {
     classes: ['Learning'],
     categories: [],
     collectable: true,
-    cost: 3,
-    attack: 3,
+    cost: 2,
+    attack: 2,
     health: 2,
     staticText: {
-        english: `Eureka: Reduce the Cost of a Tech follower in your hand by (2).`,
+        english: `Eureka: Reduce the Cost of a Tech follower in your hand by (3).`,
     },
     text: {
         templates: {
-            english: `Eureka: Reduce the Cost of a Tech follower in your hand by (2).`,
+            english: `Eureka: Reduce the Cost of a Tech follower in your hand by (3).`,
         },
     },
     actions: [{
@@ -31,13 +31,14 @@ const data: FamousFollowerData = {
         },
         text: {
             templates: {
-                english: 'Eureka: Reduce the Cost of a Tech follower in your hand by (2).'
+                english: 'Eureka: Reduce the Cost of a Tech follower in your hand by (3).'
             }
         },
         eureka: true,
         actionSteps: [{
             manualTargets: [{
                 text: { templates: { english: 'Choose a Tech follower to discount.' } },
+                hostile: false,
                 targets: {
                     valueType: 'targets',
                     from: 'targetDomain',
@@ -56,17 +57,16 @@ const data: FamousFollowerData = {
                             }
                         }
                     ]
-                }
+                },
             }],
-            requirements: [{
+            activeRequirements: [{
                 activeRequirement: 'eureka'
             }],
-            // activeHighlight: true,
             actionFunctions: [{
                 functionType: 'manualAction',
                 operation: 'reduceCost',
                 values: {
-                    money: 2,
+                    money: 3,
                     buffName: { english: 'Nikola Tesla Discount' },
                 }
             }]

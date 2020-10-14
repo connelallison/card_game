@@ -385,10 +385,11 @@ class Game extends GamePhase {
     this.emit('auraApply1')
     this.emit('auraEmit2')
     this.emit('auraApply2')
+    this.emit('applyPassionate')
     this.emit('applyInherited')
     this.emit('auraEmit3')
     this.emit('auraApply3')
-    this.emit('updateArrays')
+    this.emit('finishUpdate')
 
     if (this.player1.alive() && !this.player2.alive()) {
       this.winner = this.player1.playerName + ' wins'

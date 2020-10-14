@@ -1,11 +1,10 @@
-const truncate = number => Math.floor(number * 10) / 10
-
 const ActionOperations = {
-    damage: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { damage: number, split?: boolean }) => {
+    damage: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { damage: number, split?: boolean, rot?: boolean }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
-        const split = values.split ? true : false
-        const damage = values.damage <= 0 ? 0 : split ? truncate(values.damage / targets.length) : values.damage
+        const split = values.split ?? false
+        const rot = values.rot ?? false
+        const damage = values.damage <= 0 ? 0 : split ? source.truncate(values.damage / targets.length) : values.damage
         if (targets.length === 1) {
             const damageEvent = new DamageEvent(source.game, {
                 objectSource: source,
@@ -13,6 +12,7 @@ const ActionOperations = {
                 target: targets[0],
                 damage,
                 split,
+                rot,
             })
             source.game.startNewDeepestPhase('DamageSinglePhase', damageEvent)
         } else if (targets.length > 1) {
@@ -24,6 +24,7 @@ const ActionOperations = {
                     target,
                     damage,
                     split,
+                    rot,
                 })
                 damageEvents.push(damageEvent)
             }
@@ -31,11 +32,12 @@ const ActionOperations = {
         }
     },
 
-    heal: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { healing: number, split?: boolean }) => {
+    heal: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { healing: number, split?: boolean, nourish?: boolean }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
-        const split = values.split ? true : false
-        const healing = values.healing <= 0 ? 0 : split ? truncate(values.healing / targets.length) : values.healing
+        const split = values.split ?? false
+        const healing = values.healing <= 0 ? 0 : split ? source.truncate(values.healing / targets.length) : values.healing
+        const nourish = values.nourish ?? false
         if (targets.length === 1) {
             const healingEvent = new HealingEvent(source.game, {
                 objectSource: source,
@@ -43,6 +45,7 @@ const ActionOperations = {
                 target: targets[0],
                 healing,
                 split,
+                nourish,
             })
             source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
         } else if (targets.length > 1) {
@@ -54,6 +57,7 @@ const ActionOperations = {
                     target,
                     healing,
                     split,
+                    nourish,
                 })
                 healingEvents.push(healingEvent)
             }
@@ -61,15 +65,18 @@ const ActionOperations = {
         }
     },
 
-    healToFull: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+    healRelativeToNumber: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { numberMap: TargetToNumberMapString, scaling?: number, nourish?: boolean }) => {
         const targets = targetObjs as Character[]
+        const nourish = values.nourish ?? false
+        const scaling = values.scaling ?? 1
         if (targets.length === 0) return
         if (targets.length === 1) {
             const healingEvent = new HealingEvent(source.game, {
                 objectSource: source,
                 charSource: source.charOwner(),
                 target: targets[0],
-                healing: targets[0].missingHealth(),
+                healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(targets[0]) * scaling,
+                nourish,
             })
             source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
         } else if (targets.length > 1) {
@@ -79,7 +86,8 @@ const ActionOperations = {
                     objectSource: source,
                     charSource: source.charOwner(),
                     target,
-                    healing: target.missingHealth(),
+                    healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(target) * scaling,
+                    nourish,
                 })
                 healingEvents.push(healingEvent)
             }
@@ -87,26 +95,60 @@ const ActionOperations = {
         }
     },
 
-    gainArmour: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { armour: number, opponent?: boolean }) => {
-        const player = values.opponent ? source.opponent() : source.controller()
+    depleteCharge: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { charges?: number }) => {
+        const targets = targetObjs as (Creation | NamelessFollower)[]
+        const charges = values.charges ?? 1
+        targets.forEach(target => {
+            for (let i = 0; i < charges; i++) {
+                target.loseCharge()
+            }
+        })
+    },
+
+    addCharge: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { charges?: number }) => {
+        const targets = targetObjs as (Creation | NamelessFollower)[]
+        const charges = values.charges ?? 1
+        targets.forEach(target => {
+            for (let i = 0; i < charges; i++) {
+                target.gainCharge()
+            }
+        })
+    },
+
+    gainArmour: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { armour: number, forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.opponent() : source.controller()
         player.gainArmour(values.armour)
     },
 
-    draw: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values?: { number?: number, criteria?: TargetRequirement[] }) => {
-        const number = values.number === undefined ? 1 : values.number
-        const criteria = values.criteria === undefined ? [] : values.criteria
+    draw: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values?: { number?: number, targetRequirements?: TargetRequirement[], forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.opponent() : source.controller()
+        const targets = values.targetRequirements?.reduce((queue, requirement) => queue.filter(card => source.targetRequirement(requirement, card)), player.deck)
+        const number = values.number ?? 1
         const proposedDrawEvent = new ProposedDrawEvent(source.game, {
-            player: source.controller(),
+            player,
             number,
-            criteria,
+            targets,
         })
         source.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
+    },
+
+    shuffleIntoDeck: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        targetObjs.forEach((target: Card) => {
+            target.moveZone('deck')
+            const index = Math.floor(Math.random() * target.controller().deck.length)
+            ActionOperations.setIndex(source, event, [target], { index })
+        })
+    },
+
+    moveZone: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { zone: ZoneString }) => {
+        const cards = targetObjs as Card[]
+        cards.forEach(card => card.moveZone(values.zone))
     },
 
     addTargetedEffect: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { effectID: EffectIDString, target: GameObject[], expires?: EffectExpiryIDString[] }) => {
         targetObjs.forEach(target => {
             const effect = new Effects[values.effectID](source.game, target)
-            ActionOperations.rememberTarget(effect, event, values.target, { param: 'target' })
+            ActionOperations.rememberTargets(effect, event, values.target, { param: 'target' })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
@@ -142,7 +184,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
         if (attack === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -156,7 +198,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (health === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -170,7 +212,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const stats = values.stats <= 0 ? 0 : split ? truncate(values.stats / targets.length) : values.stats
+        const stats = values.stats <= 0 ? 0 : split ? source.truncate(values.stats / targets.length) : source.truncate(values.stats)
         if (stats === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -184,8 +226,8 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const attack = values.attack <= 0 ? 0 : split ? truncate(values.attack / targets.length) : values.attack
-        const health = values.health <= 0 ? 0 : split ? truncate(values.health / targets.length) : values.health
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (attack === 0 && health === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -195,11 +237,68 @@ const ActionOperations = {
         })
     },
 
+    setAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
+        if (attack === 0) return
+        const buffName = values.buffName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetAttack(source.game, target, { attack, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    setHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
+        if (health === 0) return
+        const buffName = values.buffName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetHealth(source.game, target, { health, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    setStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const stats = values.stats <= 0 ? 0 : split ? source.truncate(values.stats / targets.length) : source.truncate(values.stats)
+        if (stats === 0) return
+        const buffName = values.buffName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetAttackAndHealth(source.game, target, { attack: stats, health: stats, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    setAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
+        if (attack === 0 && health === 0) return
+        const buffName = values.buffName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetAttackAndHealth(source.game, target, { attack, health, buffName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
     reduceCost: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
         const targets = targetObjs as Card[]
         if (targets.length === 0) return
         const split = values.split ? true : false
-        const money = values.money <= 0 ? 0 : split ? truncate(values.money / targets.length) : values.money
+        const money = values.money <= 0 ? 0 : split ? source.truncate(values.money / targets.length) : values.money
         if (money === 0) return
         const buffName = values.buffName ?? null
         targets.forEach(target => {
@@ -209,41 +308,83 @@ const ActionOperations = {
         })
     },
 
-    createAndSummonCard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cardID: string, number?: number, forOpponent?: boolean }) => {
-        const targetSlot = (targetObjs && targetObjs[0] instanceof BoardSlot) ? targetObjs[0] as BoardSlot
-            : (source instanceof Follower && source.inPlay()) ? source.slot : null
+    createAndStoreCard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cardID: string, param?: string, number?: number, forOpponent?: boolean }) => {
         const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
-        const number = values.number === undefined ? 1 : values.number
-        const cardID = values.cardID as PersistentCardIDString
-        if (typeof cardID !== 'string') throw ('cardID is not a string')
-        if (cardID.length === 0) return
-        for (let i = 0; i < number; i++) {
-            const card = source.createCard(cardID, controller) as PersistentCard
-            const eventObj = Object.assign({
-                controller,
-                card,
-                objectSource: source,
-                charSource: source.charOwner(),
-            }, targetSlot && { targetSlot })
-            const summonEvent = new SummonEvent(source.game, eventObj)
-            source.game.startNewDeepestPhase('SummonPhase', summonEvent)
+        const number = values.number ?? 1
+        const param = values.param ?? 'createdCards'
+        const cardID = values.cardID as CardIDString
+        const cards: Card[] = []
+        if (cardID?.length !== 0) {
+            for (let i = 0; i < number; i++) {
+                cards.push(source.createCard(cardID, controller))
+            }
+            event.stored[param] = cards
         }
     },
+    createAndStoreCopy: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param?: string, number?: number, forOpponent?: boolean }) => {
+        const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
+        const number = values.number ?? 1
+        const param = values.param ?? 'copiedCards'
+        const cards: Card[] = []
+        targetObjs?.forEach(target => {
+            if (target instanceof Card) {
+                for (let i = 0; i < number; i++) {
+                    cards.push(source.createCard(target.id, controller))
+                }
+            }
+        })
+        event.stored[param] = cards
+    },
 
-    // putIntoPlay: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
-    //     const targets = targetObjs as PersistentCard[]
-    //     targets.forEach(target => {
-    //         if (source.controller().canSummon(target)) {
-    //             const enterPlayEvent = new EnterPlayEvent(source.game, {
-    //                 controller: source.controller(),
-    //                 card: target,
-    //                 objectSource: source,
-    //                 charSource: source.charOwner(),
-    //             })
-    //             source.game.startNewDeepestPhase('EnterPlayPhase', enterPlayEvent)
-    //         }
-    //     })
-    // },
+    createAndStoreClone: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param?: string, number?: number, forOpponent?: boolean }) => {
+        const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
+        const number = values.number ?? 1
+        const param = values.param ?? 'clonedCards'
+        const cards: Card[] = []
+        targetObjs?.forEach(target => {
+            if (target instanceof Card) {
+                for (let i = 0; i < number; i++) {
+                    const clone = target.clone()
+                    clone.owner = controller
+                    cards.push(clone)
+                }
+            }
+        })
+        event.stored[param] = cards
+    },
+
+    summonCards: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cards: Card[] }) => {
+        const targetSlot = (targetObjs?.[0] instanceof BoardSlot) ? targetObjs[0] as BoardSlot
+            : (source instanceof Follower && source.inPlay()) ? source.slot : null
+
+        values.cards?.forEach(card => {
+            if (card instanceof PersistentCard) {
+                const eventObj = Object.assign({
+                    controller: card.controller(),
+                    card,
+                    objectSource: source,
+                    charSource: source.charOwner(),
+                }, targetSlot && { targetSlot })
+                const summonEvent = new SummonEvent(source.game, eventObj)
+                source.game.startNewDeepestPhase('SummonPhase', summonEvent)
+            }
+        })
+    },
+
+    createAndSummonCard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cardID: string, number?: number, forOpponent?: boolean }) => {
+        ActionOperations.createAndStoreCard(source, event, targetObjs, { ...values })
+        ActionOperations.summonCards(source, event, targetObjs, { cards: event.stored['createdCards'] })
+    },
+
+    createAndSummonCopy: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { number?: number, forOpponent?: boolean }) => {
+        ActionOperations.createAndStoreCopy(source, event, targetObjs, { ...values })
+        ActionOperations.summonCards(source, event, targetObjs, { cards: event.stored['copiedCards'] })
+    },
+
+    createAndSummonClone: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { number?: number, forOpponent?: boolean }) => {
+        ActionOperations.createAndStoreClone(source, event, targetObjs, { ...values })
+        ActionOperations.summonCards(source, event, targetObjs, { cards: event.stored['clonedCards'] })
+    },
 
     spendMoney: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, forOpponent?: boolean }) => {
         const player = values.forOpponent ? source.opponent() : source.controller()
@@ -276,11 +417,13 @@ const ActionOperations = {
         const attackers = targetObjs as Character[]
         const defender = values.attackTarget[0]
         attackers.forEach(attacker => {
-            const attackEvent = new AttackEvent(source.game, {
-                attacker,
-                defender,
-            })
-            source.game.startNewDeepestPhase('AttackPhase', attackEvent)
+            if (!attacker.isDestroyed()) {
+                const attackEvent = new AttackEvent(source.game, {
+                    attacker,
+                    defender,
+                })
+                source.game.startNewDeepestPhase('AttackPhase', attackEvent)
+            }
         })
     },
 
@@ -303,8 +446,8 @@ const ActionOperations = {
         const targets = targetObjs as PersistentCard[]
         for (const target of targets) {
             if (target.zone === 'legacy' && target.controller().canSummon(target)) {
-                if (target instanceof Follower) target.rawHealth = target.maxHealth
-                if (target instanceof Creation) target.charges = target.data.charges
+                // if (target instanceof Follower) target.rawHealth = target.maxHealth
+                // if (target instanceof Creation) target.charges = target.data.charges
                 const eventObj = Object.assign({
                     controller: target.controller(),
                     card: target,
@@ -358,16 +501,26 @@ const ActionOperations = {
         })
     },
 
-    rememberTarget: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string }) => {
-        if (targetObjs[0]) source.memory[values.param] = targetObjs[0]
+    rememberValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: any }) => {
+        const value = typeof values.value === 'number' ? source.truncate(values.value) : values.value
+        source.memory[values.param] = value
     },
 
-    storeValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: number }) => {
-        event.stored[values.param] = values.value
+    modRememberedNumber: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, number: number }) => {
+        if (typeof source.memory[values.param] === 'number') source.memory[values.param] += values.number
     },
 
-    storeTarget: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string }) => {
-        if (targetObjs[0]) event.stored[values.param] = targetObjs[0]
+    rememberTargets: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string }) => {
+        if (targetObjs) source.memory[values.param] = targetObjs
+    },
+
+    storeValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: any }) => {
+        const value = typeof values.value === 'number' ? source.truncate(values.value) : values.value
+        event.stored[values.param] = value
+    },
+
+    storeTargets: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string }) => {
+        if (targetObjs) event.stored[values.param] = targetObjs
     },
 
     effectExpiry: (source: GameObject, event: ActionEvent) => {
@@ -387,7 +540,7 @@ import ActionEvent from '../gamePhases/ActionEvent'
 import { DamageEvent } from '../gamePhases/DamageSinglePhase'
 import { HealingEvent } from '../gamePhases/HealSinglePhase'
 import { ProposedDrawEvent } from '../gamePhases/ProposedDrawPhase'
-import { CardIDString, EffectExpiryIDString, EffectIDString, PersistentCardIDString, StatStaticEffectIDString } from '../stringTypes/DictionaryKeyString'
+import { CardIDString, EffectExpiryIDString, EffectIDString, PersistentCardIDString, StatStaticEffectIDString, TargetToNumberMapString } from '../stringTypes/DictionaryKeyString'
 import { SummonEvent } from '../gamePhases/SummonPhase'
 import { EnterPlayEvent } from '../gamePhases/EnterPlayPhase'
 import DestroyableCard from '../gameObjects/DestroyableCard'
@@ -401,4 +554,8 @@ import { AttackEvent } from '../gamePhases/AttackPhase'
 import Creation from '../gameObjects/Creation'
 import { LocalisedStringObject } from '../structs/Localisation'
 import Game from '../gamePhases/Game'
+import NamelessFollower from '../gameObjects/NamelessFollower'
+import { ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
+import TargetToNumberMaps from './TargetToNumberMaps'
+import TargetToNumberMap from '../functionTypes/TargetToNumberMap'
 

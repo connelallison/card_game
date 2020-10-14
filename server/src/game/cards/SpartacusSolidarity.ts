@@ -12,7 +12,6 @@ const data: PassiveLeaderTechniqueData = {
     classes: ['The People'],
     cost: 0,
     collectable: false,
-    repeatable: false,
     staticText: {
         english: `Passive: Your nameless followers are Spartacus.`,
     },

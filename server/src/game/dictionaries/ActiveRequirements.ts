@@ -7,6 +7,7 @@ const ActiveRequirements = {
     min1AllFollower: (object: GameObject) => (object.controller().boardFollowers().length + object.opponent().boardFollowers().length >= 1),
     canSummonType: (object: GameObject, values: {type: string}) => (object.controller().canSummonType(values.type as PersistentCardTypeString)),
     isMyTurn: (object: GameObject) => (object.controller().myTurn()),
+    isNotMyTurn: (object: GameObject) => (!object.controller().myTurn()),
     eureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() ?? false),
     notEureka: (object: GameObject) => ((object.effectOwner() as Card).eureka?.() === false ?? false),
     canAfford: (object: GameObject, values: {cost: number}) => (object.controller().money >= values.cost),

@@ -36,8 +36,8 @@ const data: EventMomentData = {
         targets: {
           valueType: 'target',
           from: 'targets',
-          'reducer': 'min',
-          'criterionMap': 'attack',
+          reducer: 'min',
+          criterionMap: 'attack',
           targets: {
             valueType: 'targets',
             from: 'targetDomain',
@@ -49,7 +49,7 @@ const data: EventMomentData = {
         functionType: 'autoAction',
         operation: 'damage',
         values: {
-          'damage': 3,
+          damage: 3,
         },
       },
       {

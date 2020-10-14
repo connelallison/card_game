@@ -15,7 +15,7 @@ class DamageMultiplePhase extends EventPhase {
         }
         for (const event of events) {
             if (event.damage > 0) {
-                const actualDamage = event.target.takeDamage(event.damage)
+                const actualDamage = event.target.takeDamage(event.damage, !!event.rot)
                 event.actualDamage = actualDamage
                 event.generateLog()
                 this.cacheEvent(event, 'damage')

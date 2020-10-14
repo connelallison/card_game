@@ -1,12 +1,6 @@
 import React from 'react'
+import Highlighter from 'react-highlight-words'
 import AddedText from './AddedText'
-import Creation from './Creation'
-import Follower from './Follower'
-import Leader from './Leader'
-import LeaderTechnique from './LeaderTechnique'
-import Moment from './Moment'
-import Passive from './Passive'
-import Unknown from './Unknown'
 import TargetableEntity, { EntityProps, Selections } from './TargetableEntity'
 
 interface CardProps extends EntityProps {
@@ -36,25 +30,19 @@ abstract class Card extends TargetableEntity {
         return this.props.relatedCard ? 'relatedCard' : ''
     }
 
-    hoverCard(object): JSX.Element | null  { return null }
+    hoverCard(object): JSX.Element | null { return null }
 
-    // hoverCard(object): JSX.Element | null {
-    //     if (object.type === 'unknown') {
-    //         return <Unknown big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Follower') {
-    //         return <Follower big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Moment') {
-    //         return <Moment big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Creation') {
-    //         return <Creation big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Passive') {
-    //         return <Passive big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'Leader') {
-    //         return <Leader big={false} hover object={object} selections={this.props.selections} />
-    //     } else if (object.type === 'LeaderTechnique') {
-    //         return <LeaderTechnique big={false} hover object={object} selections={this.props.selections} />
-    //     } else return null
-    // }
+    fortuneOverlay(): JSX.Element | null {
+        return this.props.object.fortune && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' ? (
+            <div className='fortuneOverlay'></div>
+        ) : null
+    }
+
+    guardOverlay(): JSX.Element | null {
+        return this.props.object.guard && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' ? (
+            <div className='guardOverlay'></div>
+        ) : null
+    }
 
     textLength(): string {
         return `${this.isBig()} ${this.props.object.text.length > 70 ? 'text-long' : this.props.object.text.length > 35 ? 'text-medium' : 'text-short'}`
@@ -89,7 +77,7 @@ abstract class Card extends TargetableEntity {
                 return 'learning'
             case 'The People':
                 return 'thePeople'
-            default: 
+            default:
                 return ''
         }
     }
@@ -104,6 +92,24 @@ abstract class Card extends TargetableEntity {
 
     relatedCard() {
         return (this.props.object && this.props.object.relatedCard) ? this.hoverCard(this.props.object.relatedCard) : null
+    }
+
+    boldedText() {
+        const boldedText = this.props.object.text.length > 0
+            ? <Highlighter
+                className='boldedText'
+                caseSensitive
+                highlightClassName='keyword'
+                searchWords={['Guard', 'Fortune', 'Fervour', 'Rent', 'Passionate', 
+                            'Snipe', 'Pillage', 'Action', 'Event', 'Option', 
+                            'Eureka', 'Income', 'Growth', 'Bloodthirst', 'Mob', 
+                            'Rush', 'Death', 'Legacy', 'Hand', 'Deck', 
+                            'Starter', 'Passive', 'Successor']}
+                highlightTag='span'
+                textToHighlight={this.props.object.text}
+            />
+            : null
+        return <p className={`card-text ${this.textLength()}`}>{boldedText}</p>
     }
 
     handInfo(): JSX.Element | null {

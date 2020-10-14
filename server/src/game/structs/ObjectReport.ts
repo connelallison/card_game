@@ -23,6 +23,8 @@ export interface ObjectReport {
   type: ObjectTypeString
   subtype: ObjectSubtypeString
   classes?: PlayerClassString[]
+  fortune?: boolean
+  guard?: boolean
   zone: string
   ownerName: string
   playerID: string

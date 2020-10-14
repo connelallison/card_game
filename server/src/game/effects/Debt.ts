@@ -10,6 +10,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Debt 0` } },
+    stackable: true,
     effectObjs: [
         {
             operation: 'incrementDebt',

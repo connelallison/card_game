@@ -18,6 +18,7 @@ const data: AuraEffectData = {
             english: `John the Baptist Aura`,
         },
         text: { templates: { english: `+2/+2` } },
+        stackable: true,
         functions: [
             {
                 operation: 'incrementAttack',

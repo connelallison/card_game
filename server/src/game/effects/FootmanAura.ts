@@ -24,6 +24,7 @@ const data: AuraEffectData = {
     effectFunction: {
         name: { english: `Footman Aura` },
         text: { templates: { english: `+2 Attack` } },
+        stackable: true,
         functions: [{
             operation: 'incrementAttack',
             value: 2

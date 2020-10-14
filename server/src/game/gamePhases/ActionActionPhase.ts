@@ -57,5 +57,6 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import GameObject from "../gameObjects/GameObject";
 import { ActionAction } from "../structs/Action";
 import Game from "./Game";
-import { PlayEvent } from "./PlayPhase";import { UseEvent } from "./UsePhase";
+import { PlayEvent } from "./PlayPhase";
+import { UseEvent } from "./UsePhase";
 

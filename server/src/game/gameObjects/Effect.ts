@@ -50,8 +50,8 @@ abstract class Effect extends GameObject {
     }
 
     updateActive(): boolean {
-        this.zone = this.owner.zone
-        const active = this.activeZones.includes(this.owner.zone)
+        this.zone = this.owner?.zone ?? null
+        const active = this.activeZones.includes(this.zone)
             && this.activeTypes.includes(this.owner.type)
             && this.activeSubtypes.includes(this.owner.subtype)
             && this.activeRequirements.every(requirement => this.requirement(requirement))
@@ -77,6 +77,7 @@ abstract class Effect extends GameObject {
     expire(): void {
         this.owner.removeEffect(this)
         this.owner = null
+        this.updateActive()
     }
 
     abstract clone(newOwner): Effect

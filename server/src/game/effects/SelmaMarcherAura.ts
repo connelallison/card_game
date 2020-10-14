@@ -3,41 +3,51 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEffectData = {
-    id: 'CombatTrainingAura',
+    id: 'SelmaMarcherAura',
     name: {
-        english: `Combat Training Aura`,
+        english: `Selma Marcher Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
-    text: { templates: { english: `Passive: Your Citizens have +1 Attack.` } },
+    text: {
+        templates: {
+            english: `Selma Marchers can't attack.`,
+        },
+    },
     priority: 1,
     activeZones: 'inPlay',
-    activeTypes: 'Persistent',
     effectFunction: {
-        name: { english: `Combat Training` },
-        text: { templates: { english: `+1 Attack` } },
-        functions: [{
-            operation: 'incrementAttack',
-            value: 1,
-        }]
+        name: { english: `Selma Marcher Aura` },
+        text: {
+            templates: {
+                english: `Can't attack.`,
+            },
+        },
+        stackable: false,
+        functions: [
+            {
+              operation: 'cantAttack',
+              value: true,
+            },
+        ],
     },
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyBoard'],
+        targetDomain: ['friendlyBoard', 'enemyBoard'],
         requirements: [{
             targetRequirement: 'isSpecificCardClass',
             values: {
-                'cardID': 'Citizen',
+                cardID: 'SelmaMarcher'
             }
         }]
     },
 }
 
-class CombatTrainingAura extends AuraEffect {
+class SelmaMarcherAura extends AuraEffect {
     static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default CombatTrainingAura
+export default SelmaMarcherAura

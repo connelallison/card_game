@@ -13,6 +13,7 @@ export type CreationIDString = keyof typeof Creations
 export type PassiveIDString = keyof typeof Passives
 export type LeaderTechniqueIDString = keyof typeof LeaderTechniques
 
+export type StarterLeaderIDString = keyof typeof StarterLeaders
 export type NamelessFollowerIDString = keyof typeof NamelessFollowers
 export type FamousFollowerIDString = keyof typeof FamousFollowers
 export type ActionMomentString = keyof typeof ActionMoments
@@ -51,6 +52,7 @@ export type EventModOperationString = keyof typeof EventModOperations
 export type EventReducerString = keyof typeof DynamicEventReducers
 export type EventRequirementString = keyof typeof EventRequirements
 export type EventToTargetMapString = keyof typeof EventToTargetMaps
+export type EventToNumberMapString = keyof typeof EventToNumberMaps
 export type NumberOperatorString = keyof typeof DynamicNumberOperators
 export type NumberReducerString = keyof typeof DynamicNumberReducers
 export type NumberToBooleanMapString = keyof typeof NumberToBooleanMaps
@@ -83,7 +85,8 @@ import Cards, {
     ActiveLeaderTechniques,
     PersistentCards,
     DestroyableCards,
-    WonderCreations
+    WonderCreations,
+    StarterLeaders
 } from "../dictionaries/Cards"
 import { DynamicOrStoredStringObject } from "../structs/DynamicValueObject"
 import EffectOperations from "../dictionaries/EffectOperations"
@@ -102,3 +105,5 @@ import NumberToBooleanMaps from "../dictionaries/NumberToBooleanMaps"
 import DynamicNumberOperators from "../dictionaries/DynamicNumberOperators"
 import { StatsObject } from "../structs/GameObjectData"
 import Tooltips from "../dictionaries/Tooltips"
+import EventToNumberMaps from "../dictionaries/EventToNumberMaps"
+

@@ -33,6 +33,8 @@ abstract class NamelessFollower extends Follower {
             subtype: this.subtype,
             classes: this.classes,
             zone: this.zone,
+            fortune: this.flags.fortune,
+            guard: this.flags.guard,
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
@@ -57,7 +59,7 @@ abstract class NamelessFollower extends Follower {
             charges: this.data.charges,
             attack: this.data.attack,
             health: this.data.health,
-            categories: this.data.categories ?? [],
+            categories: Follower.categoriesReport(this.data, localisation),
             type: this.data.type,
             subtype: this.data.subtype,
             text: this.data.staticText[localisation],
@@ -65,10 +67,17 @@ abstract class NamelessFollower extends Follower {
         }
     }
 
-    loseCharge() {
-        this.charges--
-        if (this.charges <= 0 && !this.inPlay()) this.moveZone('setAsideZone')
+    gainCharge() {
+        this.charges++
         this.update()
+    }
+
+    loseCharge() {
+        if (!this.flags.immune) {
+            this.charges--
+            if (this.charges <= 0 && !this.inPlay()) this.moveZone('setAsideZone')
+            this.update()
+        }
     }
 
     setCharges(number: number) {
@@ -98,6 +107,12 @@ abstract class NamelessFollower extends Follower {
                 this.game.inPlay.push(this)
             }
         } else {
+            if (destination === 'legacy') {
+                const healthDiff = this.maxHealth - this.rawHealth
+                this.rawHealth += healthDiff
+                this.healthStatic += healthDiff
+                this.health += healthDiff
+            }
             if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
             else this.owner[destination].push(this)
         }

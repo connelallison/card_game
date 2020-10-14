@@ -37,8 +37,8 @@ abstract class AuraEffect extends Effect {
     }
 
     updateActive(): boolean {
-        this.zone = this.owner.zone
-        const active = this.activeZones.includes(this.owner.zone)
+        this.zone = this.owner?.zone ?? null
+        const active = this.activeZones.includes(this.zone)
             && this.activeTypes.includes(this.owner.type)
             && this.activeSubtypes.includes(this.owner.subtype)
             && this.activeRequirements.every(requirement => this.requirement(requirement))

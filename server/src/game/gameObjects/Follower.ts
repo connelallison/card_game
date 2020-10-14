@@ -34,13 +34,17 @@ abstract class Follower extends Character {
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
   }
 
-  updateArrays(): void {
+  finishUpdate(): void {
     // this.updateActiveOptions()
     // this.updateActiveActions()
     this.updateActiveEvents()
     this.updateActiveDeathEvents()
     this.updateAttackTargets()
     this.updateValidSlots()
+    this.attack = this.truncate(this.attack)
+    this.health = this.truncate(this.health)
+    this.cost = this.truncate(this.cost)
+    this.healthStatic = this.truncate(this.healthStatic)
   }
 
   updateAttackTargets(): void {
@@ -69,20 +73,39 @@ abstract class Follower extends Character {
     } : null
   }
 
+  slotText(): NameAndTextObject[] {
+    return (this.slot && (this.slot.attack !== 0 || this.slot.health !== 0)) ? [this.slot.statsReport()] : []
+  }
+
   categoriesReport(localisation: LocalisationString = 'english'): string[] {
     return this.categories.map(category => CategoryIcons[category])
   }
 
-  takeDamage(damage: number): number {
-    const reducedDamage = this.stats.damageReduction ? damage - this.stats.damageReduction : damage
+  static categoriesReport(data: FollowerData, localisation: LocalisationString = 'english'): string[] {
+    return data.categories?.map(category => CategoryIcons[category]) ?? []
+  }
+
+  takeDamage(damage: number, rot?: boolean): number {
+    let reducedDamage = damage - this.stats.damageReduction >= 0 ? damage - this.stats.damageReduction : 0
+    if (this.flags.immune && !rot) reducedDamage = 0
+    if (reducedDamage > 0 && this.flags.fortune && !rot) {
+      reducedDamage = 0
+      this.effects = this.effects.filter(effect => !(effect instanceof Fortune))
+      this.flags.fortune = false
+    }
     this.rawHealth -= reducedDamage
     this.health -= reducedDamage
+    if (rot) this.maxHealth -= reducedDamage
     this.update()
     return reducedDamage
   }
 
-  receiveHealing(rawHealing: number): number {
-    const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+  receiveHealing(rawHealing: number, nourish?: boolean): number {
+    const healing = nourish
+      ? rawHealing
+      : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+    
+    if (nourish) this.maxHealth += healing
     this.rawHealth += healing
     this.health += healing
     this.update()
@@ -91,6 +114,10 @@ abstract class Follower extends Character {
 
   missingHealth(): number {
     return this.maxHealth - this.rawHealth
+  }
+
+  hasAttack(): boolean {
+    return this.owner.myTurn() && this.ready && this.inPlay() && (!this.summonSickness || this.flags.rush || this.flags.mob)
   }
 
   getReady(): void {
@@ -112,6 +139,12 @@ abstract class Follower extends Character {
     }
   }
 
+  setData(dataObj: GameObjectData): void {
+    if (dataObj.cost < 0) dataObj.cost = 0
+    this.healthStatic = this.truncate(dataObj.health)
+    Object.assign(this, dataObj)
+  }
+
   applyInherited(): void {
     if (this.inPlay()) {
       this.attack += this.slot.attack
@@ -119,11 +152,6 @@ abstract class Follower extends Character {
       Object.assign(this.flags, this.slot.flags)
     }
   }
-
-  // putIntoPlay(index?: number): void {
-  //   this.moveZone(this.inPlayZone, index)
-  //   this.game.inPlay.push(this)
-  // }
 
   index(): number {
     if (this.zone === 'board') {
@@ -241,4 +269,7 @@ import FollowerCategoryString, { CategoryIcons } from '../stringTypes/FollowerCa
 import GameObjectData from '../structs/GameObjectData'
 import Permissions from '../dictionaries/Permissions'
 import { ManualTargetReport } from '../structs/ObjectReport'
-import { LocalisationString, LocalisedStringObject } from '../structs/Localisation'
+import { LocalisationString, LocalisedNameAndText, LocalisedStringObject, NameAndTextObject } from '../structs/Localisation'
+import Effect from './Effect'
+import Fortune from '../effects/Fortune'
+

@@ -13,7 +13,7 @@ const Tooltips = {
     },
     deathEvent: {
         name: { english: 'Death Event' },
-        text: { templates : { english: `Does something when this is destroyed.` } },
+        text: { templates: { english: `Does something when this is destroyed.` } },
     },
     eureka: {
         name: { english: 'Eureka' },
@@ -27,6 +27,10 @@ const Tooltips = {
         name: { english: 'Pillage' },
         text: { templates: { english: `Damage done by this also heals your leader.` } },
     },
+    snipe: {
+        name: { english: 'Snipe' },
+        text: { templates: { english: `When this attacks, it deals damage before taking damage.` } }
+    },
     rush: {
         name: { english: 'Rush' },
         text: { templates: { english: `Can attack followers immediately.` } },
@@ -34,6 +38,14 @@ const Tooltips = {
     mob: {
         name: { english: 'Mob' },
         text: { templates: { english: `Can attack immediately. Can only ever attack leaders if they have no followers.` } },
+    },
+    fortune: {
+        name: { english: 'Fortune' },
+        text: { templates: { english: `The first time this takes damage, ignore it.` } },
+    },
+    bloodthirst: {
+        name: { english: 'Bloodthirst' },
+        text: { templates: { english: `After this attacks and kills the defender, it can attack again.` } },
     },
     fervour: {
         name: { english: 'Fervour' },
@@ -43,7 +55,7 @@ const Tooltips = {
         name: { english: 'Passionate' },
         text: { templates: { english: `Has +Attack equal to your Fervour.` } },
     },
-    money: { 
+    money: {
         name: { english: 'Money' },
         text: { templates: { english: `The resource you spend to play cards.` } }
     },
@@ -62,6 +74,18 @@ const Tooltips = {
     debt: {
         name: { english: 'Debt' },
         text: { templates: { english: `You pay this amount at the end of your turn, the first turn you play this.` } },
+    },
+    rotDamage: {
+        name: { english: 'Rot damage' },
+        text: { templates: { english: `Rot damage reduces max Health, and ignores Armour, Fortune, and Immune.` } },
+    },
+    nourishHealing: {
+        name: { english: 'Nourish healing' },
+        text: { templates: { english: `Nourish healing increases max Health.` } },
+    },
+    starter: {
+        name: { english: 'Starter' },
+        text: { templates: { english: `You can start the game with this leader in play.` } },
     },
 }
 

@@ -10,7 +10,7 @@ const data: FamousFollowerData = {
   type: 'Follower',
   subtype: 'Famous',
   classes: ['Art'],
-  categories: [],
+  categories: ['Legend'],
   collectable: true,
   cost: 2,
   attack: 2,

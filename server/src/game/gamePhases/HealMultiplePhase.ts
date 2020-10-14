@@ -11,11 +11,11 @@ class HealMultiplePhase extends EventPhase {
     start(): void {
         const events = this.event
         for (const event of events) {
-            if (event.healing > 0 && event.target.isDamaged()) this.emit('beforeHealing', event)
+            if (event.healing > 0) this.emit('beforeHealing', event)
         }
         for (const event of events) {
-            if (event.healing > 0 && event.target.isDamaged()) {
-                const actualHealing = event.target.receiveHealing(event.healing)
+            if (event.healing > 0) {
+                const actualHealing = event.target.receiveHealing(event.healing, !!event.nourish)
                 event.actualHealing = actualHealing
                 event.generateLog()
                 this.cacheEvent(event, 'healing')
@@ -23,6 +23,7 @@ class HealMultiplePhase extends EventPhase {
         }
         for (const event of events) {
             if (event.actualHealing > 0) this.emit('afterHealing', event)
+            if (event.overhealing > 0) this.emit('afterOverhealing', event)
         }
         this.queueSteps()
         this.end()

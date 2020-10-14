@@ -93,7 +93,7 @@ const data: TechniqueCreationData = {
         },
       }]
     }]
-  }]
+  }],
 }
 
 class CorporalMotivation extends TechniqueCreation {

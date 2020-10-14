@@ -18,6 +18,7 @@ class Deck {
     this.passive = this.game.createCard(deck.passive, this.owner) as Passive
     this.cards = deck.cards.map(cardID => this.game.createCard(cardID, this.owner))
     this.shuffle()
+    this.insertSuccessors()
   }
 
   shuffle () {
@@ -25,6 +26,18 @@ class Deck {
       const j = Math.floor(Math.random() * (i + 1));
       [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]]
     }
+  }
+
+  insertSuccessors() {
+    this.cards.forEach(successorCard => {
+      if (successorCard.successor) {
+        const successorCards = this.cards.filter(card => card.id === successorCard.id)
+        if (successorCards.length > 1) {
+          const successorIndex = this.cards.indexOf(successorCards[1])
+          this.cards[successorIndex] = this.game.createCard(successorCards[1].successor, successorCards[1].owner)
+        }
+      }
+    })
   }
 }
 

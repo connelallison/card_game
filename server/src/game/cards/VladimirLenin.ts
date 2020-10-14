@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: FamousFollowerData = {
-  id: 'PrinceTimothy',
+  id: 'VladimirLenin',
   name: {
-    english: `Prince Timothy`,
+    english: `Vladimir Lenin`,
   },
   type: 'Follower',
   subtype: 'Famous',
@@ -14,45 +14,38 @@ const data: FamousFollowerData = {
   collectable: true,
   cost: 3,
   attack: 3,
-  health: 5,
+  health: 1,
   staticText: {
-    english: `Event: Give all followers in your hand +1/+1 for every Citizen you control.`,
+    english: `Event: Gain +1/+1 for every Citizen you control.`,
   },
   text: {
     templates: {
-      english: `Event: Give all followers in your hand +1/+1 for every Citizen you control.`,
+      english: `Event: Gain +1/+1 for every Citizen you control.`,
     },
   },
   events: [{
     actionType: 'eventAction',
-    id: 'PrinceTimothyEvent',
+    id: 'VladimirLeninEvent',
     name: {
-      english: 'Prince Timothy Event'
+      english: 'Vladimir Lenin Event'
     },
     text: {
       templates: {
-        english: `Event: Give all followers in your hand +1/+1 for every Citizen you control.`,
+        english: `Event: Gain +1/+1 for every Citizen you control.`,
       },
     },
     actionSteps: [{
       autoTargets: [{
         targets: {
-          valueType: 'targets',
-          from: 'targetDomain',
-          targetDomain: 'friendlyHand',
-          requirements: [{
-            targetRequirement: 'isType',
-            values: {
-              type: 'Follower'
-            }
-          }],
+          valueType: 'target',
+          from: 'self',
         }
       }],
       actionFunctions: [{
         functionType: 'autoAction',
         operation: 'buffStats',
         values: {
-          buffName: { english: 'Prince Timothy Buff'},
+          buffName: { english: 'Vladimir Lenin Buff'},
           stats: {
             valueType: 'number',
             from: 'numbers',
@@ -80,10 +73,10 @@ const data: FamousFollowerData = {
   }]
 }
 
-class PrinceTimothy extends FamousFollower {
+class VladimirLenin extends FamousFollower {
   static readonly data: FamousFollowerData = data
   constructor(game: Game, owner: GamePlayer) {
     super(game, owner, data)
   }
 }
-export default PrinceTimothy
+export default VladimirLenin

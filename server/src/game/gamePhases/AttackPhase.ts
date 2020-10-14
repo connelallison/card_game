@@ -9,10 +9,11 @@ interface AttackEventObject {
 export class AttackEvent extends GameEvent {
     attacker: Character
     defender: Character
+    lethal: boolean
     cancelled: boolean = false
 
     constructor(game: Game, object: AttackEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
     }
 
@@ -32,7 +33,7 @@ class AttackPhase extends EventPhase {
         if (event.attacker.attack > 0) {
             event.generateLog()
             this.cacheEvent(event, 'attack')
-            
+
             this.emit('beforeAttack', event)
             const attackerDamageEvent = new DamageEvent(this.game(), {
                 objectSource: event.attacker,
@@ -41,8 +42,9 @@ class AttackPhase extends EventPhase {
                 damage: event.attacker.attack,
             })
             this.startChild(new Phases.DamageSinglePhase(this, attackerDamageEvent))
+            if (event.attacker.flags.snipe) this.startChild(new Phases.DeathPhase(this))
             let defenderDamageEvent
-            if (event.defender.attack > 0) {
+            if (event.defender.inPlay() && event.defender.attack > 0) {
                 defenderDamageEvent = new DamageEvent(this.game(), {
                     objectSource: event.defender,
                     charSource: event.defender,
@@ -61,7 +63,7 @@ class AttackPhase extends EventPhase {
                 })
                 this.startChild(new Phases.HealSinglePhase(this, healingEvent))
             }
-            if (event.defender.flags.pillage && event.defender.attack > 0) {
+            if (event.defender.flags.pillage && defenderDamageEvent) {
                 const healingEvent = new HealingEvent(this.game(), {
                     objectSource: defenderDamageEvent.objectSource,
                     charSource: defenderDamageEvent.charSource,
@@ -72,6 +74,13 @@ class AttackPhase extends EventPhase {
             }
 
             event.attacker.ready = false
+            if (event.defender.isDestroyed()) {
+                event.lethal = true
+                if (event.attacker.flags.bloodthirst) {
+                    event.attacker.ready = true
+                }
+            }
+
             this.emit('afterAttack', event)
             this.queueSteps()
         }

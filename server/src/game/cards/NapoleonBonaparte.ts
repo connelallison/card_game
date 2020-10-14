@@ -11,15 +11,15 @@ const data: LeaderData = {
     subtype: 'Leader',
     classes: ['The People'],
     collectable: true,
-    cost: 0,
-    health: 8,
+    cost: 2,
+    health: 5,
     leaderTechniqueID: 'NapoleonBonaparteLeveeEnMasse',
     staticText: {
-        english: ``,
+        english: `Starter`,
     },
     text: {
         templates: {
-            english: ``,
+            english: `Starter`,
         },
     },
     starter: true

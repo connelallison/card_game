@@ -1,10 +1,11 @@
 import React from 'react'
 import Card from './Card'
+import HoverCard from './HoverCard'
 
 class Creation extends Card {
-  // hoverCard() {
-  //   return this.props.big ? null : <Creation big hover={false} object={this.props.object} selections={this.props.selections} />
-  // }
+  hoverCard(object): JSX.Element | null {
+    return <HoverCard object={object} selections={this.props.selections}></HoverCard>
+  }
 
   render() {
     const costLabel = this.props.object.subtype === 'Technique' && this.props.object.zone === 'creationZone'
@@ -16,7 +17,8 @@ class Creation extends Card {
         <div className={`cardClassColour ${this.cardClass()}`}></div>
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
-        <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
+        {/* <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p> */}
+        {this.boldedText()}
         <div className="multicolour-line">
           {costLabel}
           {this.statLabel('attack')}
@@ -24,6 +26,7 @@ class Creation extends Card {
         </div>
         {this.addedText()}
         {this.tooltips()}
+        {this.relatedCard()}
       </div>
     )
   }

@@ -10,11 +10,14 @@ export interface NameAndTextObject {
     name: LocalisedStringObject
     text: DynamicTextObject
     active?: boolean
+    stackable?: boolean
 }
 
 export interface LocalisedNameAndText {
     name: string
     text: string
+    stackable?: boolean
+    count?: number
 }
 
 export interface DynamicTextValueObject {

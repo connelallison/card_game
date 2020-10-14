@@ -55,7 +55,7 @@ const data: NamelessFollowerData = {
         },
         actionSteps: [{
             activeHighlight: true,
-            requirements: [{
+            activeRequirements: [{
                 customRequirement: {
                     valueType: 'boolean',
                     from: 'number',

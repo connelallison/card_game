@@ -10,7 +10,7 @@
         ]
     },
     "include": [
-        "./src/**/*"
+        "./src/**/*", "fileGenerator.ts"
     ],
     "exclude": [
         "node_modules"

@@ -26,6 +26,7 @@ abstract class Character extends DestroyableCard {
   rawAttack: number
   attack: number
   rawHealth: number
+  healthStatic: number
   health: number
   ready: boolean
   attackTargets: Character[]
@@ -36,6 +37,7 @@ abstract class Character extends DestroyableCard {
     this.ready = true
     this.rawHealth = data.health
     this.health = this.rawHealth
+    this.healthStatic = this.health
     this.attackTargets = []
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
@@ -67,8 +69,25 @@ abstract class Character extends DestroyableCard {
     } : null
   }
 
+  passionateText(): NameAndTextObject[] {
+    return (this.flags.passionate && this.fervour() > 0) ? [{
+      name: { english: 'Passionate' },
+      text: { templates: { english: `+${this.fervour()} Attack from Fervour.` } },
+    }] : []
+  }
+
+  applyPassionate(): void {
+    // if (this.inPlay()) {
+      if (this.flags.passionate) this.attack += this.fervour()
+    // }
+  }
+
+  hasAttack():  boolean {
+    return this.owner.myTurn() && this.ready && this.inPlay()
+  }
+
   canAttack(): boolean {
-    return this.owner.myTurn() && this.ready && this.inPlay() && !this.flags.cantAttack && this.attack > 0
+    return this.hasAttack() && !this.flags.cantAttack && this.attack > 0
   }
 
   hasTargets(): boolean {
@@ -124,8 +143,8 @@ abstract class Character extends DestroyableCard {
 
   abstract updateAttackTargets(): void
   abstract getReady(): void
-  abstract takeDamage(damage: number): number
-  abstract receiveHealing(healing: number): number
+  abstract takeDamage(damage: number, rot?: boolean): number
+  abstract receiveHealing(healing: number, nourish?: boolean): number
   abstract missingHealth(): number
 }
 
@@ -136,4 +155,4 @@ import GamePlayer from './GamePlayer'
 import { StartOfTurnEvent } from '../gamePhases/StartOfTurnPhase'
 import { CharacterTypeString, CharacterSubtypeString } from '../stringTypes/ZoneTypeSubtypeString'
 import { ManualTargetReport } from '../structs/ObjectReport'
-import { LocalisationString, LocalisedStringObject } from '../structs/Localisation'
+import { LocalisationString, LocalisedStringObject, NameAndTextObject } from '../structs/Localisation'

@@ -1,7 +1,7 @@
 import Moment, { MomentData } from "./Moment";
 
 export interface ActionMomentData extends MomentData {
-  actions: ActionAction[]
+  actions: ActionActionData[]
 }
 
 abstract class ActionMoment extends Moment {
@@ -18,4 +18,4 @@ export default ActionMoment
 
 import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
-import { ActionAction } from "../structs/Action";
+import { ActionActionData } from "../structs/Action";

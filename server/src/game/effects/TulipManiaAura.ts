@@ -53,6 +53,7 @@ const data: AuraEffectData = {
                 }
             ]
         },
+        stackable: true,
         functions: [{
             operation: 'incrementHealth',
             value: sumFriendlyFollowersHealth

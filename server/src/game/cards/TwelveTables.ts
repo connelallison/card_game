@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: WonderCreationData = {
-    id: 'CitizenAcademy',
+    id: 'TwelveTables',
     name: {
-        english: `Citizen Academy`,
+        english: `Twelve Tables`,
     },
     type: 'Creation',
     subtype: 'Wonder',
@@ -14,20 +14,20 @@ const data: WonderCreationData = {
     cost: 2,
     charges: 3,
     staticText: {
-        english: `After you draw a follower, summon a 2/2 Citizen.`,
+        english: `After you draw a follower, summon two 1/1 Citizens.`,
     },
     text: {
         templates: {
-            english: `After you draw a follower, summon a 2/2 Citizen.`,
+            english: `After you draw a follower, summon two 1/1 Citizens.`,
         },
     },
-    effects: ['CitizenAcademyTrigger'],
+    effects: ['TwelveTablesTrigger'],
 }
 
-class CitizenAcademy extends WonderCreation {
+class TwelveTables extends WonderCreation {
     static readonly data: WonderCreationData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default CitizenAcademy
+export default TwelveTables

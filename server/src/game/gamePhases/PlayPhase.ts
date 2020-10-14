@@ -45,10 +45,10 @@ class PlayPhase extends EventPhase {
 
     start(): void {
         const event = this.event
+        this.emit('beforePlay', event)
         this.spendMoneyPhase()
         event.generateLog()
         this.cacheEvent(event, 'play')
-        this.emit('onPlay', event)
         this.enterPlayPhase()
         this.optionPhase()
         this.actionPhase()

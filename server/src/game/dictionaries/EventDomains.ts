@@ -9,6 +9,9 @@ const EventDomains = (object: GameObject, cache: EventsDomainString | EventsDoma
             case 'enterPlayEvents':
                 eventDomain.push(...object.game.eventCache.enterPlay)
                 break
+            case 'playEvents': 
+                eventDomain.push(...object.game.eventCache.play)
+                break
             default:
                 break
         }

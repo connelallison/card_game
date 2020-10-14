@@ -35,9 +35,10 @@ abstract class GameObject {
         this.game.event.on('auraApply0', event => this.auraApply(0))
         this.game.event.on('auraApply1', event => this.auraApply(1))
         this.game.event.on('auraApply2', event => this.auraApply(2))
+        this.game.event.on('applyPassionate', event => this.applyPassionate())
         this.game.event.on('applyInherited', event => this.applyInherited())
         this.game.event.on('auraApply3', event => this.auraApply(3))
-        this.game.event.on('updateArrays', event => this.updateArrays())
+        this.game.event.on('finishUpdate', event => this.finishUpdate())
 
     }
 
@@ -67,14 +68,18 @@ abstract class GameObject {
         this.auraApply(2)
         this.applyInherited()
         this.auraApply(3)
-        this.updateArrays()
+        this.finishUpdate()
+    }
+
+    applyPassionate(): void {
+
     }
 
     applyInherited(): void {
 
     }
 
-    updateArrays(): void {
+    finishUpdate(): void {
 
     }
 
@@ -119,6 +124,10 @@ abstract class GameObject {
         return this.controller().opponentPlayer
     }
 
+    fervour(): number {
+        return this.controller().stats.fervour
+    }
+
     charOwner(): Character {
         return this.controller().leaderZone[0]
     }
@@ -129,6 +138,41 @@ abstract class GameObject {
 
     currentTurn(): Turn {
         return this.game.currentTurn()
+    }
+
+    static truncate(number: number): number {
+        return Math.floor(number * 10) / 10
+    }
+
+    truncate(number: number): number {
+        return GameObject.truncate(number)
+    }
+
+    static round(number: number): number {
+        return Math.round(number * 10) / 10
+    }
+
+    round(number: number): number {
+        return GameObject.round(number)
+    }
+
+    static sortCards(first: Card, second: Card, localisation: LocalisationString = 'english', index?: number): boolean {
+        if (first.id === second.id) return false
+        if (typeof index !== 'number') {
+            if (first.cost === second.cost) return GameObject.sortCards(first, second, localisation, 0)
+            else return first.cost > second.cost
+        } else {
+            if (
+                first.name[localisation][index] === second.name[localisation][index]
+                && first.name[localisation][index + 1]
+                && second.name[localisation][index + 1]
+            ) return GameObject.sortCards(first, second, localisation, index + 1)
+            else return first.name[localisation][index] > second.name[localisation][index]
+        }
+    }
+
+    sortCards(first: Card, second: Card, localisation: LocalisationString = 'english', index?: number): boolean {
+        return GameObject.sortCards(first, second, localisation, index)
     }
 
     createCard(cardID: CardIDString, owner: GamePlayer): Card {
@@ -202,7 +246,7 @@ abstract class GameObject {
             if (value) {
                 if (valueObj.templates) {
                     return valueObj.templates[localisation].replace('$', value.toString())
-                } else if (valueObj.fervour && this.controller().stats.fervour > 0) {
+                } else if (valueObj.fervour && this.fervour() > 0) {
                     return `*${value.toString()}*`
                 } else {
                     return value.toString()
@@ -225,7 +269,8 @@ abstract class GameObject {
     localiseNameAndTextObject(object: NameAndTextObject, localisation: LocalisationString = 'english'): LocalisedNameAndText {
         const name = object.name[localisation]
         const text = this.generateDynamicText(object.text, localisation)
-        return { name, text }
+        const { stackable } = object
+        return { name, text, stackable }
     }
 
     parseActiveZones(activeZones: ActiveZones): ZoneString[] {
@@ -233,21 +278,25 @@ abstract class GameObject {
     }
 
     parseActiveTypes(activeTypes: ActiveTypes): ObjectTypeString[] {
-        return !activeTypes 
-        ? [...ObjectTypes] 
-        : activeTypes === 'Persistent' 
-        ? [...PersistentCardTypes] 
-        : activeTypes === 'Character' 
-        ? [...CharacterTypes] 
-        : activeTypes === 'Card'
-        ? [...CardTypes]
-        : activeTypes === 'inPlay'
-        ? [...PersistentCardTypes, 'Player']
-        : activeTypes
+        return !activeTypes
+            ? [...ObjectTypes]
+            : activeTypes === 'Persistent'
+                ? [...PersistentCardTypes]
+                : activeTypes === 'Character'
+                    ? [...CharacterTypes]
+                    : activeTypes === 'Card'
+                        ? [...CardTypes]
+                        : activeTypes === 'inPlay'
+                            ? [...PersistentCardTypes, 'Player']
+                            : activeTypes
     }
 
     parseActiveSubtypes(activeSubtypes: ActiveSubtypes): ObjectSubtypeString[] {
-        return !activeSubtypes ? [...ObjectSubtypes] : activeSubtypes
+        return !activeSubtypes
+            ? [...ObjectSubtypes]
+            : activeSubtypes === 'hasAttack'
+                ? ['Leader', 'Famous', 'Nameless', 'Weapon']
+                : activeSubtypes
     }
 
     targetDomains(targetDomain: TargetsDomainString | TargetsDomainString[]): GameObject[] {
@@ -259,7 +308,7 @@ abstract class GameObject {
     }
 
     localisedDynamicValue(value: DynamicValue, localisation: LocalisationString = 'english') {
-        if (typeof value === 'number') return value
+        if (typeof value === 'number') return this.truncate(value)
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
         if (value instanceof Array) return value
@@ -274,13 +323,9 @@ abstract class GameObject {
             const obj = value as DynamicOrStoredValueObject
             if (obj.from === 'stored') {
                 return this.storedValue(value as ValueFromStored, actionEvent, step)
-            } else if (obj.from === 'autoTarget') {
-                return (this.dynamicOrStoredValue(step.autoTargets[obj.autoTarget].targets, actionEvent, step) as GameObject[])
-            } else if (obj.from === 'manualTarget') {
-                return [(step as ActionActionStep).manualTargets[obj.manualTarget].chosenTarget]
             }
         }
-        return this.dynamicValue(value as DynamicValue)
+        return this.dynamicValue((value as DynamicValue), actionEvent, step)
     }
 
     storedValue(value: ValueFromStored, actionEvent: ActionEvent, step: ActionStep): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
@@ -289,28 +334,28 @@ abstract class GameObject {
         else return storedValue
     }
 
-    dynamicValue(value: DynamicValue): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
+    dynamicValue(value: DynamicValue, actionEvent?: ActionEvent, step?: ActionStep): LocalisedStringObject | string | boolean | number | number[] | GameObject[] | GameEvent[] {
         if (typeof value === 'undefined') return value
-        if (typeof value === 'number') return value
+        if (typeof value === 'number') return this.truncate(value)
         if (typeof value === 'string') return value
         if (typeof value === 'boolean') return value
         if (value instanceof Array) return value
         if (value.hasOwnProperty('english')) return value as LocalisedStringObject
         const valueObj = value as DynamicValueObject
-        if (valueObj.valueType === 'localisedString') return this.dynamicLocalisedString(valueObj)
-        if (valueObj.valueType === 'string') return this.dynamicString(valueObj)
-        if (valueObj.valueType === 'boolean') return this.dynamicBoolean(valueObj)
-        if (valueObj.valueType === 'number') return this.dynamicNumber(valueObj)
-        if (valueObj.valueType === 'numbers') return this.dynamicNumbers(valueObj)
-        if (valueObj.valueType === 'target') return this.dynamicTarget(valueObj)
-        if (valueObj.valueType === 'targets') return this.dynamicTargets(valueObj)
-        if (valueObj.valueType === 'event') return this.dynamicEvent(valueObj)
-        if (valueObj.valueType === 'events') return this.dynamicEvents(valueObj)
+        if (valueObj.valueType === 'localisedString') return this.dynamicLocalisedString(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'string') return this.dynamicString(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'boolean') return this.dynamicBoolean(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'number') return this.dynamicNumber(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'numbers') return this.dynamicNumbers(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'target') return this.dynamicTarget(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'targets') return this.dynamicTargets(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'event') return this.dynamicEvent(valueObj, actionEvent, step)
+        if (valueObj.valueType === 'events') return this.dynamicEvents(valueObj, actionEvent, step)
     }
 
-    dynamicLocalisedString(obj: DynamicLocalisedStringObject): LocalisedStringObject {
+    dynamicLocalisedString(obj: DynamicLocalisedStringObject, actionEvent?: ActionEvent, step?: ActionStep): LocalisedStringObject {
         if (obj.from === 'target') {
-            const target = this.dynamicTarget(obj.target)[0]
+            const target = this.dynamicTarget(obj.target, actionEvent, step)[0]
             if (target) {
                 if (obj.stringMap === 'name') return target.name
             }
@@ -320,92 +365,122 @@ abstract class GameObject {
         }
     }
 
-    dynamicString(obj: DynamicStringObject): string {
+    dynamicString(obj: DynamicStringObject, actionEvent?: ActionEvent, step?: ActionStep): string {
         if (obj.from === 'target') {
-            const target = this.dynamicTarget(obj.target)[0]
+            const target = this.dynamicTarget(obj.target, actionEvent, step)[0]
             if (target) return (TargetToStringMaps[obj.stringMap] as TargetToStringMap)(target)
             return ''
         }
     }
 
-    dynamicBoolean(obj: DynamicBooleanObject): boolean {
+    dynamicBoolean(obj: DynamicBooleanObject, actionEvent?: ActionEvent, step?: ActionStep): boolean {
         if (obj.from === 'number') {
-            const number = this.dynamicValue(obj.number) as number
-            const comparison = this.dynamicValue(obj.comparison) as number
+            const number = this.dynamicOrStoredValue(obj.number, actionEvent, step) as number
+            const comparison = this.dynamicOrStoredValue(obj.comparison, actionEvent, step) as number
             return NumberToBooleanMaps[obj.operator](number, comparison)
         }
     }
 
-    dynamicTarget(obj: DynamicTargetObject): GameObject[] {
+    dynamicTarget(obj: DynamicTargetObject, actionEvent?: ActionEvent, step?: ActionStep): GameObject[] {
+        if (obj.from === 'self') return [this.effectOwner()]
         if (obj.from === 'targetDomain') return this.targetDomains(obj.targetDomain)
-        if (obj.from === 'targets') return DynamicTargetReducers[obj.reducer](this.dynamicTargets(obj.targets), TargetToNumberMaps[obj.criterionMap])
+        if (obj.from === 'targets') return DynamicTargetReducers[obj.reducer](this.dynamicTargets(obj.targets, actionEvent, step), TargetToNumberMaps[obj.criterionMap])
         if (obj.from === 'event') {
-            const event = this.dynamicEvent(obj.event)[0]
+            const event = this.dynamicEvent(obj.event, actionEvent, step)[0]
             return [(EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event)]
         }
         if (obj.from === 'memory') {
-            const target = obj.targetMemory ? [this.dynamicTarget(obj.targetMemory)[0].memory[obj.param]] : [this.memory[obj.param]]
-            return target[0] ? target : []
+            const target = obj.targetMemory ? this.dynamicTarget(obj.targetMemory, actionEvent, step)[0].memory[obj.param] : this.memory[obj.param]
+            return target?.[0] ? target : []
+        }
+        if (obj.from === 'autoTarget') {
+            return (this.dynamicOrStoredValue(step.autoTargets[obj.autoTarget].targets, actionEvent, step) as GameObject[])
+        }
+        if (obj.from === 'manualTarget') {
+            return [(step as ActionActionStep).manualTargets[obj.manualTarget].chosenTarget]
         }
     }
 
-    dynamicTargets(obj: DynamicTargetsObject): GameObject[] {
+    dynamicTargets(obj: DynamicTargetsObject, actionEvent?: ActionEvent, step?: ActionStep): GameObject[] {
         if (obj.from === 'targetDomain') {
             const unfiltered = this.targetDomains(obj.targetDomain)
             if (obj.requirements) {
-                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(requirement, target))), unfiltered)
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(requirement, target, actionEvent, step))), unfiltered)
             }
             return unfiltered
         }
         if (obj.from === 'events') {
-            const events = this.dynamicEvents(obj.events)
+            const events = this.dynamicEvents(obj.events, actionEvent, step)
             const unfiltered = events.map(event => (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event))
             if (obj.requirements) {
-                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(requirement, target))), unfiltered)
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.targetRequirement(requirement, target, actionEvent, step))), unfiltered)
             }
             return unfiltered
         }
         if (obj.from === 'memory') {
-            const target = obj.targetMemory ? [this.dynamicTarget(obj.targetMemory)[0].memory[obj.param]] : this.memory[obj.param]
-            return target[0] ? target : []
+            const targets = obj.targetMemory ? this.dynamicTarget(obj.targetMemory, actionEvent, step)[0].memory[obj.param] : this.memory[obj.param]
+            return targets instanceof Array ? targets : []
         }
     }
 
-    dynamicEvent(obj: DynamicEventObject): GameEvent[] {
-        if (obj.from === 'events') return DynamicEventReducers[obj.reducer](this.dynamicEvents(obj.events))
+    dynamicEvent(obj: DynamicEventObject, actionEvent?: ActionEvent, step?: ActionStep): GameEvent[] {
+        if (obj.from === 'events') return DynamicEventReducers[obj.reducer](this.dynamicEvents(obj.events, actionEvent, step))
+        if (obj.from === 'actionEventEvent') return [actionEvent.event]
     }
 
-    dynamicEvents(obj: DynamicEventsObject): GameEvent[] {
+    dynamicEvents(obj: DynamicEventsObject, actionEvent?: ActionEvent, step?: ActionStep): GameEvent[] {
         if (obj.from === 'eventDomain') {
             const unfiltered = this.eventDomains(obj.eventDomain)
             if (obj.requirements) {
-                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.eventRequirement(requirement, target))), unfiltered)
+                return obj.requirements.reduce((filtered, requirement) => (filtered.filter(target => this.eventRequirement(requirement, target, actionEvent, step))), unfiltered)
             }
             return unfiltered
         }
     }
 
-    dynamicNumber(obj: DynamicNumberObject): number {
+    dynamicNumber(obj: DynamicNumberObject, actionEvent?: ActionEvent, step?: ActionStep): number {
         if (obj.from === 'fervour') {
-            const base = typeof obj.base === 'number' ? obj.base : this.dynamicNumber(obj.base)
-            const fervour = obj.scaling ? this.controller().stats.fervour * obj.scaling : this.controller().stats.fervour
-            return base + fervour
+            const base = typeof obj.base === 'number' ? obj.base : this.dynamicNumber(obj.base, actionEvent, step)
+            const fervour = obj.scaling ? this.fervour() * obj.scaling : this.fervour()
+            return this.truncate(base + fervour)
         }
-        if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.dynamicNumbers(obj.numbers))
+        if (obj.from === 'scaling') {
+            const base = typeof obj.base === 'number' ? obj.base : this.dynamicNumber(obj.base, actionEvent, step)
+            const scaling = typeof obj.scaling === 'number' ? obj.scaling : this.dynamicNumber(obj.scaling, actionEvent, step)
+            return this.truncate(base * scaling)
+        }
+        if (obj.from === 'numbers') return DynamicNumberReducers[obj.reducer](this.dynamicNumbers(obj.numbers, actionEvent, step))
         if (obj.from === 'target') {
-            const target = this.dynamicTarget(obj.target)[0]
-            if (target) return (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)
+            const target = this.dynamicTarget(obj.target, actionEvent, step)[0]
+            if (target) return this.truncate((TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target))
             return null
         }
-        if (obj.from === 'targets') return this.dynamicTargets(obj.targets).length
-        if (obj.from === 'compound') return obj.numberMods.reduce((acc, mod) => this.numberMod(acc, mod), obj.base)
+        if (obj.from === 'targets') return this.dynamicTargets(obj.targets, actionEvent, step).length
+        if (obj.from === 'events') return this.dynamicEvents(obj.events, actionEvent, step).length
+        if (obj.from === 'compound') return this.truncate(obj.numberMods.reduce((acc, mod) => this.numberMod(acc, mod), obj.base))
+        if (obj.from === 'event') {
+            const event = this.dynamicEvent(obj.event, actionEvent, step)[0]
+            if (event) return this.truncate((EventToNumberMaps[obj.numberMap] as EventToNumberMap)(event)) as number
+            return null
+        }
+        if (obj.from === 'memory') {
+            const number = obj.targetMemory ? this.dynamicTarget(obj.targetMemory, actionEvent, step)[0].memory[obj.param] : this.memory[obj.param]
+            return number ?? null
+        }
     }
 
-    dynamicNumbers(obj: DynamicNumbersObject): number[] {
+    dynamicNumbers(obj: DynamicNumbersObject, actionEvent?: ActionEvent, step?: ActionStep): number[] {
         if (obj.from === 'targets') {
-            const targets = this.dynamicTargets(obj.targets)
-            return targets.map(target => (TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target))
+            const targets = this.dynamicTargets(obj.targets, actionEvent, step)
+            return targets.map(target => this.truncate((TargetToNumberMaps[obj.numberMap] as TargetToNumberMap)(target)))
         }
+        if (obj.from === 'memory') {
+            const numbers = obj.targetMemory ? this.dynamicTarget(obj.targetMemory, actionEvent, step)[0].memory[obj.param] : this.memory[obj.param]
+            return numbers instanceof Array ? numbers : []
+        }
+        if (obj.from === 'numberArray') return obj.numbers.map(number => this.dynamicNumber(number, actionEvent, step))
+        if (obj.from === 'numbersArray') return obj.numbers.map(number => this.dynamicNumbers(number, actionEvent, step)).flat()
+
     }
 
     numberMod(accumulator: number, mod: NumberModObject) {
@@ -429,77 +504,77 @@ abstract class GameObject {
     }
 
     autoActionFunction(actionEvent: ActionEvent, step: ActionStep, obj: AutoActionFunction, values): void {
-        let targets = (this.dynamicOrStoredValue(step.autoTargets?.[obj.autoTarget ?? 0].targets, actionEvent, step) as GameObject[]) ?? []
+        let targets = (this.dynamicOrStoredValue(step.autoTargets?.[obj.autoTarget ?? 0]?.targets, actionEvent, step) as GameObject[]) ?? []
         if (obj.extraTargets && targets[0]) {
-            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
-            else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
+            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets, actionEvent, step)
+            else targets.push(...targets[0].dynamicTargets(obj.extraTargets, actionEvent, step))
         }
-        if (obj.runRequirements?.every(requirement => this.requirement(requirement, targets[0])) ?? true)
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, targets[0], actionEvent, step)) ?? true)
             return ActionOperations[obj.operation](this, actionEvent, targets, values)
     }
 
     manualActionFunction(actionEvent: ActionActionEvent, step: ActionActionStep, obj: ManualActionFunction, values): void {
         let targets = [step.manualTargets[obj.manualTarget ?? 0].chosenTarget]
         if (obj.extraTargets && targets[0]) {
-            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
-            else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
+            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets, actionEvent, step)
+            else targets.push(...targets[0].dynamicTargets(obj.extraTargets, actionEvent, step))
         }
-        if (obj.runRequirements?.every(requirement => this.requirement(requirement, targets[0])) ?? true)
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, targets[0], actionEvent, step)) ?? true)
             return ActionOperations[obj.operation](this, actionEvent, targets, values)
     }
 
     targetMapActionFunction(triggerActionEvent: TriggerActionEvent, step: ActionStep, obj: TargetMapActionFunction, values): void {
         let targets = [(EventToTargetMaps[obj.targetMap] as EventToTargetMap)(triggerActionEvent.event)]
         if (obj.extraTargets && targets[0]) {
-            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets)
-            else targets.push(...targets[0].dynamicTargets(obj.extraTargets))
+            if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets, triggerActionEvent, step)
+            else targets.push(...targets[0].dynamicTargets(obj.extraTargets, triggerActionEvent, step))
         }
-        if (obj.runRequirements?.every(requirement => this.requirement(requirement, triggerActionEvent)) ?? true)
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, triggerActionEvent, triggerActionEvent, step)) ?? true)
             return ActionOperations[obj.operation](this, triggerActionEvent, targets, values)
     }
 
     eventModActionFunction(triggerActionEvent: TriggerActionEvent, step: ActionStep, obj: EventModActionFunction, values): void {
-        if (obj.runRequirements?.every(requirement => this.requirement(requirement, triggerActionEvent)) ?? true)
+        if (obj.runRequirements?.every(requirement => this.requirement(requirement, triggerActionEvent, triggerActionEvent, step)) ?? true)
             return EventModOperations[obj.operation](this, triggerActionEvent.event, values)
     }
 
-    requirement(obj: Requirement, target?: GameObject | GameEvent): boolean {
-        if (obj.hasOwnProperty('activeRequirement')) return this.activeRequirement(obj as ActiveRequirementShortcut)
-        if (obj.hasOwnProperty('targetRequirement')) return this.targetRequirement(obj as TargetRequirement, target as GameObject)
-        if (obj.hasOwnProperty('eventTargetRequirement')) return this.eventTargetRequirement(obj as EventTargetRequirement, target as GameEvent)
-        if (obj.hasOwnProperty('eventRequirement')) return this.eventRequirement(obj as EventRequirement, target as GameEvent)
-        if (obj.hasOwnProperty('customRequirement')) return this.dynamicBoolean((obj as CustomRequirement).customRequirement)
+    requirement(obj: Requirement, target?: GameObject | GameEvent, actionEvent?: ActionEvent, step?: ActionStep): boolean {
+        if (obj.hasOwnProperty('activeRequirement')) return this.activeRequirement(obj as ActiveRequirementShortcut, target, actionEvent, step)
+        if (obj.hasOwnProperty('targetRequirement')) return this.targetRequirement(obj as TargetRequirement, target as GameObject, actionEvent, step)
+        if (obj.hasOwnProperty('eventTargetRequirement')) return this.eventTargetRequirement(obj as EventTargetRequirement, target as GameEvent, actionEvent, step)
+        if (obj.hasOwnProperty('eventRequirement')) return this.eventRequirement(obj as EventRequirement, target as GameEvent, actionEvent, step)
+        if (obj.hasOwnProperty('customRequirement')) return this.dynamicBoolean((obj as CustomRequirement).customRequirement, actionEvent, step)
     }
 
-    targetRequirement(obj: TargetRequirement, target: GameObject): boolean {
+    targetRequirement(obj: TargetRequirement, target: GameObject, actionEvent?: ActionEvent, step?: ActionStep): boolean {
         const values: any = {}
         for (let property in obj.values) {
-            values[property] = this.dynamicValue(obj.values[property])
+            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
         }
         return TargetRequirements[obj.targetRequirement](this, target, values)
     }
 
-    activeRequirement(obj: ActiveRequirementShortcut): boolean {
+    activeRequirement(obj: ActiveRequirementShortcut, target?, actionEvent?: ActionEvent, step?: ActionStep): boolean {
         const values: any = {}
         for (let property in obj.values) {
-            values[property] = this.dynamicValue(obj.values[property])
+            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
         }
         return ActiveRequirements[obj.activeRequirement](this, values)
     }
 
-    eventTargetRequirement(obj: EventTargetRequirement, event: GameEvent): boolean {
+    eventTargetRequirement(obj: EventTargetRequirement, event: GameEvent, actionEvent?: ActionEvent, step?: ActionStep): boolean {
         const values: any = {}
         for (let property in obj.values) {
-            values[property] = this.dynamicValue(obj.values[property])
+            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
         }
         const target = (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event)
         return TargetRequirements[obj.eventTargetRequirement](this, target, values)
     }
 
-    eventRequirement(obj: EventRequirement, event: GameEvent): boolean {
+    eventRequirement(obj: EventRequirement, event: GameEvent, actionEvent?: ActionEvent, step?: ActionStep): boolean {
         const values: any = {}
         for (let property in obj.values) {
-            values[property] = this.dynamicValue(obj.values[property])
+            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
         }
         return EventRequirements[obj.eventRequirement](this, event)
     }
@@ -567,4 +642,7 @@ import EventRequirements from "../dictionaries/EventRequirements"
 import NumberToBooleanMaps from "../dictionaries/NumberToBooleanMaps"
 import DynamicNumberOperators from "../dictionaries/DynamicNumberOperators"
 import { AuraEffectFunction } from "../structs/EffectFunctionObject"
+import EventToNumberMaps from "../dictionaries/EventToNumberMaps"
+import EventToNumberMap from "../functionTypes/EventToNumberMap"
+import e = require("express")
 

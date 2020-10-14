@@ -15,12 +15,9 @@ export interface AutoActionFunction extends BaseActionFunction {
     functionType: 'autoAction'
     operation: ActionOperationString
     values?: ValuesObject
-    // targets?: DynamicOrStoredTargetObject | DynamicOrStoredTargetsObject
     autoTarget?: number
-    // validTargets?: GameObject[]
     extraTargets?: DynamicTargetsFromTargetDomain
     onlyExtraTargets?: boolean
-    // activeRequirements?: ActiveRequirement[]
     runRequirements?: RunRequirement[]
 }
 
@@ -31,7 +28,6 @@ export interface ManualActionFunction extends BaseActionFunction {
     manualTarget?: number
     extraTargets?: DynamicTargetsFromTargetDomain
     onlyExtraTargets?: boolean
-    // activeRequirements?: ActiveRequirement[]
     runRequirements?: RunRequirement[]
 }
 
@@ -53,9 +49,9 @@ export interface EventModActionFunction extends BaseActionFunction {
 }
 
 export interface ManualTargetData {
-    targets: DynamicTargetsFromTargetDomain
+    targets: DynamicTargetsObject
     text: DynamicTextObject
-    hostile?: boolean
+    hostile: boolean
     minUnique?: number
     highlightRequirements?: TargetRequirement[]
 }
@@ -79,7 +75,7 @@ export interface ActionActionStepData {
     manualTargets?: ManualTargetData[]
     autoTargets?: AutoTarget[]
     actionFunctions: ActionActionFunction[]
-    requirements?: ActiveRequirement[]
+    activeRequirements?: ActiveRequirement[]
     activeHighlight?: boolean
 }
 
@@ -91,7 +87,7 @@ export interface ActionActionStep extends ActionActionStepData {
 export interface EventActionStepData {
     autoTargets?: AutoTarget[]
     actionFunctions: EventActionFunction[]
-    requirements?: ActiveRequirement[]
+    activeRequirements?: ActiveRequirement[]
     activeHighlight?: boolean
 }
 
@@ -205,7 +201,7 @@ export interface OptionChoiceRequest {
 // export type ReportableAction = ActionAction | EventAction | DeathAction //| OptionAction
 
 import ValuesObject from "./ValuesObject"
-import { DynamicTargetsFromTargetDomain, DynamicOrStoredTargetObject, DynamicOrStoredTargetsObject } from "./DynamicValueObject"
+import { DynamicTargetsFromTargetDomain, DynamicOrStoredTargetObject, DynamicOrStoredTargetsObject, DynamicTargetsObject } from "./DynamicValueObject"
 import { ActionOperationString, EventModOperationString, EventToTargetMapString } from "../stringTypes/DictionaryKeyString"
 import { DynamicTextObject, LocalisedStringObject } from "./Localisation"
 import TriggerTypeString from "../stringTypes/TriggerTypeString"

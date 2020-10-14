@@ -11,15 +11,15 @@ const data: LeaderData = {
   subtype: 'Leader',
   classes: ['Empire'],
   collectable: true,
-  cost: 0,
-  health: 4,
+  cost: 2,
+  health: 5,
   leaderTechniqueID: 'OrkusTheOrkestSmash',
   staticText: {
-    english: ``,
+    english: `Starter`,
   },
   text: {
       templates: {
-          english: ``,
+          english: `Starter`,
       },
   },
   starter: true,

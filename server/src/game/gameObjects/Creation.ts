@@ -62,10 +62,17 @@ abstract class Creation extends DestroyableCard {
         }
     }
 
-    loseCharge() {
-        this.charges--
-        if (this.charges <= 0) this.pendingDestroy = true
+    gainCharge() {
+        this.charges++
         this.update()
+    }
+
+    loseCharge() {
+        if (!this.flags.immune) {
+            this.charges--
+            if (this.charges <= 0) this.pendingDestroy = true
+            this.update()
+        }
     }
 
     isDestroyed(): boolean {
@@ -109,6 +116,7 @@ abstract class Creation extends DestroyableCard {
         if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
         else this.zone = destination
         if (destination === 'creationZone') this.game.inPlay.push(this)
+        else if (destination === 'legacy') this.charges = this.data.charges
         this.updateEffects()
     }
 }

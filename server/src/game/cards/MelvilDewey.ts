@@ -41,7 +41,8 @@ const data: FamousFollowerData = {
                     valueType: 'targets',
                     from: 'targetDomain',
                     targetDomain: 'friendlyHand'
-                }
+                },
+                hostile: false,
             }],
             actionFunctions: [
                 {

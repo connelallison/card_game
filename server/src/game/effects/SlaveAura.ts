@@ -1,7 +1,6 @@
 import AuraEffect, { AuraEffectData } from "../gameObjects/AuraEffect";
 import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
-import { sumFriendlyFollowersHealth } from "../dictionaries/DynamicValueShortcuts";
 
 const data: AuraEffectData = {
     id: 'SlaveAura',
@@ -24,6 +23,7 @@ const data: AuraEffectData = {
                 english: `Can't attack.`,
             },
         },
+        stackable: false,
         functions: [{
             operation: 'cantAttack',
             value: true
@@ -32,7 +32,7 @@ const data: AuraEffectData = {
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyBoard'],
+        targetDomain: ['friendlyBoard', 'enemyBoard'],
         requirements: [{
             targetRequirement: 'isSpecificCardClass',
             values: {

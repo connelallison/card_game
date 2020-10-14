@@ -56,7 +56,7 @@ class GamePlayer extends GameObject {
     this.zone = 'global'
     this.playerName = name
     this.socketID = socketID
-    this.maxHealth = 20
+    this.maxHealth = 25
     this.currentHealth = this.maxHealth
     this.armour = 0
     this.rawGrowth = 1
@@ -153,8 +153,8 @@ class GamePlayer extends GameObject {
     return this.hand.map(card => card.provideReport())
   }
 
-  deckReport(): ObjectReport[] {
-    return [...this.deck].sort((first, second) => first.data.cost - second.data.cost).map(card => card.provideReport())
+  deckReport(localisation: LocalisationString = 'english'): ObjectReport[] {
+    return [...this.deck].sort((first, second) => this.sortCards(first, second, localisation) ? 1 : -1).map(card => card.provideReport())
   }
 
   legacyReport(): ObjectReport[] {
@@ -173,7 +173,6 @@ class GamePlayer extends GameObject {
       const proposedDrawEvent = new ProposedDrawEvent(this.game, {
         player: this,
         number: 1,
-        criteria: [],
       })
       this.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
     }
@@ -190,6 +189,10 @@ class GamePlayer extends GameObject {
 
   controller(): GamePlayer {
     return this
+  }
+
+  weapons(): WeaponCreation[] {
+    return this.creationZone.filter(creation => creation instanceof WeaponCreation) as WeaponCreation[]
   }
 
   // opponent(): GamePlayer {
@@ -241,7 +244,7 @@ class GamePlayer extends GameObject {
     this.auraApply(1)
     this.auraApply(2)
     this.auraApply(3)
-    this.updateArrays()
+    this.finishUpdate()
   }
 
   // setData(dataObj) {
@@ -319,13 +322,31 @@ class GamePlayer extends GameObject {
     this.armour += armour
   }
 
-  takeDamage(damage: number): number {
-    const remainingDamage = damage > this.armour ? damage - this.armour : 0
-    const remainingArmour = this.armour > damage ? this.armour - damage : 0
-    this.armour = remainingArmour
+  takeDamage(damage: number, rot?: boolean): number {
+    let remainingDamage = damage
+    if (!rot) {
+      remainingDamage = damage > this.armour ? damage - this.armour : 0
+      const remainingArmour = this.armour > damage ? this.armour - damage : 0
+      this.armour = remainingArmour
+    }
     this.currentHealth -= remainingDamage
+    if (rot) this.maxHealth -= remainingDamage
     // this.update()
     return remainingDamage
+  }
+
+  receiveHealing(rawHealing: number, nourish?: boolean): number {
+    const healing = nourish
+      ? rawHealing
+      : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+    
+    if (nourish) this.maxHealth += healing
+    this.currentHealth += healing
+    return healing
+  }
+
+  missingHealth(): number {
+    return this.maxHealth - this.currentHealth
   }
 
   spendMoney(amount: number): void {
@@ -340,6 +361,7 @@ class GamePlayer extends GameObject {
 
   refillMoney(): void {
     this.rawMoney = this.stats.income
+    this.money = this.baseMoney()
   }
 
   increaseIncome(number): void {
@@ -403,4 +425,5 @@ import { LocalisationString, LocalisedStringObject } from '../structs/Localisati
 import GameObjectData from '../structs/GameObjectData'
 import { PersistentCardTypeString } from '../stringTypes/ZoneTypeSubtypeString'
 import { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'
+import WeaponCreation from './WeaponCreation'
 

@@ -14,7 +14,7 @@ const data: FamousFollowerData = {
   collectable: true,
   cost: 3,
   attack: 4,
-  health: 5,
+  health: 4,
   staticText: {
     english: `Eureka: Gain Rush.`,
   },
@@ -46,7 +46,7 @@ const data: FamousFollowerData = {
           targetDomain: "self",
         },
       }],
-      requirements: [{
+      activeRequirements: [{
         activeRequirement: 'eureka'
       }],
       // activeHighlight: true,

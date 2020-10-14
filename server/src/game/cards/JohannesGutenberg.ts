@@ -57,7 +57,7 @@ const data: FamousFollowerData = {
                     },
                 },
             ],
-            requirements: [{
+            activeRequirements: [{
                 activeRequirement: 'eureka'
             }],
             // activeHighlight: true,

@@ -10,6 +10,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Rush` } },
+    stackable: false,
     activeTypes: ['Follower'],
     effectObjs: [{
         operation: 'rush',

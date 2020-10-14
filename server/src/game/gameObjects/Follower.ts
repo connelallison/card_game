@@ -81,6 +81,10 @@ abstract class Follower extends Character {
     return this.categories.map(category => CategoryIcons[category])
   }
 
+  static categoriesReport(data: FollowerData, localisation: LocalisationString = 'english'): string[] {
+    return data.categories?.map(category => CategoryIcons[category]) ?? []
+  }
+
   takeDamage(damage: number, rot?: boolean): number {
     let reducedDamage = damage - this.stats.damageReduction >= 0 ? damage - this.stats.damageReduction : 0
     if (this.flags.immune && !rot) reducedDamage = 0
@@ -96,8 +100,12 @@ abstract class Follower extends Character {
     return reducedDamage
   }
 
-  receiveHealing(rawHealing: number): number {
-    const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+  receiveHealing(rawHealing: number, nourish?: boolean): number {
+    const healing = nourish
+      ? rawHealing
+      : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+    
+    if (nourish) this.maxHealth += healing
     this.rawHealth += healing
     this.health += healing
     this.update()

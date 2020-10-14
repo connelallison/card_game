@@ -21,6 +21,7 @@ const data: AuraEffectData = {
             english: `Junior Orc Aura`,
         },
         text: { templates: { english: `+1 Attack.` } },
+        stackable: true,
         functions: [{
             operation: 'incrementAttack',
             value: 1

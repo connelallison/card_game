@@ -144,7 +144,7 @@ abstract class Character extends DestroyableCard {
   abstract updateAttackTargets(): void
   abstract getReady(): void
   abstract takeDamage(damage: number, rot?: boolean): number
-  abstract receiveHealing(healing: number): number
+  abstract receiveHealing(healing: number, nourish?: boolean): number
   abstract missingHealth(): number
 }
 

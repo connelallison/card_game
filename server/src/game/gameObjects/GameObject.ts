@@ -139,21 +139,40 @@ abstract class GameObject {
     currentTurn(): Turn {
         return this.game.currentTurn()
     }
-    
+
     static truncate(number: number): number {
         return Math.floor(number * 10) / 10
-    } 
+    }
 
     truncate(number: number): number {
         return GameObject.truncate(number)
-    } 
-    
+    }
+
     static round(number: number): number {
         return Math.round(number * 10) / 10
     }
 
     round(number: number): number {
         return GameObject.round(number)
+    }
+
+    static sortCards(first: Card, second: Card, localisation: LocalisationString = 'english', index?: number): boolean {
+        if (first.id === second.id) return false
+        if (typeof index !== 'number') {
+            if (first.cost === second.cost) return GameObject.sortCards(first, second, localisation, 0)
+            else return first.cost > second.cost
+        } else {
+            if (
+                first.name[localisation][index] === second.name[localisation][index]
+                && first.name[localisation][index + 1]
+                && second.name[localisation][index + 1]
+            ) return GameObject.sortCards(first, second, localisation, index + 1)
+            else return first.name[localisation][index] > second.name[localisation][index]
+        }
+    }
+
+    sortCards(first: Card, second: Card, localisation: LocalisationString = 'english', index?: number): boolean {
+        return GameObject.sortCards(first, second, localisation, index)
     }
 
     createCard(cardID: CardIDString, owner: GamePlayer): Card {
@@ -250,7 +269,8 @@ abstract class GameObject {
     localiseNameAndTextObject(object: NameAndTextObject, localisation: LocalisationString = 'english'): LocalisedNameAndText {
         const name = object.name[localisation]
         const text = this.generateDynamicText(object.text, localisation)
-        return { name, text }
+        const { stackable } = object
+        return { name, text, stackable }
     }
 
     parseActiveZones(activeZones: ActiveZones): ZoneString[] {
@@ -484,7 +504,7 @@ abstract class GameObject {
     }
 
     autoActionFunction(actionEvent: ActionEvent, step: ActionStep, obj: AutoActionFunction, values): void {
-        let targets = (this.dynamicOrStoredValue(step.autoTargets?.[obj.autoTarget ?? 0].targets, actionEvent, step) as GameObject[]) ?? []
+        let targets = (this.dynamicOrStoredValue(step.autoTargets?.[obj.autoTarget ?? 0]?.targets, actionEvent, step) as GameObject[]) ?? []
         if (obj.extraTargets && targets[0]) {
             if (obj.onlyExtraTargets) targets = targets[0].dynamicTargets(obj.extraTargets, actionEvent, step)
             else targets.push(...targets[0].dynamicTargets(obj.extraTargets, actionEvent, step))
@@ -624,4 +644,5 @@ import DynamicNumberOperators from "../dictionaries/DynamicNumberOperators"
 import { AuraEffectFunction } from "../structs/EffectFunctionObject"
 import EventToNumberMaps from "../dictionaries/EventToNumberMaps"
 import EventToNumberMap from "../functionTypes/EventToNumberMap"
+import e = require("express")
 

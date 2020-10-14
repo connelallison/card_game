@@ -17,9 +17,9 @@ const fervourTextHealing: DynamicTextValueObject = {
     value: {
         valueType: 'number',
         from: 'fervour',
-        base: 6,
+        base: 5,
     },
-    default: 6,
+    default: 5,
     fervour: true,
 }
 
@@ -33,14 +33,14 @@ const data: TechniqueCreationData = {
     classes: ['Learning'],
     collectable: true,
     repeatable: false,
-    cost: 2,
+    cost: 1,
     charges: 3,
     staticText: {
-        english: `Action: Deal 2 rot damage. Then, restore 6 Health.`,
+        english: `Action: Deal 2 rot damage to a follower. Then, restore 5 Health.`,
     },
     text: {
         templates: {
-            english: `Action: Deal $0 rot damage. Then, restore $1 Health.`,
+            english: `Action: Deal $0 rot damage to a follower. Then, restore $1 Health.`,
         },
         dynamicValues: [fervourTextDamage, fervourTextHealing],
     },
@@ -52,7 +52,7 @@ const data: TechniqueCreationData = {
             name: { english: 'Chemotherapy' },
             text: {
                 templates: {
-                    english: `Action: Deal $0 rot damage. Then, restore $1 Health.`,
+                    english: `Action: Deal $0 rot damage to a follower. Then, restore $1 Health.`,
                 },
                 dynamicValues: [fervourTextDamage, fervourTextHealing],
             },
@@ -76,18 +76,18 @@ const data: TechniqueCreationData = {
                             functionType: 'manualAction',
                             operation: 'heal',
                             values: {
-                                healing: 6,
+                                healing: 5,
                             },
                         },
                     ],
                     manualTargets: [
                         {
-                            text: { templates: { english: 'Choose a character to damage and heal.' } },
+                            text: { templates: { english: 'Choose a follower to damage and heal.' } },
                             hostile: true,
                             targets: {
                                 valueType: 'targets',
                                 from: 'targetDomain',
-                                targetDomain: ['enemyBoard', 'friendlyBoard', 'enemyLeader', 'friendlyLeader'],
+                                targetDomain: ['enemyBoard', 'friendlyBoard'],
                             },
                         },
                     ],

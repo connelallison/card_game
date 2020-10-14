@@ -10,12 +10,13 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Guard` } },
+    stackable: false,
     activeTypes: ['Follower'],
     effectObjs: [{
         operation: 'guard',
         value: true
     }],
-    
+
 }
 
 class Guard extends StaticEffect {

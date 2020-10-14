@@ -1,21 +1,20 @@
-import NamelessFollower, { NamelessFollowerData } from '../gameObjects/NamelessFollower'
+import FamousFollower, { FamousFollowerData } from '../gameObjects/FamousFollower'
 import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
-const data: NamelessFollowerData = {
-    id: 'Sputnik',
+const data: FamousFollowerData = {
+    id: 'HelenOfTroy',
     name: {
-        english: `Sputnik`,
+        english: `Helen Of Troy`,
     },
     type: 'Follower',
-    subtype: 'Nameless',
+    subtype: 'Famous',
     classes: ['All'],
-    categories: ['Tech'],
+    categories: ['Woman', 'Legend'],
     collectable: true,
     cost: 3,
-    attack: 3,
-    health: 3,
-    charges: 1,
+    attack: 4,
+    health: 2,
     staticText: {
         english: `Event: Both players draw two cards.`,
     },
@@ -31,8 +30,8 @@ const data: NamelessFollowerData = {
     actions: [],
     events: [
         {
-            id: 'SputnikEvent',
-            name: { english: 'Sputnik Event' },
+            id: 'HelenOfTroyEvent',
+            name: { english: 'Helen Of Troy Event' },
             text: { templates: { english: 'Event: Both players draw two cards.' } },
             actionType: 'eventAction',
             actionSteps: [
@@ -62,10 +61,10 @@ const data: NamelessFollowerData = {
     deathEvents: [],
 }
 
-class Sputnik extends NamelessFollower {
-    static readonly data: NamelessFollowerData = data
+class HelenOfTroy extends FamousFollower {
+    static readonly data: FamousFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default Sputnik
+export default HelenOfTroy

@@ -17,11 +17,11 @@ const data: NamelessFollowerData = {
     health: 2,
     charges: 2,
     staticText: {
-        english: `At the end of your turn, gain Rent 1.`,
+        english: `At the start of your turn, gain Rent 1.`,
     },
     text: {
         templates: {
-            english: `At the end of your turn, gain Rent 1.`,
+            english: `At the start of your turn, gain Rent 1.`,
         },
     },
     tooltips: [],

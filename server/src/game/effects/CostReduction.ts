@@ -11,6 +11,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `-0 Cost` } },
+    stackable: true,
     activeTypes: 'Card',
     effectObjs: [
         {

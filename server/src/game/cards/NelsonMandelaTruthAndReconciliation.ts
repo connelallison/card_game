@@ -13,14 +13,14 @@ const data: PassiveLeaderTechniqueData = {
     collectable: false,
     cost: 0,
     staticText: {
-        english: `Passive: After a character doesn't use their attack, give them +1 Health.`,
+        english: `Passive: After a character doesn't use their attack, nourish 1 Health to them.`,
     },
     text: {
         templates: {
-            english: `Passive: After a character doesn't use their attack, give them +1 Health.`,
+            english: `Passive: After a character doesn't use their attack, nourish 1 Health to them.`,
         },
     },
-    tooltips: [],
+    tooltips: ['nourishHealing'],
     effects: ['NelsonMandelaTruthAndReconciliationTrigger'],
 }
 

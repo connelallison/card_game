@@ -1,4 +1,5 @@
 import React from 'react'
+import Highlighter from 'react-highlight-words'
 import AddedText from './AddedText'
 import TargetableEntity, { EntityProps, Selections } from './TargetableEntity'
 
@@ -29,7 +30,7 @@ abstract class Card extends TargetableEntity {
         return this.props.relatedCard ? 'relatedCard' : ''
     }
 
-    hoverCard(object): JSX.Element | null  { return null }
+    hoverCard(object): JSX.Element | null { return null }
 
     fortuneOverlay(): JSX.Element | null {
         return this.props.object.fortune && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' ? (
@@ -76,7 +77,7 @@ abstract class Card extends TargetableEntity {
                 return 'learning'
             case 'The People':
                 return 'thePeople'
-            default: 
+            default:
                 return ''
         }
     }
@@ -94,8 +95,21 @@ abstract class Card extends TargetableEntity {
     }
 
     boldedText() {
-        // const text = (this.props.object.text as string).split()
-        return <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
+        const boldedText = this.props.object.text.length > 0
+            ? <Highlighter
+                className='boldedText'
+                caseSensitive
+                highlightClassName='keyword'
+                searchWords={['Guard', 'Fortune', 'Fervour', 'Rent', 'Passionate', 
+                            'Snipe', 'Pillage', 'Action', 'Event', 'Option', 
+                            'Eureka', 'Income', 'Growth', 'Bloodthirst', 'Mob', 
+                            'Rush', 'Death', 'Legacy', 'Hand', 'Deck', 
+                            'Starter', 'Passive', 'Successor']}
+                highlightTag='span'
+                textToHighlight={this.props.object.text}
+            />
+            : null
+        return <p className={`card-text ${this.textLength()}`}>{boldedText}</p>
     }
 
     handInfo(): JSX.Element | null {

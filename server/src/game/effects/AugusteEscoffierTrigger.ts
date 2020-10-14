@@ -13,7 +13,7 @@ const data: TriggerEffectData = {
     activeTypes: ['Follower'],
     text: {
         templates: {
-            english: `Deck: At the end of your turn, gain +1/+1.`,
+            english: `Deck: At the end of your turn, gain +2/+2.`,
         },
     },
     repeatable: true,
@@ -34,7 +34,7 @@ const data: TriggerEffectData = {
                             functionType: 'autoAction',
                             operation: 'buffStats',
                             values: {
-                                stats: 1,
+                                stats: 2,
                                 buffName: { english: 'Auguste Escoffier Buff' },
                             },
                         },

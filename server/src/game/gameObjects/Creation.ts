@@ -116,6 +116,7 @@ abstract class Creation extends DestroyableCard {
         if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
         else this.zone = destination
         if (destination === 'creationZone') this.game.inPlay.push(this)
+        else if (destination === 'legacy') this.charges = this.data.charges
         this.updateEffects()
     }
 }

@@ -3,6 +3,7 @@ import Effect, { EffectData } from './Effect'
 export interface StaticEffectData extends EffectData {
     subtype: 'Static'
     effectObjs: EffectFunctionObject[]
+    stackable: boolean
 }
 
 abstract class StaticEffect extends Effect {
@@ -10,10 +11,12 @@ abstract class StaticEffect extends Effect {
     readonly data: StaticEffectData
     subtype: 'Static'
     effectFunctions: EffectFunction[]
+    stackable: boolean
 
     constructor(game: Game, owner: GameObject, data: StaticEffectData) {
         super(game, owner, data)
         this.effectFunctions = this.wrappedEffects(data.effectObjs)
+        this.stackable = data.stackable
     }
 
     clone(newOwner): StaticEffect {

@@ -21,7 +21,8 @@ class Follower extends Card {
         {this.guardOverlay()}
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
-        <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
+        {/* <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p> */}
+        {this.boldedText()}
         <div className="multicolour-line">
           {this.statLabel('attack')}
           {this.categories()}

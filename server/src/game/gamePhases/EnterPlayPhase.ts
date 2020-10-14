@@ -46,6 +46,7 @@ class EnterPlayPhase extends EventPhase {
         this.cacheEvent(event, 'enterPlay')
         this.startChild(new Phases.AuraUpdatePhase(this))
         this.emit('onEnterPlay', event)
+        this.banishIfDead()
         this.queueSteps()
         this.end()
     }
@@ -65,6 +66,11 @@ class EnterPlayPhase extends EventPhase {
         } else {
             event.card.putIntoPlay(event.index)
         }
+    }
+
+    banishIfDead(): void {
+        const event = this.event
+        if (event.card instanceof Follower && event.card.isDestroyed()) event.card.moveZone('setAsideZone') 
     }
 }
 

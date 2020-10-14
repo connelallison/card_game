@@ -11,6 +11,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Set to 0 Attack.` } },
+    stackable: false,
     activeSubtypes: 'hasAttack',
     effectObjs: [
         {

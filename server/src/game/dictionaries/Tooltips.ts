@@ -78,7 +78,15 @@ const Tooltips = {
     rotDamage: {
         name: { english: 'Rot damage' },
         text: { templates: { english: `Rot damage reduces max Health, and ignores Armour, Fortune, and Immune.` } },
-    }
+    },
+    nourishHealing: {
+        name: { english: 'Nourish healing' },
+        text: { templates: { english: `Nourish healing increases max Health.` } },
+    },
+    starter: {
+        name: { english: 'Starter' },
+        text: { templates: { english: `You can start the game with this leader in play.` } },
+    },
 }
 
 export default Tooltips

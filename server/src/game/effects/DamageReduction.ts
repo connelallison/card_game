@@ -10,6 +10,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `This takes 0 less damage from all sources.` } },
+    stackable: true,
     activeTypes: 'Character',
     effectObjs: [
         {

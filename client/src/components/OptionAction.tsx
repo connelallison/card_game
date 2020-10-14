@@ -6,7 +6,8 @@ class OptionAction extends Card {
         return (
             <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={this.styleClasses()}>
                 <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
-                <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
+                {/* <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p> */}
+                {this.boldedText()}
             </div>
         )
     }

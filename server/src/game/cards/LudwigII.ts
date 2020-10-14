@@ -13,8 +13,8 @@ const data: FamousFollowerData = {
     categories: ['Noble'],
     collectable: true,
     cost: 2,
-    attack: 1,
-    health: 4,
+    attack: 3,
+    health: 2,
     staticText: {
         english: `After you overheal your leader, gain Armour equal to the overhealing.`,
     },

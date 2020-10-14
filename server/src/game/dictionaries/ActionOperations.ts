@@ -32,11 +32,12 @@ const ActionOperations = {
         }
     },
 
-    heal: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { healing: number, split?: boolean }) => {
+    heal: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { healing: number, split?: boolean, nourish?: boolean }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ?? false
         const healing = values.healing <= 0 ? 0 : split ? source.truncate(values.healing / targets.length) : values.healing
+        const nourish = values.nourish ?? false
         if (targets.length === 1) {
             const healingEvent = new HealingEvent(source.game, {
                 objectSource: source,
@@ -44,6 +45,7 @@ const ActionOperations = {
                 target: targets[0],
                 healing,
                 split,
+                nourish,
             })
             source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
         } else if (targets.length > 1) {
@@ -55,6 +57,7 @@ const ActionOperations = {
                     target,
                     healing,
                     split,
+                    nourish,
                 })
                 healingEvents.push(healingEvent)
             }
@@ -62,15 +65,18 @@ const ActionOperations = {
         }
     },
 
-    healToFull: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+    healRelativeToNumber: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { numberMap: TargetToNumberMapString, scaling?: number, nourish?: boolean }) => {
         const targets = targetObjs as Character[]
+        const nourish = values.nourish ?? false
+        const scaling = values.scaling ?? 1
         if (targets.length === 0) return
         if (targets.length === 1) {
             const healingEvent = new HealingEvent(source.game, {
                 objectSource: source,
                 charSource: source.charOwner(),
                 target: targets[0],
-                healing: targets[0].missingHealth(),
+                healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(targets[0]) * scaling,
+                nourish,
             })
             source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
         } else if (targets.length > 1) {
@@ -80,7 +86,8 @@ const ActionOperations = {
                     objectSource: source,
                     charSource: source.charOwner(),
                     target,
-                    healing: target.missingHealth(),
+                    healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(target) * scaling,
+                    nourish,
                 })
                 healingEvents.push(healingEvent)
             }
@@ -410,11 +417,13 @@ const ActionOperations = {
         const attackers = targetObjs as Character[]
         const defender = values.attackTarget[0]
         attackers.forEach(attacker => {
-            const attackEvent = new AttackEvent(source.game, {
-                attacker,
-                defender,
-            })
-            source.game.startNewDeepestPhase('AttackPhase', attackEvent)
+            if (!attacker.isDestroyed()) {
+                const attackEvent = new AttackEvent(source.game, {
+                    attacker,
+                    defender,
+                })
+                source.game.startNewDeepestPhase('AttackPhase', attackEvent)
+            }
         })
     },
 
@@ -437,8 +446,8 @@ const ActionOperations = {
         const targets = targetObjs as PersistentCard[]
         for (const target of targets) {
             if (target.zone === 'legacy' && target.controller().canSummon(target)) {
-                if (target instanceof Follower) target.rawHealth = target.maxHealth
-                if (target instanceof Creation) target.charges = target.data.charges
+                // if (target instanceof Follower) target.rawHealth = target.maxHealth
+                // if (target instanceof Creation) target.charges = target.data.charges
                 const eventObj = Object.assign({
                     controller: target.controller(),
                     card: target,
@@ -531,7 +540,7 @@ import ActionEvent from '../gamePhases/ActionEvent'
 import { DamageEvent } from '../gamePhases/DamageSinglePhase'
 import { HealingEvent } from '../gamePhases/HealSinglePhase'
 import { ProposedDrawEvent } from '../gamePhases/ProposedDrawPhase'
-import { CardIDString, EffectExpiryIDString, EffectIDString, PersistentCardIDString, StatStaticEffectIDString } from '../stringTypes/DictionaryKeyString'
+import { CardIDString, EffectExpiryIDString, EffectIDString, PersistentCardIDString, StatStaticEffectIDString, TargetToNumberMapString } from '../stringTypes/DictionaryKeyString'
 import { SummonEvent } from '../gamePhases/SummonPhase'
 import { EnterPlayEvent } from '../gamePhases/EnterPlayPhase'
 import DestroyableCard from '../gameObjects/DestroyableCard'
@@ -547,4 +556,6 @@ import { LocalisedStringObject } from '../structs/Localisation'
 import Game from '../gamePhases/Game'
 import NamelessFollower from '../gameObjects/NamelessFollower'
 import { ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
+import TargetToNumberMaps from './TargetToNumberMaps'
+import TargetToNumberMap from '../functionTypes/TargetToNumberMap'
 

@@ -23,6 +23,10 @@ label {
   background-color: lightgrey;
 }
 
+span {
+  background-color: transparent;
+}
+
 body {
   /* -webkit-user-select: none; 
   -moz-user-select: none;    
@@ -342,6 +346,18 @@ input {
   z-index: 1;
 }
 
+/* .cardTextSpan {
+  background-color: transparent;
+} */
+
+.keyword {
+  font-weight: 600;
+}
+
+/* .notBolded {
+
+} */
+
 /* .allClasses {
 } */
 
@@ -556,7 +572,7 @@ input {
 
 .stat-label .decimal {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .cardName .stat-label {

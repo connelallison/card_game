@@ -23,6 +23,7 @@ const data: AuraEffectData = {
                 english: `"I'm Spartacus!"`,
             },
         },
+        stackable: false,
         functions: [
             {
                 operation: 'setID',

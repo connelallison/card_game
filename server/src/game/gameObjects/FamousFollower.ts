@@ -54,7 +54,7 @@ abstract class FamousFollower extends Follower {
       cost: this.data.cost,
       attack: this.data.attack,
       health: this.data.health,
-      categories: this.data.categories ?? [],
+      categories: Follower.categoriesReport(this.data, localisation),
       type: this.data.type,
       subtype: this.data.subtype,
       text: this.data.staticText[localisation],
@@ -79,6 +79,12 @@ abstract class FamousFollower extends Follower {
         this.game.inPlay.push(this)
       }
     } else {
+      if (destination === 'legacy') {
+        const healthDiff = this.maxHealth - this.rawHealth
+        this.rawHealth += healthDiff
+        this.healthStatic += healthDiff
+        this.health += healthDiff
+      }
       if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
       else this.owner[destination].push(this)
     }

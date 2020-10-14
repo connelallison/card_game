@@ -10,6 +10,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Rent 0` } },
+    stackable: true,
     activeTypes: 'Persistent',
     effectObjs: [
         {

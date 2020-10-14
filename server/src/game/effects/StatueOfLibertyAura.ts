@@ -23,6 +23,7 @@ const data: AuraEffectData = {
                 english: `+1/+1`,
             },
         },
+        stackable: true,
         functions: [
             {
                 operation: 'incrementAttack',

@@ -10,7 +10,7 @@ export type DynamicValueObject = DynamicLocalisedStringObject
 
 export type DynamicLocalisedStringObject = DynamicLocalisedStringFromTarget 
 export type DynamicStringObject = DynamicStringFromTarget
-export type DynamicBooleanObject = DynamicBooleanFromNumber
+export type DynamicBooleanObject = DynamicBooleanFromNumber | DynamicBooleanFromTarget
 export type DynamicNumberObject = DynamicNumberFromFervour | DynamicNumberFromScaling | DynamicNumberFromTarget | DynamicNumberFromEvent | DynamicNumberFromTargets | DynamicNumberFromEvents | DynamicNumberFromNumbers | DynamicNumberFromCompound | DynamicNumberFromMemory
 export type DynamicNumbersObject = DynamicNumbersFromTargets | DynamicNumbersFromNumberArray | DynamicNumbersFromNumbersArray | DynamicNumbersFromMemory
 export type DynamicTargetObject = DynamicTargetFromEvent | DynamicTargetFromTargets | DynamicTargetFromTargetDomain | DynamicTargetFromMemory | DynamicTargetFromSelf  | DynamicTargetFromAutoTarget | DynamicTargetFromManualTarget
@@ -78,6 +78,13 @@ export interface DynamicBooleanFromNumber {
     number: DynamicNumber
     operator: NumberToBooleanMapString
     comparison: DynamicNumber
+}
+
+export interface DynamicBooleanFromTarget {
+    valueType: 'boolean'
+    from: 'target'
+    targetRequirements: TargetRequirement[]
+    target: DynamicTargetObject
 }
 
 export interface DynamicBooleanFromStored {

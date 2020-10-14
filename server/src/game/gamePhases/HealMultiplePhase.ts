@@ -15,7 +15,7 @@ class HealMultiplePhase extends EventPhase {
         }
         for (const event of events) {
             if (event.healing > 0) {
-                const actualHealing = event.target.receiveHealing(event.healing)
+                const actualHealing = event.target.receiveHealing(event.healing, !!event.nourish)
                 event.actualHealing = actualHealing
                 event.generateLog()
                 this.cacheEvent(event, 'healing')

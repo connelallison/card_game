@@ -17,7 +17,8 @@ class Creation extends Card {
         <div className={`cardClassColour ${this.cardClass()}`}></div>
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
-        <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p>
+        {/* <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p> */}
+        {this.boldedText()}
         <div className="multicolour-line">
           {costLabel}
           {this.statLabel('attack')}

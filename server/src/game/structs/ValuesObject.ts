@@ -36,6 +36,7 @@ interface ValuesObject {
     zone?: DynamicOrStoredZoneString
     // zones?: DynamicOrStoredZoneString[]
     split?: DynamicOrStoredBoolean
+    cards?: DynamicOrStoredTargets
     attackTarget?: DynamicOrStoredTarget
     target?: DynamicOrStoredTarget
     autoTarget?: number
@@ -46,12 +47,14 @@ interface ValuesObject {
     forOpponent?: boolean
     rot?: boolean
     nourish?: boolean
+    numberMap?: TargetToNumberMapString
+    scaling?: number
 }
 
 export default ValuesObject
 
 import { DynamicTargetObject, DynamicOrStoredTargetObject } from "./DynamicValueObject";
-import { DynamicOrStoredCardIDString, EffectIDString, DynamicOrStoredPersistentCardIDString, StatStaticEffectIDString, EffectExpiryIDString, StatString } from "../stringTypes/DictionaryKeyString";
+import { DynamicOrStoredCardIDString, EffectIDString, DynamicOrStoredPersistentCardIDString, StatStaticEffectIDString, EffectExpiryIDString, StatString, TargetToNumberMapString } from "../stringTypes/DictionaryKeyString";
 import { DynamicNumber, DynamicString, DynamicValue, DynamicOrStoredNumber, DynamicOrStoredString, DynamicOrStoredValue, DynamicOrStoredBoolean, DynamicOrStoredLocalisedString, DynamicOrStoredTarget, DynamicOrStoredTargets } from "./DynamicValue";
 import { DynamicZoneString, DynamicOrStoredZoneString, ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
 import { LocalisedStringObject } from "./Localisation"; import FollowerCategoryString from "../stringTypes/FollowerCategoryString";

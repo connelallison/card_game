@@ -16,6 +16,7 @@ const data: AuraEffectData = {
     effectFunction: {
         name: { english: `Second Amendment` },
         text: { templates: { english: `+1 Attack` } },
+        stackable: true,
         functions: [{
             operation: 'incrementAttack',
             value: 1,

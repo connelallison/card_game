@@ -10,6 +10,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Bloodthirst` } },
+    stackable: false,
     activeSubtypes: 'hasAttack',
     effectObjs: [
         {

@@ -8,6 +8,7 @@ export default EffectFunctionObject
 export interface AuraEffectFunctionObject {
   name: LocalisedStringObject
   text: DynamicTextObject
+  stackable: boolean
   functions: EffectFunctionObject[]
 }
 

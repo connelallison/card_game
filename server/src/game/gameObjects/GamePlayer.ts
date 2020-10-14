@@ -56,7 +56,7 @@ class GamePlayer extends GameObject {
     this.zone = 'global'
     this.playerName = name
     this.socketID = socketID
-    this.maxHealth = 20
+    this.maxHealth = 25
     this.currentHealth = this.maxHealth
     this.armour = 0
     this.rawGrowth = 1
@@ -153,8 +153,8 @@ class GamePlayer extends GameObject {
     return this.hand.map(card => card.provideReport())
   }
 
-  deckReport(): ObjectReport[] {
-    return [...this.deck].sort((first, second) => first.data.cost - second.data.cost).map(card => card.provideReport())
+  deckReport(localisation: LocalisationString = 'english'): ObjectReport[] {
+    return [...this.deck].sort((first, second) => this.sortCards(first, second, localisation) ? 1 : -1).map(card => card.provideReport())
   }
 
   legacyReport(): ObjectReport[] {
@@ -333,6 +333,20 @@ class GamePlayer extends GameObject {
     if (rot) this.maxHealth -= remainingDamage
     // this.update()
     return remainingDamage
+  }
+
+  receiveHealing(rawHealing: number, nourish?: boolean): number {
+    const healing = nourish
+      ? rawHealing
+      : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
+    
+    if (nourish) this.maxHealth += healing
+    this.currentHealth += healing
+    return healing
+  }
+
+  missingHealth(): number {
+    return this.maxHealth - this.currentHealth
   }
 
   spendMoney(amount: number): void {

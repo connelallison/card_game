@@ -29,11 +29,14 @@ const TargetRequirements = {
     notHasAttack: (source: GameObject, target: GameObject): boolean => (!(target as Character).hasAttack()),
     isOwnersTurn: (source: GameObject, target: GameObject): boolean => (target.controller().myTurn()),
     isNotOwnersTurn: (source: GameObject, target: GameObject): boolean => (!target.controller().myTurn()),
+    isDestroyed: (source: GameObject, target: GameObject): boolean => ((target as DestroyableCard).isDestroyed()),
+    isNotDestroyed: (source: GameObject, target: GameObject): boolean => (!(target as DestroyableCard).isDestroyed()),
 }
 
 export default TargetRequirements
 
 import Character from "../gameObjects/Character"
+import DestroyableCard from "../gameObjects/DestroyableCard"
 import Follower from "../gameObjects/Follower"
 import GameObject from "../gameObjects/GameObject"
 import FollowerCategoryString from "../stringTypes/FollowerCategoryString"

@@ -12,6 +12,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Set to $0 Health. ($1 Health)` } },
+    stackable: false,
     activeTypes: 'Character',
     effectObjs: [
         {

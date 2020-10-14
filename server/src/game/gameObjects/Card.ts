@@ -275,7 +275,11 @@ abstract class Card extends GameObject {
   actionStepActive(actionStep: ActionActionStep): boolean {
     const active = this.eventStepActive(actionStep as EventActionStep)
     if (actionStep.manualTargets) {
-      actionStep.manualTargets.forEach(manualTarget => manualTarget.validTargets = active ? this.dynamicValue(manualTarget.targets) as GameObject[] : [])
+      actionStep.manualTargets.forEach(manualTarget =>
+        manualTarget.validTargets = active
+          ? (this.dynamicValue(manualTarget.targets) as GameObject[]).filter(target => this.actionTargetConstraints(target))
+          : []
+      )
       const manualTargets = actionStep.manualTargets.every(manualTarget => manualTarget.validTargets.length >= (manualTarget.minUnique ?? 1))
       actionStep.highlighted = active && manualTargets && actionStep.activeHighlight
       return active && manualTargets
@@ -292,6 +296,12 @@ abstract class Card extends GameObject {
 
     eventStep.highlighted = active && autoTargets && eventStep.activeHighlight
     return active && autoTargets
+  }
+
+  actionTargetConstraints(target: GameObject): boolean {
+    return (
+      !(!!this.flags.mob && target instanceof Leader && !target.unprotected())
+    )
   }
 
   finishUpdate(): void {
@@ -341,7 +351,7 @@ abstract class Card extends GameObject {
   slotText(): NameAndTextObject[] {
     return []
   }
-  
+
   passionateText(): NameAndTextObject[] {
     return []
   }
@@ -351,10 +361,45 @@ abstract class Card extends GameObject {
     const passionateText = this.passionateText()
     const auraText = this.auraEffects.flat()
     const activeText = [...this.addedText, ...auraText, ...passionateText, ...slotText]
-    return activeText.map(text => {
+    const localisedText = activeText.map(text => {
       if (text instanceof Effect) return text.localiseNameAndTextObject(text, localisation)
       else return this.localiseNameAndTextObject(text, localisation)
     })
+
+    const mappedText: any = {}
+    localisedText.forEach(text => {
+      if (!mappedText.hasOwnProperty(`${text.name}${text.text}`)) {
+        mappedText[`${text.name}${text.text}`] = { ...text }
+        mappedText[`${text.name}${text.text}`].count = 1
+      } else {
+        mappedText[`${text.name}${text.text}`].count++
+      }
+    })
+
+    // const stackedText = Object.values(mappedText)//.map((obj: Object) => { return { ...obj } }) as LocalisedNameAndText[]
+    const stackedText = Object.values(mappedText) as LocalisedNameAndText[]
+    stackedText.forEach(text => {
+      if (text.count > 1) {
+        [text.name += ` x${text.count}`]
+        if (text.stackable) {
+          const numbers = this.extractNumbersFromText(text.text)
+          numbers.forEach(number => {
+            text.text = this.multiplyStackedTextValue(text.text, number, text.count)
+          })
+        }
+      }
+    })
+
+    return stackedText
+  }
+
+  extractNumbersFromText(text: string): number[] {
+    return text.replace(/\D/g, ' ').split(' ').filter(str => str !== ' ').map(num => parseInt(num))
+  }
+
+  multiplyStackedTextValue(text: string, number: number, count: number): string {
+    const regex = new RegExp(number.toString(), 'g')
+    return text.replace(regex, (number * count).toString())
   }
 
   tooltipsReport(localisation: LocalisationString = 'english'): LocalisedNameAndText[] {
@@ -379,13 +424,15 @@ abstract class Card extends GameObject {
     if (this.stats['fervour'] || this.tooltips.includes('fervour')) rawTooltips.push(Tooltips.fervour)
     if (this.tooltips.includes('money')) rawTooltips.push(Tooltips.money)
     if (this.tooltips.includes('rotDamage')) rawTooltips.push(Tooltips.rotDamage)
+    if (this.tooltips.includes('nourishHealing')) rawTooltips.push(Tooltips.nourishHealing)
+    if (this['starter']) rawTooltips.push(Tooltips.starter)
     const tooltips = rawTooltips.map(tooltip => this.localiseNameAndTextObject(tooltip, localisation))
     return tooltips
-}
+  }
 
-relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
-  return this.successor && Cards[this.successor].provideReport(localisation)
-}
+  relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
+    return this.successor && Cards[this.successor].provideReport(localisation)
+  }
 
   addEffect(effect: Effect): void {
     this.effects.push(effect)
@@ -530,4 +577,5 @@ import Effect from './Effect'
 import Follower from './Follower'
 import { setPriority } from 'os'
 import Tooltips from '../dictionaries/Tooltips'
+import Leader from './Leader'
 

@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `After a character doesn't use their attack, give them +1 Health.`,
+            english: `After a character doesn't use their attack, nourish 1 Health to them.`,
         },
     },
     repeatable: true,
@@ -26,10 +26,10 @@ const data: TriggerEffectData = {
                     actionFunctions: [
                         {
                             functionType: 'autoAction',
-                            operation: 'buffHealth',
+                            operation: 'heal',
                             values: {
-                                health: 1,
-                                buffName: { english: 'Truth And Reconciliation Buff' },
+                                healing: 1,
+                                nourish: true,
                             },
                         },
                     ],

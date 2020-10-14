@@ -10,7 +10,8 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Mob` } },
-    activeTypes: ['Follower'],
+    stackable: false,
+    // activeTypes: ['Follower'],
     effectObjs: [{
         operation: 'mob',
         value: true

@@ -24,6 +24,7 @@ const data: AuraEffectData = {
                 english: `Can't attack.`,
             },
         },
+        stackable: false,
         functions: [
             {
                 operation: 'cantAttack',

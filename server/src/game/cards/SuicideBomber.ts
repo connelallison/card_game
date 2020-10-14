@@ -26,7 +26,7 @@ const data: NamelessFollowerData = {
     },
     deathEvents: [{
         actionType: 'deathAction',
-        id: 'SuicideBomberEvent',
+        id: 'SuicideBomberDeath#Event',
         name: {
             english: 'Suicide Bomber Death Event'
         },

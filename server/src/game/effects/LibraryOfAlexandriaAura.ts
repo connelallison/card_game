@@ -18,6 +18,7 @@ const data: AuraEffectData = {
     activeZones: 'inPlay',
     effectFunction: {
         name: { english: `Library of Alexandria Aura` },
+        stackable: false,
         text: {
             templates: {
                 english: `Immune.`,

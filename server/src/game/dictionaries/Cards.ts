@@ -95,7 +95,7 @@ import UniversityOfOxford from '../cards/UniversityOfOxford'
 import M1Abrams from '../cards/M1Abrams'
 import AlexanderFleming from '../cards/AlexanderFleming'
 import Dolly from '../cards/Dolly'
-import Sputnik from '../cards/Sputnik'
+import HelenOfTroy from '../cards/HelenOfTroy'
 import ThrillOfDiscovery from '../cards/ThrillOfDiscovery'
 import UnarmedSoviet from '../cards/UnarmedSoviet'
 import SelmaMarcher from '../cards/SelmaMarcher'
@@ -123,6 +123,16 @@ import ThomasBodley from '../cards/ThomasBodley'
 import JamesMadison from '../cards/JamesMadison'
 import StatueOfLiberty from '../cards/StatueOfLiberty'
 import Collectivisation from '../cards/Collectivisation'
+import TupacShakur from '../cards/TupacShakur'
+import TupacHologram from '../cards/TupacHologram'
+import StormingOfTheBastille from '../cards/StormingOfTheBastille'
+import HippocraticOath from '../cards/HippocraticOath'
+import HippocratesMedicine from '../cards/HippocratesMedicine'
+import Hippocrates from '../cards/Hippocrates'
+import Triage from '../cards/Triage'
+import NancyKerrigan from '../cards/NancyKerrigan'
+import HenryFord from '../cards/HenryFord'
+import Atalanta from '../cards/Atalanta'
 // insert import here
 
 export const NamelessFollowers = {
@@ -138,12 +148,12 @@ export const NamelessFollowers = {
   Slave,
   Konigstiger,
   M1Abrams,
-  Sputnik,
   UnarmedSoviet,
   SelmaMarcher,
   StonewallRioter,
   SubprimeBorrower,
   TankMan,
+  TupacHologram,
   // insert NamelessFollower here
 }
 
@@ -170,6 +180,11 @@ export const FamousFollowers = {
   AlfredNobel,
   ThomasBodley,
   JamesMadison,
+  TupacShakur,
+  NancyKerrigan,
+  HenryFord,
+  HelenOfTroy,
+  Atalanta,
   // insert FamousFollower here
 }
 
@@ -177,6 +192,7 @@ export const ActionMoments = {
   Fireburst,
   NapalmStrike,
   DivideAndConquer,
+  StormingOfTheBastille,
   // insert ActionMoment here
 }
 
@@ -211,6 +227,7 @@ export const WonderCreations = {
 export const TechniqueCreations = {
   CorporalMotivation,
   Chemotherapy,
+  Triage,
   // insert TechniqueCreation here
 }
 
@@ -224,6 +241,7 @@ export const EthosPassives = {
   SingleMindedFury,
   ThrillOfDiscovery,
   PeacefulResistance,
+  HippocraticOath,
   // insert EthosPassive here 
 }
 
@@ -231,6 +249,7 @@ export const ActiveLeaderTechniques = {
   OrkusTheOrkestSmash,
   NapoleonBonaparteLeveeEnMasse,
   DavidHumeOrganiseThoughts,
+  HippocratesMedicine,
   // insert ActiveLeaderTechnique here
 }
 
@@ -246,6 +265,7 @@ export const StarterLeaders = {
   NapoleonBonaparte,
   DavidHume,
   NelsonMandela,
+  Hippocrates,
   // insert StarterLeader here
 }
 

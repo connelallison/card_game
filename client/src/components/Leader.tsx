@@ -15,7 +15,8 @@ class Leader extends Card {
         <div className={`cardClassColour ${this.cardClass()}`}></div>
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
-        <p className={`card-text`}>{this.props.object.text}</p>
+        {/* <p className={`card-text`}>{this.props.object.text}</p> */}
+        {this.boldedText()}
         <div className="multicolour-line">
           {this.statLabel('attack')}
           {this.statLabel('health')}
@@ -34,7 +35,7 @@ class Leader extends Card {
 }
 
   moneyLabel() {
-    if (this.props.object.currentMoney && this.props.object.maxMoney) {
+    if (this.props.object.currentMoney !== null && this.props.object.maxMoney !== null) {
       const currentMoneyInteger = Math.floor(this.props.object.currentMoney)
       const currentMoneyDecimal = Math.floor((this.props.object.currentMoney % 1) * 10)
       const currentMoneyDecimalSpan = currentMoneyDecimal > 0 ? <span className='decimal'>.{currentMoneyDecimal}</span> : null

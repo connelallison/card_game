@@ -24,6 +24,7 @@ const data: AuraEffectData = {
                 english: `+2 Health.`,
             },
         },
+        stackable: true,
         functions: [
             {
               operation: 'incrementHealth',

@@ -10,6 +10,7 @@ const data: StaticEffectData = {
     type: 'Effect',
     subtype: 'Static',
     text: { templates: { english: `Passionate` } },
+    stackable: false,
     activeSubtypes: ['Leader', 'Nameless', 'Famous', 'Weapon'],
     effectObjs: [
         {

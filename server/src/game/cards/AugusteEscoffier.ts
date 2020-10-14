@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
     attack: 2,
     health: 3,
     staticText: {
-        english: `Action: Shuffle a follower in your hand into your deck. It gains +1/+1 each turn it stays there.`,
+        english: `Action: Shuffle a follower in your hand into your deck. It gains +2/+2 each turn it stays there.`,
     },
     text: {
         templates: {
-            english: `Action: Shuffle a follower in your hand into your deck. It gains +1/+1 each turn it stays there.`,
+            english: `Action: Shuffle a follower in your hand into your deck. It gains +2/+2 each turn it stays there.`,
         },
     },
     tooltips: [],
@@ -31,7 +31,7 @@ const data: FamousFollowerData = {
         {
             id: 'AugustEscoffierAction',
             name: { english: 'Auguste Escoffier Action' },
-            text: { templates: { english: `Action: Shuffle a follower in your hand into your deck. It gains +1/+1 each turn it stays there.` } },
+            text: { templates: { english: `Action: Shuffle a follower in your hand into your deck. It gains +2/+2 each turn it stays there.` } },
             actionType: 'actionAction',
             actionSteps: [
                 {

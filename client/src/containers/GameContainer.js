@@ -51,6 +51,7 @@ class GameContainer extends Component {
             maxMoney: null,
             canBeSelected: false,
             name: '',
+            text: '',
             type: 'Leader',
           },
           leaderTechnique: {
@@ -84,6 +85,7 @@ class GameContainer extends Component {
             maxMoney: null,
             canBeSelected: false,
             name: '',
+            text: '',
             type: 'Leader',
           },
           leaderTechnique: {
@@ -217,7 +219,7 @@ class GameContainer extends Component {
       actions: JSON.parse(JSON.stringify(selected.actions))
     }
     if (this.moveRequest.options) this.moveRequest.options.forEach(option => this.flatMappedOption(option))
-    this.requiresConfirmation = (this.moveRequest.selected.zone === 'hand' && !this.moveRequest.attackTargets && !this.moveRequest.validSlots && !this.moveRequest.options && !this.moveRequest.actions)
+    this.requiresConfirmation = (this.moveRequest.selected.zone === 'hand' && !this.moveRequest.attackTargets && !this.moveRequest.validSlots && !this.moveRequest.options && !this.actionTargets)
     this.actionTargets = this.moveRequest.actions && this.flatMappedActions(this.moveRequest.actions)
   }
 

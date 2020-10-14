@@ -39,7 +39,10 @@ const data: FamousFollowerData = {
                     actionFunctions: [
                         {
                             functionType: 'manualAction',
-                            operation: 'healToFull',
+                            operation: 'healRelativeToNumber',
+                            values: {
+                                numberMap: 'missingHealth',
+                            }
                         },
                     ],
                     activeRequirements: [

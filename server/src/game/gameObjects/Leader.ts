@@ -117,10 +117,14 @@ abstract class Leader extends Character {
     return actualDamage
   }
 
-  receiveHealing(rawHealing: number): number {
-    const healing = rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
-    this.owner.currentHealth += healing
-    this.update()
+  receiveHealing(rawHealing: number, nourish?: boolean): number {
+    let healing = rawHealing
+    if (this.inPlay()) {
+      healing = this.owner.receiveHealing(rawHealing, nourish)
+    } else {
+      this.health += healing
+      this.rawHealth += healing
+    }
     return healing
   }
 

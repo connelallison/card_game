@@ -53,6 +53,9 @@ import AlfredNobelTrigger from '../effects/AlfredNobelTrigger'
 import ThomasBodleyTrigger from '../effects/ThomasBodleyTrigger'
 import StatueOfLibertyTrigger from '../effects/StatueOfLibertyTrigger'
 import StatueOfLibertyAura from '../effects/StatueOfLibertyAura'
+import TupacShakurTrigger from '../effects/TupacShakurTrigger'
+import HippocraticOathTrigger from '../effects/HippocraticOathTrigger'
+import HenryFordAura from '../effects/HenryFordAura'
 // insert import here
 
 export const StatStaticEffects = {
@@ -98,6 +101,7 @@ export const AuraEffects = {
   SpartacusGladiatorAura,
   LibraryOfAlexandriaAura,
   StatueOfLibertyAura,
+  HenryFordAura,
   // insert AuraEffect here
 }
 
@@ -121,6 +125,8 @@ export const TriggerEffects = {
   AlfredNobelTrigger,
   ThomasBodleyTrigger,
   StatueOfLibertyTrigger,
+  TupacShakurTrigger,
+  HippocraticOathTrigger,
   // insert TriggerEffect here
 }
 

@@ -14,11 +14,21 @@ import Decks from './game/dictionaries/Decks'
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
 function testGame(player: ServerPlayer) {
-  if (Math.floor(Math.random() * 2)) {
-    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'OrcDeck', false, true, true, player.socketID, null, true)
+  const roll = Math.floor(Math.random() * 4)
+  if (roll === 0) {
+    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'Revolution', false, true, true, player.socketID, null, true)
     testGame.init()
-  } else {
-    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'KnightDeck', false, true, true, player.socketID, null, true)
+  }
+  if (roll === 1) {
+    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'CivilDisobedience', false, true, true, player.socketID, null, true)
+    testGame.init()
+  }
+  if (roll === 2) {
+    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'ThinkTank', false, true, true, player.socketID, null, true)
+    testGame.init()
+  }
+  if (roll === 3) {
+    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'HarshMedicine', false, true, true, player.socketID, null, true)
     testGame.init()
   }
 

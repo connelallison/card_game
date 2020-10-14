@@ -24,7 +24,7 @@ class GameContainer extends Component {
     super(props)
     this.state = {
       displayName: localStorage.getItem('displayName') || 'Anonymous',
-      deckID: localStorage.getItem('deckID') || 'KnightDeck',
+      deckID: localStorage.getItem('deckID') || 'Revolution',
       selectionsEnabled: false,
       inGame: false,
       targetSelection: null,

@@ -1,11 +1,11 @@
 import CivilDisobedience from '../decks/CivilDisobedience'
 import HarshMedicine from '../decks/HarshMedicine'
-import KnightDeck from '../decks/KnightDeck'
+import Revolution from '../decks/Revolution'
 import OrcDeck from '../decks/OrcDeck'
 import ThinkTank from '../decks/ThinkTank'
 
 const Decks = {
-  KnightDeck,
+  Revolution,
   OrcDeck,
   ThinkTank,
   CivilDisobedience,

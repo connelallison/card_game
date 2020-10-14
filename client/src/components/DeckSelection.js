@@ -11,7 +11,7 @@ class DeckSelection extends Component {
             <option value='CivilDisobedience' >The People - Civil Disobedience</option>
             {/* <option value='OrcDeck' >Orc Deck</option> */}
             <option value='ThinkTank' >Learning - Think Tank</option>
-            <option value='ExponentialCancer' >Learning - Harsh Medicine</option>
+            <option value='HarshMedicine' >Learning - Harsh Medicine</option>
           </select>
         </label>
       </form>

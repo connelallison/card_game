@@ -1,6 +1,6 @@
-const CitizenDeck: DeckObject = {
-  id: 'CitizenDeck',
-  name: 'Citizen Deck',
+const Revolution: DeckObject = {
+  id: 'Revolution',
+  name: 'Revolution',
   // leader: 'DavidHume',
   leader: 'NapoleonBonaparte',
   passive: 'PeacefulResistance',
@@ -75,6 +75,6 @@ const CitizenDeck: DeckObject = {
   ]
 }
 
-export default CitizenDeck
+export default Revolution
 
 import DeckObject from '../structs/DeckObject'

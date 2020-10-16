@@ -758,6 +758,16 @@ input {
   outline: solid red 2px;
 } */
 
+.__react_component_tooltip.target-tooltip {
+  color: black;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: var(--card-background-colour);
+  border: 1px solid var(--border-colour);
+  /* margin-left: 10px; */
+}
+
 .topBar {
   width: 100%;
   background-color: var(--card-background-colour);

@@ -105,9 +105,10 @@ class GamePlayer extends GameObject {
       const highlightedObjectIDs = highlightedSelections.map(card => card.objectID)
       return {
         hostile: false,
-        text: {
-          english: 'Choose a card.'
-        }[localisation],
+        text: '',
+        // text: {
+        //   english: 'Choose a card.'
+        // }[localisation],
         validTargets: validObjectIDs,
         highlightedTargets: highlightedObjectIDs
       }

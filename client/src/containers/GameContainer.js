@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import io from 'socket.io-client'
+import ReactTooltip from 'react-tooltip'
 import Leader from '../components/Leader'
 // import OpponentHand from '../components/OpponentHand'
 import PlayerHand from '../components/PlayerHand'
@@ -10,7 +12,6 @@ import DisplayName from '../components/DisplayName'
 import PlayArea from '../components/PlayArea'
 import CreationZone from '../components/CreationZone'
 // import socket from '../helpers/websocket'
-import io from 'socket.io-client'
 import PassiveZone from '../components/PassiveZone'
 import LeaderTechnique from '../components/LeaderTechnique'
 import PlayerStatus from '../components/PlayerStatus'
@@ -440,10 +441,15 @@ class GameContainer extends Component {
       handleSelection: this.handleSelection,
     }
 
+    const selectionText = (this.state.targetSelection && this.state.targetSelection.text) || ''
+
     return (
       // <div id='gameContainer' onContextMenu={event => { event.preventDefault(); event.stopPropagation() }}>
-      <div id='gameContainer'>
+      <div id='gameContainer' data-tip=''>
         {/* <> */}
+        <ReactTooltip className='target-tooltip' offset={{right: 10}} arrowColor='transparent' place='right' >
+          {selectionText}
+        </ReactTooltip>
         <div className='topBar'>
           <DisplayName displayName={this.state.displayName} handleSubmit={this.handleUpdateDisplayName} />
           <DeckSelection deckID={this.state.deckID} decks={this.state.decks} updateDeck={this.handleUpdateDeck} />

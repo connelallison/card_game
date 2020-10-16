@@ -45,7 +45,7 @@ class EnterPlayPhase extends EventPhase {
         event.generateLog()
         this.cacheEvent(event, 'enterPlay')
         this.startChild(new Phases.AuraUpdatePhase(this))
-        this.emit('onEnterPlay', event)
+        this.emit('afterEnterPlay', event)
         this.banishIfDead()
         this.queueSteps()
         this.end()

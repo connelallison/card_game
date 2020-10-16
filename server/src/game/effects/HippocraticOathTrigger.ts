@@ -12,9 +12,8 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Passive: All healing to friendly characters is nourish healing.`,
+            english: `Passive: Your damage and healing to friendly characters are never rot and always nourish.`,
         },
-        dynamicValues: [],
     },
     repeatable: true,
     wonderTrigger: false,
@@ -38,6 +37,38 @@ const data: TriggerEffectData = {
                         {
                             eventTargetRequirement: 'isFriendly',
                             targetMap: 'healingEventHealedTarget',
+                        },
+                        {
+                            eventTargetRequirement: 'isFriendly',
+                            targetMap: 'healingEventCharSource',
+                        },
+                    ]
+                },
+            ],
+        },
+        {
+            actionType: 'triggerAction',
+            eventType: 'beforeDamage',
+            actionSteps: [
+                {
+                    actionFunctions: [
+                        {
+                            functionType: 'eventModAction',
+                            operation: 'setBooleanParam',
+                            values: {
+                                param: 'rot',
+                                value: false,
+                            },
+                        },
+                    ],
+                    requirements: [
+                        {
+                            eventTargetRequirement: 'isFriendly',
+                            targetMap: 'damageEventDamagedTarget',
+                        },
+                        {
+                            eventTargetRequirement: 'isFriendly',
+                            targetMap: 'damageEventCharSource',
                         },
                     ]
                 },

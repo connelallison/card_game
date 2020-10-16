@@ -1,7 +1,9 @@
 const EventToTargetMaps = {
     deathEventDestroyedTarget: (event: DeathEvent) => event.died,
     drawEventDrawnCard: (event: DrawEvent) => event.card,
+    drawEventPlayer: (event: DrawEvent) => event.player,
     damageEventDamagedTarget: (event: DamageEvent) => event.target,
+    damageEventCharSource: (event: DamageEvent) => event.charSource,
     healingEventHealedTarget: (event: HealingEvent) => event.target,
     healingEventCharSource: (event: HealingEvent) => event.charSource,
     enterPlayEventPlayedCard: (event: EnterPlayEvent) => event.card,

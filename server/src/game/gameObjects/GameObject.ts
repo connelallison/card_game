@@ -282,13 +282,15 @@ abstract class GameObject {
             ? [...ObjectTypes]
             : activeTypes === 'Persistent'
                 ? [...PersistentCardTypes]
-                : activeTypes === 'Character'
-                    ? [...CharacterTypes]
-                    : activeTypes === 'Card'
-                        ? [...CardTypes]
-                        : activeTypes === 'inPlay'
-                            ? [...PersistentCardTypes, 'Player']
-                            : activeTypes
+                : activeTypes === 'Destroyable'
+                    ? [...DestroyableCardTypes]
+                    : activeTypes === 'Character'
+                        ? [...CharacterTypes]
+                        : activeTypes === 'Card'
+                            ? [...CardTypes]
+                            : activeTypes === 'inPlay'
+                                ? [...PersistentCardTypes, 'Player']
+                                : activeTypes
     }
 
     parseActiveSubtypes(activeSubtypes: ActiveSubtypes): ObjectSubtypeString[] {
@@ -590,7 +592,7 @@ import Game from "../gamePhases/Game"
 import GamePlayer from "./GamePlayer"
 import Effect from "./Effect"
 import Card from "./Card"
-import { ActiveSubtypes, ActiveTypes, ActiveZones, CardTypes, CharacterTypes, InGameZones, ObjectSubtypes, ObjectSubtypeString, ObjectTypes, ObjectTypeString, PersistentCardTypes, PlayZones, ZoneString } from "../stringTypes/ZoneTypeSubtypeString"
+import { ActiveSubtypes, ActiveTypes, ActiveZones, CardTypes, CharacterTypes, DestroyableCardTypes, InGameZones, ObjectSubtypes, ObjectSubtypeString, ObjectTypes, ObjectTypeString, PersistentCardTypes, PlayZones, ZoneString } from "../stringTypes/ZoneTypeSubtypeString"
 import EffectFunction from "../functionTypes/EffectFunction"
 import StaticEffect from "./StaticEffect"
 import GameObjectData, { FlagsObject } from "../structs/GameObjectData"

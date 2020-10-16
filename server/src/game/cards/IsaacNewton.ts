@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
     attack: 4,
     health: 3,
     staticText: {
-        english: `Action: Deplete a charge on a creation in play. Give its owner a clone for each remaining charge.`,
+        english: `Action: Deplete a charge on a creation in play. Add a clone to your hand for each remaining charge.`,
     },
     text: {
         templates: {
-            english: `Action: Deplete a charge on a creation in play. Give its owner a clone for each remaining charge.`,
+            english: `Action: Deplete a charge on a creation in play. Add a clone to your hand for each remaining charge.`,
         },
     },
     tooltips: [],
@@ -31,7 +31,7 @@ const data: FamousFollowerData = {
         {
             id: 'IsaacNewtonAction',
             name: { english: 'Isaac Newton Action' },
-            text: { templates: { english: `Action: Deplete a charge on a creation in play. Give its owner a clone for each remaining charge.` } },
+            text: { templates: { english: `Action: Deplete a charge on a creation in play. Add a clone to your hand for each remaining charge.` } },
             actionType: 'actionAction',
             actionSteps: [
                 {

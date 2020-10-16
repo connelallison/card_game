@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `After you play a technique, give it +2 charges.`,
+            english: `After you play a technique, draw a card.`,
         },
         dynamicValues: [],
     },
@@ -26,12 +26,8 @@ const data: TriggerEffectData = {
                 {
                     actionFunctions: [
                         {
-                            functionType: 'targetMapAction',
-                            targetMap: 'playEventPlayedCard',
-                            operation: 'addCharge',
-                            values: {
-                                charges: 2,
-                            },
+                          functionType: 'autoAction',
+                          operation: 'draw',
                         },
                     ],
                     requirements: [

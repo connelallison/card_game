@@ -12,9 +12,9 @@ const data: FamousFollowerData = {
     classes: ['Learning'],
     categories: [],
     collectable: true,
-    cost: 2,
+    cost: 1,
     attack: 2,
-    health: 3,
+    health: 1,
     staticText: {
         english: `Action: Shuffle a follower in your hand into your deck. It gains +2/+2 each turn it stays there.`,
     },
@@ -62,6 +62,9 @@ const data: FamousFollowerData = {
                                         values: {
                                             type: 'Follower',
                                         }
+                                    },
+                                    {
+                                      targetRequirement: 'isNotSelf',
                                     },
                                 ]
                             },

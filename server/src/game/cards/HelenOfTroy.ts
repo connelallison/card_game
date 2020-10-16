@@ -12,15 +12,15 @@ const data: FamousFollowerData = {
     classes: ['All'],
     categories: ['Woman', 'Legend'],
     collectable: true,
-    cost: 3,
+    cost: 4,
     attack: 4,
-    health: 2,
+    health: 4,
     staticText: {
-        english: `Event: Both players draw two cards.`,
+        english: `Event: Both players draw two famous followers.`,
     },
     text: {
         templates: {
-            english: `Event: Both players draw two cards.`,
+            english: `Event: Both players draw two famous followers.`,
         },
     },
     tooltips: [],
@@ -32,7 +32,7 @@ const data: FamousFollowerData = {
         {
             id: 'HelenOfTroyEvent',
             name: { english: 'Helen Of Troy Event' },
-            text: { templates: { english: 'Event: Both players draw two cards.' } },
+            text: { templates: { english: 'Event: Both players draw two famous followers.' } },
             actionType: 'eventAction',
             actionSteps: [
                 {
@@ -43,6 +43,14 @@ const data: FamousFollowerData = {
                             values: {
                                 number: 2,
                                 forOpponent: false,
+                                targetRequirements: [
+                                    {
+                                        targetRequirement: 'isSubtype',
+                                        values: {
+                                            subtype: 'Famous',
+                                        }
+                                    },
+                                ],
                             },
                         },
                         {
@@ -51,6 +59,14 @@ const data: FamousFollowerData = {
                             values: {
                                 number: 2,
                                 forOpponent: true,
+                                targetRequirements: [
+                                    {
+                                        targetRequirement: 'isSubtype',
+                                        values: {
+                                            subtype: 'Famous',
+                                        }
+                                    },
+                                ],
                             },
                         },
                     ],

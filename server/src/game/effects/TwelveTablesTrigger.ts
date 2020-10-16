@@ -11,7 +11,7 @@ const data: TriggerEffectData = {
     subtype: 'Trigger',
     text: {
         templates: {
-            english: `After you draw a follower, summon two 1/1 Citizens.`,
+            english: `After you draw a follower, summon a 1/1 Citizen.`,
         },
     },
     repeatable: true,
@@ -38,7 +38,7 @@ const data: TriggerEffectData = {
                 },
                 {
                     eventTargetRequirement: 'isFriendly',
-                    targetMap: 'drawEventDrawnCard'
+                    targetMap: 'drawEventPlayer'
                 }
             ],
             actionFunctions: [{
@@ -46,7 +46,6 @@ const data: TriggerEffectData = {
                 operation: 'createAndSummonCard',
                 values: {
                     cardID: 'Citizen',
-                    number: 2,
                 }
             }]
         }]

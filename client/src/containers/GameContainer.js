@@ -24,7 +24,8 @@ class GameContainer extends Component {
     super(props)
     this.state = {
       displayName: localStorage.getItem('displayName') || 'Anonymous',
-      deckID: localStorage.getItem('deckID') || 'Revolution',
+      deckID: null,
+      decks: null,
       selectionsEnabled: false,
       inGame: false,
       targetSelection: null,
@@ -132,8 +133,9 @@ class GameContainer extends Component {
     socket.on('connect', (data) => {
       console.log('websocket connection established at ' + Date().toString())
       if (localStorage.getItem('displayName')) this.socket.emit('updateDisplayName', { displayName: localStorage.getItem('displayName') })
-      if (localStorage.getItem('deckID')) this.socket.emit('updateDeckID', { deckID: localStorage.getItem('deckID') })
+      // if (localStorage.getItem('deckID')) this.socket.emit('updateDeckID', { deckID: localStorage.getItem('deckID') })
     })
+    socket.on('updateDecks', decks => this.updateDecks(decks))
     socket.on('displayNameAnnouncement', data => console.log(data.message))
     socket.on('disconnect', data => this.onDisconnect())
     socket.on('gameStateUpdate', report => this.updateGameState(report))
@@ -145,9 +147,9 @@ class GameContainer extends Component {
 
   onDisconnect() {
     console.log('disconnected from websocket connection at ' + Date().toString())
-    const newGameState = {...this.state.gameState}
+    const newGameState = { ...this.state.gameState }
     newGameState.winner = 'you disconnected'
-    this.updateGameState({gameState: newGameState, eventsReport: []})
+    this.updateGameState({ gameState: newGameState, eventsReport: [] })
   }
 
   updateGameState(report) {
@@ -166,6 +168,15 @@ class GameContainer extends Component {
   updateTurnEnd(turnEnd) {
     // console.log('updatingTurnTimer')
     this.setState({ turnEnd })
+  }
+
+  updateDecks(decks) {
+    const deckIDs = Object.values(decks).map(deck => deck.id)
+    const deckID = deckIDs.includes(localStorage.getItem('deckID')) ? localStorage.getItem('deckID') : deckIDs[0]
+
+    this.socket.emit('updateDeckID', { deckID })
+    localStorage.setItem('deckID', deckID)
+    this.setState({ deckID, decks })
   }
 
   updateServerPlayers(unfilteredServerPlayers) {
@@ -435,7 +446,7 @@ class GameContainer extends Component {
         {/* <> */}
         <div className='topBar'>
           <DisplayName displayName={this.state.displayName} handleSubmit={this.handleUpdateDisplayName} />
-          <DeckSelection deckID={this.state.deckID} updateDeck={this.handleUpdateDeck} />
+          <DeckSelection deckID={this.state.deckID} decks={this.state.decks} updateDeck={this.handleUpdateDeck} />
           {
             this.state.inGame
               ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name} />

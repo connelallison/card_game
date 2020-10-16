@@ -21,7 +21,7 @@ import OrpheusTrigger from '../effects/OrpheusTrigger'
 import JohnTheBaptistAura from '../effects/JohnTheBaptistAura'
 import Mob from '../effects/Mob'
 import SlaveAura from '../effects/SlaveAura'
-import SpartacusSolidarityAura from '../effects/SpartacusSolidarityAura'
+import ImSpartacusAura from '../effects/ImSpartacusAura'
 import CostReduction from '../effects/CostReduction'
 import DamageReduction from '../effects/DamageReduction'
 import DavidHumeOrganiseThoughtsTrigger from '../effects/DavidHumeOrganiseThoughtsTrigger'
@@ -44,11 +44,10 @@ import TankManAura from '../effects/TankManAura'
 import Bloodthirst from '../effects/Bloodthirst'
 import GeneralStrike1926Aura from '../effects/GeneralStrike1926Aura'
 import ExpiresEndOfMyNextTurn from '../effects/ExpiresEndOfMyNextTurn'
-import SpartacusGladiatorAura from '../effects/SpartacusGladiatorAura'
+import SpartacusBrokenChainsAura from '../effects/SpartacusBrokenChainsAura'
 import RobespierreTrigger from '../effects/RobespierreTrigger'
 import AugusteEscoffierTrigger from '../effects/AugusteEscoffierTrigger'
 import LibraryOfAlexandriaTrigger from '../effects/LibraryOfAlexandriaTrigger'
-import LibraryOfAlexandriaAura from '../effects/LibraryOfAlexandriaAura'
 import AlfredNobelTrigger from '../effects/AlfredNobelTrigger'
 import ThomasBodleyTrigger from '../effects/ThomasBodleyTrigger'
 import StatueOfLibertyTrigger from '../effects/StatueOfLibertyTrigger'
@@ -56,6 +55,12 @@ import StatueOfLibertyAura from '../effects/StatueOfLibertyAura'
 import TupacShakurTrigger from '../effects/TupacShakurTrigger'
 import HippocraticOathTrigger from '../effects/HippocraticOathTrigger'
 import HenryFordAura from '../effects/HenryFordAura'
+import RansomEOldsAura from '../effects/RansomEOldsAura'
+import Repeatable from '../effects/Repeatable'
+import VenetianPatentStatuteTrigger from '../effects/VenetianPatentStatuteTrigger'
+import HelotTrigger from '../effects/HelotTrigger'
+import NikaRioterTrigger from '../effects/NikaRioterTrigger'
+import Immune from '../effects/Immune'
 // insert import here
 
 export const StatStaticEffects = {
@@ -83,6 +88,8 @@ export const StaticEffects = {
   SetAttackAndHealth,
   Fortune,
   Bloodthirst,
+  Repeatable,
+  Immune,
   // insert StaticEffect here
 }
 
@@ -93,15 +100,15 @@ export const AuraEffects = {
   SecondAmendmentAura,
   JohnTheBaptistAura,
   SlaveAura,
-  SpartacusSolidarityAura,
+  ImSpartacusAura,
   SelmaMarcherAura,
   StonewallRioterAura,
   TankManAura,
   GeneralStrike1926Aura,
-  SpartacusGladiatorAura,
-  LibraryOfAlexandriaAura,
+  SpartacusBrokenChainsAura,
   StatueOfLibertyAura,
   HenryFordAura,
+  RansomEOldsAura,
   // insert AuraEffect here
 }
 
@@ -127,6 +134,9 @@ export const TriggerEffects = {
   StatueOfLibertyTrigger,
   TupacShakurTrigger,
   HippocraticOathTrigger,
+  VenetianPatentStatuteTrigger,
+  HelotTrigger,
+  NikaRioterTrigger,
   // insert TriggerEffect here
 }
 

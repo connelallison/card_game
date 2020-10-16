@@ -11,26 +11,17 @@ GameObject
 // Cards
 import Game from './game/gamePhases/Game'
 import Decks from './game/dictionaries/Decks'
+const deckIDs = Object.keys(Decks)
 // const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
+function randomDeckID() {
+  const roll = Math.floor(Math.random() * deckIDs.length)
+  return deckIDs[roll]
+}
+
 function testGame(player: ServerPlayer) {
-  const roll = Math.floor(Math.random() * 4)
-  if (roll === 0) {
-    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'Revolution', false, true, true, player.socketID, null, true)
-    testGame.init()
-  }
-  if (roll === 1) {
-    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'CivilDisobedience', false, true, true, player.socketID, null, true)
-    testGame.init()
-  }
-  if (roll === 2) {
-    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'ThinkTank', false, true, true, player.socketID, null, true)
-    testGame.init()
-  }
-  if (roll === 3) {
-    const testGame = new Game(player.displayName, 'TestBot', player.deckID, 'HarshMedicine', false, true, true, player.socketID, null, true)
-    testGame.init()
-  }
+  const testGame = new Game(player.displayName, 'TestBot', player.deckID, randomDeckID(), false, true, true, player.socketID, null, true)
+  testGame.init()
 
   // const gameThread = new Worker('./worker');
   // gameThread.on('message', (message) => {
@@ -70,10 +61,11 @@ const connectedSockets = {}
 io.on('connection', function (socket) {
   console.log('made websocket connection: ', socket.id)
   const socketID = socket.id
-  const serverPlayer = new ServerPlayer(socketID)
+  const serverPlayer = new ServerPlayer(socketID, randomDeckID())
   connectedPlayers[socketID] = serverPlayer
   connectedSockets[socketID] = socket
   console.log(connectedPlayers)
+  socket.emit('updateDecks', Decks)
   io.emit('serverPlayersUpdate', Object.values(connectedPlayers))
   socket.on('updateDisplayName', function (data) {
     console.log('updateDisplayName request received')
@@ -87,9 +79,17 @@ io.on('connection', function (socket) {
   })
   socket.on('updateDeckID', data => {
     console.log('updateDeckID request received')
-    if (Object.keys(Decks).includes(data.deckID)) serverPlayer.deckID = data.deckID
+    if (deckIDs.includes(data.deckID)) serverPlayer.deckID = data.deckID
   })
   socket.on('requestTestGame', function (opponent: { opponentID: string }) {
+    if (!deckIDs.includes(serverPlayer.deckID)) {
+      console.log(`challenger player's deck "${serverPlayer.deckID}" does not exist.`)
+      return
+    }
+    if (opponent.opponentID && opponent.opponentID !== 'TestBot' && !deckIDs.includes(connectedPlayers[opponent.opponentID].deckID)) {
+      console.log(`challenged player's deck "${connectedPlayers[opponent.opponentID].deckID}" does not exist`)
+      return
+    }
     const emitGameState = gameState => socket.emit('gameStateUpdate', gameState)
     const emitTurnTimer = turnTimer => socket.emit('turnTimerUpdate', turnTimer)
     serverEvent.removeAllListeners(`newGameStatus:${socketID}`)

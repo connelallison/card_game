@@ -11,7 +11,7 @@ const data: AuraEffectData = {
     subtype: 'Aura',
     text: {
         templates: {
-            english: `Your (leader) techniques cost (1) less`,
+            english: `Your techniques cost (1) less`,
         },
     },
     priority: 1,
@@ -34,12 +34,12 @@ const data: AuraEffectData = {
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyCreations', 'friendlyLeaderTechnique', 'friendlyHand'],
+        targetDomain: ['friendlyCreations', 'friendlyHand'],
         requirements: [
             {
-                targetRequirement: 'isSubtypes',
+                targetRequirement: 'isSubtype',
                 values: {
-                    subtypes: ['Technique', 'Active'],
+                    subtype: 'Technique',
                 }
             },
         ],

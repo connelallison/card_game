@@ -40,7 +40,12 @@ const data: FamousFollowerData = {
                 targets: {
                     valueType: 'targets',
                     from: 'targetDomain',
-                    targetDomain: 'friendlyHand'
+                    targetDomain: 'friendlyHand',
+                    requirements: [
+                        {
+                          targetRequirement: 'isNotSelf'
+                        },
+                    ]
                 },
                 hostile: false,
             }],

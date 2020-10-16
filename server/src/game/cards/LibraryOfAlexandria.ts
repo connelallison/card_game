@@ -14,11 +14,11 @@ const data: WonderCreationData = {
     cost: 2,
     charges: 3,
     staticText: {
-        english: `Your Works and Techniques are Immune until your opponent plays 3 leftmost or rightmost cards.`,
+        english: `After you play a work or technique, draw a card.`,
     },
     text: {
         templates: {
-            english: `Your Works and Techniques are Immune until your opponent plays $0 leftmost or rightmost cards.`,
+            english: `After you play a work or technique, draw a card.`,
         },
         dynamicValues: [
             {
@@ -35,7 +35,7 @@ const data: WonderCreationData = {
             }
         ],
     },
-    effects: ['LibraryOfAlexandriaAura', 'LibraryOfAlexandriaTrigger'],
+    effects: ['LibraryOfAlexandriaTrigger'],
 }
 
 class LibraryOfAlexandria extends WonderCreation {

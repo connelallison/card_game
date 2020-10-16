@@ -12,7 +12,6 @@ const data: ActiveLeaderTechniqueData = {
     classes: ['Empire'],
     cost: 2,
     collectable: false,
-    repeatable: false,
     staticText: {
         english: `Action: Deal 2 damage to a follower.`,
     },

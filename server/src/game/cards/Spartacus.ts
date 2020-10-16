@@ -10,16 +10,17 @@ const data: LeaderData = {
     type: 'Leader',
     subtype: 'Leader',
     classes: ['The People'],
-    collectable: false,
-    cost: 5,
+    collectable: true,
+    cost: 4,
     health: 5,
-    leaderTechniqueID: 'SpartacusSolidarity',
+    leaderTechniqueID: 'SpartacusBrokenChains', 
+    successor: 'SpartacusFollower',
     staticText: {
-        english: `Event: Summon two 2/2 Slaves.`,
+        english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Slaves.`,
     },
     text: {
         templates: {
-            english: `Event: Summon two 2/2 Slaves.`,
+            english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Slaves.`,
         },
     },
     starter: false,
@@ -34,14 +35,8 @@ const data: LeaderData = {
                     functionType: 'autoAction',
                     operation: 'createAndSummonCard',
                     values: {
-                        cardID: 'Slave'
-                    },
-                },
-                {
-                    functionType: 'autoAction',
-                    operation: 'createAndSummonCard',
-                    values: {
-                        cardID: 'Slave'
+                        cardID: 'Slave',
+                        number: 2,
                     },
                 },
             ]

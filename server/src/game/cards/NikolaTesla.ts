@@ -13,14 +13,14 @@ const data: FamousFollowerData = {
     categories: [],
     collectable: true,
     cost: 2,
-    attack: 2,
+    attack: 3,
     health: 2,
     staticText: {
-        english: `Eureka: Reduce the Cost of a Tech follower in your hand by (3).`,
+        english: `Eureka: Reduce the Cost of a Tech follower in your hand by (2).`,
     },
     text: {
         templates: {
-            english: `Eureka: Reduce the Cost of a Tech follower in your hand by (3).`,
+            english: `Eureka: Reduce the Cost of a Tech follower in your hand by (2).`,
         },
     },
     actions: [{
@@ -31,7 +31,7 @@ const data: FamousFollowerData = {
         },
         text: {
             templates: {
-                english: 'Eureka: Reduce the Cost of a Tech follower in your hand by (3).'
+                english: 'Eureka: Reduce the Cost of a Tech follower in your hand by (2).'
             }
         },
         eureka: true,
@@ -66,7 +66,7 @@ const data: FamousFollowerData = {
                 functionType: 'manualAction',
                 operation: 'reduceCost',
                 values: {
-                    money: 3,
+                    money: 2,
                     buffName: { english: 'Nikola Tesla Discount' },
                 }
             }]

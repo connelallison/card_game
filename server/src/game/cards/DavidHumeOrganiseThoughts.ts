@@ -11,7 +11,6 @@ const data: ActiveLeaderTechniqueData = {
     subtype: 'Active',
     classes: ['Learning'],
     collectable: false,
-    repeatable: false,
     cost: 1,
     staticText: {
         english: `Action: Shuffle a card in your hand into your deck. At the end of your turn, draw it.`,

@@ -11,10 +11,9 @@ const data: ActiveLeaderTechniqueData = {
     subtype: 'Active',
     classes: ['Learning'],
     collectable: false,
-    repeatable: false,
     cost: 2,
     staticText: {
-        english: `Action: Restore 3 Health.`,
+        english: `Action: Restore 2 Health.`,
     },
     text: {
         templates: {
@@ -25,9 +24,9 @@ const data: ActiveLeaderTechniqueData = {
                 value: {
                     valueType: 'number',
                     from: 'fervour',
-                    base: 3,
+                    base: 2,
                 },
-                default: 3,
+                default: 2,
                 fervour: true,
             }
         ],
@@ -45,9 +44,9 @@ const data: ActiveLeaderTechniqueData = {
                         value: {
                             valueType: 'number',
                             from: 'fervour',
-                            base: 3,
+                            base: 2,
                         },
-                        default: 3,
+                        default: 2,
                         fervour: true,
                     }
                 ]
@@ -63,7 +62,7 @@ const data: ActiveLeaderTechniqueData = {
                                 healing: {
                                     valueType: 'number',
                                     from: 'fervour',
-                                    base: 3,
+                                    base: 2,
                                 },
                             },
                         },

@@ -1,16 +1,18 @@
 const ActionOperations = {
-    damage: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { damage: number, split?: boolean, rot?: boolean }) => {
+    damage: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { damage?: number, split?: boolean, numberMap?: TargetToNumberMapString, scaling?: number, rot?: boolean }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ?? false
         const rot = values.rot ?? false
-        const damage = values.damage <= 0 ? 0 : split ? source.truncate(values.damage / targets.length) : values.damage
+        const scaling = values.scaling ?? 1
+        const damage = (values.damage ?? 0) <= 0 ? 0 : split ? source.truncate(values.damage / targets.length) : values.damage
         if (targets.length === 1) {
+            const relativeDamage = values.numberMap ? (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(targets[0]) * scaling : 0
             const damageEvent = new DamageEvent(source.game, {
                 objectSource: source,
                 charSource: source.charOwner(),
                 target: targets[0],
-                damage,
+                damage: damage + relativeDamage,
                 split,
                 rot,
             })
@@ -18,11 +20,12 @@ const ActionOperations = {
         } else if (targets.length > 1) {
             const damageEvents: DamageEvent[] = []
             for (const target of targets) {
+                const relativeDamage = values.numberMap ? (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(target) * scaling : 0
                 const damageEvent = new DamageEvent(source.game, {
                     objectSource: source,
                     charSource: source.charOwner(),
                     target,
-                    damage,
+                    damage: damage + relativeDamage,
                     split,
                     rot,
                 })
@@ -32,18 +35,20 @@ const ActionOperations = {
         }
     },
 
-    heal: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { healing: number, split?: boolean, nourish?: boolean }) => {
+    heal: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { healing?: number, split?: boolean, numberMap?: TargetToNumberMapString, scaling?: number, nourish?: boolean }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ?? false
-        const healing = values.healing <= 0 ? 0 : split ? source.truncate(values.healing / targets.length) : values.healing
         const nourish = values.nourish ?? false
+        const scaling = values.scaling ?? 1
+        const healing = (values.healing ?? 0) <= 0 ? 0 : split ? source.truncate(values.healing / targets.length) : values.healing
         if (targets.length === 1) {
+            const relativeHealing = values.numberMap ? (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(targets[0]) * scaling : 0
             const healingEvent = new HealingEvent(source.game, {
                 objectSource: source,
                 charSource: source.charOwner(),
                 target: targets[0],
-                healing,
+                healing: healing + relativeHealing,
                 split,
                 nourish,
             })
@@ -51,11 +56,12 @@ const ActionOperations = {
         } else if (targets.length > 1) {
             const healingEvents: HealingEvent[] = []
             for (const target of targets) {
+                const relativeHealing = values.numberMap ? (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(target) * scaling : 0
                 const healingEvent = new HealingEvent(source.game, {
                     objectSource: source,
                     charSource: source.charOwner(),
                     target,
-                    healing,
+                    healing: healing + relativeHealing,
                     split,
                     nourish,
                 })
@@ -65,35 +71,35 @@ const ActionOperations = {
         }
     },
 
-    healRelativeToNumber: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { numberMap: TargetToNumberMapString, scaling?: number, nourish?: boolean }) => {
-        const targets = targetObjs as Character[]
-        const nourish = values.nourish ?? false
-        const scaling = values.scaling ?? 1
-        if (targets.length === 0) return
-        if (targets.length === 1) {
-            const healingEvent = new HealingEvent(source.game, {
-                objectSource: source,
-                charSource: source.charOwner(),
-                target: targets[0],
-                healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(targets[0]) * scaling,
-                nourish,
-            })
-            source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
-        } else if (targets.length > 1) {
-            const healingEvents: HealingEvent[] = []
-            for (const target of targets) {
-                const healingEvent = new HealingEvent(source.game, {
-                    objectSource: source,
-                    charSource: source.charOwner(),
-                    target,
-                    healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(target) * scaling,
-                    nourish,
-                })
-                healingEvents.push(healingEvent)
-            }
-            source.game.startNewDeepestPhase('HealMultiplePhase', healingEvents)
-        }
-    },
+    // healRelativeToNumber: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { numberMap: TargetToNumberMapString, scaling?: number, nourish?: boolean }) => {
+    //     const targets = targetObjs as Character[]
+    //     const nourish = values.nourish ?? false
+    //     const scaling = values.scaling ?? 1
+    //     if (targets.length === 0) return
+    //     if (targets.length === 1) {
+    //         const healingEvent = new HealingEvent(source.game, {
+    //             objectSource: source,
+    //             charSource: source.charOwner(),
+    //             target: targets[0],
+    //             healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(targets[0]) * scaling,
+    //             nourish,
+    //         })
+    //         source.game.startNewDeepestPhase('HealSinglePhase', healingEvent)
+    //     } else if (targets.length > 1) {
+    //         const healingEvents: HealingEvent[] = []
+    //         for (const target of targets) {
+    //             const healingEvent = new HealingEvent(source.game, {
+    //                 objectSource: source,
+    //                 charSource: source.charOwner(),
+    //                 target,
+    //                 healing: (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(target) * scaling,
+    //                 nourish,
+    //             })
+    //             healingEvents.push(healingEvent)
+    //         }
+    //         source.game.startNewDeepestPhase('HealMultiplePhase', healingEvents)
+    //     }
+    // },
 
     depleteCharge: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { charges?: number }) => {
         const targets = targetObjs as (Creation | NamelessFollower)[]
@@ -169,6 +175,11 @@ const ActionOperations = {
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
+    },
+
+    addEventAction: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { eventAction: EventAction }) => {
+        const targets = targetObjs as Card[]
+        if (values.eventAction) targets.forEach(target => target.addEvent(values.eventAction))
     },
 
     copyEurekasToTarget: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
@@ -558,4 +569,5 @@ import NamelessFollower from '../gameObjects/NamelessFollower'
 import { ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import TargetToNumberMaps from './TargetToNumberMaps'
 import TargetToNumberMap from '../functionTypes/TargetToNumberMap'
+import { EventAction } from '../structs/Action'
 

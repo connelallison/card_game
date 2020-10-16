@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `At the start of your turn, gain Rent 1.`,
+            english: `At the start of your turn, Subprime Borrower gains Rent 1.`,
         },
         dynamicValues: [],
     },
@@ -42,8 +42,17 @@ const data: TriggerEffectData = {
                     autoTargets: [
                         {
                             targets: {
-                                valueType: 'target',
-                                from: 'self',
+                                valueType: 'targets',
+                                from: 'targetDomain',
+                                targetDomain: 'self',
+                                requirements: [
+                                    {
+                                        targetRequirement: 'isSpecificCardClass',
+                                        values: {
+                                            cardID: 'SubprimeBorrower',
+                                        }
+                                    },
+                                ]
                             }
                         },
                     ],

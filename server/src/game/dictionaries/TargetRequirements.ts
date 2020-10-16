@@ -4,7 +4,7 @@ const TargetRequirements = {
     isFriendly: (source: GameObject, target: GameObject): boolean => (source.controller() === target.controller()),
     isEnemy: (source: GameObject, target: GameObject): boolean => (source.controller() !== target.controller()),
     isSelf: (source: GameObject, target: GameObject): boolean => (source.charOwner() === target),
-    notSelf: (source: GameObject, target: GameObject): boolean => (source.charOwner() !== target),
+    isNotSelf: (source: GameObject, target: GameObject): boolean => (source.charOwner() !== target),
     isSpecificCardClass: (source: GameObject, target: GameObject, values: { cardID: string }): boolean => (target.id === values.cardID),
     isNotSpecificCardClass: (source: GameObject, target: GameObject, values: { cardID: string }): boolean => (target.id !== values.cardID),
     isType: (source: GameObject, target: GameObject, values: { type: string }): boolean => (target.type === values.type),
@@ -31,6 +31,8 @@ const TargetRequirements = {
     isNotOwnersTurn: (source: GameObject, target: GameObject): boolean => (!target.controller().myTurn()),
     isDestroyed: (source: GameObject, target: GameObject): boolean => ((target as DestroyableCard).isDestroyed()),
     isNotDestroyed: (source: GameObject, target: GameObject): boolean => (!(target as DestroyableCard).isDestroyed()),
+    hasOpposite: (source: GameObject, target: GameObject): boolean => (!!(target as Follower).oppositeFollower?.()),
+    notHasOpposite: (source: GameObject, target: GameObject): boolean => (!((target as Follower).oppositeFollower?.() ?? true)),
 }
 
 export default TargetRequirements

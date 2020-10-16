@@ -49,6 +49,7 @@ interface ValuesObject {
     nourish?: boolean
     numberMap?: TargetToNumberMapString
     scaling?: number
+    eventAction?: EventAction
 }
 
 export default ValuesObject
@@ -59,4 +60,5 @@ import { DynamicNumber, DynamicString, DynamicValue, DynamicOrStoredNumber, Dyna
 import { DynamicZoneString, DynamicOrStoredZoneString, ObjectTypeString, ObjectSubtypeString } from "../stringTypes/ZoneTypeSubtypeString";
 import { LocalisedStringObject } from "./Localisation"; import FollowerCategoryString from "../stringTypes/FollowerCategoryString";
 import { TargetRequirement } from "./Requirement";
+import { EventAction } from "./Action";
 

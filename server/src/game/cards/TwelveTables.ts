@@ -11,14 +11,14 @@ const data: WonderCreationData = {
     subtype: 'Wonder',
     classes: ['The People'],
     collectable: true,
-    cost: 2,
-    charges: 3,
+    cost: 1,
+    charges: 6,
     staticText: {
-        english: `After you draw a follower, summon two 1/1 Citizens.`,
+        english: `After you draw a follower, summon a 1/1 Citizen.`,
     },
     text: {
         templates: {
-            english: `After you draw a follower, summon two 1/1 Citizens.`,
+            english: `After you draw a follower, summon a 1/1 Citizen.`,
         },
     },
     effects: ['TwelveTablesTrigger'],

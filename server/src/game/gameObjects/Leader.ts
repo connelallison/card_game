@@ -88,6 +88,7 @@ abstract class Leader extends Character {
     this.updateAttackTargets()
     this.attack = this.truncate(this.attack)
     this.health = this.truncate(this.health)
+    if (this.cost < 0) this.cost = 0
     this.cost = this.truncate(this.cost)
     this.healthStatic = this.truncate(this.healthStatic)
   }

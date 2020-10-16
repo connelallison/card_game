@@ -4,7 +4,6 @@ export interface LeaderTechniqueData extends PersistentCardData {
     type: 'LeaderTechnique'
     subtype: LeaderTechniqueSubtypeString
     collectable: false
-    repeatable?: boolean
 }
 
 abstract class LeaderTechnique extends PersistentCard {
@@ -13,14 +12,12 @@ abstract class LeaderTechnique extends PersistentCard {
     collectable: false
     inPlayZone: 'leaderTechniqueZone'
     ready: boolean
-    repeatable: boolean
     type: 'LeaderTechnique'
     subtype: LeaderTechniqueSubtypeString
     zone: LeaderTechniqueZoneString
 
     constructor(game: Game, owner: GamePlayer, data: LeaderTechniqueData) {
         super(game, owner, data)
-        this.repeatable = data.repeatable ?? false
         this.ready = true
         this.inPlayZone = 'leaderTechniqueZone'
 

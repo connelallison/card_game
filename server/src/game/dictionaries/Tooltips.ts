@@ -87,6 +87,10 @@ const Tooltips = {
         name: { english: 'Starter' },
         text: { templates: { english: `You can start the game with this leader in play.` } },
     },
+    repeatable: {
+        name: { english: 'Repetable' },
+        text: { templates: { english: `You can use this technique more than once per turn.` } },
+    },
 }
 
 export default Tooltips

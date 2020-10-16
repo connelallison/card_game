@@ -6,7 +6,7 @@ export interface DestroyableCardData extends PersistentCardData {
     deathEvents?: DeathActionData[]
 }
 
-export interface DestroyableCardStats extends PersistentCardStats {}
+export interface DestroyableCardStats extends PersistentCardStats { }
 
 abstract class DestroyableCard extends PersistentCard {
     static readonly data: DestroyableCardData
@@ -40,13 +40,13 @@ abstract class DestroyableCard extends PersistentCard {
     cloneAddedText(clone: DestroyableCard, addedText: NameAndTextObject) {
         if (addedText instanceof Effect) clone.addEffect(addedText.clone(clone))
         else {
-          const action = addedText as ActionAction | OptionAction | EventAction | DeathAction
-          if (action.actionType === 'actionAction') clone.addAction(JSON.parse(JSON.stringify(action)))
-          else if (action.actionType === 'optionAction') clone.addOption(JSON.parse(JSON.stringify(action)))
-          else if (action.actionType === 'eventAction') clone.addEvent(JSON.parse(JSON.stringify(action)))
-          else if (action.actionType === 'deathAction') clone.addDeathEvent(JSON.parse(JSON.stringify(action)))
+            const action = addedText as ActionAction | OptionAction | EventAction | DeathAction
+            if (action.actionType === 'actionAction') clone.addAction(JSON.parse(JSON.stringify(action)))
+            else if (action.actionType === 'optionAction') clone.addOption(JSON.parse(JSON.stringify(action)))
+            else if (action.actionType === 'eventAction') clone.addEvent(JSON.parse(JSON.stringify(action)))
+            else if (action.actionType === 'deathAction') clone.addDeathEvent(JSON.parse(JSON.stringify(action)))
         }
-      }
+    }
 
     addBaseDeathEvent(deathEvent: DeathAction): void {
         if (deathEvent.unique && this.deathEvents.map(deathEvent => deathEvent.id).includes(deathEvent.id)) return
@@ -74,6 +74,8 @@ abstract class DestroyableCard extends PersistentCard {
     finishUpdate(): void {
         // this.updateActiveOptions()
         // this.updateActiveActions()
+        if (this.cost < 0) this.cost = 0
+        this.cost = this.truncate(this.cost)
         this.updateActiveEvents()
         this.updateActiveDeathEvents()
     }

@@ -12,16 +12,15 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `After you equip a creation for the first time each turn, add a copy to your hand.`,
+            english: `After you draw a creation, add a copy of it to your hand.`,
         },
-        dynamicValues: [],
     },
     repeatable: true,
     wonderTrigger: false,
     triggerObjs: [
         {
             actionType: 'triggerAction',
-            eventType: 'afterPlay',
+            eventType: 'afterDraw',
             actionSteps: [
                 {
                     requirements: [
@@ -30,49 +29,49 @@ const data: TriggerEffectData = {
                             values: {
                                 type: 'Creation'
                             },
-                            targetMap: 'playEventPlayedCard',
+                            targetMap: 'drawEventDrawnCard',
                         },
                         {
-                          eventTargetRequirement: 'isFriendly',
-                          targetMap: 'playEventPlayer',
+                            eventTargetRequirement: 'isFriendly',
+                            targetMap: 'drawEventPlayer',
                         },
-                        {
-                            customRequirement: {
-                                valueType: 'boolean',
-                                from: 'number',
-                                comparison: 1,
-                                operator: 'equals',
-                                number: {
-                                    valueType: 'number',
-                                    from: 'targets',
-                                    numberMap: 'count',
-                                    targets: {
-                                        valueType: 'targets',
-                                        from: 'events',
-                                        targetMap: 'playEventPlayedCard',
-                                        requirements: [
-                                            {
-                                                targetRequirement: 'isType',
-                                                values: {
-                                                    type: 'Creation'
-                                                }
-                                            },
-                                        ],
-                                        events: {
-                                            valueType: 'events',
-                                            from: 'eventDomain',
-                                            eventDomain: 'playEvents',
-                                            requirements: [
-                                                {
-                                                    eventRequirement: 'thisTurn'
-                                                },
-                                            ]
-                                        }
+                        // {
+                        //     customRequirement: {
+                        //         valueType: 'boolean',
+                        //         from: 'number',
+                        //         comparison: 1,
+                        //         operator: 'equals',
+                        //         number: {
+                        //             valueType: 'number',
+                        //             from: 'targets',
+                        //             numberMap: 'count',
+                        //             targets: {
+                        //                 valueType: 'targets',
+                        //                 from: 'events',
+                        //                 targetMap: 'drawEventDrawnCard',
+                        //                 requirements: [
+                        //                     {
+                        //                         targetRequirement: 'isType',
+                        //                         values: {
+                        //                             type: 'Creation'
+                        //                         }
+                        //                     },
+                        //                 ],
+                        //                 events: {
+                        //                     valueType: 'events',
+                        //                     from: 'eventDomain',
+                        //                     eventDomain: 'playEvents',
+                        //                     requirements: [
+                        //                         {
+                        //                             eventRequirement: 'thisTurn'
+                        //                         },
+                        //                     ]
+                        //                 }
 
-                                    }
-                                }
-                            }
-                        },
+                        //             }
+                        //         }
+                        //     }
+                        // },
                     ],
                     actionFunctions: [
                         {

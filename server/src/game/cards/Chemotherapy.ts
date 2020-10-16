@@ -32,7 +32,6 @@ const data: TechniqueCreationData = {
     subtype: 'Technique',
     classes: ['Learning'],
     collectable: true,
-    repeatable: false,
     cost: 1,
     charges: 3,
     staticText: {

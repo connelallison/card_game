@@ -1,6 +1,7 @@
 const OrcDeck: DeckObject = {
   id: 'OrcDeck',
   name: 'Orc Deck',
+  class: 'Empire',
   leader: 'OrkusTheOrkest',
   passive: 'SingleMindedFury',
   cards: [

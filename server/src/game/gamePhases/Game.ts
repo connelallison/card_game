@@ -25,7 +25,8 @@ class Game extends GamePhase {
   children: Turn[]
   queuedPhases: Turn[]
   // turnNumber: number
-  unreportedEvents: GameEvent[]
+  // unreportedEvents: GameEvent[]
+  unreportedEvents: any[]
   winner: string
 
   constructor(player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
@@ -67,12 +68,15 @@ class Game extends GamePhase {
 
   announceGameState() {
     if (!this.ended) {
+      this.emit('updateTargets')
       const player1report: any = {}
       const player2report: any = {}
       player1report.gameState = this.prepareGameState(this.player1)
       player1report.eventsReport = this.prepareEventsReport(this.player1)
+      player1report.validSelections = this.player1.validSelectionsReport()
       player2report.gameState = this.prepareGameState(this.player2)
       player2report.eventsReport = this.prepareEventsReport(this.player2)
+      player2report.validSelections = this.player2.validSelectionsReport()
       if (this.player1.socketID) {
         serverEvent.emit(`newGameStatus:${this.player1.socketID}`, player1report)
       }
@@ -97,7 +101,6 @@ class Game extends GamePhase {
     const gameState = {
       started: true,
       winner: this.winner,
-      myTurn: player.myTurn(),
       my: {
         stats: player.statsReport(),
         passives: player.passivesReport(),
@@ -121,21 +124,34 @@ class Game extends GamePhase {
         hand: opponentHand,
         deck: opponentDeck,
       },
-      validSelections: player.validSelectionsReport(),
     }
     return gameState
   }
 
-  prepareEventsReport(player: GamePlayer) {
-    return this.unreportedEvents.map(event => event.log)
+  prepareEventsReport(player: GamePlayer, localisation: LocalisationString = 'english') {
+    // return this.unreportedEvents.map(event => event.log)
+    const observer = (player === this.player1) ? 'player1' : 'player2'
+    return this.unreportedEvents.map(event => {
+      if (event[localisation].hasOwnProperty('player1')) {
+        return event[localisation][observer]
+      } else {
+        return event[localisation]
+      }
+    })
   }
 
   announceNewTurn() {
     if (this.player1.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, this.activeChild.turnEnd)
+      serverEvent.emit(`newTurnTimer:${this.player1.socketID}`, {
+        turnEnd: this.activeChild.turnEnd,
+        myTurn: this.player1.myTurn(),
+      })
     }
     if (this.player2.socketID) {
-      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, this.activeChild.turnEnd)
+      serverEvent.emit(`newTurnTimer:${this.player2.socketID}`, {
+        turnEnd: this.activeChild.turnEnd,
+        myTurn: this.player2.myTurn(),
+      })
     }
     //  else {
     //   serverEvent.emit("newTurnTimer", this.turnLength);
@@ -155,6 +171,7 @@ class Game extends GamePhase {
 
   executeMoveRequest(moveRequest: MoveRequest, player: GamePlayer) {
     if (!player.myTurn()) return
+    // const before = performance.now()
 
     const selected = this.gameObjects[moveRequest.selected] as Card
     const attackTarget = moveRequest.attackTarget && this.gameObjects[moveRequest.attackTarget] as Character
@@ -188,6 +205,8 @@ class Game extends GamePhase {
       console.log(moveRequest)
     }
     this.announceGameState()
+    // const after = performance.now()
+    // console.log(after - before, 'ms')
   }
 
   executeAttackRequest(selected: Character, attackTarget: Character): void {
@@ -337,7 +356,13 @@ class Game extends GamePhase {
   cacheEvent(event: GameEvent, type: EventTypeString): void {
     (this.eventCache[type] as GameEvent[]).push(event)
     this.eventCache.all.push(event)
-    this.unreportedEvents.push(event)
+    event.generateLog()
+    event.generateReport('english')
+    this.unreportedEvents.push(event.reports)
+  }
+
+  preGameTurn(): Turn {
+    return new Turn(this, null, 0)
   }
 
   firstTurn(): Turn {
@@ -345,8 +370,11 @@ class Game extends GamePhase {
   }
 
   async start() {
-    console.log('starting game')
-    await this.sleep(1000)
+    // console.log('starting game')
+    // await this.sleep(1000)
+    // this.queuedPhases.push(this.preGameTurn())
+    this.activeChild = this.preGameTurn()
+    this.startSequence('StartOfGamePhase')
     this.queuedPhases.push(this.firstTurn())
     while (!this.ended && this.queuedPhases.length > 0) {
       this.startChild(this.queuedPhases.shift())
@@ -440,3 +468,6 @@ import Phases from '../dictionaries/Phases'
 import { PhaseString } from '../stringTypes/DictionaryKeyString'
 import { OptionChoice, OptionChoiceRequest } from '../structs/Action'
 import { MoveRequest } from '../structs/ObjectReport'
+import { LocalisationString } from '../structs/Localisation'
+import { performance } from 'perf_hooks'
+

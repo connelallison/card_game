@@ -28,6 +28,7 @@ import UsePhase from "../gamePhases/UsePhase";
 import SpendMoneyPhase from "../gamePhases/SpendMoneyPhase";
 import TriggerPhase from "../gamePhases/TriggerPhase";
 import TriggerActionPhase from "../gamePhases/TriggerActionPhase";
+import StartOfGamePhase from "../gamePhases/StartOfGamePhase";
 
 const Phases = {
     ActionActionPhase,
@@ -52,6 +53,7 @@ const Phases = {
     SummonPhase,
     UsePhase,
     SpendMoneyPhase,
+    StartOfGamePhase,
     TriggerPhase,
     TriggerActionPhase,
 }

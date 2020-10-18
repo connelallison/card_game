@@ -17,11 +17,11 @@ const data: FamousFollowerData = {
     attack: 2,
     health: 2,
     staticText: {
-        english: `Event: Deal 8 rot damage to all other followers.`,
+        english: `Event: Deal 8 Rot damage to all other followers.`,
     },
     text: {
         templates: {
-            english: `Event: Deal 8 rot damage to all other followers.`,
+            english: `Event: Deal 8 Rot damage to all other followers.`,
         },
     },
     tooltips: ['rotDamage'],
@@ -33,7 +33,7 @@ const data: FamousFollowerData = {
         {
             id: 'JRobertOppenheimerEvent',
             name: { english: 'J. Robert Oppenheimer Event' },
-            text: { templates: { english: `Event: Deal 8 rot damage to all followers.` } },
+            text: { templates: { english: `Event: Deal 8 Rot damage to all followers.` } },
             actionType: 'eventAction',
             actionSteps: [
                 {

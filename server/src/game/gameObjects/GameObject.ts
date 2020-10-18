@@ -66,6 +66,7 @@ abstract class GameObject {
         this.auraApply(0)
         this.auraApply(1)
         this.auraApply(2)
+        this.applyPassionate()
         this.applyInherited()
         this.auraApply(3)
         this.finishUpdate()
@@ -421,7 +422,7 @@ abstract class GameObject {
         }
         if (obj.from === 'memory') {
             const targets = obj.targetMemory ? this.dynamicTarget(obj.targetMemory, actionEvent, step)[0].memory[obj.param] : this.memory[obj.param]
-            return targets instanceof Array ? targets : []
+            return targets instanceof Array ? targets : targets instanceof GameObject ? [targets] : []
         }
     }
 

@@ -29,6 +29,15 @@ export class EnterPlayEvent extends GameEvent {
         const slot = this.card instanceof Follower ? `in slot ${this.slot.index() + 1} ` : ''
         this.log =  `${this.card.name.english} enters play ${slot}under ${this.controller.playerName}'s control.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'enterPlay',
+            card: this.card.objectID,
+            slot: this.slot?.objectID ?? null,
+            index: this.index ?? null,
+        }
+    }
 }
 class EnterPlayPhase extends EventPhase {
     parent: EventPhase
@@ -42,7 +51,7 @@ class EnterPlayPhase extends EventPhase {
         const event = this.event
         this.resolveTargetSlot()
         this.putIntoPlay()
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'enterPlay')
         this.startChild(new Phases.AuraUpdatePhase(this))
         this.emit('afterEnterPlay', event)
@@ -84,3 +93,4 @@ import GameObject from "../gameObjects/GameObject";
 import Character from "../gameObjects/Character";
 import BoardSlot from "../gameObjects/BoardSlot";
 import Game from "./Game";
+import { LocalisationString } from "../structs/Localisation";

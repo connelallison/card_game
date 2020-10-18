@@ -143,6 +143,7 @@ abstract class GamePhase {
             accrueDebt: [],
             trigger: [],
             triggerAction: [],
+            update: [],
         }
     }
 }

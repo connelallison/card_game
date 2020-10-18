@@ -27,6 +27,13 @@ export class TriggerActionEvent extends GameEvent {
         const targets = this.targets.length > 0 ? `, targeting ${this.targets[0].name.english}` : ''
         this.log = `${this.objectSource.name.english}'s trigger action activates${targets}.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'triggerAction',
+            card: this.objectSource.effectOwner().objectID,
+        }
+    }
 }
 
 class TriggerActionPhase extends EventPhase {
@@ -39,7 +46,7 @@ class TriggerActionPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'action')
         event.actionSteps.forEach(actionStep => {
             event.objectSource.actionStep(event, actionStep)
@@ -55,4 +62,5 @@ import GamePlayer from "../gameObjects/GamePlayer";
 import TriggerEffect from "../gameObjects/TriggerEffect";
 import { TriggerActionStep } from "../structs/Action";
 import Game from "./Game";
-import GameObject from "../gameObjects/GameObject";
+import GameObject from "../gameObjects/GameObject";import { LocalisationString } from "../structs/Localisation";
+

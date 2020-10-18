@@ -26,6 +26,13 @@ export class TriggerEvent extends GameEvent {
     generateLog() {
         this.log = `${this.triggerOwner.name.english}'s ${this.objectSource.name.english} triggers from the ${this.triggerType} event.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'trigger',
+            card: this.triggerOwner.objectID,
+        }
+    }
 }
 
 class TriggerPhase extends EventPhase {
@@ -38,7 +45,7 @@ class TriggerPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'trigger')
         const triggerActionEvent = new TriggerActionEvent(this.game(), {
             controller: event.controller,
@@ -66,4 +73,5 @@ import Card from "../gameObjects/Card";
 import Game from "./Game";
 import { TriggerActionEvent } from "./TriggerActionPhase";
 import Phases from "../dictionaries/Phases";
-import GameObject from "../gameObjects/GameObject";
+import GameObject from "../gameObjects/GameObject";import { LocalisationString } from "../structs/Localisation";
+

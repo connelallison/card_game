@@ -23,9 +23,9 @@ const data: FamousFollowerData = {
     classes: ['Learning'],
     categories: [],
     collectable: true,
-    cost: 6,
-    attack: 3,
-    health: 3,
+    cost: 5,
+    attack: 4,
+    health: 2,
     staticText: {
         english: `Action: Deal 3 damage to a follower.\nLegacy: After you play a technique, draw a card.`,
     },

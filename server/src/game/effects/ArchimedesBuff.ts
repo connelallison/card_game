@@ -3,27 +3,35 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: StaticEffectData = {
-    id: 'Fortune',
+    id: 'ArchimedesBuff',
     name: {
-        english: `Fortune`,
+        english: `Archimedes Buff`,
     },
+    stackable: true,
     type: 'Effect',
     subtype: 'Static',
-    text: { templates: { english: `Fortune` } },
-    stackable: false,
-    activeTypes: 'Destroyable',
+    text: { templates: { english: `+1/+1 and Rush.` } },
+    activeTypes: ['Follower'],
     effectObjs: [
         {
-            operation: 'fortune',
+            operation: 'rush',
             value: true,
+        },
+        {
+            operation: 'incrementAttack',
+            value: 1,
+        },
+        {
+          operation: 'incrementHealth',
+          value: 1,
         },
     ],
 }
 
-class Fortune extends StaticEffect {
+class ArchimedesBuff extends StaticEffect {
     static readonly data: StaticEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default Fortune
+export default ArchimedesBuff

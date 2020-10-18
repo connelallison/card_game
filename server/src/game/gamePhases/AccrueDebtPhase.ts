@@ -13,12 +13,21 @@ export class AccrueDebtEvent extends GameEvent {
     card: Card
 
     constructor(game: Game, object: AccrueDebtEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
     }
 
     generateLog() {
         this.log = `${this.player.playerName} accrues ${this.money} debt from ${this.card.name.english}.`
+    }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'accrueDebt',
+            player: this.player.objectID,
+            money: this.money,
+            // card: this.card.provideReport(localisation),
+        }
     }
 }
 
@@ -35,7 +44,7 @@ class AccrueDebtPhase extends EventPhase {
         if (event.money > 0) {
             this.emit('beforeAccrueDebt', event)
             event.player.accrueDebt(event.money)
-            event.generateLog()
+            // event.generateLog()
             this.cacheEvent(event, 'accrueDebt')
             this.emit('afterAccrueDebt', event)
             this.queueSteps()
@@ -49,3 +58,4 @@ export default AccrueDebtPhase
 import GamePlayer from "../gameObjects/GamePlayer";
 import Card from "../gameObjects/Card";
 import Game from "./Game";
+import { LocalisationString } from "../structs/Localisation";

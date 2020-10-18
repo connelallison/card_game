@@ -15,11 +15,11 @@ class AddedText extends Component {
         const styleClasses = `addedText ${this.props.tooltip ? 'tooltip' : ''}`
         return (
             <div className={styleClasses}>
-                {this.props.contents.map(addedText => (
+                {this.props.contents.map((addedText, index) => (
                     // <div>
                     [
-                        <p className='addedTextName'>{addedText.name}</p>,
-                        <p className='addedTextText'>{addedText.text}</p>
+                        <p key={`${addedText.name}:${index}`} className='addedTextName'>{addedText.name}</p>,
+                        <p key={`${addedText.text}:${index}`} className='addedTextText'>{addedText.text}</p>
                     ]
                     // </div>
                 ))}

@@ -27,6 +27,13 @@ export class OptionActionEvent extends GameEvent {
         // this.log = `${this.objectSource.name.english}'s option activates${targets}.`
         this.log = `${this.objectSource.name.english}'s option activates.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'optionAction',
+            card: this.objectSource.effectOwner().objectID,
+        }
+    }
 }
 
 class OptionActionPhase extends EventPhase {
@@ -41,7 +48,7 @@ class OptionActionPhase extends EventPhase {
         const event = this.event
         const actionCard = event.objectSource as Card
         this.emit('beforeOptionAction', event)
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'optionAction')
         event.optionAction.chosenActions.forEach(action => action.activeSteps.forEach(step => actionCard.actionStep(event, step)))
         this.emit('afterOptionAction', event)
@@ -59,4 +66,5 @@ import { OptionAction } from "../structs/Action";
 import Game from "./Game";
 import { PlayEvent } from "./PlayPhase";
 import { UseEvent } from "./UsePhase";
+import { LocalisationString } from "../structs/Localisation";
 

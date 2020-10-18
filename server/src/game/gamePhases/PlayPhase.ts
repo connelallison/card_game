@@ -33,6 +33,14 @@ export class PlayEvent extends GameEvent {
         // this.log = `${this.player.playerName} plays ${this.card.name.english}${slot}${targets}.`
         this.log = `${this.player.playerName} plays ${this.card.name.english}${slot}.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'play',
+            card: this.card.provideReport(localisation),
+            player: this.player.objectID,
+        }
+    }
 }
 
 class PlayPhase extends EventPhase {
@@ -47,7 +55,7 @@ class PlayPhase extends EventPhase {
         const event = this.event
         this.emit('beforePlay', event)
         this.spendMoneyPhase()
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'play')
         this.enterPlayPhase()
         this.optionPhase()
@@ -175,4 +183,5 @@ import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import { SpendMoneyEvent as AccrueDebtEvent } from "./SpendMoneyPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
-import { OptionActionEvent } from "./OptionActionPhase"; 
+import { OptionActionEvent } from "./OptionActionPhase"; import { LocalisationString } from "../structs/Localisation";
+

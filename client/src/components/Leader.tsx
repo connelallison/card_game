@@ -13,6 +13,10 @@ class Leader extends Card {
     return (
       <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={this.styleClasses()} >
         <div className={`cardClassColour ${this.cardClass()}`}></div>
+        {this.damageOverlay()}
+        {this.healingOverlay()}
+        {this.deathOverlay()}
+        {this.actionOverlay()}
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
         {/* <p className={`card-text`}>{this.props.object.text}</p> */}
@@ -31,7 +35,7 @@ class Leader extends Card {
   }
 
   hoverCard(object): JSX.Element | null {
-    return <HoverCard object={object} selections={this.props.selections}></HoverCard>
+    return <HoverCard object={object} animations={this.props.animations} selections={this.props.selections}></HoverCard>
 }
 
   moneyLabel() {

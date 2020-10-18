@@ -440,10 +440,20 @@ const ActionOperations = {
 
     setIndex: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { index: number }) => {
         targetObjs.forEach((target: Card) => {
+            if (!(target instanceof Card)) {
+                console.log(target)
+                throw Error('wat')
+            }
             const moveTarget = (target instanceof Follower && target.zone === 'board') ? target.slot : target
             const zone = moveTarget.controller()[moveTarget.zone] as GameObject[]
             zone.splice(values.index, 0, zone.splice(moveTarget.index(), 1)[0])
         })
+    },
+
+    setMaxBoardSlots: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { number: number, forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.opponent() : source.controller()
+        player.max.board = values.number
+        player.populateBoardSlots()
     },
 
     banish: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {

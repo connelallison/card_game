@@ -1,19 +1,19 @@
 const Tooltips = {
     option: {
         name: { english: 'Option' },
-        text: { templates: { english: `Choose one of multiple Actions when you play this from your hand.` } },
+        text: { templates: { english: `Choose something that happens when you play this from your hand.` } },
     },
     action: {
         name: { english: 'Action' },
-        text: { templates: { english: `Does something when you play this from your hand.` } },
+        text: { templates: { english: `Something that happens when you play this from your hand.` } },
     },
     event: {
         name: { english: 'Event' },
-        text: { templates: { english: `Does something when this enters play.` } },
+        text: { templates: { english: `Something that happens when this enters play.` } },
     },
     deathEvent: {
         name: { english: 'Death Event' },
-        text: { templates: { english: `Does something when this is destroyed.` } },
+        text: { templates: { english: `Something that happens when this is destroyed.` } },
     },
     eureka: {
         name: { english: 'Eureka' },
@@ -91,6 +91,10 @@ const Tooltips = {
         name: { english: 'Repetable' },
         text: { templates: { english: `You can use this technique more than once per turn.` } },
     },
+    immune: {
+        name: { english: 'Immune' },
+        text: { templates: { english: `This ignores damage (except Rot damage) and destroy effects.` } },
+    }
 }
 
 export default Tooltips

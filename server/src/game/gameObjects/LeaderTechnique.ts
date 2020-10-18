@@ -29,9 +29,9 @@ abstract class LeaderTechnique extends PersistentCard {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-        this.updateActiveOptions()
-        this.updateActiveActions()
-        this.updateActiveEvents()
+        // this.updateActiveOptions()
+        // this.updateActiveActions()
+        // this.updateActiveEvents()
 
         return {
             name: this.name[localisation],
@@ -42,6 +42,7 @@ abstract class LeaderTechnique extends PersistentCard {
             subtype: this.subtype,
             classes: this.classes,
             zone: this.zone,
+            discounted: (this.cost < this.data.cost),
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),

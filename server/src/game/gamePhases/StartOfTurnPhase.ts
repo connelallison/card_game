@@ -14,6 +14,12 @@ export class StartOfTurnEvent extends GameEvent {
     generateLog() {
         this.log = `${this.activePlayer.playerName}'s turn begins.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+
+        }
+    }
 }
 
 class StartOfTurnPhase extends EventPhase {
@@ -25,7 +31,7 @@ class StartOfTurnPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'startOfTurn')
         this.emit('startOfTurn', event)
         this.queueSteps()
@@ -37,3 +43,4 @@ export default StartOfTurnPhase
 
 import Sequence from "./Sequence"
 import GamePlayer from "../gameObjects/GamePlayer"
+import { LocalisationString } from "../structs/Localisation"

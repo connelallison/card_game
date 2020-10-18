@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Passive: If your followers don't attack, they restore Health to your Leader equal to their Attack.`,
+            english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
         },
     },
     repeatable: true,
@@ -33,6 +33,7 @@ const data: TriggerEffectData = {
                             functionType: 'autoAction',
                             operation: 'heal',
                             values: {
+                                nourish: true,
                                 healing: {
                                     valueType: 'number',
                                     from: 'numbers',

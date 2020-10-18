@@ -12,6 +12,7 @@ class LeaderTechnique extends Card {
             return (
                 <div onClick={event => this.props.selections.handleSelection(this.props.object)} className={this.styleClasses()}>
                     <div className={`cardClassColour ${this.cardClass()}`}></div>
+                    {this.actionOverlay()}
                     <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
                     {/* {this.handInfo()} */}
                     {/* <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p> */}

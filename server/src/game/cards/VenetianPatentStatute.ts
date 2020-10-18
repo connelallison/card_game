@@ -11,14 +11,14 @@ const data: WorkCreationData = {
     subtype: 'Work',
     classes: ['Learning'],
     collectable: true,
-    cost: 2,
-    charges: 3,
+    cost: 1,
+    charges: 4,
     staticText: {
-        english: `Before you play a technique, give it Immune until the end of your next turn.`, 
+        english: `Before you play a creation, give it Fortune.`,
     },
     text: {
         templates: {
-            english: `Before you play a technique, give it Immune until the end of your next turn.`,
+            english: `Before you play a creation, give it Fortune.`,
         },
     },
     effects: ['VenetianPatentStatuteTrigger'],

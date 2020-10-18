@@ -26,6 +26,13 @@ export class DeathActionEvent extends GameEvent {
         // this.log = `${this.objectSource.name.english}'s death event activates${targets}.`
         this.log = `${this.objectSource.name.english}'s death event activates.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'deathAction',
+            card: this.objectSource.effectOwner().objectID,
+        }
+    }
 }
 
 class DeathActionPhase extends EventPhase {
@@ -42,7 +49,7 @@ class DeathActionPhase extends EventPhase {
         if (destroyedCard instanceof Follower) event.stored.deathSlot = event.event.slot
 
         this.emit('beforeDeathAction', event)
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'deathAction')
         event.deathAction.actionSteps.forEach(step => destroyedCard.actionStep(event, step))
         this.emit('afterDeathAction', event)
@@ -60,4 +67,5 @@ import Game from "./Game"
 import DestroyableCard from "../gameObjects/DestroyableCard"
 import { DeathEvent } from "./DeathPhase"
 import Follower from "../gameObjects/Follower"
+import { LocalisationString } from "../structs/Localisation"
 

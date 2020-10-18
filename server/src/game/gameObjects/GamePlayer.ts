@@ -75,7 +75,7 @@ class GamePlayer extends GameObject {
       creationZone: 4,
       passiveZone: 5,
     }
-    this.board = this.populateBoardSlots()
+    this.populateBoardSlots()
     this.hand = []
     this.deck = []
     this.creationZone = []
@@ -270,12 +270,12 @@ class GamePlayer extends GameObject {
     }
   }
 
-  populateBoardSlots(): BoardSlot[] {
-    const board = []
-    for (let i = 0; i < this.max.board; i++) {
+  populateBoardSlots(): void {
+    const board = this.board ?? []
+    for (let i = board.length; i < this.max.board; i++) {
       board.push(new BoardSlot(this.game, this, 'board'))
     }
-    return board
+    this.board = board
   }
 
   firstEmptySlot(): BoardSlot {

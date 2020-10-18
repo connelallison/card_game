@@ -16,7 +16,7 @@ class Turn extends GamePhase {
         super()
         this.parent = parent
         this.activePlayer = activePlayer
-        this.nextActivePlayer = activePlayer.opponentPlayer
+        this.nextActivePlayer = activePlayer?.opponentPlayer
         this.turnNumber = turnNumber
         this.turnLength = 60000
         this.endPromise = this.endTurnPromise()

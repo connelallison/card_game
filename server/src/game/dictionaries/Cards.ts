@@ -136,12 +136,15 @@ import Atalanta from '../cards/Atalanta'
 import RansomEOlds from '../cards/RansomEOlds'
 import VenetianPatentStatute from '../cards/VenetianPatentStatute'
 import Helot from '../cards/Helot'
-import NikaRioter from '../cards/NikaRioter'
+import NikaHooligan from '../cards/NikaHooligan'
 import BostonTeaParty from '../cards/BostonTeaParty'
 import ErasmusExchange from '../cards/ErasmusExchange'
 import ImSpartacus from '../cards/ImSpartacus'
 import JRobertOppenheimer from '../cards/JRobertOppenheimer'
 import PrimaryEducation from '../cards/PrimaryEducation'
+import GrandeArmee from '../cards/GrandeArmee'
+import MarySomerville from '../cards/MarySomerville'
+import Type42Destroyer from '../cards/Type42Destroyer'
 // insert import here
 
 export const NamelessFollowers = {
@@ -164,7 +167,8 @@ export const NamelessFollowers = {
   TankMan,
   TupacHologram,
   Helot,
-  NikaRioter,
+  NikaHooligan,
+  Type42Destroyer,
   // insert NamelessFollower here
 }
 
@@ -198,6 +202,7 @@ export const FamousFollowers = {
   Atalanta,
   RansomEOlds,
   JRobertOppenheimer,
+  MarySomerville,
   // insert FamousFollower here
 }
 
@@ -260,6 +265,7 @@ export const EthosPassives = {
   ThrillOfDiscovery,
   PeacefulResistance,
   HippocraticOath,
+  GrandeArmee,
   // insert EthosPassive here 
 }
 

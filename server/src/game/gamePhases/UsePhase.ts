@@ -20,6 +20,14 @@ export class UseEvent extends GameEvent {
         // this.log = `${this.player.playerName} uses ${this.card.name.english}${targets}.`
         this.log = `${this.player.playerName} uses ${this.card.name.english}.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'use',
+            card: this.card.provideReport(),
+            player: this.player.objectID,
+        }
+    }
 }
 
 class UsePhase extends EventPhase {
@@ -34,7 +42,7 @@ class UsePhase extends EventPhase {
         const event = this.event
         const card = event.card as TechniqueCreation | LeaderTechnique
         this.spendMoneyPhase()
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'use')
         if (!card.flags.repeatable) card.ready = false
         this.actionPhase()
@@ -139,4 +147,5 @@ import { EventActionEvent } from "./EventActionPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 import PersistentCard from "../gameObjects/PersistentCard";
 import { OptionActionEvent } from "./OptionActionPhase";import { AccrueDebtEvent } from "./AccrueDebtPhase";
+import { LocalisationString } from "../structs/Localisation";
 

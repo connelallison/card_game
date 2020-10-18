@@ -11,19 +11,19 @@ import Unknown from './Unknown'
 class CardName extends TargetableEntity {
     hoverCard(object): JSX.Element | null {
         if (object.type === 'unknown') {
-            return <Unknown big={false} hover object={object} selections={this.props.selections} />
+            return <Unknown big={false} hover object={object} animations={this.props.animations} selections={this.props.selections} />
         } else if (object.type === 'Follower') {
-            return <Follower big={false} hover object={object} selections={this.props.selections} />
+            return <Follower big={false} hover object={object} animations={this.props.animations} selections={this.props.selections} />
         } else if (object.type === 'Moment') {
-            return <Moment big={false} hover object={object} selections={this.props.selections} />
+            return <Moment big={false} hover object={object} animations={this.props.animations} selections={this.props.selections} />
         } else if (object.type === 'Creation') {
-            return <Creation big={false} hover object={object} selections={this.props.selections} />
+            return <Creation big={false} hover object={object} animations={this.props.animations} selections={this.props.selections} />
         } else if (object.type === 'Passive') {
-            return <Passive big={false} hover object={object} selections={this.props.selections} />
+            return <Passive big={false} hover object={object} animations={this.props.animations} selections={this.props.selections} />
         } else if (object.type === 'Leader') {
-            return <Leader big={false} hover object={object} selections={this.props.selections} />
+            return <Leader big={false} hover object={object} animations={this.props.animations} selections={this.props.selections} />
         } else if (object.type === 'LeaderTechnique') {
-            return <LeaderTechnique big={false} hover object={object} selections={this.props.selections} />
+            return <LeaderTechnique big={false} hover object={object} animations={this.props.animations} selections={this.props.selections} />
         } else return null
     }
 

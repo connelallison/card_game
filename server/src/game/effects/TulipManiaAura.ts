@@ -31,7 +31,7 @@ const data: AuraEffectData = {
     priority: 3,
     activeZones: 'inPlay',
     effectFunction: {
-        name: { english: `Holy Protectors Aura` },
+        name: { english: `Tulip Mania Aura` },
         text: {
             templates: {
                 english: `$0`,

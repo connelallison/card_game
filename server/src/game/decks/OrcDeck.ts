@@ -29,6 +29,8 @@ const OrcDeck: DeckObject = {
     'DivideAndConquer',
     'JohnFKennedy',
     'JohnFKennedy',
+    'JohnTheBaptist',
+    'JohnTheBaptist',
   ],
 }
 

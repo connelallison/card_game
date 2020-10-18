@@ -27,9 +27,9 @@ abstract class WeaponCreation extends Creation {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-        this.updateActiveOptions()
-        this.updateActiveActions()
-        this.updateActiveEvents()
+        // this.updateActiveOptions()
+        // this.updateActiveActions()
+        // this.updateActiveEvents()
 
         return {
             name: this.name[localisation],
@@ -42,6 +42,8 @@ abstract class WeaponCreation extends Creation {
             subtype: this.subtype,
             classes: this.classes,
             zone: this.zone,
+            discounted: (this.cost < this.data.cost),
+            fortune: this.flags.fortune,
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),

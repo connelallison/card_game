@@ -22,9 +22,9 @@ abstract class Creation extends DestroyableCard {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-        this.updateActiveOptions()
-        this.updateActiveActions()
-        this.updateActiveEvents()
+        // this.updateActiveOptions()
+        // this.updateActiveActions()
+        // this.updateActiveEvents()
 
         return {
             name: this.name[localisation],
@@ -36,6 +36,8 @@ abstract class Creation extends DestroyableCard {
             subtype: this.subtype,
             classes: this.classes,
             zone: this.zone,
+            discounted: (this.cost < this.data.cost),
+            fortune: this.flags.fortune,
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
             canBeSelected: this.canBeSelected(),
@@ -68,9 +70,13 @@ abstract class Creation extends DestroyableCard {
     }
 
     loseCharge() {
-        if (!this.flags.immune) {
+        if (!this.flags.immune && !this.flags.fortune) {
             this.charges--
             if (this.charges <= 0) this.pendingDestroy = true
+            this.update()
+        } else if (this.flags.fortune) {
+            this.effects = this.effects.filter(effect => !(effect instanceof Fortune))
+            this.flags.fortune = false
             this.update()
         }
     }
@@ -129,4 +135,5 @@ import { ObjectReport, StaticObjectReport } from "../structs/ObjectReport";
 import GameObjectData from "../structs/GameObjectData";
 import { LocalisationString } from "../structs/Localisation";
 import { CreationSubtypeString, CreationZoneString } from "../stringTypes/ZoneTypeSubtypeString";
+import Fortune from "../effects/Fortune";
 

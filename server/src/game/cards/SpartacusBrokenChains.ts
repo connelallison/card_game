@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: PassiveLeaderTechniqueData = {
-    id: 'SpartacusSolidarity',
+    id: 'SpartacusBrokenChains',
     name: {
-        english: `Solidarity`,
+        english: `Broken Chains`,
     },
     type: 'LeaderTechnique',
     subtype: 'Passive',
@@ -13,20 +13,20 @@ const data: PassiveLeaderTechniqueData = {
     cost: 0,
     collectable: false,
     staticText: {
-        english: `Passive: Your nameless followers are Spartacus.`,
+        english: `Passive: Your followers can attack.`,
     },
     text: {
         templates: {
-            english: `Passive: Your nameless followers are Spartacus.`,
+            english: `Passive: Your followers can attack.`,
         },
     },
-    effects: ['SpartacusSolidarityAura']
+    effects: ['SpartacusBrokenChainsAura']
 }
 
-class SpartacusSolidarity extends PassiveLeaderTechnique {
+class SpartacusBrokenChains extends PassiveLeaderTechnique {
     static readonly data: PassiveLeaderTechniqueData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default SpartacusSolidarity
+export default SpartacusBrokenChains

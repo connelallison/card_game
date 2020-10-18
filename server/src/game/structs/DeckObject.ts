@@ -1,6 +1,7 @@
 interface DeckObject {
     id: string
     name: string
+    class: PlayerClassString
     leader: StarterLeaderIDString
     passive: EthosPassiveIDString
     cards: CardIDString[]
@@ -9,3 +10,4 @@ interface DeckObject {
 export default DeckObject
 
 import { CardIDString, EthosPassiveIDString, StarterLeaderIDString } from "../stringTypes/DictionaryKeyString";
+import PlayerClassString from "../stringTypes/PlayerClassString";

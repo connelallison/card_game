@@ -36,7 +36,7 @@ class UsePhase extends EventPhase {
         this.spendMoneyPhase()
         event.generateLog()
         this.cacheEvent(event, 'use')
-        if (!card.repeatable) card.ready = false
+        if (!card.flags.repeatable) card.ready = false
         this.actionPhase()
         this.eventActionPhase()
         this.accrueDebtPhase()

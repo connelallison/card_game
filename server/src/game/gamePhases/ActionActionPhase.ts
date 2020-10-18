@@ -13,6 +13,7 @@ export class ActionActionEvent extends GameEvent {
     objectSource: GameObject
     action: ActionAction
     event: PlayEvent
+    eureka: boolean
     stored?: {}
 
     constructor(game: Game, object: ActionActionEventObject) {
@@ -39,6 +40,7 @@ class ActionActionPhase extends EventPhase {
     start(): void {
         const event = this.event
         const actionCard = event.objectSource as Card
+        event.eureka = event.action.eureka
         // console.log(event.action.activeSteps)
         this.emit('beforeAction', event)
         event.generateLog()

@@ -11,6 +11,7 @@ const EffectOperations = {
     passionate: (data, value: boolean) => { data.flags.passionate = value },
     cantAttack: (data, value: boolean) => { data.flags.cantAttack = value },
     immune: (data, value: boolean) => { data.flags.immune = value },
+    repeatable: (data, value: boolean) => { data.flags.repeatable = value },
     incrementAttack: (data, value: number) => { data.attack += value >= 0 ? value : 0 },
     incrementHealth: (data, value: number) => { data.health += value >= 0 ? value : 0 },
     decrementAttack: (data, value: number) => { data.attack -= value >= 0 ? value : 0 },

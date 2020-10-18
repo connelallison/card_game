@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEffectData = {
-    id: 'SpartacusGladiatorAura',
+    id: 'SpartacusBrokenChainsAura',
     name: {
-        english: `Spartacus, Gladiator Aura`,
+        english: `Broken Chains Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
@@ -17,7 +17,7 @@ const data: AuraEffectData = {
     priority: 2,
     activeZones: 'inPlay',
     effectFunction: {
-        name: { english: `Spartacus, Gladiator Aura` },
+        name: { english: `Broken Chains Aura` },
         text: {
             templates: {
                 english: `Can attack.`,

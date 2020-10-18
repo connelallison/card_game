@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
     attack: 2,
     health: 4,
     staticText: {
-        english: `After you play a creation for the first time each turn, add a copy to your hand.`,
+        english: `After you draw a creation, add a copy of it to your hand.`,
     },
     text: {
         templates: {
-            english: `After you play a creation for the first time each turn, add a copy to your hand.`,
+            english: `After you draw a creation, add a copy of it to your hand.`,
         },
     },
     tooltips: [],

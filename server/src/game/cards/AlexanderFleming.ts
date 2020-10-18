@@ -12,15 +12,15 @@ const data: FamousFollowerData = {
     classes: ['Learning'],
     categories: [],
     collectable: true,
-    cost: 4,
-    attack: 4,
-    health: 5,
+    cost: 3,
+    attack: 3,
+    health: 4,
     staticText: {
-        english: `Eureka: Restore a friendly follower to full health.`,
+        english: `Action: Restore a friendly follower to full health.`,
     },
     text: {
         templates: {
-            english: `Eureka: Restore a friendly follower to full health.`,
+            english: `Action: Restore a friendly follower to full health.`,
         },
     },
     tooltips: [],
@@ -29,25 +29,19 @@ const data: FamousFollowerData = {
     options: [],
     actions: [
         {
-            id: 'AlexanderFlemingEureka',
-            name: { english: 'Alexander Fleming Eureka' },
-            text: { templates: { english: 'Eureka: Restore a friendly follower to full health.' } },
+            id: 'AlexanderFlemingAction',
+            name: { english: 'Alexander Fleming Action' },
+            text: { templates: { english: 'Action: Restore a friendly follower to full health.' } },
             actionType: 'actionAction',
-            eureka: true,
             actionSteps: [
                 {
                     actionFunctions: [
                         {
                             functionType: 'manualAction',
-                            operation: 'healRelativeToNumber',
+                            operation: 'heal',
                             values: {
                                 numberMap: 'missingHealth',
                             }
-                        },
-                    ],
-                    activeRequirements: [
-                        {
-                            activeRequirement: 'eureka',
                         },
                     ],
                     manualTargets: [

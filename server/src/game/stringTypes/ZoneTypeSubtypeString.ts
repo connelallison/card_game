@@ -60,5 +60,5 @@ export type EffectSubtypeString = typeof EffectSubtypes[number]
 export type ObjectSubtypeString = typeof ObjectSubtypes[number]
 
 export type ActiveZones = ZoneString[] | 'inPlay'
-export type ActiveTypes = ObjectTypeString[] | 'Persistent' | 'Character' | 'Card' | 'inPlay'
+export type ActiveTypes = ObjectTypeString[] | 'Persistent' | 'Destroyable' | 'Character' | 'Card' | 'inPlay'
 export type ActiveSubtypes = ObjectSubtypeString[] | 'hasAttack'

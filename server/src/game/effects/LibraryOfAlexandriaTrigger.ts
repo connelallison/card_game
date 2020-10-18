@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `After your opponent plays a leftmost or rightmost card, this wonder loses a charge.`,
+            english: `After you play a work or technique, draw a card.`,
         },
     },
     repeatable: true,
@@ -23,16 +23,25 @@ const data: TriggerEffectData = {
             eventType: 'afterPlay',
             actionSteps: [
                 {
-                  actionFunctions: [],
-                  requirements: [
-                      {
-                        eventRequirement: 'isEureka',
-                      },
-                      {
-                        eventTargetRequirement: 'isEnemy',
-                        targetMap: 'playEventPlayer',
-                      },
-                  ]
+                    actionFunctions: [
+                        {
+                          functionType: 'autoAction',
+                          operation: 'draw',
+                        },
+                    ],
+                    requirements: [
+                        {
+                            eventTargetRequirement: 'isSubtypes',
+                            targetMap: 'playEventPlayedCard',
+                            values: {
+                                subtypes: ['Technique', 'Work'],
+                            }
+                        },
+                        {
+                          eventTargetRequirement: 'isFriendly',
+                          targetMap: 'playEventPlayedCard',
+                        },
+                    ]
                 },
             ],
         },

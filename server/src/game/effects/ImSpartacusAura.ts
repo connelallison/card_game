@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEffectData = {
-    id: 'SpartacusSolidarityAura',
+    id: 'ImSpartacusAura',
     name: {
-        english: `Spartacus Solidarity Aura`,
+        english: `"I'm Spartacus!" Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
@@ -17,7 +17,7 @@ const data: AuraEffectData = {
     priority: 0,
     activeZones: 'inPlay',
     effectFunction: {
-        name: { english: `Spartacus Aura` },
+        name: { english: `"I'm Spartacus!" Aura` },
         text: {
             templates: {
                 english: `"I'm Spartacus!"`,
@@ -48,10 +48,10 @@ const data: AuraEffectData = {
     }
 }
 
-class SpartacusSolidarityAura extends AuraEffect {
+class ImSpartacusAura extends AuraEffect {
     static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default SpartacusSolidarityAura
+export default ImSpartacusAura

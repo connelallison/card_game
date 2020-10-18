@@ -308,6 +308,7 @@ abstract class Card extends GameObject {
     // this.updateActiveOptions()
     // this.updateActiveActions()
     // this.updateActiveEvents()
+    if (this.cost < 0) this.cost = 0
     this.cost = this.truncate(this.cost)
   }
 
@@ -340,7 +341,6 @@ abstract class Card extends GameObject {
   }
 
   setData(dataObj: GameObjectData) {
-    if (dataObj.cost < 0) dataObj.cost = 0
     Object.assign(this, dataObj)
   }
 
@@ -417,6 +417,7 @@ abstract class Card extends GameObject {
     if (this.flags.passionate || this.tooltips.includes('passionate')) rawTooltips.push(Tooltips.passionate)
     if (this.flags.fortune || this.tooltips.includes('fortune')) rawTooltips.push(Tooltips.fortune)
     if (this.flags.bloodthirst || this.tooltips.includes('bloodthirst')) rawTooltips.push(Tooltips.bloodthirst)
+    if (this.flags.repeatable || this.tooltips.includes('repeatable')) rawTooltips.push(Tooltips.repeatable)
     if (this.stats['debt'] || this.tooltips.includes('debt')) rawTooltips.push(Tooltips.debt)
     if (this.stats['rent'] || this.tooltips.includes('rent')) rawTooltips.push(Tooltips.rent)
     if (this.stats['income'] || this.tooltips.includes('income')) rawTooltips.push(Tooltips.income)

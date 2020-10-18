@@ -49,7 +49,7 @@ abstract class Card extends TargetableEntity {
     }
 
     nameLength(): string {
-        return `${this.isBig()} ${this.props.object.name.length > 22 ? 'name-long' : this.props.object.name.length > 17 ? 'name-medium' : 'name-short'}`
+        return `${this.isBig()} ${this.props.object.name.length > 22 ? 'name-long' : this.props.object.name.length > 16 ? 'name-medium' : 'name-short'}`
     }
 
     styleClasses(): string {

@@ -33,7 +33,7 @@ const data: AuraEffectData = {
         targetDomain: ['friendlyBoard'],
         requirements: [
             { targetRequirement: 'isFriendly' },
-            { targetRequirement: 'notSelf' }
+            { targetRequirement: 'isNotSelf' }
         ],
     },
 }

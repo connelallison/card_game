@@ -35,7 +35,7 @@ class Leader extends Card {
 }
 
   moneyLabel() {
-    if (this.props.object.currentMoney !== null && this.props.object.maxMoney !== null) {
+    if (this.props.object.zone === 'leaderZone' && typeof this.props.object.currentMoney ==='number' && typeof this.props.object.maxMoney === 'number') {
       const currentMoneyInteger = Math.floor(this.props.object.currentMoney)
       const currentMoneyDecimal = Math.floor((this.props.object.currentMoney % 1) * 10)
       const currentMoneyDecimalSpan = currentMoneyDecimal > 0 ? <span className='decimal'>.{currentMoneyDecimal}</span> : null

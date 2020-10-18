@@ -14,14 +14,14 @@ const data: PermanentPassiveData = {
     ethos: true,
     cost: 4,
     staticText: {
-        english: `Passive: All healing to friendly characters is nourish healing.`,
+        english: `Passive: Your damage and healing to friendly characters are never rot and always nourish.`,
     },
     text: {
         templates: {
-            english: `Passive: All healing to friendly characters is nourish healing.`,
+            english: `Passive: Your damage and healing to friendly characters are never rot and always nourish.`,
         },
     },
-    tooltips: ['nourishHealing'],
+    tooltips: ['nourishHealing', 'rotDamage'],
     effects: ['HippocraticOathTrigger'],
 }
 

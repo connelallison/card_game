@@ -6,7 +6,7 @@ class ServerPlayer {
   deckID: string
   match: Game
 
-  constructor (socketID: string, displayName: string = 'Anonymous', deckID: string = 'KnightDeck') {
+  constructor (socketID: string, deckID: string, displayName: string = 'Anonymous') {
     this.socketID = socketID
     this.displayName = displayName
     this.deckID = deckID

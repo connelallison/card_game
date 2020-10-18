@@ -30,7 +30,6 @@ const data: TechniqueCreationData = {
       fervour: true,
     }]
   },
-  repeatable: false,
   actions: [{
     actionType: 'actionAction',
     id: 'CorporalMotivationAction',

@@ -13,7 +13,7 @@ const data: NamelessFollowerData = {
     categories: ['Tech'],
     collectable: true,
     cost: 5,
-    attack: 3,
+    attack: 4,
     health: 6,
     charges: 1,
     staticText: {

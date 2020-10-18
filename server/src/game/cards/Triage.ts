@@ -11,31 +11,32 @@ const data: TechniqueCreationData = {
   subtype: 'Technique',
   classes: ['Learning'],
   collectable: true,
-  repeatable: false,
   cost: 2,
   charges: 2,
   staticText: {
-    english: `Action: Heal your followers for half their missing Health.`,
+    english: `Event: Heal your followers for half their missing Health, plus 2 Health.`,
   },
   text: {
     templates: {
-      english: `Action: Heal your followers for half their missing Health.`,
+      english: `Event: Heal your followers for half their missing Health, plus 2 Health.`,
     },
   },
   options: [],
-  actions: [
+  actions: [],
+  events: [
       {
-            id: 'TriageAction',
+            id: 'TriageEvent',
             name: { english: 'Triage' },
-            text: { templates: { english: `Action: Heal your followers for half their missing Health` } },
-            actionType: 'actionAction',
+            text: { templates: { english: `Event: Heal your followers for half their missing Health` } },
+            actionType: 'eventAction',
             actionSteps: [
                 {
                   actionFunctions: [
                       {
                         functionType: 'autoAction',
-                        operation: 'healRelativeToNumber',
+                        operation: 'heal',
                         values: {
+                            healing: 2,
                             numberMap: 'missingHealth',
                             scaling: 0.5,
                         },
@@ -54,7 +55,6 @@ const data: TechniqueCreationData = {
             ],
       },
   ],
-  events: [],
 }
 
 class Triage extends TechniqueCreation {

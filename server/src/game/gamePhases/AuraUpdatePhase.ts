@@ -20,6 +20,7 @@ class AuraUpdatePhase extends EventPhase {
         this.emit('auraEmit3')
         this.emit('auraApply3')
         this.emit('finishUpdate')
+        this.emit('afterAuraUpdate')
         this.end()
     }
 }

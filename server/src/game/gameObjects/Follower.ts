@@ -43,6 +43,7 @@ abstract class Follower extends Character {
     this.updateValidSlots()
     this.attack = this.truncate(this.attack)
     this.health = this.truncate(this.health)
+    if (this.cost < 0) this.cost = 0
     this.cost = this.truncate(this.cost)
     this.healthStatic = this.truncate(this.healthStatic)
   }
@@ -104,7 +105,7 @@ abstract class Follower extends Character {
     const healing = nourish
       ? rawHealing
       : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
-    
+
     if (nourish) this.maxHealth += healing
     this.rawHealth += healing
     this.health += healing

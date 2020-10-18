@@ -1,6 +1,7 @@
 const CivilDisobedience: DeckObject = {
     id: 'CivilDisobedience',
     name: 'Civil Disobedience',
+    class: 'The People',
     leader: 'NelsonMandela',
     passive: 'PeacefulResistance',
     cards: [
@@ -14,8 +15,8 @@ const CivilDisobedience: DeckObject = {
         'Collectivisation',
         'StatueOfLiberty',
         'StatueOfLiberty',
-        'SpartacusGladiator',
-        'SpartacusGladiator',
+        'Spartacus',
+        'Spartacus',
         'Slave',
         'Slave',
         'UnarmedSoviet',

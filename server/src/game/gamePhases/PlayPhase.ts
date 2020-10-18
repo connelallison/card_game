@@ -56,7 +56,7 @@ class PlayPhase extends EventPhase {
         this.accrueDebtPhase()
         if (event.card instanceof TechniqueCreation) {
             event.card.loseCharge()
-            if (!event.card.repeatable) event.card.ready = false
+            if (!event.card.flags.repeatable) event.card.ready = false
         }
         this.emit('afterPlay', event)
         this.queueSteps()

@@ -82,7 +82,7 @@ import Orpheus from '../cards/Orpheus'
 import JohnTheBaptist from '../cards/JohnTheBaptist'
 import Slave from '../cards/Slave'
 import Spartacus from '../cards/Spartacus'
-import SpartacusSolidarity from '../cards/SpartacusSolidarity'
+import SpartacusBrokenChains from '../cards/SpartacusBrokenChains'
 import JohannesGutenberg from '../cards/JohannesGutenberg'
 import MelvilDewey from '../cards/MelvilDewey'
 import NikolaTesla from '../cards/NikolaTesla'
@@ -112,7 +112,7 @@ import SubprimeBorrower from '../cards/SubprimeBorrower'
 import TankMan from '../cards/TankMan'
 import Cleon from '../cards/Cleon'
 import GeneralStrike1926 from '../cards/GeneralStrike1926'
-import SpartacusGladiator from '../cards/SpartacusGladiator'
+import SpartacusFollower from '../cards/SpartacusFollower'
 import Robespierre from '../cards/Robespierre'
 import AugusteEscoffier from '../cards/AugusteEscoffier'
 import IsaacNewton from '../cards/IsaacNewton'
@@ -133,6 +133,15 @@ import Triage from '../cards/Triage'
 import NancyKerrigan from '../cards/NancyKerrigan'
 import HenryFord from '../cards/HenryFord'
 import Atalanta from '../cards/Atalanta'
+import RansomEOlds from '../cards/RansomEOlds'
+import VenetianPatentStatute from '../cards/VenetianPatentStatute'
+import Helot from '../cards/Helot'
+import NikaRioter from '../cards/NikaRioter'
+import BostonTeaParty from '../cards/BostonTeaParty'
+import ErasmusExchange from '../cards/ErasmusExchange'
+import ImSpartacus from '../cards/ImSpartacus'
+import JRobertOppenheimer from '../cards/JRobertOppenheimer'
+import PrimaryEducation from '../cards/PrimaryEducation'
 // insert import here
 
 export const NamelessFollowers = {
@@ -154,6 +163,8 @@ export const NamelessFollowers = {
   SubprimeBorrower,
   TankMan,
   TupacHologram,
+  Helot,
+  NikaRioter,
   // insert NamelessFollower here
 }
 
@@ -173,7 +184,7 @@ export const FamousFollowers = {
   SaintJust,
   LudwigII,
   Cleon,
-  SpartacusGladiator,
+  SpartacusFollower,
   Robespierre,
   AugusteEscoffier,
   IsaacNewton,
@@ -185,6 +196,8 @@ export const FamousFollowers = {
   HenryFord,
   HelenOfTroy,
   Atalanta,
+  RansomEOlds,
+  JRobertOppenheimer,
   // insert FamousFollower here
 }
 
@@ -202,12 +215,14 @@ export const EventMoments = {
   FrenchRevolution,
   GeneralStrike1926,
   Collectivisation,
+  BostonTeaParty,
   // insert EventMoment here
 }
 
 export const WorkCreations = {
   BeveridgeReport,
   LesMiserables,
+  VenetianPatentStatute,
   // insert WorkCreation here
 }
 
@@ -228,11 +243,14 @@ export const TechniqueCreations = {
   CorporalMotivation,
   Chemotherapy,
   Triage,
+  ErasmusExchange,
+  PrimaryEducation,
   // insert TechniqueCreation here
 }
 
 export const PermanentPassives = {
   SecondAmendment,
+  ImSpartacus,
   // insert PermanentPassive here
 }
 
@@ -254,7 +272,7 @@ export const ActiveLeaderTechniques = {
 }
 
 export const PassiveLeaderTechniques = {
-  SpartacusSolidarity,
+  SpartacusBrokenChains,
   HenryVIIIRemarriage,
   NelsonMandelaTruthAndReconciliation,
   // insert PassiveLeaderTechnique here
@@ -287,5 +305,6 @@ export const PersistentCards = { ...DestroyableCards, ...Passives, ...LeaderTech
 
 const Cards = { ...PersistentCards, ...Moments }
 // const Cards = {...Followers, ...Leaders, ...Creations, ...LeaderTechniques, ...Passives, ...Moments}
+// const LearningCards = Object.fromEntries(Object.entries(Cards).filter(card => card[1].data.classes.includes('All') || card[1].data.classes.includes('Learning')))
 
 export default Cards

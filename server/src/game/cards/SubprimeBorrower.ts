@@ -17,14 +17,14 @@ const data: NamelessFollowerData = {
     health: 2,
     charges: 2,
     staticText: {
-        english: `At the start of your turn, gain Rent 1.`,
+        english: `At the start of your turn, Subprime Borrower gains Rent 1.`,
     },
     text: {
         templates: {
-            english: `At the start of your turn, gain Rent 1.`,
+            english: `At the start of your turn, Subprime Borrower gains Rent 1.`,
         },
     },
-    tooltips: [],
+    tooltips: ['rent'],
     stats: {},
     effects: ['SubprimeBorrowerTrigger'],
     options: [],

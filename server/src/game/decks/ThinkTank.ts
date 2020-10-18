@@ -1,6 +1,7 @@
 const ThinkThank: DeckObject = {
     id: 'ThinkTank',
     name: 'Think Tank',
+    class: 'Learning',
     leader: 'DavidHume',
     passive: 'ThrillOfDiscovery',
     cards: [
@@ -30,10 +31,10 @@ const ThinkThank: DeckObject = {
         'Chemotherapy',
         'TupacShakur',
         'TupacShakur',
-        'HelenOfTroy',
-        'HelenOfTroy',
         'Atalanta',
         'Atalanta',
+        'VenetianPatentStatute',
+        'VenetianPatentStatute',
     ]
 }
 

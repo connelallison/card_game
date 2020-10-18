@@ -11,14 +11,13 @@ const data: ActiveLeaderTechniqueData = {
     subtype: 'Active',
     classes: ['The People'],
     collectable: false,
-    cost: 1,
-    repeatable: false,
+    cost: 2,
     staticText: {
-        english: `Event: Summon a 1/1 Citizen.`,
+        english: `Event: Summon two 1/1 Citizens.`,
     },
     text: {
         templates: {
-            english: `Event: Summon a 1/1 Citizen.`,
+            english: `Event: Summon two 1/1 Citizens.`,
         },
     },
     events: [{
@@ -29,7 +28,7 @@ const data: ActiveLeaderTechniqueData = {
         },
         text: {
             templates: {
-                english: `Event: Summon a 1/1 Citizen.`,
+                english: `Event: Summon two 1/1 Citizens.`,
             },
         },
         actionSteps: [{
@@ -38,6 +37,7 @@ const data: ActiveLeaderTechniqueData = {
                 operation: 'createAndSummonCard',
                 values: {
                     cardID: 'Citizen',
+                    number: 2,
                 }
             }],
             activeRequirements: [{

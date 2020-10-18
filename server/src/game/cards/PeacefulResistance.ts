@@ -14,14 +14,14 @@ const data: PermanentPassiveData = {
     ethos: true,
     cost: 4,
     staticText: {
-        english: `Passive: If your followers don't attack, you restore Health to your Leader equal to their Attack.`,
+        english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
     },
     text: {
         templates: {
-            english: `Passive: If your followers don't attack, you restore Health to your Leader equal to their Attack.`,
+            english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
         },
     },
-    tooltips: [],
+    tooltips: ['nourishHealing'],
     effects: ['PeacefulResistanceTrigger'],
 }
 

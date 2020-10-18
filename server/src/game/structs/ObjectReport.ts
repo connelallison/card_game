@@ -22,9 +22,13 @@ export interface ObjectReport {
   charges?: number
   type: ObjectTypeString
   subtype: ObjectSubtypeString
-  classes?: PlayerClassString[]
+  discounted: boolean
+  classes: PlayerClassString[]
   fortune?: boolean
   guard?: boolean
+  damaged?: boolean
+  attackBuffed?: boolean
+  healthBuffed?: boolean
   zone: string
   ownerName: string
   playerID: string

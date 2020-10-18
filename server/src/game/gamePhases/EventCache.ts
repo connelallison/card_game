@@ -1,25 +1,26 @@
 interface EventCache { 
-    all: GameEvent[],
-    death: DeathEvent[],
-    play: PlayEvent[],
-    action: ActionActionEvent[],
-    optionAction: OptionActionEvent[],
-    // eurekaAction: EurekaActionEvent[],
-    eventAction: EventActionEvent[],
-    deathAction: DeathActionEvent[],
-    attack: AttackEvent[],
-    damage: DamageEvent[],
-    healing: HealingEvent[],
-    draw: DrawEvent[],
-    enterPlay: EnterPlayEvent[],
-    summon: SummonEvent[],
-    use: UseEvent[],
-    startOfTurn: StartOfTurnEvent[],
-    endOfTurn: EndOfTurnEvent[],
-    spendMoney: SpendMoneyEvent[],
-    accrueDebt: AccrueDebtEvent[],
-    trigger: TriggerEvent[],
-    triggerAction: TriggerActionEvent[],
+    all: GameEvent[]
+    death: DeathEvent[]
+    play: PlayEvent[]
+    action: ActionActionEvent[]
+    optionAction: OptionActionEvent[]
+    // eurekaAction: EurekaActionEvent[]
+    eventAction: EventActionEvent[]
+    deathAction: DeathActionEvent[]
+    attack: AttackEvent[]
+    damage: DamageEvent[]
+    healing: HealingEvent[]
+    draw: DrawEvent[]
+    enterPlay: EnterPlayEvent[]
+    summon: SummonEvent[]
+    use: UseEvent[]
+    startOfTurn: StartOfTurnEvent[]
+    endOfTurn: EndOfTurnEvent[]
+    spendMoney: SpendMoneyEvent[]
+    accrueDebt: AccrueDebtEvent[]
+    trigger: TriggerEvent[]
+    triggerAction: TriggerActionEvent[]
+    update: UpdateEvent[]
 }
 
 export default EventCache
@@ -44,4 +45,5 @@ import { DeathActionEvent } from "./DeathActionPhase";
 import { DrawEvent } from "./ProposedDrawPhase";
 import { OptionActionEvent } from "./OptionActionPhase";
 import { AccrueDebtEvent } from "./AccrueDebtPhase";
+import { UpdateEvent } from "./AuraUpdatePhase";
 // import { EurekaActionEvent } from "./EurekaActionPhase";

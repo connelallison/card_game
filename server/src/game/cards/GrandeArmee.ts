@@ -3,32 +3,32 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: PermanentPassiveData = {
-    id: 'HippocraticOath',
+    id: 'GrandeArmee',
     name: {
-        english: `Hippocratic Oath`,
+        english: `Grande Armée`,
     },
     type: 'Passive',
     subtype: 'Permanent',
-    classes: ['Learning'],
+    classes: ['The People'],
     collectable: true,
     ethos: true,
     cost: 4,
     staticText: {
-        english: `Passive: Your damage and healing to friendly characters are never Rot and always Nourish.`,
+        english: `Passive: You have 10 board slots.`,
     },
     text: {
         templates: {
-            english: `Passive: Your damage and healing to friendly characters are never Rot and always Nourish.`,
+            english: `Passive: You have 10 board slots.`,
         },
     },
-    tooltips: ['nourishHealing', 'rotDamage'],
-    effects: ['HippocraticOathTrigger'],
+    tooltips: [],
+    effects: ['GrandeArmeeTrigger'],
 }
 
-class HippocraticOath extends PermanentPassive {
+class GrandeArmee extends PermanentPassive {
     static readonly data: PermanentPassiveData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default HippocraticOath
+export default GrandeArmee

@@ -23,66 +23,67 @@ const data: TechniqueCreationData = {
   },
   options: [],
   actions: [
-      {
-            id: 'PrimaryEducationAction',
-            name: { english: 'Primary Education' },
-            text: { templates: { english: `Action: Give a follower in your hand +2/+2 and "Event: Draw a card".` } },
-            actionType: 'actionAction',
-            actionSteps: [
-                {
-                  actionFunctions: [
-                      {
-                        functionType: 'manualAction',
-                        operation: 'buffStats',
-                        values: {
-                            stats: 2,
+    {
+      id: 'PrimaryEducationAction',
+      name: { english: 'Primary Education' },
+      text: { templates: { english: `Action: Give a follower in your hand +2/+2 and "Event: Draw a card".` } },
+      actionType: 'actionAction',
+      actionSteps: [
+        {
+          actionFunctions: [
+            {
+              functionType: 'manualAction',
+              operation: 'buffStats',
+              values: {
+                stats: 2,
+                buffName: { english: 'Primary Education Buff' },
+              },
+            },
+            {
+              functionType: 'manualAction',
+              operation: 'addEventAction',
+              values: {
+                eventAction: {
+                  id: 'PrimaryEducationEvent',
+                  name: { english: 'Primary Education Event' },
+                  text: { templates: { english: `Event: Draw a card.` } },
+                  actionType: 'eventAction',
+                  actionSteps: [
+                    {
+                      actionFunctions: [
+                        {
+                          functionType: 'autoAction',
+                          operation: 'draw',
                         },
-                      },
-                      {
-                        functionType: 'manualAction',
-                        operation: 'addEventAction',
-                        values: {
-                            eventAction: {
-                                  id: 'PrimaryEducationEvent',
-                                  name: { english: 'Primary Education Event' },
-                                  text: { templates: { english: `Event: Draw a card.` } },
-                                  actionType: 'eventAction',
-                                  actionSteps: [
-                                      {
-                                        actionFunctions: [
-                                            {
-                                              functionType: 'autoAction',
-                                              operation: 'draw',
-                                            },
-                                        ],
-                                      },
-                                  ],
-                            },
-                        },
-                      },
-                  ],
-                  manualTargets: [
-                      {
-                        text: { templates: { english: 'Choose a follower in your hand to buff.' } },
-                        hostile: false,
-                        targets: {
-                            valueType: 'targets',
-                            from: 'targetDomain',
-                            targetDomain: 'friendlyHand',
-                            requirements: [
-                                {
-                                  targetRequirement: 'isType',
-                                  values: {
-                                      type: 'Follower',
-                                  }
-                                },
-                            ],
-                        },
-                      },
+                      ],
+                    },
                   ],
                 },
-            ],
-      },
+              },
+            },
+          ],
+          manualTargets: [
+            {
+              text: { templates: { english: 'Choose a follower in your hand to buff.' } },
+              hostile: false,
+              targets: {
+                valueType: 'targets',
+                from: 'targetDomain',
+                targetDomain: 'friendlyHand',
+                requirements: [
+                  {
+                    targetRequirement: 'isType',
+                    values: {
+                      type: 'Follower',
+                    }
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    },
   ],
   events: [],
 }

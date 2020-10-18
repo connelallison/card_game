@@ -14,6 +14,12 @@ export class EndOfTurnEvent extends GameEvent {
     generateLog() {
         this.log = `${this.activePlayer.playerName}'s turn ends.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            // card: this.card.objectID,
+        }
+    }
 }
 
 class EndOfTurnPhase extends EventPhase {
@@ -25,7 +31,7 @@ class EndOfTurnPhase extends EventPhase {
 
     start(): void {
         const event = this.event
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'endOfTurn')
         this.emit('endOfTurn', event)
         this.queueSteps()
@@ -37,3 +43,4 @@ export default EndOfTurnPhase
 
 import Sequence from "./Sequence";
 import GamePlayer from "../gameObjects/GamePlayer";
+import { LocalisationString } from "../structs/Localisation";

@@ -3,16 +3,16 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEffectData = {
-    id: 'NikaRioterTrigger',
+    id: 'NikaHooliganTrigger',
     name: {
-        english: `Nika Rioter Trigger`,
+        english: `Nika Hooligan Trigger`,
     },
     type: 'Effect',
     subtype: 'Trigger',
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `After another Nika Rioter enters play, attack it.`,
+            english: `After another Nika Hooligan enters play, attack it.`,
         },
         dynamicValues: [],
     },
@@ -29,7 +29,7 @@ const data: TriggerEffectData = {
                             eventTargetRequirement: 'isSpecificCardClass',
                             targetMap: 'enterPlayEventPlayedCard',
                             values: {
-                                cardID: 'NikaRioter',
+                                cardID: 'NikaHooligan',
                             }
                         },
                         {
@@ -68,10 +68,10 @@ const data: TriggerEffectData = {
     ],
 }
 
-class NikaRioterTrigger extends TriggerEffect {
+class NikaHooliganTrigger extends TriggerEffect {
     static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default NikaRioterTrigger
+export default NikaHooliganTrigger

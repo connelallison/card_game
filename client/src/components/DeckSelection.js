@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class DeckSelection extends Component {
   render() {
     const deckOptions = this.props.decks
-      ? Object.values(this.props.decks).map(deck => <option value={deck.id}>{deck.name}: {deck.class}</option>)
+      ? Object.values(this.props.decks).map(deck => <option key={deck.id} value={deck.id}>{deck.name}: {deck.class}</option>)
       : <option disabled value='noDecks' >No decks</option>
 
     const defaultDeck = this.props.deckID

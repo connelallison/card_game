@@ -23,6 +23,7 @@ const data: FamousFollowerData = {
             english: `Rush\nEvent: For the rest of the game, your followers are Spartacus.`,
         },
     },
+    relatedCard: 'ImSpartacus',
     tooltips: [],
     stats: {},
     effects: ['Rush'],

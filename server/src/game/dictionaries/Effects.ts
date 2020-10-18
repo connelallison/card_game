@@ -59,8 +59,10 @@ import RansomEOldsAura from '../effects/RansomEOldsAura'
 import Repeatable from '../effects/Repeatable'
 import VenetianPatentStatuteTrigger from '../effects/VenetianPatentStatuteTrigger'
 import HelotTrigger from '../effects/HelotTrigger'
-import NikaRioterTrigger from '../effects/NikaRioterTrigger'
+import NikaHooliganTrigger from '../effects/NikaHooliganTrigger'
 import Immune from '../effects/Immune'
+import ArchimedesBuff from '../effects/ArchimedesBuff'
+import GrandeArmeeTrigger from '../effects/GrandeArmeeTrigger'
 // insert import here
 
 export const StatStaticEffects = {
@@ -90,6 +92,7 @@ export const StaticEffects = {
   Bloodthirst,
   Repeatable,
   Immune,
+  ArchimedesBuff,
   // insert StaticEffect here
 }
 
@@ -136,7 +139,8 @@ export const TriggerEffects = {
   HippocraticOathTrigger,
   VenetianPatentStatuteTrigger,
   HelotTrigger,
-  NikaRioterTrigger,
+  NikaHooliganTrigger,
+  GrandeArmeeTrigger,
   // insert TriggerEffect here
 }
 

@@ -1,21 +1,34 @@
 import React, { Component } from 'react'
-import Card from './Card'
-import Creation from './Creation'
-import Follower from './Follower'
-import Moment from './Moment'
-import Passive from './Passive'
-import Unknown from './Unknown'
 
 export interface EntityProps {
     object: any
     selections: Selections
+    animations: Animations
 }
 
 export interface Selections {
     selectionsEnabled: boolean
     selected: any[]
+    gameObjects: { [index: string]: any }
     targetSelection: TargetSelection
     handleSelection: (object: any) => void
+}
+
+export interface Animations {
+    combatCards: { [index: string]: AnimationObject }
+    damageCards: { [index: string]: AnimationObject }
+    healingCards: { [index: string]: AnimationObject }
+    deathCards: { [index: string]: AnimationObject }
+    actionCards: { [index: string]: AnimationObject }
+}
+
+export interface AnimationObject {
+    objectID: string
+    timeout: NodeJS.Timeout
+    number?: number
+    key?: number
+    rot?: boolean
+    nourish?: boolean
 }
 
 export interface TargetSelection {
@@ -34,22 +47,22 @@ abstract class TargetableEntity extends Component {
     targetType(): string {
         return this.props.selections.targetSelection
             && this.props.selections.targetSelection.highlightedTargets.includes(this.props.object.objectID)
-            ? 'highlightedTarget'
+            ? 'highlightedTarget '
             : this.props.selections.targetSelection.hostile
-                ? 'hostileTarget'
-                : 'nonHostileTarget'
+                ? 'hostileTarget '
+                : 'nonHostileTarget '
     }
 
     outlineStatus(): string {
         return (
             this.props.selections.selectionsEnabled
             && this.props.selections.selected
-            && this.props.selections.selected.includes(this.props.object)
+            && this.props.selections.selected.some(selected => selected.objectID === this.props.object.objectID)
         )
-            ? 'isSelected'
+            ? 'isSelected '
             : this.canBeTargeted()
                 ? this.targetType()
-                : 'notTargetable'
+                : 'notTargetable '
     }
 
     canBeTargeted(): boolean {
@@ -75,16 +88,23 @@ abstract class TargetableEntity extends Component {
             ? this.props.object[stat] > 0
             : this.props.object[stat] !== null
 
-        const integer = Math.floor(this.props.object[stat])
-        const decimal = Math.floor((this.props.object[stat] % 1) * 10)
+        const negative = this.props.object[stat] < 0 ? -1 : 1
+        const integer = Math.floor(Math.abs(this.props.object[stat])) * negative
+        const decimal = Math.floor(Math.abs((this.props.object[stat] % 1)) * 10)
         const decimalSpan = decimal > 0 ? <span className='decimal'>.{decimal}</span> : null
-        return this.props.object.hasOwnProperty(stat) && hiddenCriterion ? (
-            <p className={`${stat}-label stat-label`}>
-                {integer}
-                {decimalSpan}
-                {abbreviations[stat]}
-                </p>
-        ) : null
+        const spanClass = stat === 'health' && this.props.object.damaged
+            ? 'damaged'
+            : (
+                (stat === 'cost' && this.props.object.discounted)
+                || (stat === 'health' && this.props.object.healthBuffed)
+                || (stat === 'attack' && this.props.object.attackBuffed)
+            )
+                ? 'buffed'
+                : ''
+        // const numberSpan = <span className={`statNumberSpan ${spanClass}`} >{integer}{decimalSpan}</span>
+        return this.props.object.hasOwnProperty(stat) && hiddenCriterion
+            ? <p className={`${stat}-label stat-label ${spanClass}`}>{integer}{decimalSpan}{abbreviations[stat]}</p>
+            : null
     }
 
     abstract hoverCard(object): JSX.Element | null

@@ -1,11 +1,31 @@
+import { LocalisationString } from "../structs/Localisation";
 import EventPhase from "./EventPhase";
+import GameEvent from "./GameEvent";
+
+export class UpdateEvent extends GameEvent {
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            player1: {
+                eventType: 'update',
+                gameState: this.game.prepareGameState(this.game.player1)
+            },
+            player2: {
+                eventType: 'update',
+                gameState: this.game.prepareGameState(this.game.player2)
+            },
+        }
+    }
+
+    generateLog() { }
+}
 
 class AuraUpdatePhase extends EventPhase {
     constructor(parent: Sequence | EventPhase) {
         super(parent)
     }
-    
+
     start(): void {
+        // console.log('auraUpdatePhase')
         this.emit('auraReset')
         this.emit('staticApply')
         this.emit('auraEmit0')
@@ -20,6 +40,8 @@ class AuraUpdatePhase extends EventPhase {
         this.emit('auraEmit3')
         this.emit('auraApply3')
         this.emit('finishUpdate')
+        this.cacheEvent(new UpdateEvent(this.game()), 'update')
+
         this.emit('afterAuraUpdate')
         this.end()
     }

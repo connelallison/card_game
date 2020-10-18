@@ -89,7 +89,7 @@ input {
   box-shadow: 0 0 2px 0 black;
 }
 
-.card:hover.notTargetable {
+.card:hover.notTargetable, .deck:hover, .legacy:hover {
   /* filter: drop-shadow(0 0 6px black); */
   box-shadow: 0 0 8px 0 black;
 }
@@ -318,32 +318,175 @@ input {
   background-color: var(--card-background-colour);
 }
 
-.fortuneOverlay {
+.overlay {
   width: 100%;
   height: 100%;
-  box-shadow: 0 0 4px 4px rgba(230, 230, 141, 0.719);
-  border-radius: 30px;
   position: absolute;
   margin: 0;
   padding: 0;
   left: 0;
   top: 0;
+  background-color: transparent;
   z-index: 2;
+}
+
+.overlay.fortune {
+  box-shadow: 0 0 4px 4px rgba(230, 230, 141, 0.719);
+  border-radius: 30px;
   background-color: rgba(230, 230, 141, 0.281);
 }
 
-.guardOverlay {
-  width: 100%;
-  height: 100%;
-  box-shadow: 0 0 0px 6px rgb(83, 83, 83);
-  background-color: transparent;
+.overlay.guard {
+  box-shadow: 0 0 0px 4px rgb(83, 83, 83);
   border-radius: 5px;
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  left: 0;
-  top: 0;
   z-index: 1;
+}
+
+@keyframes healthChangeText-animation {
+  0% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes damageOverlay-animation {
+  5% {
+    box-shadow: 0 0 4px 18px rgba(236, 59, 59, 0.877) inset;
+  }
+  10% {
+    box-shadow: 0 0 4px 18px rgba(236, 59, 59, 0.651) inset;
+  }
+  20% {
+    box-shadow: 0 0 4px 18px rgba(236, 59, 59, 0.514) inset;
+  }
+}
+
+
+@keyframes healingOverlay-animation {
+  10% {
+    box-shadow: 0 0 4px 18px rgba(59, 236, 59, 0.877) inset;
+  }
+  20% {
+    box-shadow: 0 0 4px 18px rgba(59, 236, 59, 0.651) inset;
+  }
+  30% {
+    box-shadow: 0 0 4px 18px rgba(59, 236, 59, 0.514) inset;
+  }
+}
+
+@keyframes deathOverlay-animation {
+  10% {
+    box-shadow: 0 0 2px 18px rgba(124, 124, 124, 0.514) inset;
+    background-color: rgba(124, 124, 124, 0.151);
+  }
+  20% {
+    box-shadow: 0 0 2px 18px rgba(124, 124, 124, 0.651) inset;
+    background-color: rgba(124, 124, 124, 0.322);
+  }
+  30% {
+    box-shadow: 0 0 2px 18px  rgb(124, 124, 124, 0.877) inset;
+    background-color: rgba(124, 124, 124, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 2px 18px  rgb(124, 124, 124, 0.877) inset;
+    background-color: rgba(124, 124, 124, 0.5);
+  }
+}
+
+@keyframes dyingCard-animation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes actionOverlay-animation {
+  10% {
+    box-shadow: 0 0 2px 18px rgba(255, 255, 255, 0.514) inset;
+    background-color: rgba(255, 255, 2555, 0.151);
+  }
+  30% {
+    box-shadow: 0 0 2px 18px rgba(255, 255, 2555, 0.651) inset;
+    background-color: rgba(255, 255, 2555, 0.322);
+  }
+  50% {
+    box-shadow: 0 0 2px 18px  rgb(255, 255, 2555, 0.877) inset;
+    background-color: rgba(255, 255, 2555, 0.5);
+  }
+  /* 100% {
+    box-shadow: 0 0 2px 18px  rgb(255, 255, 2555, 0.877) inset;
+    background-color: rgba(255, 255, 2555, 0.5);
+  } */
+}
+
+.overlay.damage {
+  animation: damageOverlay-animation 1s;
+}
+.overlay.damage.noDamage {
+  animation: none;
+}
+.overlay.healing {
+  animation: healingOverlay-animation 1s;
+}
+.overlay.death {
+  animation: deathOverlay-animation 1s;
+}
+.overlay.action {
+  animation: actionOverlay-animation 1s;
+}
+
+.healthChangeText {
+  opacity: 0;
+  font-size: 32px;
+  font-weight: 700;
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  margin: 0;
+  width: 50%;
+  height: 50%;
+  padding: 0;
+  transform: rotate(8deg);
+  animation: healthChangeText-animation 3s;
+  text-shadow:
+   -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+}
+
+.healthChangeText.damageText {
+  color: rgb(255, 0, 0);
+  filter: drop-shadow(0 0 10px rgba(155, 71, 71, 0.603));
+}
+
+.healthChangeText.healingText {
+  color: rgb(0, 255, 0);
+  filter: drop-shadow(0 0 10px rgba(71, 155, 71, 0.603));
+}
+
+.healthChangeText.nourishText {
+  color: cyan;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.603));
+}
+
+.healthChangeText.rotText {
+  color: rgb(187, 3, 74);
+  filter: drop-shadow(0 0 10px rgba(128, 0, 49, 0.603));
+
 }
 
 /* .cardTextSpan {
@@ -353,6 +496,10 @@ input {
 .keyword {
   font-weight: 600;
 }
+
+/* .text-long .keyword {
+  font-weight: 700;
+} */
 
 /* .notBolded {
 
@@ -414,15 +561,57 @@ input {
   justify-items: center;
   position: relative;
   z-index: 0;
+  text-align: center;
   /* padding: 4px; */
 }
 
-.card:hover {
+.card:hover, .Follower.inPlay{
   z-index: 2;
 }
 
 .card.big {
   width: 200px;
+}
+
+.card.combat, .Follower.inPlay.combat {
+  transform: scale(1.1);
+  z-index: 4;
+}
+
+.card.dying {
+  opacity: 0;
+  animation: dyingCard-animation 1s;
+}
+
+.card.dying.action {
+  opacity: 1;
+}
+
+.BoardSlot.background {
+  /* margin-left: 4px;
+  margin-right: 4px; */
+  padding: 0;
+  /* border: 0; */
+  visibility: hidden;
+  /* background-color: transparent; */
+  /* z-index: 1; */
+}
+
+.BoardSlot.background.followerDying {
+  visibility: visible;
+}
+
+.BoardSlot.padding {
+  visibility: hidden;
+}
+
+.Follower.inPlay {
+  bottom: 1px;
+  right: 1px;
+  /* z-index: 1; */
+  margin: 0;
+  height: 100%;
+  visibility: visible;
 }
 
 .addedText {
@@ -433,6 +622,7 @@ input {
   position: absolute;
   pointer-events: none;
   /* display: none; */
+  border: 1px solid var(--border-colour);
   background-color: var(--card-background-colour);
   font-size: 12px;
   border-radius: 5px;
@@ -446,6 +636,7 @@ input {
 
 .card:hover .addedText {
   /* top: 102%; */
+  /* z-index: 6; */
   opacity: 1;
   left: 104%;
   transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.3, 0.8) 0.5s;
@@ -509,6 +700,7 @@ input {
 
 .legacy, .deck { 
   z-index: 3;
+  max-width: 130px;
 }
 
 .legacy .nameList {
@@ -549,10 +741,16 @@ input {
 /* .cardName.notTargetable {
 } */
 
-.cardName.nonHostileTarget {
+button.jobDone {
+  transition: 0.5s;
+}
+
+.cardName.nonHostileTarget{
+  /* color: saddlebrown; */
+  /* font-weight: 600; */
   background-color: rgba(6, 173, 0, 0.25);
 }
-.cardName.nonHostileTarget:hover {
+.cardName.nonHostileTarget:hover, button.jobDone  {
   background-color: rgba(6, 173, 0, 0.5);
 }
 
@@ -709,6 +907,19 @@ input {
   margin-top: 2px;
   margin-bottom: 2px;
   border-radius: 7px;
+  text-shadow:
+   -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+}
+
+.stat-label.damaged {
+  color: rgb(255, 129, 129);
+}
+
+.stat-label.buffed {
+  color: rgb(108, 255, 108);
 }
 
 .decimal {
@@ -765,7 +976,17 @@ input {
   border-radius: 10px;
   background-color: var(--card-background-colour);
   border: 1px solid var(--border-colour);
+  box-shadow: 0 0 8px 0 black;
   /* margin-left: 10px; */
+}
+
+.playCard {
+  position: absolute;
+  left: 5%;
+  z-index: 5;
+  height: 195px;
+  box-shadow: 0 0 12px 0 black;
+  pointer-events: none;
 }
 
 .topBar {

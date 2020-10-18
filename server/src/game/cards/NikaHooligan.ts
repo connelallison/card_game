@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-    id: 'NikaRioter',
+    id: 'NikaHooligan',
     name: {
-        english: `Nika Rioter`,
+        english: `Nika Hooligan`,
     },
     type: 'Follower',
     subtype: 'Nameless',
@@ -17,26 +17,26 @@ const data: NamelessFollowerData = {
     health: 3,
     charges: 2,
     staticText: {
-        english: `Mob\nAfter another Nika Rioter enters play, attack it.`,
+        english: `Mob\nAfter another Nika Hooligan enters play, attack it.`,
     },
     text: {
         templates: {
-            english: `Mob\nAfter another Nika Rioter enters play, attack it.`,
+            english: `Mob\nAfter another Nika Hooligan enters play, attack it.`,
         },
     },
     tooltips: [],
     stats: {},
-    effects: ['Mob', 'NikaRioterTrigger'],
+    effects: ['Mob', 'NikaHooliganTrigger'],
     options: [],
     actions: [],
     events: [],
     deathEvents: [],
 }
 
-class NikaRioter extends NamelessFollower {
+class NikaHooligan extends NamelessFollower {
     static readonly data: NamelessFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default NikaRioter
+export default NikaHooligan

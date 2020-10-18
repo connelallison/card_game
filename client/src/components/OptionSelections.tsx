@@ -7,7 +7,7 @@ class OptionSelections extends EntityContainer {
         let optionActions
         if (this.props.contents) {
             optionActions = (this.props.contents).map(optionAction =>
-                <OptionAction big hover={false} object={optionAction} selections={this.props.selections} />
+                <OptionAction big hover={false} key={optionAction.id} object={optionAction} animations={this.props.animations} selections={this.props.selections} />
             )
         } else {
             optionActions = null

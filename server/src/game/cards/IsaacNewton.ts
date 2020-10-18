@@ -76,7 +76,7 @@ const data: FamousFollowerData = {
                     ],
                     manualTargets: [
                         {
-                            text: { templates: { english: 'Choose a creation.' } },
+                            text: { templates: { english: 'Choose a creation to remove a charge from.' } },
                             hostile: true,
                             targets: {
                                 valueType: 'targets',

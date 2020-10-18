@@ -15,6 +15,7 @@ export interface CardData {
   text: DynamicTextObject
   tooltips?: TooltipString[]
   successor?: CardIDString
+  relatedCard?: CardIDString
   effects?: EffectIDString[]
   options?: OptionActionData[]
   actions?: ActionActionData[]
@@ -41,6 +42,7 @@ abstract class Card extends GameObject {
   staticText: LocalisedStringObject
   text: DynamicTextObject
   successor: CardIDString
+  relatedCard: CardIDString
   options: OptionAction[]
   baseOptions: OptionAction[]
   addedOptions: OptionAction[]
@@ -72,6 +74,7 @@ abstract class Card extends GameObject {
     this.staticText = data.staticText
     this.text = data.text
     this.successor = data.successor ?? null
+    this.relatedCard = data.relatedCard ?? null
     this.tooltips = data.tooltips ?? []
     this.baseOptions = data.options ?? []
     this.options = [...this.baseOptions]
@@ -89,12 +92,13 @@ abstract class Card extends GameObject {
     this.addBaseStatEffects(data)
     this.addBaseEffects(data.effects ?? [])
     this.data = data
+    this.game.event.on('updateTargets', event => this.updateTargets())
   }
 
   provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-    this.updateActiveOptions()
-    this.updateActiveActions()
-    this.updateActiveEvents()
+    // this.updateActiveOptions()
+    // this.updateActiveActions()
+    // this.updateActiveEvents()
 
     return {
       name: this.name[localisation],
@@ -105,6 +109,7 @@ abstract class Card extends GameObject {
       subtype: this.subtype,
       classes: this.classes,
       zone: this.zone,
+      discounted: (this.cost < this.data.cost),
       ownerName: this.owner.playerName,
       playerID: this.owner.objectID,
       canBeSelected: this.canBeSelected(),
@@ -128,6 +133,12 @@ abstract class Card extends GameObject {
       text: this.data.staticText[localisation],
       classes: this.data.classes,
     }
+  }
+
+  updateTargets(): void {
+    this.updateActiveOptions()
+    this.updateActiveActions()
+    this.updateActiveEvents()
   }
 
   optionsReport(localisation: LocalisationString = 'english'): OptionActionReport[] {
@@ -409,6 +420,7 @@ abstract class Card extends GameObject {
     if (this.events.length > 0 || this.tooltips.includes('event')) rawTooltips.push(Tooltips.event)
     if (this.actions.filter(action => action.eureka).length > 0 || this.tooltips.includes('eureka')) rawTooltips.push(Tooltips.eureka)
     if (this['deathEvents']?.length > 0 || this.tooltips.includes('deathEvent')) rawTooltips.push(Tooltips.deathEvent)
+    if (this.stats['fervour'] || this.tooltips.includes('fervour')) rawTooltips.push(Tooltips.fervour)
     if (this.flags.guard || this.tooltips.includes('guard')) rawTooltips.push(Tooltips.guard)
     if (this.flags.pillage || this.tooltips.includes('pillage')) rawTooltips.push(Tooltips.pillage)
     if (this.flags.rush || this.tooltips.includes('rush')) rawTooltips.push(Tooltips.rush)
@@ -418,11 +430,11 @@ abstract class Card extends GameObject {
     if (this.flags.fortune || this.tooltips.includes('fortune')) rawTooltips.push(Tooltips.fortune)
     if (this.flags.bloodthirst || this.tooltips.includes('bloodthirst')) rawTooltips.push(Tooltips.bloodthirst)
     if (this.flags.repeatable || this.tooltips.includes('repeatable')) rawTooltips.push(Tooltips.repeatable)
+    if (this.flags.immune || this.tooltips.includes('immune')) rawTooltips.push(Tooltips.immune)
     if (this.stats['debt'] || this.tooltips.includes('debt')) rawTooltips.push(Tooltips.debt)
     if (this.stats['rent'] || this.tooltips.includes('rent')) rawTooltips.push(Tooltips.rent)
     if (this.stats['income'] || this.tooltips.includes('income')) rawTooltips.push(Tooltips.income)
     if (this.stats['growth'] || this.tooltips.includes('growth')) rawTooltips.push(Tooltips.growth)
-    if (this.stats['fervour'] || this.tooltips.includes('fervour')) rawTooltips.push(Tooltips.fervour)
     if (this.tooltips.includes('money')) rawTooltips.push(Tooltips.money)
     if (this.tooltips.includes('rotDamage')) rawTooltips.push(Tooltips.rotDamage)
     if (this.tooltips.includes('nourishHealing')) rawTooltips.push(Tooltips.nourishHealing)
@@ -432,7 +444,7 @@ abstract class Card extends GameObject {
   }
 
   relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
-    return this.successor && Cards[this.successor].provideReport(localisation)
+    return (this.successor && Cards[this.successor].provideReport(localisation)) || (this.relatedCard && Cards[this.relatedCard].provideReport(localisation))
   }
 
   addEffect(effect: Effect): void {

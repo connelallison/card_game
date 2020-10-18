@@ -17,5 +17,6 @@ type EventTypeString = 'death'
                         | 'spendMoney'
                         | 'accrueDebt'
                         | 'trigger'
+                        | 'update'
 
 export default EventTypeString

@@ -1,14 +1,16 @@
 import React from 'react'
 import Highlighter from 'react-highlight-words'
 import AddedText from './AddedText'
-import TargetableEntity, { EntityProps, Selections } from './TargetableEntity'
+import TargetableEntity, { Animations, EntityProps, Selections } from './TargetableEntity'
 
-interface CardProps extends EntityProps {
+export interface CardProps extends EntityProps {
     object: any
     selections: Selections
+    animations: Animations
     big?: boolean
     hover?: boolean
     relatedCard?: boolean
+    playCard?: boolean
     zone?: boolean
 }
 
@@ -19,29 +21,74 @@ abstract class Card extends TargetableEntity {
     }
 
     isBig(): string {
-        return this.props.big ? 'big' : ''
+        return !!this.props.big ? 'big' : ''
     }
 
     isHover(): string {
-        return this.props.hover ? 'hoverCard' : ''
+        return !!this.props.hover ? 'hoverCard' : ''
     }
 
     isRelatedCard(): string {
-        return this.props.relatedCard ? 'relatedCard' : ''
+        return !!this.props.relatedCard ? 'relatedCard' : ''
+    }
+
+    isPlayCard(): string {
+        return !!this.props.playCard ? 'playCard' : ''
+    }
+
+    isCombat(): string {
+        return !!this.props.animations.combatCards[this.props.object.objectID] ? 'combat' : ''
+    }
+    
+    isDying(): string {
+        return !!this.props.animations.deathCards[this.props.object.objectID] && !!this.props.animations.actionCards[this.props.object.objectID] ? 'dying' : ''
     }
 
     hoverCard(object): JSX.Element | null { return null }
 
     fortuneOverlay(): JSX.Element | null {
-        return this.props.object.fortune && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' ? (
-            <div className='fortuneOverlay'></div>
-        ) : null
+        return this.props.object.fortune && (this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' || this.props.object.zone === 'creationZone')
+            ? (<div className='fortune overlay'></div>)
+            : null
     }
 
     guardOverlay(): JSX.Element | null {
-        return this.props.object.guard && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone' ? (
-            <div className='guardOverlay'></div>
-        ) : null
+        return this.props.object.guard && this.props.object.zone === 'board' || this.props.object.zone === 'leaderZone'
+            ? (<div className='guard overlay'></div>)
+            : null
+    }
+
+
+    damageOverlay(): JSX.Element | null {
+        const damage = this.props.animations.damageCards[this.props.object.objectID]
+        return !!damage
+            ? <div
+                key={damage.key}
+                className={`damage overlay ${damage.number === 0 ? 'noDamage' : ''}`}>
+                <p className={`${damage.rot ? 'rotText' : 'damageText'} healthChangeText`}>-{damage.number}</p>
+            </div>
+            : null
+    }
+
+    healingOverlay(): JSX.Element | null {
+        const healing = this.props.animations.healingCards[this.props.object.objectID]
+        return !!healing && healing.number !== 0
+            ? <div key={healing.key} className='healing overlay'>
+                <p className={`${healing.nourish ? 'nourishText' : 'healingText'} healthChangeText`}>+{healing.number}</p>
+            </div>
+            : null
+    }
+
+    deathOverlay(): JSX.Element | null {
+        return !!this.props.animations.deathCards[this.props.object.objectID]
+            ? <div key={this.props.animations.deathCards[this.props.object.objectID].key} className='death overlay'></div>
+            : null
+    }
+
+    actionOverlay(): JSX.Element | null {
+        return !!this.props.animations.actionCards[this.props.object.objectID]
+            ? <div key={this.props.animations.actionCards[this.props.object.objectID].key} className='action overlay'></div>
+            : null
     }
 
     textLength(): string {
@@ -53,7 +100,15 @@ abstract class Card extends TargetableEntity {
     }
 
     styleClasses(): string {
-        return `${this.outlineStatus()} ${this.isBig()} ${this.isHover()} ${this.isRelatedCard()} ${this.props.zone ? 'zone' : 'card'} ${this.props.object.type || ''}`
+        return `${this.outlineStatus()} 
+                ${this.isBig()} 
+                ${this.isHover()} 
+                ${this.isRelatedCard()} 
+                ${this.isPlayCard()} 
+                ${this.isCombat()}
+                ${this.isDying()}
+                ${this.props.zone ? 'zone' : 'card'} 
+                ${this.props.object.type || ''}`
     }
 
     cardClass(): string {
@@ -100,11 +155,12 @@ abstract class Card extends TargetableEntity {
                 className='boldedText'
                 caseSensitive
                 highlightClassName='keyword'
-                searchWords={['Guard', 'Fortune', 'Fervour', 'Rent', 'Passionate', 
-                            'Snipe', 'Pillage', 'Action', 'Event', 'Option', 
-                            'Eureka', 'Income', 'Growth', 'Bloodthirst', 'Mob', 
-                            'Rush', 'Death', 'Legacy', 'Hand', 'Deck', 
-                            'Starter', 'Passive', 'Successor']}
+                searchWords={['Guard', 'Fortune', 'Fervour', 'Rent', 'Passionate',
+                    'Snipe', 'Pillage', 'Action', 'Event', 'Option',
+                    'Eureka', 'Income', 'Growth', 'Bloodthirst', 'Mob',
+                    'Rush', 'Death', 'Legacy', 'Hand', 'Deck',
+                    'Starter', 'Passive', 'Successor', 'Immune', 'Rot',
+                    'Nourish']}
                 highlightTag='span'
                 textToHighlight={this.props.object.text}
             />
@@ -113,7 +169,7 @@ abstract class Card extends TargetableEntity {
     }
 
     handInfo(): JSX.Element | null {
-        return (this.props.hover || this.props.object.zone === 'hand') ? (
+        return (this.props.hover || this.props.playCard || this.props.object.zone === 'hand') ? (
             <div className="multicolour-line text-medium">
                 {this.statLabel('cost')}
                 <p>{this.props.object.subtype}</p>

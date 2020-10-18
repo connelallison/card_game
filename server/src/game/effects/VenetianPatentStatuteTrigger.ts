@@ -12,11 +12,11 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Before you play a Technique, give it Immune until the end of your next turn.`,
+            english: `Before you play a creation, give it Fortune.`,
         },
     },
     repeatable: true,
-    wonderTrigger: true,
+    wonderTrigger: false,
     triggerObjs: [
         {
             actionType: 'triggerAction',
@@ -29,18 +29,16 @@ const data: TriggerEffectData = {
                             targetMap: 'playEventPlayedCard',
                             operation: 'addEffect',
                             values: {
-                                effectID: 'Immune',
-                                expires: ['ExpiresEndOfMyNextTurn'],
-                                buffName: { english: 'Venetian Patent Statute Buff' },
+                                effectID: 'Fortune',
                             }
                         },
                     ],
                     requirements: [
                         {
-                            eventTargetRequirement: 'isSubtype',
+                            eventTargetRequirement: 'isType',
                             targetMap: 'playEventPlayedCard',
                             values: {
-                                subtype: 'Technique',
+                                type: 'Creation',
                             }
                         },
                     ]

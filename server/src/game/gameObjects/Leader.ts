@@ -29,9 +29,9 @@ abstract class Leader extends Character {
   }
 
   provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-    this.updateActiveOptions()
-    this.updateActiveActions()
-    this.updateActiveEvents()
+    // this.updateActiveOptions()
+    // this.updateActiveActions()
+    // this.updateActiveEvents()
 
     return {
       name: this.name[localisation],
@@ -44,6 +44,10 @@ abstract class Leader extends Character {
       subtype: this.subtype,
       classes: this.classes,
       zone: this.zone,
+      discounted: (this.cost < this.data.cost),
+      damaged: this.isDamaged(),
+      attackBuffed: (this.attack > this.baseAttack()),
+      healthBuffed: (this.health > this.baseHealth()),
       fortune: this.flags.fortune,
       guard: this.flags.guard,
       ownerName: this.owner.playerName,
@@ -216,6 +220,12 @@ abstract class Leader extends Character {
       this.game.inPlay.push(this)
       this.owner.maxHealth += health
       this.owner.currentHealth += health
+    }
+
+    if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
+    else this.owner[destination].push(this)
+    this.zone = destination
+    if (destination === 'leaderZone') {
       if (this.game.activeChild) {
         const leaderTechnique = this.createCard(this.leaderTechniqueID, this.controller()) as LeaderTechnique
         const summonEvent = new SummonEvent(this.game, {
@@ -227,10 +237,6 @@ abstract class Leader extends Character {
         this.game.startNewDeepestPhase('SummonPhase', summonEvent)
       }
     }
-
-    if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
-    else this.owner[destination].push(this)
-    this.zone = destination
     this.updateEffects()
   }
 }

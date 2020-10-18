@@ -1,10 +1,11 @@
 import { Component } from 'react'
-import { Selections } from './TargetableEntity'
+import { Animations, Selections } from './TargetableEntity'
 
 export interface EntityContainerProps {
     mine: boolean
     contents: any[]
     selections: Selections
+    animations: Animations
 }
 
 abstract class EntityContainer extends Component {

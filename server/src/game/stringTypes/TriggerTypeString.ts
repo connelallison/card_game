@@ -45,5 +45,7 @@ type TriggerTypeString = 'afterDeath'
                         | 'auraApply3'
                         | 'finishUpdate'
                         | 'afterAuraUpdate'
+                        | 'updateTargets'
+                        | 'startOfGame'
 
 export default TriggerTypeString                        

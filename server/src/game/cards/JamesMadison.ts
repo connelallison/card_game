@@ -23,6 +23,7 @@ const data: FamousFollowerData = {
             english: `Event: Give your Citizens +1 Attack this game.`,
         },
     },
+    relatedCard: 'SecondAmendment',
     tooltips: [],
     stats: {},
     effects: [],

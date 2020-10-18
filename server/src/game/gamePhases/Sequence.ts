@@ -16,6 +16,7 @@ class Sequence extends GamePhase {
     }
 
     start(): void {
+        // console.log('sequence')
         while (!this.game().ended && this.queuedPhases.length > 0) {
             this.startChild(this.queuedPhases.shift())
         }

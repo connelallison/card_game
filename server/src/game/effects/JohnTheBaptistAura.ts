@@ -10,7 +10,7 @@ const data: AuraEffectData = {
     type: 'Effect',
     subtype: 'Aura',
     text: { templates: { english: `Legacy: The slot where this died has +2/+2.` } },
-    priority: 1,
+    priority: 0,
     activeZones: ['legacy'],
     activeTypes: ['Follower'],
     effectFunction: {

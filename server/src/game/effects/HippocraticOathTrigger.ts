@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Passive: Your damage and healing to friendly characters are never rot and always nourish.`,
+            english: `Passive: Your damage and healing to friendly characters are never Rot and always Nourish.`,
         },
     },
     repeatable: true,

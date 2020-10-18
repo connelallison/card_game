@@ -16,21 +16,56 @@ const data: FamousFollowerData = {
     attack: 4,
     health: 3,
     staticText: {
-        english: `Successor: Tupac Hologram\nAfter a friendly follower is attacked and killed, its adjacents retaliate.`,
+        english: `Rush, Fervour 1\nDeath: Shuffle a Tupac Hologram into your deck.`,
     },
     text: {
         templates: {
-            english: `Successor: Tupac Hologram\nAfter a friendly follower is attacked and killed, its adjacents retaliate.`,
+            english: `Rush, Fervour 1\nDeath: Shuffle a Tupac Hologram into your deck.`,
         },
     },
-    successor: 'TupacHologram',
+    relatedCard: 'TupacHologram',
     tooltips: [],
-    stats: {},
-    effects: ['TupacShakurTrigger'],
+    stats: {
+        Fervour: 1,
+    },
+    effects: ['Rush'],
     options: [],
     actions: [],
     events: [],
-    deathEvents: [],
+    deathEvents: [
+        {
+              id: 'TupacShakurDeathEvent',
+              name: { english: 'Tupac Shakur Death Event' },
+              text: { templates: { english: `Death: Shuffle a Tupac Hologram into your deck.` } },
+              actionType: 'deathAction',
+              actionSteps: [
+                  {
+                    actionFunctions: [
+                        {
+                          functionType: 'autoAction',
+                          operation: 'createAndStoreCard',
+                          values: {
+                              cardID: 'TupacHologram'
+                          },
+                        },
+                        {
+                          functionType: 'autoAction',
+                          operation: 'shuffleIntoDeck',
+                        },
+                    ],
+                    autoTargets: [
+                        {
+                          targets: {
+                              valueType: 'target',
+                              from: 'stored',
+                              param: 'createdCards',
+                          }
+                        },
+                    ],
+                  },
+              ],
+        },
+    ],
 }
 
 class TupacShakur extends FamousFollower {

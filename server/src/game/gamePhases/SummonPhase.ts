@@ -26,6 +26,14 @@ export class SummonEvent extends GameEvent {
         const controller = this.charSource === this.controller.leaderZone[0] ? '' : ` under ${this.controller.playerName}'s control`
         this.log = `${this.charSource.name.english}${source} summons a ${this.card.id}${controller}.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'summon',
+            player: this.controller.objectID,
+            card: this.card.objectID,
+        }
+    }
 }
 
 class SummonPhase extends EventPhase {
@@ -41,7 +49,7 @@ class SummonPhase extends EventPhase {
         const { controller, objectSource, charSource, card, targetSlot } = event
         controller.setAsideZone.push(card)
         if (controller.canSummon(card)) {
-            event.generateLog()
+            // event.generateLog()
             this.cacheEvent(event, 'summon')
             this.enterPlayPhase()
             this.eventActionPhase()
@@ -100,3 +108,4 @@ import Game from "./Game";
 import { EnterPlayEvent } from "./EnterPlayPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
+import { LocalisationString } from "../structs/Localisation";

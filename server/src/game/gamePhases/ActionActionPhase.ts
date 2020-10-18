@@ -27,6 +27,13 @@ export class ActionActionEvent extends GameEvent {
         // this.log = `${this.objectSource.name.english}'s action activates${actionTargets}.`
         this.log = `${this.objectSource.name.english}'s action activates.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'actionAction',
+            card: this.objectSource.effectOwner().objectID,
+        }
+    }
 }
 
 class ActionActionPhase extends EventPhase {
@@ -43,7 +50,7 @@ class ActionActionPhase extends EventPhase {
         event.eureka = event.action.eureka
         // console.log(event.action.activeSteps)
         this.emit('beforeAction', event)
-        event.generateLog()
+        // event.generateLog()
         this.cacheEvent(event, 'action')
         event.action.activeSteps.forEach(step => actionCard.actionStep(event, step))
         this.emit('afterAction', event)
@@ -61,4 +68,5 @@ import { ActionAction } from "../structs/Action";
 import Game from "./Game";
 import { PlayEvent } from "./PlayPhase";
 import { UseEvent } from "./UsePhase";
+import { LocalisationString } from "../structs/Localisation";
 

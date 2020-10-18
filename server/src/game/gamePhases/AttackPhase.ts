@@ -20,6 +20,14 @@ export class AttackEvent extends GameEvent {
     generateLog() {
         this.log = `${this.attacker.name.english} attacks ${this.defender.name.english}.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'attack',
+            attacker: this.attacker.objectID,
+            defender: this.defender.objectID,
+        }
+    }
 }
 
 class AttackPhase extends EventPhase {
@@ -31,7 +39,7 @@ class AttackPhase extends EventPhase {
     start(): void {
         const event = this.event
         if (event.attacker.attack > 0) {
-            event.generateLog()
+            // event.generateLog()
             this.cacheEvent(event, 'attack')
 
             this.emit('beforeAttack', event)
@@ -96,3 +104,4 @@ import Character from "../gameObjects/Character";
 import Game from "./Game";
 import { DamageEvent } from "./DamageSinglePhase";
 import { HealingEvent } from "./HealSinglePhase";
+import { LocalisationString } from "../structs/Localisation";

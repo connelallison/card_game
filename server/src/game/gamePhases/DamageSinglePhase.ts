@@ -20,7 +20,7 @@ export class DamageEvent extends GameEvent {
     rot?: boolean
 
     constructor(game: Game, object: DamageEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
     }
 
@@ -28,6 +28,15 @@ export class DamageEvent extends GameEvent {
         const source = this.objectSource === this.charSource ? '' : `'s ${this.objectSource.name.english}`
         const rot = this.rot ? 'rot ' : ''
         this.log = `${this.target.name.english} takes ${this.actualDamage} ${rot}damage from ${this.charSource.name.english}${source}.`
+    }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'damage',
+            target: this.target.objectID,
+            damage: this.actualDamage,
+            rot: !!this.rot,
+        }
     }
 }
 
@@ -44,7 +53,6 @@ class DamageSinglePhase extends EventPhase {
             this.emit('beforeDamage', event)
             const actualDamage = event.target.takeDamage(event.damage, !!event.rot)
             event.actualDamage = actualDamage
-            event.generateLog()
             this.cacheEvent(event, 'damage')
             if (event.actualDamage > 0) this.emit('afterDamage', event)
             this.queueSteps()
@@ -58,3 +66,4 @@ export default DamageSinglePhase
 import GameObject from "../gameObjects/GameObject";
 import Character from "../gameObjects/Character";
 import Game from "./Game";
+import { LocalisationString } from "../structs/Localisation";

@@ -31,6 +31,15 @@ export class HealingEvent extends GameEvent {
         const overhealing = this.overhealing > 0 ? ` (${this.overhealing} overhealing)`: ''
         this.log = `${this.target.name.english} receives ${this.actualHealing} ${nourish}healing from ${this.charSource.name.english}${source}${overhealing}.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'healing',
+            target: this.target.objectID,
+            healing: this.actualHealing,
+            nourish: !!this.nourish,
+        }
+    }
 }
 
 class HealSinglePhase extends EventPhase {
@@ -48,7 +57,7 @@ class HealSinglePhase extends EventPhase {
             const actualHealing = event.target.receiveHealing(event.healing, !!event.nourish)
             event.actualHealing = actualHealing
             event.overhealing = event.healing - actualHealing
-            event.generateLog()
+            // event.generateLog()
             this.cacheEvent(event, 'healing')
             if (event.actualHealing > 0) this.emit('afterHealing', event)
             if (event.overhealing > 0) this.emit('afterOverhealing', event)
@@ -63,3 +72,4 @@ export default HealSinglePhase
 import GameObject from "../gameObjects/GameObject";
 import Character from "../gameObjects/Character";
 import Game from "./Game";
+import { LocalisationString } from "../structs/Localisation";

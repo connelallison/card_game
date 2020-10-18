@@ -20,6 +20,14 @@ export class ProposedDrawEvent extends GameEvent {
     generateLog() {
         this.log = `${this.player.playerName} draws ${this.number} cards.`
     }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'drawSequence',
+            number: this.number,
+            player: this.player.objectID,
+        }
+    }
 }
 
 interface DrawEventObject {
@@ -38,6 +46,14 @@ export class DrawEvent extends GameEvent {
 
     generateLog() {
         this.log = `${this.player.playerName} draws ${this.card.name.english}.`
+    }
+
+    generateReport(localisation: LocalisationString = 'english') {
+        this.reports[localisation] = {
+            eventType: 'draw',
+            card: this.card.objectID,
+            player: this.player.objectID,
+        }
     }
 }
 
@@ -66,7 +82,7 @@ class ProposedDrawPhase extends EventPhase {
                         player,
                         card,
                     })
-                    event.generateLog()
+                    // event.generateLog()
                     this.cacheEvent(event, 'draw')
                     this.emit('onDraw', event)
                     this.afterDrawQueue.push(event)
@@ -108,3 +124,4 @@ import Game from "./Game";
 import { DamageEvent } from "./DamageSinglePhase";
 import Card from "../gameObjects/Card";
 import { TargetRequirement } from "../structs/Requirement";
+import { LocalisationString } from "../structs/Localisation";

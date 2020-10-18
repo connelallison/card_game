@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `After a character doesn't use their attack, nourish 1 Health to them.`,
+            english: `After a friendly character doesn't use their attack, Nourish 1 Health to them.`,
         },
     },
     repeatable: true,
@@ -38,7 +38,7 @@ const data: TriggerEffectData = {
                             targets: {
                                 valueType: 'targets',
                                 from: 'targetDomain',
-                                targetDomain: ['friendlyLeader', 'friendlyBoard', 'enemyLeader', 'enemyBoard'],
+                                targetDomain: ['friendlyLeader', 'friendlyBoard'],
                                 requirements: [
                                     {
                                         targetRequirement: 'hasAttack',

@@ -11,7 +11,7 @@ const data: WonderCreationData = {
     subtype: 'Wonder',
     classes: ['The People'],
     collectable: true,
-    cost: 1,
+    cost: 2,
     charges: 1,
     staticText: {
         english: `Your followers have +1/+1. If you have no followers at the start of your turn, this loses a charge.`,

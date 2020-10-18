@@ -13,14 +13,14 @@ const data: FamousFollowerData = {
   categories: [],
   collectable: true,
   cost: 3,
-  attack: 4,
-  health: 4,
+  attack: 3,
+  health: 3,
   staticText: {
-    english: `Eureka: Gain Rush.`,
+    english: `Eureka: Gain +1/+1 and Rush.`,
   },
   text: {
     templates: {
-      english: `Eureka: Gain Rush.`,
+      english: `Eureka: Gain +1/+1 and Rush.`,
     },
   },
   tooltips: ['rush'],
@@ -32,11 +32,10 @@ const data: FamousFollowerData = {
     },
     text: {
       templates: {
-        english: 'Eureka: Gain Rush.'
+        english: 'Eureka: Gain +1/+1 and Rush.'
       }
     },
     eureka: true,
-    unique: true,
     activeTypes: ['Follower'],
     actionSteps: [{
       autoTargets: [{
@@ -54,7 +53,7 @@ const data: FamousFollowerData = {
         functionType: 'autoAction',
         operation: 'addEffect',
         values: {
-          effectID: 'Rush'
+          effectID: 'ArchimedesBuff'
         }
       }]
     }]

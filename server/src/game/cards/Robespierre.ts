@@ -23,7 +23,7 @@ const data: FamousFollowerData = {
             english: `Passionate, Fortune\nAt the end of your turn, gain Fervour 1.`,
         },
     },
-    tooltips: [],
+    tooltips: ['fervour'],
     stats: {},
     effects: ['Passionate', 'Fortune', 'RobespierreTrigger'],
     options: [],

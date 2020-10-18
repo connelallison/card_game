@@ -17,9 +17,9 @@ abstract class NamelessFollower extends Follower {
     }
 
     provideReport(localisation: LocalisationString = 'english'): ObjectReport {
-        this.updateActiveOptions()
-        this.updateActiveActions()
-        this.updateActiveEvents()
+        // this.updateActiveOptions()
+        // this.updateActiveActions()
+        // this.updateActiveEvents()
 
         return {
             name: this.name[localisation],
@@ -33,6 +33,10 @@ abstract class NamelessFollower extends Follower {
             subtype: this.subtype,
             classes: this.classes,
             zone: this.zone,
+            discounted: (this.cost < this.data.cost),
+            damaged: this.isDamaged(),
+            attackBuffed: (this.attack > this.rawAttack),
+            healthBuffed: (this.health > this.rawHealth),
             fortune: this.flags.fortune,
             guard: this.flags.guard,
             ownerName: this.owner.playerName,

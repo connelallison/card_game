@@ -41,6 +41,10 @@ const data: TriggerEffectData = {
                                 type: 'Creation',
                             }
                         },
+                        {
+                          eventTargetRequirement: 'isFriendly',
+                          targetMap: 'playEventPlayer',
+                        },
                     ]
                 },
             ],

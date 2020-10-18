@@ -27,7 +27,7 @@ const data: AuraEffectData = {
         functions: [
             {
                 operation: 'setID',
-                value: 'SpartacusImpersonator'
+                value: 'SpartacusFollower'
             },
             {
                 operation: 'setName',

@@ -217,6 +217,7 @@ io.on('connection', function (socket) {
         serverEvent.on(`challengeAccepted:${opponent.opponentID}`, () => {
           opponentSocket.emit('challengeAccepted')
         })
+        serverEvent.removeAllListeners(`gameStarting:${socketID}`)
         serverEvent.on(`gameStarting:${socketID}`, () => {
           socket.emit('gameStarting')
           opponentSocket.emit('gameStarting')

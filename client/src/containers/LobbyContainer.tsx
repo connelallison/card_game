@@ -181,7 +181,7 @@ class LobbyContainer extends Component {
                     <DisplayName displayName={this.props.displayName} handleSubmit={this.props.updateName} />
                     <DeckSelection deckID={this.props.deckID as string} decks={this.props.decks as Decks} updateDeck={this.props.updateDeck} />
                 </div>
-                <div id='lobbyContainer' className={this.props.offscreen ? 'offScreen' : ''}>
+                <div id='lobbyContainer' className={this.props.offscreen ? 'offscreen' : ''}>
                     <LobbyPlayerList sendChallenge={opponentID => this.sendChallenge(opponentID)} players={this.props.serverPlayers} />
                     <LobbyChat socketID={this.socket.id} sendMessage={message => this.sendMessage(message)} messages={this.state.messages} />
                     {challenge}

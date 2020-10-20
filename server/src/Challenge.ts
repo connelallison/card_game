@@ -118,7 +118,7 @@ class PvPChallenge {
         this.player1.status = 'game'
         this.player2.status = 'game'
         serverEvent.emit(`gameStarting:${this.player1.socketID}`)
-        serverEvent.emit(`gameStarting:${this.player2.socketID}`)
+        // serverEvent.emit(`gameStarting:${this.player2.socketID}`)
         // const pvpGame = new Game(this.player1.displayName, this.player2.displayName, Decks[this.player1.deckID], Decks[this.player2.deckID], this.player1.socketID, this.player2.socketID)
         // pvpGame.init()
     }

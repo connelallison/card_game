@@ -22,7 +22,7 @@ class StartGame extends Component {
   render() {
     const options = this.props.opponents.map(opponent => {
       return (
-        <option value={opponent.socketID}>{opponent.displayName}</option>
+        <option value={opponent.socketID}>{opponent.name}</option>
       )
     })
 

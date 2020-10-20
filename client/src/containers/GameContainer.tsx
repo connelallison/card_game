@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import io from 'socket.io-client'
 import ReactTooltip from 'react-tooltip'
 import Leader from '../components/Leader'
 import PlayerHand from '../components/PlayerHand'
@@ -18,14 +17,59 @@ import EndGame from '../components/EndGame'
 import DeckSelection from '../components/DeckSelection'
 import Legacy from '../components/Legacy'
 import { PlayCard } from '../components/HoverCard'
+import socket from '../socket'
+import { MoveRequest } from '../structs/MoveRequest'
+import { Decks } from '../structs/DeckObject'
+import { LobbyPlayerData } from '../structs/LobbyPlayerData'
+
+interface GameProps {
+  offscreen: boolean
+  displayName: string
+  serverPlayers: LobbyPlayerData[]
+  decks: Decks
+  deckID: string
+  updateDeck: (deckID: string) => void 
+  updateName: (name: string) => void 
+}
 
 class GameContainer extends Component {
-  constructor(props) {
+  props!: GameProps
+  socket: SocketIOClient.Socket
+  timerID: NodeJS.Timeout
+  state
+  moveRequest
+  actionTargets
+  requiresConfirmation
+  playCardTimeout
+  eventQueue
+  finalGameState
+
+  constructor(props: GameProps) {
     super(props)
-    this.state = {
-      displayName: localStorage.getItem('displayName') || 'Anonymous',
-      deckID: null,
-      decks: null,
+    this.state = this.baseState()
+    this.socket = this.initSocket(socket)
+    this.timerID = setInterval(
+      () => this.tick(),
+      100
+    )
+    this.moveRequest = {}
+    this.actionTargets = null
+    this.requiresConfirmation = null
+    this.playCardTimeout = null
+    this.eventQueue = []
+    this.finalGameState = null
+
+    this.handleUpdateDisplayName = this.handleUpdateDisplayName.bind(this)
+    this.handleUpdateDeck = this.handleUpdateDeck.bind(this)
+    this.handleStartGame = this.handleStartGame.bind(this)
+    this.handleEndGame = this.handleEndGame.bind(this)
+    this.handleEndTurn = this.handleEndTurn.bind(this)
+    this.handleSelection = this.handleSelection.bind(this)
+
+  }
+
+  baseState() {
+    return {
       selectionsEnabled: false,
       gameObjects: {},
       playCard: null,
@@ -40,6 +84,7 @@ class GameContainer extends Component {
       validSelections: null,
       myTurn: false,
       turnEnd: 0,
+      turnTimer: 0,
       gameState: {
         started: null,
         winner: null,
@@ -112,50 +157,22 @@ class GameContainer extends Component {
           deck: [],
         }
       },
-      serverPlayers: [],
-      turnTimer: 0,
     }
-    this.socket = this.initSocket()
-    this.timerID = setInterval(
-      () => this.tick(),
-      100
-    )
-    this.moveRequest = {}
-    this.actionTargets = null
-    this.requiresConfirmation = null
-    this.playCardTimeout = null
-    this.eventQueue = []
-    this.finalGameState = null
-
-    this.handleUpdateDisplayName = this.handleUpdateDisplayName.bind(this)
-    this.handleUpdateDeck = this.handleUpdateDeck.bind(this)
-    this.handleStartGame = this.handleStartGame.bind(this)
-    this.handleEndGame = this.handleEndGame.bind(this)
-    this.handleEndTurn = this.handleEndTurn.bind(this)
-    this.handleSelection = this.handleSelection.bind(this)
-
   }
 
-  initSocket() {
-    const host = window.location.hostname
-    const socket = io.connect('http://' + host + ':4000')
+  initSocket(socket) {
+    console.log('game running initSocket')
 
-    socket.on('connect', (data) => {
-      console.log('websocket connection established at ' + Date().toString())
-      if (localStorage.getItem('displayName')) this.socket.emit('updateDisplayName', { displayName: localStorage.getItem('displayName') })
-    })
-    socket.on('updateDecks', decks => this.updateDecks(decks))
-    socket.on('displayNameAnnouncement', data => console.log(data.message))
+    socket.on('gameStarting', () => this.setState(this.baseState()))
     socket.on('disconnect', data => this.onDisconnect())
     socket.on('gameStateUpdate', report => this.updateGameState(report))
     socket.on('turnTimerUpdate', turnEnd => this.updateTurnEnd(turnEnd))
-    socket.on('serverPlayersUpdate', serverPlayers => this.updateServerPlayers(serverPlayers))
 
     return socket
   }
 
   onDisconnect() {
-    console.log('disconnected from websocket connection at ' + Date().toString())
+    // console.log('disconnected from websocket connection at ' + Date().toString())
     const newGameState = { ...this.state.gameState }
     newGameState.winner = 'you disconnected'
     this.updateGameState({ gameState: newGameState, eventsReport: [] })
@@ -182,12 +199,12 @@ class GameContainer extends Component {
     this.setState(turnInfo)
   }
 
-  updateDecks(decks) {
+  updateDecks(decks: Decks) {
     const deckIDs = Object.values(decks).map(deck => deck.id)
-    const deckID = deckIDs.includes(localStorage.getItem('deckID')) ? localStorage.getItem('deckID') : deckIDs[0]
+    const deckID = deckIDs.includes(localStorage.getItem('deckID') as string) ? localStorage.getItem('deckID') : deckIDs[0]
 
     this.socket.emit('updateDeckID', { deckID })
-    localStorage.setItem('deckID', deckID)
+    localStorage.setItem('deckID', deckID as string)
     this.setState({ deckID, decks })
   }
 
@@ -214,6 +231,7 @@ class GameContainer extends Component {
 
   handleStartGame(opponentID) {
     if (!this.state.inGame) {
+      document.documentElement.requestFullscreen()
       // console.log('starting game')
       this.socket.emit('requestTestGame', {
         opponentID
@@ -233,7 +251,7 @@ class GameContainer extends Component {
     if (this.state.myTurn) this.socket.emit('endTurn')
   }
 
-  async animateEvents(report, delay) {
+  async animateEvents(report, delay?) {
     if (delay) await this.sleep(delay)
     if (this.eventQueue.length > 0) {
       const event = this.eventQueue.shift()
@@ -510,7 +528,7 @@ class GameContainer extends Component {
   }
 
   currentSelected() {
-    const selected = []
+    const selected: any[] = []
     if (this.moveRequest.selected) selected.push(this.moveRequest.selected)
     if (this.moveRequest.validSlots && this.moveRequest.validSlots.chosenTarget) selected.push(this.moveRequest.validSlots.chosenTarget)
     selected.push(...this.currentStepSelections())
@@ -675,30 +693,31 @@ class GameContainer extends Component {
     const maxSlots = Math.max(this.state.gameState.my.board.length, this.state.gameState.opponent.board.length)
 
     return (
-      // <div id='gameContainer' data-tip='' onContextMenu={event => { event.preventDefault(); event.stopPropagation() }}>
-      <div id='gameContainer' data-tip=''>
+      // <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''} data-tip='' onContextMenu={event => { event.preventDefault(); event.stopPropagation() }}>
+      <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''}  data-tip=''>
         <ReactTooltip className='target-tooltip' offset={{ right: 10 }} arrowColor='transparent' place='right' >
           {selectionText}
         </ReactTooltip>
         <div className='topBar'>
-          <DisplayName displayName={this.state.displayName} handleSubmit={this.handleUpdateDisplayName} />
-          <DeckSelection deckID={this.state.deckID} decks={this.state.decks} updateDeck={this.handleUpdateDeck} />
+          <DisplayName displayName={this.props.displayName} handleSubmit={this.props.updateName} />
+          <DeckSelection deckID={this.props.deckID} decks={this.props.decks} updateDeck={this.props.updateDeck} />
           {
             this.state.inGame
               ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name} />
-              : <StartGame startGame={this.handleStartGame} opponents={this.state.serverPlayers} socketID={this.socket.id} />
+              : <StartGame startGame={this.handleStartGame} opponents={this.props.serverPlayers} socketID={this.socket.id} />
           }
           <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.myTurn} jobDone={jobDone} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
         </div>
         <PlayerHand mine={false} selections={selections} animations={animations} contents={this.state.gameState.opponent.hand} />
-        <PlayArea selections={selections} requiresConfirmation={this.requiresConfirmation}>
+        <PlayArea selections={selections} >
+        {/* <PlayArea selections={selections} requiresConfirmation={this.requiresConfirmation}> */}
           <div className='playerStatusDiv'>
             <PlayerStatus stats={this.state.gameState.opponent.stats} />
           </div>
           <div className='outerPlayArea opponent'>
             <PassiveZone mine={false} selections={selections} animations={animations} contents={this.state.gameState.opponent.passives} />
-            <Leader mine={false} key={this.state.gameState.opponent.leader.objectID || 'enemyLeader'} selections={selections} animations={animations} object={this.state.gameState.opponent.leader} />
-            <LeaderTechnique mine={false} key={this.state.gameState.opponent.leaderTechnique.objectID || 'enemyLeaderTechnique'} selections={selections} animations={animations} object={this.state.gameState.opponent.leaderTechnique} />
+            <Leader key={this.state.gameState.opponent.leader.objectID || 'enemyLeader'} selections={selections} animations={animations} object={this.state.gameState.opponent.leader} />
+            <LeaderTechnique key={this.state.gameState.opponent.leaderTechnique.objectID || 'enemyLeaderTechnique'} selections={selections} animations={animations} object={this.state.gameState.opponent.leaderTechnique} />
             <CreationZone mine={false} selections={selections} animations={animations} contents={this.state.gameState.opponent.creations} />
           </div>
           <div className="innerPlayArea">
@@ -717,8 +736,8 @@ class GameContainer extends Component {
           </div>
           <div className='outerPlayArea player'>
             <PassiveZone mine selections={selections} animations={animations} contents={this.state.gameState.my.passives} />
-            <Leader mine key={this.state.gameState.my.leader.objectID || 'friendlyLeader'} selections={selections} animations={animations} object={this.state.gameState.my.leader} />
-            <LeaderTechnique mine key={this.state.gameState.my.leaderTechnique.objectID || 'friendlyLeaderTechnique'} selections={selections} animations={animations} object={this.state.gameState.my.leaderTechnique} />
+            <Leader key={this.state.gameState.my.leader.objectID || 'friendlyLeader'} selections={selections} animations={animations} object={this.state.gameState.my.leader} />
+            <LeaderTechnique key={this.state.gameState.my.leaderTechnique.objectID || 'friendlyLeaderTechnique'} selections={selections} animations={animations} object={this.state.gameState.my.leaderTechnique} />
             <CreationZone mine selections={selections} animations={animations} contents={this.state.gameState.my.creations} />
           </div>
           <div className='playerStatusDiv'>

@@ -6,18 +6,22 @@ class DisplayName extends Component {
     this.state = {
 
     }
-    console.log('current name is ' + this.props.displayName)
+    // console.log('current name is ' + this.props.displayName)
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount () {
-    console.log('component did mount')
+    // console.log('component did mount')
     this.setState({ value: this.props.displayName })
   }
 
   handleChange (event) {
-    this.setState({ value: event.target.value })
+    let value = event.target.value
+    if (value.length > 25) {
+      value = value.substring(0, 25)
+    }
+    this.setState({ value })
   }
 
   handleSubmit (event) {
@@ -33,7 +37,7 @@ class DisplayName extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             Display name: 
-            <input type='text' ref='input' defaultValue={this.props.displayName} placeholder={this.props.displayName} onChange={this.handleChange} />
+            <input type='text' ref='input' maxLength='25' defaultValue={this.props.displayName} placeholder={this.props.displayName} onChange={this.handleChange} />
             <input type='submit' ref='submit' id='update-display-name' value='Update' />
           </label>
         </form>

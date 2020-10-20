@@ -4,9 +4,6 @@ import GamePhase from './GamePhase'
 
 class Game extends GamePhase {
   event: EventEmitter
-  botPlayer1: boolean
-  botPlayer2: boolean
-  debug: boolean
   online: boolean
   player1turn: number
   player2turn: number
@@ -18,8 +15,8 @@ class Game extends GamePhase {
   player1: GamePlayer
   player2: GamePlayer
   inPlay: PersistentCard[]
-  player1deckID: string
-  player2deckID: string
+  player1deck: DeckObject
+  player2deck: DeckObject
   ended: boolean
   activeChild: Turn
   children: Turn[]
@@ -29,14 +26,10 @@ class Game extends GamePhase {
   unreportedEvents: any[]
   winner: string
 
-  constructor(player1name, player2name, player1deckID, player2deckID, botPlayer1 = false, debug = false, online = false, player1socketID = null, player2socketID = null, botPlayer2 = false) {
+  constructor(player1name: string, player2name: string, player1deck: DeckObject, player2deck: DeckObject, player1socketID: string, player2socketID: string = null) {
     super()
     this.event = new EventEmitter()
     this.event.setMaxListeners(1000)
-    this.botPlayer1 = botPlayer1
-    this.botPlayer2 = botPlayer2
-    this.debug = debug
-    this.online = online
     this.player1turn = 0
     this.player2turn = 0
     this.gameObjects = {}
@@ -45,8 +38,8 @@ class Game extends GamePhase {
     this.player1socketID = player1socketID
     this.player2socketID = player2socketID
     this.inPlay = []
-    this.player1deckID = player1deckID
-    this.player2deckID = player2deckID
+    this.player1deck = player1deck
+    this.player2deck = player2deck
     this.ended = false
     this.activeChild = null
     // this.turnNumber = 0
@@ -256,18 +249,10 @@ class Game extends GamePhase {
     this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
     this.player1.opponentPlayer = this.player2
     this.player2.opponentPlayer = this.player1
-    if (this.botPlayer1) {
-      this.player1.bot = true
-    } else {
-      this.player1.bot = false
-    }
-    if (this.botPlayer2) {
-      this.player2.bot = true
-    } else {
-      this.player2.bot = false
-    }
-    const player1deck = new Deck(this, this.player1, Decks[this.player1deckID])
-    const player2deck = new Deck(this, this.player2, Decks[this.player2deckID])
+    this.player1.bot = !this.player1.socketID
+    this.player2.bot = !this.player2.socketID
+    const player1deck = new Deck(this, this.player1, this.player1deck)
+    const player2deck = new Deck(this, this.player2, this.player2deck)
     player1deck.leader.putIntoPlay()
     player2deck.leader.putIntoPlay()
     player1deck.leaderTechnique.putIntoPlay()
@@ -294,7 +279,7 @@ class Game extends GamePhase {
         this.player1.conceded = true
         this.end()
       })
-      serverEvent.removeAllListeners(`playerDisconnected:${this.player1.socketID}`)
+      // serverEvent.removeAllListeners(`playerDisconnected:${this.player1.socketID}`)
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} disconnected - ending game`)
         this.player1.disconnected = true
@@ -316,7 +301,7 @@ class Game extends GamePhase {
         this.player2.conceded = true
         this.end()
       })
-      serverEvent.removeAllListeners(`playerDisconnected:${this.player2.socketID}`)
+      // serverEvent.removeAllListeners(`playerDisconnected:${this.player2.socketID}`)
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} disconnected - ending game`)
         this.player2.disconnected = true
@@ -370,7 +355,7 @@ class Game extends GamePhase {
   }
 
   async start() {
-    // console.log('starting game')
+    console.log('starting game')
     // await this.sleep(1000)
     // this.queuedPhases.push(this.preGameTurn())
     this.activeChild = this.preGameTurn()
@@ -433,6 +418,8 @@ class Game extends GamePhase {
       throw new Error('endGame() has been called but neither player is dead')
     }
     this.announceGameState()
+    serverEvent.emit(`gameEnded:${this.player1.socketID}`, this.winner)
+    serverEvent.emit(`gameEnded:${this.player2.socketID}`, this.winner)
     this.ended = true
     this.removeListeners()
     // const logs = this.eventCache.all.map(event => event.log)
@@ -470,4 +457,5 @@ import { OptionChoice, OptionChoiceRequest } from '../structs/Action'
 import { MoveRequest } from '../structs/ObjectReport'
 import { LocalisationString } from '../structs/Localisation'
 import { performance } from 'perf_hooks'
+import DeckObject from '../structs/DeckObject'
 

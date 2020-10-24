@@ -41,7 +41,7 @@ class LobbyChat extends Component {
 
     render() {
         const messages = this.props.messages.map(message => (
-            <LobbyChatMessage key={`${message.senderID}:${message.time}`} mine={message.senderID === this.props.socketID} message={message} />
+            <LobbyChatMessage key={`${message.senderID}:${message.lines[0].time}`} mine={message.senderID === this.props.socketID} message={message} />
         ))
 
         const chat = <div className='lobbyChatMessages' >{messages}</div>

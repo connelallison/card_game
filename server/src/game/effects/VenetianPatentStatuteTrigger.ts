@@ -18,37 +18,7 @@ const data: TriggerEffectData = {
     repeatable: true,
     wonderTrigger: false,
     triggerObjs: [
-        {
-            actionType: 'triggerAction',
-            eventType: 'beforePlay',
-            actionSteps: [
-                {
-                    actionFunctions: [
-                        {
-                            functionType: 'targetMapAction',
-                            targetMap: 'playEventPlayedCard',
-                            operation: 'addEffect',
-                            values: {
-                                effectID: 'Fortune',
-                            }
-                        },
-                    ],
-                    requirements: [
-                        {
-                            eventTargetRequirement: 'isType',
-                            targetMap: 'playEventPlayedCard',
-                            values: {
-                                type: 'Creation',
-                            }
-                        },
-                        {
-                          eventTargetRequirement: 'isFriendly',
-                          targetMap: 'playEventPlayer',
-                        },
-                    ]
-                },
-            ],
-        },
+        
     ],
 }
 

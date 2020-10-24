@@ -32,7 +32,7 @@ const data: AuraEffectData = {
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyBoard', 'enemyBoard'],
+        targetDomain: 'self',
         requirements: [{
             targetRequirement: 'isSpecificCardClass',
             values: {

@@ -13,7 +13,7 @@ export class DeathEvent extends GameEvent {
     slot?: BoardSlot
 
     constructor(game: Game, object: DeathEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
     }
 
@@ -39,20 +39,19 @@ class DeathPhase extends EventPhase {
         const deathQueue = this.currentSequence().deathQueue
         this.game().inPlay.filter(card => card instanceof DestroyableCard).forEach((card: DestroyableCard) => {
             if (card.isDestroyed()) {
-                if (card instanceof Leader) {
-                    this.game().end()
-                } else {
-                    const deathEvent = (card instanceof Follower) 
+                const deathEvent = (card instanceof Follower)
                     ? new DeathEvent(this.game(), {
                         card,
                         controller: card.controller(),
                         slot: card.slot,
-                    }) 
+                    })
                     : new DeathEvent(this.game(), {
                         card,
                         controller: card.controller(),
                     })
-                    // deathevent.generateLog()
+                // deathevent.generateLog()
+                this.emit('beforeDeath', deathEvent)
+                if (card.isDestroyed()) {
                     this.cacheEvent(deathEvent, 'death')
                     deathQueue.push(deathEvent)
                     if (card instanceof Follower) card.memory.deathSlot = card.slot

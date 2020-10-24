@@ -75,9 +75,17 @@ const Tooltips = {
         name: { english: 'Debt' },
         text: { templates: { english: `You pay this amount at the end of your turn, the first turn you play this.` } },
     },
+    collateral: {
+        name: { english: 'Collateral' },
+        text: { templates: { english: `When this card does single-target damage to a follower, it also hits adjacents.` } },
+    },
+    rot: {
+        name: { english: 'Rot' },
+        text: { templates: { english: `This card's damage is Rot damage.` } },
+    },
     rotDamage: {
         name: { english: 'Rot damage' },
-        text: { templates: { english: `Rot damage reduces max Health, and ignores Armour, Fortune, and Immune.` } },
+        text: { templates: { english: `Rot damage reduces max Health, and ignores Fortune and Immune.` } },
     },
     nourishHealing: {
         name: { english: 'Nourish healing' },

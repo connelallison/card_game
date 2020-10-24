@@ -13,8 +13,8 @@ const data: FamousFollowerData = {
     categories: ['Underclass'],
     collectable: true,
     cost: 3,
-    attack: 4,
-    health: 3,
+    attack: 5,
+    health: 2,
     staticText: {
         english: `Rush, Fervour 1\nDeath: Shuffle a Tupac Hologram into your deck.`,
     },

@@ -16,6 +16,7 @@ type EventTypeString = 'death'
                         | 'endOfTurn' 
                         | 'spendMoney'
                         | 'accrueDebt'
+                        | 'discard'
                         | 'trigger'
                         | 'update'
 

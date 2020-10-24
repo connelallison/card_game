@@ -127,6 +127,7 @@ input {
   text-align: center;
   box-shadow: 0 0 3px 2px black;
   background-color: var(--card-background-colour);
+  z-index: 10;
   /* left: 50%;
   top: 50%; */
 }
@@ -577,14 +578,34 @@ td.lobbyPlayerAction {
   justify-content: center;
 }
 
-.optionSelections {
+.optionSelections, .mulliganSelections {
   background-color: transparent;
   position: absolute;
   align-items: center;
   z-index: 5;
 }
 
-.optionActions {
+.mulliganButtonDiv {
+  margin-top: 20px;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+}
+
+.mulliganButtonDiv button {
+  border: solid 2px rgb(66, 66, 66);
+  font-size: 24px;
+  border-radius: 15px;
+  padding: 3px 8px;
+  box-shadow: 0 0 8px 0 black;
+}
+
+.mulliganButtonDiv button:hover {
+  /* background-color: rgb(177, 228, 175); */
+  box-shadow: 0 0 12px 3px var(--nonHostileTarget-colour);
+}
+
+.optionActions, .mulliganChoices {
   background-color: transparent;
 }
 
@@ -848,7 +869,7 @@ td.lobbyPlayerAction {
 }
 
 .card:hover, .Follower.inPlay{
-  z-index: 2;
+  z-index: 4;
 }
 
 .card.big {
@@ -934,6 +955,7 @@ td.lobbyPlayerAction {
   transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.3, 0.8) 1s;
   visibility: visible;
   filter: drop-shadow(0 0 4px);
+  /* z-index: 4; */
 }
 
 .relatedCard {

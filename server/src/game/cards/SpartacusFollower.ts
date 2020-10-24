@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
     attack: 7,
     health: 6,
     staticText: {
-        english: `Rush\nEvent: For the rest of the game, your followers are Spartacus.`,
+        english: `Rush\nEvent: For the rest of the game, your nameless followers are Spartacus.`,
     },
     text: {
         templates: {
-            english: `Rush\nEvent: For the rest of the game, your followers are Spartacus.`,
+            english: `Rush\nEvent: For the rest of the game, your nameless followers are Spartacus.`,
         },
     },
     relatedCard: 'ImSpartacus',
@@ -33,7 +33,7 @@ const data: FamousFollowerData = {
         {
             id: 'SpartacusFollowerEvent',
             name: { english: 'Spartacus Event' },
-            text: { templates: { english: `Event: For the rest of the game, your followers are Spartacus.` } },
+            text: { templates: { english: `Event: For the rest of the game, your nameless followers are Spartacus.` } },
             actionType: 'eventAction',
             actionSteps: [
                 {

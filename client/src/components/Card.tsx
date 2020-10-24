@@ -39,7 +39,7 @@ abstract class Card extends TargetableEntity {
     isCombat(): string {
         return !!this.props.animations.combatCards[this.props.object.objectID] ? 'combat' : ''
     }
-    
+
     isDying(): string {
         return !!this.props.animations.deathCards[this.props.object.objectID] && !!this.props.animations.actionCards[this.props.object.objectID] ? 'dying' : ''
     }
@@ -160,7 +160,7 @@ abstract class Card extends TargetableEntity {
                     'Eureka', 'Income', 'Growth', 'Bloodthirst', 'Mob',
                     'Rush', 'Death', 'Legacy', 'Hand', 'Deck',
                     'Starter', 'Passive', 'Successor', 'Immune', 'Rot',
-                    'Nourish']}
+                    'Nourish', 'Collateral']}
                 highlightTag='span'
                 textToHighlight={this.props.object.text}
             />
@@ -169,7 +169,7 @@ abstract class Card extends TargetableEntity {
     }
 
     handInfo(): JSX.Element | null {
-        return (this.props.hover || this.props.playCard || this.props.object.zone === 'hand') ? (
+        return (this.props.hover || this.props.big || this.props.relatedCard || this.props.playCard || this.props.object.zone === 'hand') ? (
             <div className="multicolour-line text-medium">
                 {this.statLabel('cost')}
                 <p>{this.props.object.subtype}</p>

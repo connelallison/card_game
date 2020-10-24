@@ -79,7 +79,11 @@ const data: TechniqueCreationData = {
                             functionType: 'manualAction',
                             operation: 'heal',
                             values: {
-                                healing: 5,
+                                healing: {
+                                    valueType: 'number',
+                                    from: 'fervour',
+                                    base: 5,
+                                },
                             },
                         },
                     ],

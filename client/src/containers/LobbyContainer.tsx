@@ -38,8 +38,8 @@ class LobbyContainer extends Component {
         super(props)
         this.state = {
             messages: [this.testBotMessage([
-                `Welcome! I'm TestBot.`,
-                `If there's no one else online, or you just want to practice against a simple AI, I'm always available for a game. Just challenge me like any other player.`,
+                `Welcome to the History of Everything! I'm TestBot.`,
+                `If there's no one else online, or you just want to practice against a simple AI, I'm always available for a game. You can challenge me like any other player.`,
             ])],
             firstConnection: true
         }
@@ -47,7 +47,7 @@ class LobbyContainer extends Component {
     }
 
     initSocket(socket: SocketIOClient.Socket): SocketIOClient.Socket {
-        console.log('lobby running initSocket')
+        // console.log('lobby running initSocket')
 
         socket.on('connect', () => {
             !this.state.firstConnection && this.testBotAnnouncement('You have reconnected to the server.')
@@ -76,8 +76,7 @@ class LobbyContainer extends Component {
             senderName: 'TestBot',
             senderID: 'TestBot',
             nameNum: '',
-            time: Date.now(),
-            lines,
+            lines: lines.map(line => ({ line, time: Date.now() })),
         }
     }
 

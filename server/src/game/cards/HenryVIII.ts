@@ -14,7 +14,7 @@ const data: LeaderData = {
     starter: false,
     cost: 4,
     health: 5,
-    leaderTechniqueID: 'HenryVIIIRemarriage',
+    leaderTechniqueID: 'HenryVIIIMoreWivesYourGrace',
     staticText: {
         english: `Event: Summon Catherine of Aragon.`,
     },
@@ -23,6 +23,27 @@ const data: LeaderData = {
             english: `Event: Summon Catherine of Aragon.`,
         },
     },
+    events: [
+        {
+              id: 'HenryVIIIEvent',
+              name: { english: 'Henry VIII Event' },
+              text: { templates: { english: `Event: Summon Catherine of Aragon.` } },
+              actionType: 'eventAction',
+              actionSteps: [
+                  {
+                    actionFunctions: [
+                        {
+                          functionType: 'autoAction',
+                          operation: 'createAndSummonCard',
+                          values: {
+                              cardID: 'CatherineOfAragon',
+                          },
+                        },
+                    ],
+                  },
+              ],
+        },
+    ],
 }
 
 class HenryVIII extends Leader {

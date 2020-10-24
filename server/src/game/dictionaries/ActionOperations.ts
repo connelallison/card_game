@@ -3,7 +3,7 @@ const ActionOperations = {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ?? false
-        const rot = values.rot ?? false
+        const rot = values.rot ?? source.effectOwner().flags.rot ?? false
         const scaling = values.scaling ?? 1
         const damage = (values.damage ?? 0) <= 0 ? 0 : split ? source.truncate(values.damage / targets.length) : values.damage
         if (targets.length === 1) {
@@ -16,7 +16,24 @@ const ActionOperations = {
                 split,
                 rot,
             })
-            source.game.startNewDeepestPhase('DamageSinglePhase', damageEvent)
+            let collateralDamageEvents
+            if (source.flags.collateral && targets[0] instanceof Follower) {
+                collateralDamageEvents = [damageEvent, ...targets[0].targetDomains('adjacentFollowers').map(follower => {
+                    const relativeDamage = values.numberMap ? (TargetToNumberMaps[values.numberMap] as TargetToNumberMap)(follower) * scaling : 0
+                    return {
+                        objectSource: source,
+                        charSource: source.charOwner(),
+                        target: follower,
+                        damage: damage + relativeDamage,
+                        split,
+                        rot,
+                    }
+                }
+                )]
+                source.game.startNewDeepestPhase('DamageMultiplePhase', collateralDamageEvents)
+            } else {
+                source.game.startNewDeepestPhase('DamageSinglePhase', damageEvent)
+            }
         } else if (targets.length > 1) {
             const damageEvents: DamageEvent[] = []
             for (const target of targets) {
@@ -136,6 +153,17 @@ const ActionOperations = {
             targets,
         })
         source.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
+    },
+
+    discard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.opponent() : source.controller()
+        targetObjs.forEach((card: Card) => {
+            const discardEvent = new DiscardEvent(source.game, {
+                player,
+                card,
+            })
+            source.game.startNewDeepestPhase('DiscardPhase', discardEvent)
+        })
     },
 
     shuffleIntoDeck: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
@@ -399,11 +427,12 @@ const ActionOperations = {
 
     spendMoney: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, forOpponent?: boolean }) => {
         const player = values.forOpponent ? source.opponent() : source.controller()
-        if (!(source instanceof Card)) throw Error(`spending money on something other than a card: ${source.name.english}`)
+        const card = source.effectOwner() as Card
+        // if (!(source instanceof Card)) throw Error(`spending money on something other than a card: ${source.name.english}`)
         const spendMoneyEvent = new SpendMoneyEvent(source.game, {
             player,
             money: values.money,
-            card: source as Card,
+            card,
         })
         source.game.startNewDeepestPhase('SpendMoneyPhase', spendMoneyEvent)
     },
@@ -414,9 +443,10 @@ const ActionOperations = {
     },
 
     forceDeathPhase: (source: GameObject, event: ActionEvent) => {
+        source.game.startNewDeepestPhase('AuraUpdatePhase')
         do {
-            source.game.startNewDeepestPhase('AuraUpdatePhase')
             source.game.startNewDeepestPhase('DeathPhase')
+            source.game.startNewDeepestPhase('AuraUpdatePhase')
         } while (!source.game.ended && source.game.currentSequence().deathQueue.length > 0)
     },
 
@@ -522,6 +552,10 @@ const ActionOperations = {
         })
     },
 
+    forceEndTurn: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        source.game.currentSequence().forceEndTurn = true
+    },
+
     rememberValue: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param: string, value: any }) => {
         const value = typeof values.value === 'number' ? source.truncate(values.value) : values.value
         source.memory[values.param] = value
@@ -580,4 +614,5 @@ import { ZoneString } from '../stringTypes/ZoneTypeSubtypeString'
 import TargetToNumberMaps from './TargetToNumberMaps'
 import TargetToNumberMap from '../functionTypes/TargetToNumberMap'
 import { EventAction } from '../structs/Action'
+import { DiscardEvent } from '../gamePhases/DiscardPhase'
 

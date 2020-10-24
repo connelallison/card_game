@@ -12,10 +12,10 @@ const data: NamelessFollowerData = {
   classes: ['All'],
   categories: ['Underclass'],
   collectable: false,
-  cost: 0.5,
+  cost: 1,
   attack: 2,
   health: 2,
-  charges: 2,
+  charges: 4,
   staticText: {
     english: `Mob \nSlaves can't attack.`,
   },

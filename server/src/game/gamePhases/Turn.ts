@@ -31,7 +31,7 @@ class Turn extends GamePhase {
         promise.resolve = res;
         return promise;
     }
-    
+
     start() {
         this.turnEnd = Date.now() + this.turnLength
         this.wait()
@@ -53,7 +53,7 @@ class Turn extends GamePhase {
         if (!this.parent.ended) {
             if (!this.activeChild) {
                 this.startChild(this.endOfTurnSequence())
-            } 
+            }
             if (this.parent.queuedPhases.length === 0) {
                 const nextTurn = this.nextTurn()
                 this.parent.queuedPhases.push(nextTurn)
@@ -64,6 +64,11 @@ class Turn extends GamePhase {
         // @ts-ignore
         this.endPromise.resolve()
     }
+
+    // queueEnd(): void {
+    //     const endOfTurnEvent = new EndOfTurnEvent(this.game())
+    //     this.activeChild.queuedPhases.push(new Phases.EndOfTurnPhase(this.activeChild, endOfTurnEvent))
+    // }
 
     startOfTurnSequence(): Sequence {
         const startOfTurnEvent = new StartOfTurnEvent(this.game())

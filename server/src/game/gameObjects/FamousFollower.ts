@@ -88,6 +88,7 @@ abstract class FamousFollower extends Follower {
         this.rawHealth += healthDiff
         this.healthStatic += healthDiff
         this.health += healthDiff
+        this.pendingDestroy = false
       }
       if (typeof index === 'number') this.owner[destination].splice(index, 0, this)
       else this.owner[destination].push(this)

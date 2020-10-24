@@ -46,6 +46,14 @@ const data: EventMomentData = {
                         valueType: 'targets',
                         from: 'targetDomain',
                         targetDomain: 'friendlyHand',
+                        requirements: [
+                            {
+                                targetRequirement: 'isType',
+                                values: {
+                                    type: 'Follower',
+                                }
+                            },
+                        ],
                     },
                     optional: true,
                 }],
@@ -70,7 +78,7 @@ const data: EventMomentData = {
                 {
                     functionType: 'autoAction',
                     operation: 'buffStats',
-                    autoTarget: 1, 
+                    autoTarget: 1,
                     values: {
                         buffName: { english: 'Battle of Suiyang Buff' },
                         'stats': {

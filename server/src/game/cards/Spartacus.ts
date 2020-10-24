@@ -11,16 +11,16 @@ const data: LeaderData = {
     subtype: 'Leader',
     classes: ['The People'],
     collectable: true,
-    cost: 4,
+    cost: 6,
     health: 5,
     leaderTechniqueID: 'SpartacusBrokenChains', 
     successor: 'SpartacusFollower',
     staticText: {
-        english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Slaves.`,
+        english: `Successor: "Spartacus"\nEvent: Summon three 2/2 Slaves.`,
     },
     text: {
         templates: {
-            english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Slaves.`,
+            english: `Successor: "Spartacus"\nEvent: Summon three 2/2 Slaves.`,
         },
     },
     starter: false,
@@ -28,7 +28,7 @@ const data: LeaderData = {
         actionType: 'eventAction',
         id: 'SpartacusEvent',
         name: { english: 'Spartacus Event' },
-        text: { templates: { english: 'Summon two 2/2 Slaves.' } },
+        text: { templates: { english: 'Summon three 2/2 Slaves.' } },
         actionSteps: [{
             actionFunctions: [
                 {
@@ -36,7 +36,7 @@ const data: LeaderData = {
                     operation: 'createAndSummonCard',
                     values: {
                         cardID: 'Slave',
-                        number: 2,
+                        number: 3,
                     },
                 },
             ]

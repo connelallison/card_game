@@ -87,7 +87,7 @@ import JohannesGutenberg from '../cards/JohannesGutenberg'
 import MelvilDewey from '../cards/MelvilDewey'
 import NikolaTesla from '../cards/NikolaTesla'
 import Konigstiger from '../cards/Konigstiger'
-import HenryVIIIRemarriage from '../cards/HenryVIIIRemarriage'
+import HenryVIIIMoreWivesYourGrace from '../cards/HenryVIIIMoreWivesYourGrace'
 import HenryVIII from '../cards/HenryVIII'
 import DavidHumeOrganiseThoughts from '../cards/DavidHumeOrganiseThoughts'
 import DavidHume from '../cards/DavidHume'
@@ -145,6 +145,27 @@ import PrimaryEducation from '../cards/PrimaryEducation'
 import GrandeArmee from '../cards/GrandeArmee'
 import MarySomerville from '../cards/MarySomerville'
 import Type42Destroyer from '../cards/Type42Destroyer'
+import MonasticRetreat from '../cards/MonasticRetreat'
+import MutuallyAssuredDestruction from '../cards/MutuallyAssuredDestruction'
+import CubanMissileCrisis from '../cards/CubanMissileCrisis'
+import FidelCastro from '../cards/FidelCastro'
+import CatherineParr from '../cards/CatherineParr'
+import CatherineHoward from '../cards/CatherineHoward'
+import AnneOfCleves from '../cards/AnneOfCleves'
+import JaneSeymour from '../cards/JaneSeymour'
+import AnneBoleyn from '../cards/AnneBoleyn'
+import CatherineOfAragon from '../cards/CatherineOfAragon'
+import JosephStalin from '../cards/JosephStalin'
+import JosephStalinPurge from '../cards/JosephStalinPurge'
+import MuiTsai from '../cards/MuiTsai'
+import Theodora from '../cards/Theodora'
+import WuZetian from '../cards/WuZetian'
+import Prisoner from '../cards/Prisoner'
+import Gulag from '../cards/Gulag'
+import FatMan from '../cards/FatMan'
+import Kunstoffizier from '../cards/Kunstoffizier'
+import EdwardTheBlackPrince from '../cards/EdwardTheBlackPrince'
+import BanzaiCharge from '../cards/BanzaiCharge'
 // insert import here
 
 export const NamelessFollowers = {
@@ -169,6 +190,9 @@ export const NamelessFollowers = {
   Helot,
   NikaHooligan,
   Type42Destroyer,
+  MuiTsai,
+  Prisoner,
+  Kunstoffizier,
   // insert NamelessFollower here
 }
 
@@ -203,6 +227,16 @@ export const FamousFollowers = {
   RansomEOlds,
   JRobertOppenheimer,
   MarySomerville,
+  FidelCastro,
+  CatherineParr,
+  CatherineHoward,
+  AnneOfCleves,
+  JaneSeymour,
+  AnneBoleyn,
+  CatherineOfAragon,
+  Theodora,
+  WuZetian,
+  EdwardTheBlackPrince,
   // insert FamousFollower here
 }
 
@@ -221,6 +255,7 @@ export const EventMoments = {
   GeneralStrike1926,
   Collectivisation,
   BostonTeaParty,
+  CubanMissileCrisis,
   // insert EventMoment here
 }
 
@@ -228,11 +263,13 @@ export const WorkCreations = {
   BeveridgeReport,
   LesMiserables,
   VenetianPatentStatute,
+  MutuallyAssuredDestruction,
   // insert WorkCreation here
 }
 
 export const WeaponCreations = {
   ClubOfLooting,
+  FatMan,
   // insert WeaponCreation here
 }
 
@@ -250,6 +287,8 @@ export const TechniqueCreations = {
   Triage,
   ErasmusExchange,
   PrimaryEducation,
+  MonasticRetreat,
+  BanzaiCharge,
   // insert TechniqueCreation here
 }
 
@@ -266,6 +305,7 @@ export const EthosPassives = {
   PeacefulResistance,
   HippocraticOath,
   GrandeArmee,
+  Gulag,
   // insert EthosPassive here 
 }
 
@@ -274,12 +314,13 @@ export const ActiveLeaderTechniques = {
   NapoleonBonaparteLeveeEnMasse,
   DavidHumeOrganiseThoughts,
   HippocratesMedicine,
+  JosephStalinPurge,
   // insert ActiveLeaderTechnique here
 }
 
 export const PassiveLeaderTechniques = {
   SpartacusBrokenChains,
-  HenryVIIIRemarriage,
+  HenryVIIIMoreWivesYourGrace,
   NelsonMandelaTruthAndReconciliation,
   // insert PassiveLeaderTechnique here
 }
@@ -290,6 +331,7 @@ export const StarterLeaders = {
   DavidHume,
   NelsonMandela,
   Hippocrates,
+  JosephStalin,
   // insert StarterLeader here
 }
 

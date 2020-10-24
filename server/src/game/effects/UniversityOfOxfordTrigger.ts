@@ -39,6 +39,14 @@ const data: TriggerEffectData = {
                             valueType: 'targets',
                             from: 'targetDomain',
                             targetDomain: 'friendlyHand',
+                            requirements: [
+                                {
+                                  targetRequirement: 'isType',
+                                  values: {
+                                      type: 'Follower',
+                                  }
+                                },
+                            ],
                         },
                     }],
                     requirements: [

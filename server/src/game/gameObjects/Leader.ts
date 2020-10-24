@@ -134,7 +134,7 @@ abstract class Leader extends Character {
   }
 
   missingHealth(): number {
-    return this.owner.maxHealth - this.owner.currentHealth
+    return this.inPlay() ? this.owner.maxHealth - this.owner.currentHealth : 0
   }
 
   unprotected(): boolean {
@@ -220,6 +220,9 @@ abstract class Leader extends Character {
       this.game.inPlay.push(this)
       this.owner.maxHealth += health
       this.owner.currentHealth += health
+      this.owner.leader = this
+    } else if (destination === 'legacy') {
+      this.pendingDestroy = false
     }
 
     if (typeof index === 'number') this.owner[destination].splice(index, 0, this)

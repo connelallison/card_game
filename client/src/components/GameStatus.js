@@ -7,8 +7,8 @@ const GameStatus = (props) => {
   // console.log(props.jobDone)
 
   let gameStatus
-  if (!props.started) {
-    gameStatus = <p className='lowerMargin'>The game has not started yet.</p>
+  if (props.mulligan) {
+    gameStatus = <p className='lowerMargin'>Choose your opening hand: {turnTime}s remaining.</p>
   } else if (props.winner) {
     gameStatus = <p className='lowerMargin'>The game is over: {props.winner}.</p>
   } else {

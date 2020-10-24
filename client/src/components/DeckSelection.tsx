@@ -10,18 +10,18 @@ class DeckSelection extends Component {
   }
 
   render() {
-    const deckOptions = [<option value='random' >Random deck</option>]
+    const deckOptions = this.props.decks
+      ? Object.values(this.props.decks).map(deck => <option key={deck.id} value={deck.id}>{deck.name}: {deck.class}</option>)
+      : <option disabled value='noDecks' >No decks</option>
 
-    if (this.props.decks) {
-      deckOptions.push(...Object.values(this.props.decks).map(deck => <option key={deck.id} value={deck.id}>{deck.name}: {deck.class}</option>))
-    }
-
-    const defaultDeck = this.props.deckID || 'random'
+    const defaultDeck = this.props.deckID
+      ? this.props.deckID
+      : 'noDecks'
 
     return (
       <form>
         <label>
-          {this.props.testBot ? 'Select a deck for TestBot' : 'Select a deck:'}
+        {this.props.testBot ? 'Select a deck for TestBot' : 'Select a deck:'}
         <select id='select-deck' name='deck' value={defaultDeck} onChange={event => this.props.updateDeck(event.target.value)}>
             {deckOptions}
           </select>

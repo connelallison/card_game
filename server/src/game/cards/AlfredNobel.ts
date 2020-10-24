@@ -23,15 +23,15 @@ const data: FamousFollowerData = {
     classes: ['Learning'],
     categories: [],
     collectable: true,
-    cost: 5,
+    cost: 4,
     attack: 4,
     health: 2,
     staticText: {
-        english: `Action: Deal 3 damage to a follower.\nLegacy: After you play a technique, draw a card.`,
+        english: `Action: Deal 3 damage to a follower.\nLegacy: Before you play a creation, give it Fortune.`, // swap with patent statute
     },
     text: {
         templates: {
-            english: `Action: Deal $0 damage to a follower.\nLegacy: After you play a technique, draw a card.`,
+            english: `Action: Deal $0 damage to a follower.\nLegacy: Before you play a creation, give it Fortune.`,
         },
         dynamicValues: [fervourText],
     },

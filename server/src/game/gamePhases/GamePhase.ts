@@ -105,6 +105,7 @@ abstract class GamePhase {
     }
 
     currentOuterPhase(): EventPhase {
+        // console.log(!!this.game(), !!this.currentTurn(), !!this.currentSequence())
         return this.currentSequence().activeChild
     }
 
@@ -141,6 +142,7 @@ abstract class GamePhase {
             endOfTurn: [],
             spendMoney: [],
             accrueDebt: [],
+            discard: [],
             trigger: [],
             triggerAction: [],
             update: [],

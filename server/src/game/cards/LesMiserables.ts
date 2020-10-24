@@ -11,14 +11,14 @@ const data: WorkCreationData = {
     subtype: 'Work',
     classes: ['The People'],
     collectable: true,
-    cost: 3,
-    charges: 4,
+    cost: 2,
+    charges: 3,
     staticText: {
-        english: `After a friendly follower dies during your opponent's turn, gain Fervour 1.`,
+        english: `After a friendly follower dies during your opponent's turn, gain Fervour 2.`,
     },
     text: {
         templates: {
-            english: `After a friendly follower dies during your opponent's turn, gain Fervour 1. $0`,
+            english: `After a friendly follower dies during your opponent's turn, gain Fervour 2. $0`,
         },
         dynamicValues: [
             {

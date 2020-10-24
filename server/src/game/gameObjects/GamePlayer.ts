@@ -29,6 +29,7 @@ class GamePlayer extends GameObject {
   // fervour: number
   stats: GamePlayerStats
   leaderZone: Leader[]
+  leader: Leader
   leaderTechniqueZone: LeaderTechnique[]
   board: BoardSlot[]
   hand: Card[]
@@ -56,7 +57,7 @@ class GamePlayer extends GameObject {
     this.zone = 'global'
     this.playerName = name
     this.socketID = socketID
-    this.maxHealth = 25
+    this.maxHealth = 35
     this.currentHealth = this.maxHealth
     this.armour = 0
     this.rawGrowth = 1
@@ -67,6 +68,7 @@ class GamePlayer extends GameObject {
     this.currentDebt = 0
     this.queuedDebt = 0
     this.leaderZone = []
+    this.leader = null
     this.leaderTechniqueZone = []
     this.max = {
       hand: 10,
@@ -127,7 +129,19 @@ class GamePlayer extends GameObject {
   }
 
   leaderReport() {
-    return Object.assign({}, this.leaderZone[0].provideReport(), { maxMoney: this.stats.income, currentMoney: this.money, armour: this.armour })
+    return Object.assign({},
+      this.leaderZone[0]?.provideReport() ?? {
+        attack: null,
+        health: null,
+        armour: null,
+        currentMoney: null,
+        maxMoney: null,
+        canBeSelected: false,
+        name: '',
+        text: '',
+        type: 'Leader',
+      },
+      { maxMoney: this.stats.income, currentMoney: this.money, armour: this.armour })
   }
 
   leaderTechniqueReport() {
@@ -248,9 +262,6 @@ class GamePlayer extends GameObject {
     this.finishUpdate()
   }
 
-  // setData(dataObj) {
-  //   Object.assign(this, dataObj)
-  // }
 
   mulliganDraw(): void {
     if (this.deck.length > 0) {
@@ -316,7 +327,7 @@ class GamePlayer extends GameObject {
   }
 
   alive(): boolean {
-    return this.leaderZone[0].health > 0
+    return this.leaderZone[0]?.health > 0 ?? false
   }
 
   gainArmour(armour: number): void {
@@ -325,11 +336,11 @@ class GamePlayer extends GameObject {
 
   takeDamage(damage: number, rot?: boolean): number {
     let remainingDamage = damage
-    if (!rot) {
-      remainingDamage = damage > this.armour ? damage - this.armour : 0
-      const remainingArmour = this.armour > damage ? this.armour - damage : 0
-      this.armour = remainingArmour
-    }
+    // if (!rot) {
+    remainingDamage = damage > this.armour ? damage - this.armour : 0
+    const remainingArmour = this.armour > damage ? this.armour - damage : 0
+    this.armour = remainingArmour
+    // }
     this.currentHealth -= remainingDamage
     if (rot) this.maxHealth -= remainingDamage
     // this.update()
@@ -340,7 +351,7 @@ class GamePlayer extends GameObject {
     const healing = nourish
       ? rawHealing
       : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
-    
+
     if (nourish) this.maxHealth += healing
     this.currentHealth += healing
     return healing

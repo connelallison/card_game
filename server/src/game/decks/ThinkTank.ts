@@ -31,12 +31,14 @@ const ThinkThank: DeckObject = {
         'Chemotherapy',
         'HelenOfTroy',
         'HelenOfTroy',
-        'VenetianPatentStatute',
-        'VenetianPatentStatute',
+        // 'VenetianPatentStatute',
+        // 'VenetianPatentStatute',
         'MarySomerville',
         'MarySomerville',
         'Type42Destroyer',
         'Type42Destroyer',
+        'MonasticRetreat',
+        'MonasticRetreat',
     ]
 }
 

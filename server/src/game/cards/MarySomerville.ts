@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
     attack: 1,
     health: 3,
     staticText: {
-        english: `Eureka: Draw a card.`,
+        english: `Action: Draw a card.`,
     },
     text: {
         templates: {
-            english: `Eureka: Draw a card.`,
+            english: `Action: Draw a card.`,
         },
     },
     tooltips: [],
@@ -29,18 +29,12 @@ const data: FamousFollowerData = {
     options: [],
     actions: [
         {
-            id: 'MarySomervilleEureka',
-            name: { english: 'Mary Somerville Eureka' },
-            text: { templates: { english: `Eureka: Draw a card.` } },
+            id: 'MarySomervilleAction',
+            name: { english: 'Mary Somerville Action' },
+            text: { templates: { english: `Action: Draw a card.` } },
             actionType: 'actionAction',
-            eureka: true,
             actionSteps: [
                 {
-                    activeRequirements: [
-                        {
-                            activeRequirement: 'eureka',
-                        },
-                    ],
                     actionFunctions: [
                         {
                             functionType: 'autoAction',

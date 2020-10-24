@@ -59,3 +59,22 @@ export const PlayCard = (props: { object: any }) => {
         return <LeaderTechnique big playCard object={props.object} animations={animations} selections={selections} />
     } else return null
 }
+
+export const BigCard = (props: { object: any, selections: any, animations: any }) => {
+    if (!props.object) return null
+    if (props.object.type === 'unknown') {
+        return <Unknown big object={props.object} animations={props.animations} selections={props.selections} />
+    } else if (props.object.type === 'Follower') {
+        return <Follower big object={props.object} animations={props.animations} selections={props.selections} />
+    } else if (props.object.type === 'Moment') {
+        return <Moment big object={props.object} animations={props.animations} selections={props.selections} />
+    } else if (props.object.type === 'Creation') {
+        return <Creation big object={props.object} animations={props.animations} selections={props.selections} />
+    } else if (props.object.type === 'Passive') {
+        return <Passive big object={props.object} animations={props.animations} selections={props.selections} />
+    } else if (props.object.type === 'Leader') {
+        return <Leader big object={props.object} animations={props.animations} selections={props.selections} />
+    } else if (props.object.type === 'LeaderTechnique') {
+        return <LeaderTechnique big object={props.object} animations={props.animations} selections={props.selections} />
+    } else return null
+}

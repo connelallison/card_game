@@ -63,6 +63,14 @@ import NikaHooliganTrigger from '../effects/NikaHooliganTrigger'
 import Immune from '../effects/Immune'
 import ArchimedesBuff from '../effects/ArchimedesBuff'
 import GrandeArmeeTrigger from '../effects/GrandeArmeeTrigger'
+import MutuallyAssuredDestructionTrigger from '../effects/MutuallyAssuredDestructionTrigger'
+import HenryVIIIMoreWivesYourGraceTrigger from '../effects/HenryVIIIMoreWivesYourGraceTrigger'
+import TheodoraTrigger from '../effects/TheodoraTrigger'
+import WuZetianTrigger from '../effects/WuZetianTrigger'
+import GulagTrigger from '../effects/GulagTrigger'
+import Collateral from '../effects/Collateral'
+import Rot from '../effects/Rot'
+import KunstoffizierTrigger from '../effects/KunstoffizierTrigger'
 // insert import here
 
 export const StatStaticEffects = {
@@ -93,6 +101,8 @@ export const StaticEffects = {
   Repeatable,
   Immune,
   ArchimedesBuff,
+  Collateral,
+  Rot,
   // insert StaticEffect here
 }
 
@@ -141,6 +151,12 @@ export const TriggerEffects = {
   HelotTrigger,
   NikaHooliganTrigger,
   GrandeArmeeTrigger,
+  MutuallyAssuredDestructionTrigger,
+  HenryVIIIMoreWivesYourGraceTrigger,
+  TheodoraTrigger,
+  WuZetianTrigger,
+  GulagTrigger,
+  KunstoffizierTrigger,
   // insert TriggerEffect here
 }
 

@@ -8,6 +8,8 @@ interface DamageEventObject {
     damage: number
     split?: boolean
     rot?: boolean
+    // collateral?: boolean
+    // fromCollateral?: boolean
 }
 
 export class DamageEvent extends GameEvent {
@@ -18,6 +20,8 @@ export class DamageEvent extends GameEvent {
     actualDamage: number
     split?: boolean
     rot?: boolean
+    // collateral?: boolean
+    // fromCollateral?: boolean
 
     constructor(game: Game, object: DamageEventObject) {
         super(game)
@@ -51,6 +55,10 @@ class DamageSinglePhase extends EventPhase {
         const event = this.event
         if (event.damage > 0) {
             this.emit('beforeDamage', event)
+            // const collateral = (event.collateral && !event.fromCollateral && event.target instanceof Follower)
+            // if (collateral) {
+            //     const adjacents = event.target.targetDomains('adjacentFollowers')
+            // }
             const actualDamage = event.target.takeDamage(event.damage, !!event.rot)
             event.actualDamage = actualDamage
             this.cacheEvent(event, 'damage')
@@ -67,3 +75,4 @@ import GameObject from "../gameObjects/GameObject";
 import Character from "../gameObjects/Character";
 import Game from "./Game";
 import { LocalisationString } from "../structs/Localisation";
+import Follower from "../gameObjects/Follower";

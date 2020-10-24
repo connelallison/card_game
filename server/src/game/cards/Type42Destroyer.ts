@@ -12,9 +12,9 @@ const data: NamelessFollowerData = {
     classes: ['All'],
     categories: ['Tech'],
     collectable: true,
-    cost: 5,
-    attack: 7,
-    health: 4,
+    cost: 6,
+    attack: 9,
+    health: 5,
     charges: 1,
     staticText: {
         english: `Snipe`,

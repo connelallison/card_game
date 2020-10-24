@@ -15,7 +15,7 @@ const data: NamelessFollowerData = {
     cost: 2,
     attack: 2,
     health: 3,
-    charges: 2,
+    charges: 3,
     staticText: {
         english: `Mob\nAfter another Nika Hooligan enters play, attack it.`,
     },

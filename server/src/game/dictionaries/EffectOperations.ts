@@ -8,6 +8,8 @@ const EffectOperations = {
     snipe: (data, value: boolean) => { data.flags.snipe = value },
     fortune: (data, value: boolean) => { data.flags.fortune = value },
     bloodthirst: (data, value: boolean) => { data.flags.bloodthirst = value },
+    collateral: (data, value: boolean) => { data.flags.collateral = value },
+    rot: (data, value: boolean) => { data.flags.rot = value },
     passionate: (data, value: boolean) => { data.flags.passionate = value },
     cantAttack: (data, value: boolean) => { data.flags.cantAttack = value },
     immune: (data, value: boolean) => { data.flags.immune = value },
@@ -17,7 +19,7 @@ const EffectOperations = {
     decrementAttack: (data, value: number) => { data.attack -= value >= 0 ? value : 0 },
     decrementHealth: (data, value: number) => { data.health -= value >= 0 ? value : 0 },
     setAttack: (data, value: number) => { data.attack = value >= 0 ? value : 0 },
-    setHealth: (data, value: number) => { data.health = value >= 0 ? value : 0 },
+    // setHealth: (data, value: number) => { data.health = value >= 0 ? value : 0 },
     decreaseCost: (data, value: number) => { data.cost -= value >= 0 ? value : 0 },
     increaseCost: (data, value: number) => { data.cost += value >= 0 ? value : 0 },
     setCost: (data, value: number) => { data.cost = value >= 0 ? value : 0 },
@@ -27,6 +29,7 @@ const EffectOperations = {
     incrementDamageReduction: (data, value: number) => { data.stats.damageReduction += value >= 0 ? value : 0 },
     setID: (data, value: string) => { data.id = value },
     setName: (data, value: LocalisedStringObject) => { data.name = value },
+    discardToLegacy: (data, value: boolean) => { data.flags.discardToLegacy = value },
 }
 
 export default EffectOperations

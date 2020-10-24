@@ -14,11 +14,11 @@ const data: TechniqueCreationData = {
   cost: 2,
   charges: 1,
   staticText: {
-    english: `Action: Give a follower in your hand +2/+2 and "Event: Draw a card".`,
+    english: `Action: Give a famous follower in your hand +2/+2 and "Event: Draw a card".`,
   },
   text: {
     templates: {
-      english: `Action: Give a follower in your hand +2/+2 and "Event: Draw a card".`,
+      english: `Action: Give a famous follower in your hand +2/+2 and "Event: Draw a card".`,
     },
   },
   options: [],
@@ -26,7 +26,7 @@ const data: TechniqueCreationData = {
     {
       id: 'PrimaryEducationAction',
       name: { english: 'Primary Education' },
-      text: { templates: { english: `Action: Give a follower in your hand +2/+2 and "Event: Draw a card".` } },
+      text: { templates: { english: `Action: Give a famous follower in your hand +2/+2 and "Event: Draw a card".` } },
       actionType: 'actionAction',
       actionSteps: [
         {
@@ -64,7 +64,7 @@ const data: TechniqueCreationData = {
           ],
           manualTargets: [
             {
-              text: { templates: { english: 'Choose a follower in your hand to buff.' } },
+              text: { templates: { english: 'Choose a famous follower in your hand to buff.' } },
               hostile: false,
               targets: {
                 valueType: 'targets',
@@ -72,9 +72,9 @@ const data: TechniqueCreationData = {
                 targetDomain: 'friendlyHand',
                 requirements: [
                   {
-                    targetRequirement: 'isType',
+                    targetRequirement: 'isSubtype',
                     values: {
-                      type: 'Follower',
+                      subtype: 'Famous',
                     }
                   },
                 ],

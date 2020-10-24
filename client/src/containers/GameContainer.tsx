@@ -21,6 +21,7 @@ import socket from '../socket'
 import { MoveRequest } from '../structs/MoveRequest'
 import { Decks } from '../structs/DeckObject'
 import { LobbyPlayerData } from '../structs/LobbyPlayerData'
+import MulliganSelections from '../components/MulliganSelections'
 
 interface GameProps {
   offscreen: boolean
@@ -28,8 +29,8 @@ interface GameProps {
   serverPlayers: LobbyPlayerData[]
   decks: Decks
   deckID: string
-  updateDeck: (deckID: string) => void 
-  updateName: (name: string) => void 
+  updateDeck: (deckID: string) => void
+  updateName: (name: string) => void
 }
 
 class GameContainer extends Component {
@@ -65,7 +66,6 @@ class GameContainer extends Component {
     this.handleEndGame = this.handleEndGame.bind(this)
     this.handleEndTurn = this.handleEndTurn.bind(this)
     this.handleSelection = this.handleSelection.bind(this)
-
   }
 
   baseState() {
@@ -85,8 +85,10 @@ class GameContainer extends Component {
       myTurn: false,
       turnEnd: 0,
       turnTimer: 0,
+      mulligan: null,
+      mulliganChoices: null,
       gameState: {
-        started: null,
+        started: false,
         winner: null,
         my: {
           stats: {
@@ -161,12 +163,14 @@ class GameContainer extends Component {
   }
 
   initSocket(socket) {
-    console.log('game running initSocket')
+    // console.log('game running initSocket')
 
     socket.on('gameStarting', () => this.setState(this.baseState()))
-    socket.on('disconnect', data => this.onDisconnect())
+    socket.on('disconnect', () => this.onDisconnect())
     socket.on('gameStateUpdate', report => this.updateGameState(report))
     socket.on('turnTimerUpdate', turnEnd => this.updateTurnEnd(turnEnd))
+    socket.on('mulliganReport', mulligan => this.mulliganPhase(mulligan))
+    socket.on('endMulliganPhase', () => this.endMulliganPhase())
 
     return socket
   }
@@ -190,12 +194,20 @@ class GameContainer extends Component {
       validSelections: report.validSelections,
       targetSelection: report.validSelections,
       inGame: (this.finalGameState.started && !this.finalGameState.winner),
-      selectionsEnabled: (this.finalGameState.started && !this.finalGameState.winner && this.state.myTurn),
+      selectionsEnabled: (!this.finalGameState.winner && this.state.myTurn),
     }, callback)
   }
 
+  mulliganPhase(mulligan) {
+    const mulliganChoices = []
+    this.setState({ mulligan, mulliganChoices, selectionsEnabled: true })
+  }
+
+  endMulliganPhase() {
+    this.setState({ mulligan: null, mulliganChoices: null })
+  }
+
   updateTurnEnd(turnInfo) {
-    // console.log('updatingTurnTimer')
     this.setState(turnInfo)
   }
 
@@ -425,9 +437,9 @@ class GameContainer extends Component {
   }
 
   initMoveRequest(selected) {
-    console.log(selected)
-    console.log(this.state.gameObjects)
-    console.log(this.state.gameObjects[selected.objectID])
+    // console.log(selected)
+    // console.log(this.state.gameObjects)
+    // console.log(this.state.gameObjects[selected.objectID])
     this.moveRequest = {
       selected: this.state.gameObjects[selected.objectID],
       attackTargets: JSON.parse(JSON.stringify(this.state.gameObjects[selected.objectID].attackTargets || null)),
@@ -547,6 +559,13 @@ class GameContainer extends Component {
     else return []
   }
 
+  handleToggleMulligan(object) {
+    let mulliganChoices = this.state.mulliganChoices
+    if (mulliganChoices.includes(object)) mulliganChoices = mulliganChoices.filter(choice => choice !== object)
+    else mulliganChoices = [...mulliganChoices, object]
+    this.setState({ mulliganChoices })
+  }
+
   handleClearSelected(selected) {
     if (selected === this.moveRequest.selected) {
       this.resetMoveRequest()
@@ -618,6 +637,11 @@ class GameContainer extends Component {
     this.resetMoveRequest()
   }
 
+  announceMulligan() {
+    this.socket.emit('mulliganRequest', this.state.mulliganChoices.map(choice => choice.objectID))
+    this.setState({mulligan: null, mulliganChoices: null})
+  }
+
   flatMappedOption(option) {
     option.actionTargets = []
     option.hostile = false
@@ -680,6 +704,19 @@ class GameContainer extends Component {
       handleSelection: this.handleSelection,
     }
 
+    const mulliganChoices = this.state.mulligan ? {
+      selectionsEnabled: true,
+      selected: this.state.mulliganChoices,
+      targetSelection: {
+        text: `Select any cards your don't want in your opening hand.`,
+        hostile: false,
+        validTargets: this.state.mulligan.map(card => card.objectID),
+        highlightedTargets: [],
+      },
+      gameObjects: this.state.gameObjects,
+      handleSelection: objectID => this.handleToggleMulligan(objectID)
+    } : null
+
     const animations = {
       combatCards: this.state.combatCards,
       damageCards: this.state.damageCards,
@@ -689,12 +726,12 @@ class GameContainer extends Component {
     }
 
     const selectionText = (this.state.targetSelection && this.state.targetSelection.text) || ''
-    const jobDone = (this.state.inGame && (!this.state.targetSelection || !this.state.targetSelection.validTargets.length))
+    const jobDone = (this.state.gameState.started && (!this.state.targetSelection || !this.state.targetSelection.validTargets.length))
     const maxSlots = Math.max(this.state.gameState.my.board.length, this.state.gameState.opponent.board.length)
 
     return (
       // <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''} data-tip='' onContextMenu={event => { event.preventDefault(); event.stopPropagation() }}>
-      <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''}  data-tip=''>
+      <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''} data-tip=''>
         <ReactTooltip className='target-tooltip' offset={{ right: 10 }} arrowColor='transparent' place='right' >
           {selectionText}
         </ReactTooltip>
@@ -704,13 +741,14 @@ class GameContainer extends Component {
           {
             this.state.inGame
               ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name} />
-              : <StartGame startGame={this.handleStartGame} opponents={this.props.serverPlayers} socketID={this.socket.id} />
+              // : <StartGame startGame={this.handleStartGame} opponents={this.props.serverPlayers} socketID={this.socket.id} />
+              : null
           }
-          <GameStatus winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.myTurn} jobDone={jobDone} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
+          <GameStatus mulligan={!!this.state.mulligan} winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.myTurn} jobDone={jobDone} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
         </div>
         <PlayerHand mine={false} selections={selections} animations={animations} contents={this.state.gameState.opponent.hand} />
         <PlayArea selections={selections} >
-        {/* <PlayArea selections={selections} requiresConfirmation={this.requiresConfirmation}> */}
+          {/* <PlayArea selections={selections} requiresConfirmation={this.requiresConfirmation}> */}
           <div className='playerStatusDiv'>
             <PlayerStatus stats={this.state.gameState.opponent.stats} />
           </div>
@@ -727,6 +765,7 @@ class GameContainer extends Component {
           </div>
           <div className='anchor'>
             {this.state.playCard && <PlayCard object={this.state.playCard} />}
+            {mulliganChoices && <MulliganSelections mine announceMulligan={() => this.announceMulligan()} selections={mulliganChoices} animations={animations} contents={this.state.mulligan} />}
             <OptionSelections mine={true} selections={selections} animations={animations} contents={this.nextOptionActionSelection()} />
           </div>
           <div className="innerPlayArea">

@@ -48,8 +48,21 @@ class AttackPhase extends EventPhase {
                 charSource: event.attacker,
                 target: event.defender,
                 damage: event.attacker.attack,
+                rot: !!event.attacker.flags.rot,
             })
-            this.startChild(new Phases.DamageSinglePhase(this, attackerDamageEvent))
+            let collateralDamageEvents
+            if (event.attacker.flags.collateral && event.defender instanceof Follower) {
+                collateralDamageEvents = [attackerDamageEvent, ...(event.defender.targetDomains('adjacentFollowers') as Follower[]).map(follower => new DamageEvent(this.game(), {
+                    objectSource: event.attacker,
+                    charSource: event.attacker,
+                    target: follower,
+                    damage: event.attacker.attack,
+                    rot: !!event.attacker.flags.rot,
+                }))]
+                this.startChild(new Phases.DamageMultiplePhase(this, collateralDamageEvents))
+            } else {
+                this.startChild(new Phases.DamageSinglePhase(this, attackerDamageEvent))
+            }
             if (event.attacker.flags.snipe) this.startChild(new Phases.DeathPhase(this))
             let defenderDamageEvent
             if (event.defender.inPlay() && event.defender.attack > 0) {
@@ -58,18 +71,29 @@ class AttackPhase extends EventPhase {
                     charSource: event.defender,
                     target: event.attacker,
                     damage: event.defender.attack,
+                    rot: !!event.defender.flags.rot,
                 })
                 this.startChild(new Phases.DamageSinglePhase(this, defenderDamageEvent))
             }
 
             if (event.attacker.flags.pillage) {
-                const healingEvent = new HealingEvent(this.game(), {
-                    objectSource: attackerDamageEvent.objectSource,
-                    charSource: attackerDamageEvent.charSource,
-                    target: attackerDamageEvent.objectSource.controller().leaderZone[0],
-                    healing: attackerDamageEvent.damage,
-                })
-                this.startChild(new Phases.HealSinglePhase(this, healingEvent))
+                if (collateralDamageEvents) {
+                    const healingEvents = collateralDamageEvents.map(damageEvent => new HealingEvent(this.game(), {
+                        objectSource: damageEvent.objectSource,
+                        charSource: damageEvent.charSource,
+                        target: damageEvent.objectSource.controller().leaderZone[0],
+                        healing: damageEvent.damage,
+                    }))
+                    this.startChild(new Phases.HealMultiplePhase(this, healingEvents))
+                } else {
+                    const healingEvent = new HealingEvent(this.game(), {
+                        objectSource: attackerDamageEvent.objectSource,
+                        charSource: attackerDamageEvent.charSource,
+                        target: attackerDamageEvent.objectSource.controller().leaderZone[0],
+                        healing: attackerDamageEvent.damage,
+                    })
+                    this.startChild(new Phases.HealSinglePhase(this, healingEvent))
+                }
             }
             if (event.defender.flags.pillage && defenderDamageEvent) {
                 const healingEvent = new HealingEvent(this.game(), {
@@ -104,4 +128,5 @@ import Character from "../gameObjects/Character";
 import Game from "./Game";
 import { DamageEvent } from "./DamageSinglePhase";
 import { HealingEvent } from "./HealSinglePhase";
-import { LocalisationString } from "../structs/Localisation";
+import { LocalisationString } from "../structs/Localisation"; import Follower from "../gameObjects/Follower";
+

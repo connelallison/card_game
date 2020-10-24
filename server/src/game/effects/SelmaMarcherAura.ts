@@ -26,15 +26,15 @@ const data: AuraEffectData = {
         stackable: false,
         functions: [
             {
-              operation: 'cantAttack',
-              value: true,
+                operation: 'cantAttack',
+                value: true,
             },
         ],
     },
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyBoard', 'enemyBoard'],
+        targetDomain: 'self',
         requirements: [{
             targetRequirement: 'isSpecificCardClass',
             values: {

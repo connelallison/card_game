@@ -22,9 +22,9 @@ const decksHash = crypto.createHash('sha256').update(JSON.stringify(Decks)).dige
 const cardsHash = crypto.createHash('sha256').update(JSON.stringify(CardsStatic)).digest('hex')
 // console.log(Date.now())
 const after = performance.now()
-console.log(decksHash)
-console.log(cardsHash)
-console.log(after - before)
+// console.log(decksHash)
+// console.log(cardsHash)
+// console.log(after - before)
 
 function randomDeckID() {
   const roll = Math.floor(Math.random() * deckIDs.length)
@@ -61,14 +61,21 @@ const startGame = (serverPlayer: ServerPlayer, opponent: { opponentID: string })
     console.log(`challenged player's deck "${connectedPlayers[opponent.opponentID].deckID}" does not exist`)
     return
   }
+  const emitEndMulligan = () => connectedSockets[serverPlayer.socketID]?.emit('endMulliganPhase')
+  const emitMulligan = mulligan => connectedSockets[serverPlayer.socketID]?.emit('mulliganReport', mulligan)
   const emitGameState = gameState => connectedSockets[serverPlayer.socketID]?.emit('gameStateUpdate', gameState)
   const emitTurnTimer = turnTimer => connectedSockets[serverPlayer.socketID]?.emit('turnTimerUpdate', turnTimer)
 
   const testBotGame = (!opponent.opponentID || opponent.opponentID === 'TestBot')
 
+  serverEvent.removeAllListeners(`endMulliganPhase:${serverPlayer.socketID}`)
+  serverEvent.removeAllListeners(`mulliganReport:${serverPlayer.socketID}`)
   serverEvent.removeAllListeners(`newGameStatus:${serverPlayer.socketID}`)
   serverEvent.removeAllListeners(`newTurnTimer:${serverPlayer.socketID}`)
   serverEvent.removeAllListeners(`gameEnded:${serverPlayer.socketID}`)
+
+  serverEvent.on(`endMulliganPhase:${serverPlayer.socketID}`, emitEndMulligan)
+  serverEvent.on(`mulliganReport:${serverPlayer.socketID}`, emitMulligan)
   serverEvent.on(`newGameStatus:${serverPlayer.socketID}`, emitGameState)
   serverEvent.on(`newTurnTimer:${serverPlayer.socketID}`, emitTurnTimer)
   serverEvent.on(`gameEnded:${serverPlayer.socketID}`, winner => {
@@ -96,10 +103,16 @@ const startGame = (serverPlayer: ServerPlayer, opponent: { opponentID: string })
     const opponentPlayer = connectedPlayers[opponent.opponentID]
     const opponentSocket = connectedSockets[opponent.opponentID]
     if (opponentPlayer && opponentSocket) {
+      const emitOpponentEndMulligan = () => opponentSocket?.emit('endMulliganPhase')
+      const emitOpponentMulligan = mulligan => opponentSocket?.emit('mulliganReport', mulligan)
       const emitOpponentGameState = gameState => opponentSocket?.emit('gameStateUpdate', gameState)
       const emitOpponentTurnTimer = turnTimer => opponentSocket?.emit('turnTimerUpdate', turnTimer)
+      serverEvent.removeAllListeners(`endMulliganPhase:${opponent.opponentID}`)
+      serverEvent.removeAllListeners(`mulliganReport:${opponent.opponentID}`)
       serverEvent.removeAllListeners(`newGameStatus:${opponent.opponentID}`)
       serverEvent.removeAllListeners(`newTurnTimer:${opponent.opponentID}`)
+      serverEvent.on(`endMulliganPhase:${opponent.opponentID}`, emitOpponentEndMulligan)
+      serverEvent.on(`mulliganReport:${opponent.opponentID}`, emitOpponentMulligan)
       serverEvent.on(`newGameStatus:${opponent.opponentID}`, emitOpponentGameState)
       serverEvent.on(`newTurnTimer:${opponent.opponentID}`, emitOpponentTurnTimer)
       serverEvent.on(`gameEnded:${serverPlayer.socketID}`, winner => {
@@ -164,11 +177,10 @@ io.on('connection', function (socket) {
     // console.log(data)
     const time = Date.now()
     const message: ChatMessageData = {
-      lines: [data.message],
+      lines: [{ line: data.message, time }],
       senderID: socket.id,
       senderName: serverPlayer.displayName,
       nameNum: serverPlayer.nameNum,
-      time,
     }
     io.emit('newChatMessage', message)
   })
@@ -179,6 +191,9 @@ io.on('connection', function (socket) {
   })
   socket.on('endTurn', function () {
     serverEvent.emit(`playerEndTurnRequest:${socketID}`)
+  })
+  socket.on('mulliganRequest', mulliganRequest => {
+    serverEvent.emit(`playerMulliganRequest:${socketID}`, mulliganRequest)
   })
 
   socket.on('pvpChallenge', function (opponent: { opponentID: string }) {

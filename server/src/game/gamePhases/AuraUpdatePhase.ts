@@ -43,6 +43,7 @@ class AuraUpdatePhase extends EventPhase {
         this.cacheEvent(new UpdateEvent(this.game()), 'update')
 
         this.emit('afterAuraUpdate')
+        if (this.game().player1.leaderZone.length === 0 || this.game().player2.leaderZone.length === 0) this.game().end()
         this.end()
     }
 }

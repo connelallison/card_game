@@ -26,6 +26,7 @@ interface PopupData {
 class App extends Component {
   state: AppState
   socket: SocketIOClient.Socket
+  previousStatus: 'lobby' | 'challenge' | 'game'
 
   constructor(props) {
     super(props)
@@ -39,10 +40,11 @@ class App extends Component {
       popup: null,
     }
     this.socket = this.initSocket(socket)
+    this.previousStatus = 'lobby'
   }
 
   initSocket(socket: SocketIOClient.Socket) {
-    console.log('app running initSocket')
+    // console.log('app running initSocket')
 
     socket.on('connect', () => this.setState({ online: true }))
     socket.on('updateDecks', (decks: Decks) => this.updateDecks(decks))
@@ -79,8 +81,12 @@ class App extends Component {
 
   updateServerPlayers(unfilteredServerPlayers: LobbyPlayerData[]) {
     const serverPlayers = unfilteredServerPlayers.filter(player => player.socketID !== this.socket.id)
+    const previousStatus = this.previousStatus
     const status = unfilteredServerPlayers.find(player => player.socketID === this.socket.id)!.status
-    this.setState({ serverPlayers, status })
+    this.previousStatus = status
+    this.setState({ serverPlayers, status }, () => {
+      if (previousStatus === 'lobby' && status === 'game') this.dismissPopup()
+    })
   }
 
   updateDecks(decks: Decks) {
@@ -101,9 +107,10 @@ class App extends Component {
   }
 
   render() {
+    // if (this.state.status === 'game') document.documentElement.requestFullscreen()
     const gameOffscreen = this.state.status !== 'game'
     const lobbyOffscreen = this.state.status === 'game'
-    const popup = this.state.popup ? <Popup header={this.state.popup.header} message={this.state.popup.message} dismiss={() => this.dismissPopup()} /> : null
+    const popup = (this.state.status === 'lobby' && this.state.popup) ? <Popup header={this.state.popup.header} message={this.state.popup.message} dismiss={() => this.dismissPopup()} /> : null
     return (
       <>
         {popup}

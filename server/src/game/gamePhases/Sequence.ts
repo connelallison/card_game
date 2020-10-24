@@ -7,12 +7,14 @@ class Sequence extends GamePhase {
     queuedPhases: EventPhase[]
     deathQueue: DeathEvent[]
     eventLogQueue: string[]
+    forceEndTurn: boolean
 
     constructor(parent: Turn) {
-        super() 
+        super()
         this.parent = parent
         this.queuedPhases = []
         this.deathQueue = []
+        this.forceEndTurn = false
     }
 
     start(): void {
@@ -26,6 +28,9 @@ class Sequence extends GamePhase {
     end(): void {
         this.ended = true
         this.parent.activeChild = null
+        if (this.forceEndTurn) {
+            this.parent.end()
+        }
     }
 }
 

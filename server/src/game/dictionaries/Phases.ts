@@ -1,8 +1,16 @@
 import GameEvent from "../gamePhases/GameEvent";
 import GamePhase from "../gamePhases/GamePhase";
 import EventPhase from "../gamePhases/EventPhase";
+// import Game from "../gamePhases/Game";
+import Turn from "../gamePhases/Turn";
+import PreGameTurn from "../gamePhases/PreGameTurn";
+import Sequence from "../gamePhases/Sequence";
 GameEvent
 GamePhase
+// Game
+Turn
+PreGameTurn
+Sequence
 EventPhase
 import ActionActionPhase from "../gamePhases/ActionActionPhase";
 import AccrueDebtPhase from "../gamePhases/AccrueDebtPhase";
@@ -15,7 +23,6 @@ import DeathPhase from "../gamePhases/DeathPhase";
 import EndOfTurnPhase from "../gamePhases/EndOfTurnPhase";
 import EnterPlayPhase from "../gamePhases/EnterPlayPhase";
 import EventActionPhase from "../gamePhases/EventActionPhase";
-// import EurekaActionPhase from "../gamePhases/EurekaActionPhase";
 import HealMultiplePhase from "../gamePhases/HealMultiplePhase";
 import HealSinglePhase from "../gamePhases/HealSinglePhase";
 import OptionActionPhase from "../gamePhases/OptionActionPhase";
@@ -28,6 +35,7 @@ import UsePhase from "../gamePhases/UsePhase";
 import SpendMoneyPhase from "../gamePhases/SpendMoneyPhase";
 import TriggerPhase from "../gamePhases/TriggerPhase";
 import TriggerActionPhase from "../gamePhases/TriggerActionPhase";
+import DiscardPhase from "../gamePhases/DiscardPhase";
 import StartOfGamePhase from "../gamePhases/StartOfGamePhase";
 
 const Phases = {
@@ -42,7 +50,6 @@ const Phases = {
     EndOfTurnPhase,
     EnterPlayPhase,
     EventActionPhase,
-    // EurekaActionPhase,
     HealMultiplePhase,
     HealSinglePhase,
     OptionActionPhase,
@@ -53,9 +60,10 @@ const Phases = {
     SummonPhase,
     UsePhase,
     SpendMoneyPhase,
-    StartOfGamePhase,
     TriggerPhase,
     TriggerActionPhase,
+    DiscardPhase,
+    StartOfGamePhase,
 }
 
 export default Phases

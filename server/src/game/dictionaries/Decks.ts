@@ -1,3 +1,4 @@
+import CannibalWives from '../decks/CannibalWives'
 import CivilDisobedience from '../decks/CivilDisobedience'
 import HarshMedicine from '../decks/HarshMedicine'
 import MassMobilisation from '../decks/MassMobilisation'
@@ -11,7 +12,8 @@ const Decks = {
   CivilDisobedience,
   // OrcDeck,
   ThinkTank,
-  // HarshMedicine,
+  HarshMedicine,
+  CannibalWives,
 }
 
 export default Decks

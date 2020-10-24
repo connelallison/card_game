@@ -14,11 +14,11 @@ const data: WorkCreationData = {
     cost: 1,
     charges: 4,
     staticText: {
-        english: `Before you play a creation, give it Fortune.`,
+        english: `After you activate a Eureka card`, // change to draw on eureka
     },
     text: {
         templates: {
-            english: `Before you play a creation, give it Fortune.`,
+            english: `After you activate a Eureka card`,
         },
     },
     effects: ['VenetianPatentStatuteTrigger'],

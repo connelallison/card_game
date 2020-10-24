@@ -55,7 +55,9 @@ class Game extends GamePhase {
   init() {
     this.initPlayers()
     this.initListeners()
-    this.mulliganPhase()
+    this.announceGameState()
+    // this.mulliganPhase
+    // this.mulliganPhase()
     this.start()
   }
 
@@ -79,6 +81,27 @@ class Game extends GamePhase {
       this.unreportedEvents = []
     } else {
       // console.log('game ended - gamestate not being announced')
+    }
+  }
+
+  mulliganReport() {
+    if (this.player1.socketID) {
+      const player1mulligan = this.player1.deck.slice(0, 5).map(card => card.provideReport())
+      serverEvent.emit(`mulliganReport:${this.player1.socketID}`, player1mulligan)
+    }
+    if (this.player2.socketID) {
+      const player2mulligan = this.player2.deck.slice(0, 6).map(card => card.provideReport())
+      serverEvent.emit(`mulliganReport:${this.player2.socketID}`, player2mulligan)
+    }
+  }
+
+  
+  endMulliganPhase() {
+    if (this.player1.socketID) {
+      serverEvent.emit(`endMulliganPhase:${this.player1.socketID}`)
+    }
+    if (this.player2.socketID) {
+      serverEvent.emit(`endMulliganPhase:${this.player2.socketID}`)
     }
   }
 
@@ -244,6 +267,23 @@ class Game extends GamePhase {
     }
   }
 
+  executeMulliganRequest(mulliganRequest: string[], player: GamePlayer) {
+    const playerNum = player === this.player1 ? 'player1' : 'player2'
+    if (this.activeChild instanceof PreGameTurn && !this.activeChild[`${playerNum}ready`]) {
+      const size = player === this.player1 ? 5 : 6
+      const mulliganCards = player.deck.slice(0, size)
+      const mulliganChoices = mulliganRequest.map(objectID => this.gameObjects[objectID]) as Card[]
+      if (mulliganChoices.every(card => mulliganCards.includes(card))) {
+        const remainingCards = mulliganCards.filter(card => !mulliganChoices.includes(card))
+        const replacedCount = mulliganCards.length - remainingCards.length
+        const removedIDs = mulliganChoices.map(card => card.id)
+        remainingCards.forEach(card => card.moveZone('hand'))
+        player.deck.filter(card => !removedIDs.includes(card.id)).slice(0, replacedCount).forEach(card => card.moveZone('hand'))
+      }
+      (this.activeChild as PreGameTurn).playerReady(player)
+    }
+  }
+
   initPlayers() {
     this.player1 = new GamePlayer(this, this.player1name, this.player1socketID)
     this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
@@ -273,13 +313,16 @@ class Game extends GamePhase {
       serverEvent.on(`playerEndTurnRequest:${this.player1.socketID}`, () => {
         this.executeEndTurnRequest(this.player1)
       })
+      serverEvent.removeAllListeners(`playerMulliganRequest:${this.player1.socketID}`)
+      serverEvent.on(`playerMulliganRequest:${this.player1.socketID}`, mulliganRequest => {
+        this.executeMulliganRequest(mulliganRequest, this.player1)
+      })
       serverEvent.removeAllListeners(`playerEndGameRequest:${this.player1.socketID}`)
       serverEvent.on(`playerEndGameRequest:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} conceded - ending game`)
         this.player1.conceded = true
         this.end()
       })
-      // serverEvent.removeAllListeners(`playerDisconnected:${this.player1.socketID}`)
       serverEvent.on(`playerDisconnected:${this.player1.socketID}`, () => {
         console.log(`${this.player1.playerName} disconnected - ending game`)
         this.player1.disconnected = true
@@ -295,13 +338,16 @@ class Game extends GamePhase {
       serverEvent.on(`playerEndTurnRequest:${this.player2.socketID}`, () => {
         this.executeEndTurnRequest(this.player2)
       })
+      serverEvent.removeAllListeners(`playerMulliganRequest:${this.player2.socketID}`)
+      serverEvent.on(`playerMulliganRequest:${this.player2.socketID}`, mulliganRequest => {
+        this.executeMulliganRequest(mulliganRequest, this.player2)
+      })
       serverEvent.removeAllListeners(`playerEndGameRequest:${this.player2.socketID}`)
       serverEvent.on(`playerEndGameRequest:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} conceded - ending game`)
         this.player2.conceded = true
         this.end()
       })
-      // serverEvent.removeAllListeners(`playerDisconnected:${this.player2.socketID}`)
       serverEvent.on(`playerDisconnected:${this.player2.socketID}`, () => {
         console.log(`${this.player2.playerName} disconnected - ending game`)
         this.player2.disconnected = true
@@ -346,21 +392,16 @@ class Game extends GamePhase {
     this.unreportedEvents.push(event.reports)
   }
 
-  preGameTurn(): Turn {
-    return new Turn(this, null, 0)
-  }
-
-  firstTurn(): Turn {
-    return new Turn(this, this.player1, 1)
-  }
-
   async start() {
     console.log('starting game')
     // await this.sleep(1000)
     // this.queuedPhases.push(this.preGameTurn())
-    this.activeChild = this.preGameTurn()
-    this.startSequence('StartOfGamePhase')
-    this.queuedPhases.push(this.firstTurn())
+    const preGame =  new PreGameTurn(this)
+    // preGame.
+    this.startChild(preGame)
+    // this.startSequence('StartOfGamePhase')
+    await this.activeChild.endPromise
+    this.queuedPhases.push(new Turn(this, this.player1, 1))
     while (!this.ended && this.queuedPhases.length > 0) {
       this.startChild(this.queuedPhases.shift())
       this.announceNewTurn()
@@ -458,4 +499,6 @@ import { MoveRequest } from '../structs/ObjectReport'
 import { LocalisationString } from '../structs/Localisation'
 import { performance } from 'perf_hooks'
 import DeckObject from '../structs/DeckObject'
+import { CardEffects } from '../dictionaries/Effects'
+import PreGameTurn from './PreGameTurn'
 

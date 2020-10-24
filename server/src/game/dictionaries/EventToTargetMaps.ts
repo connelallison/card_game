@@ -11,6 +11,8 @@ const EventToTargetMaps = {
     playEventPlayer: (event: PlayEvent) => event.player,
     attackEventAttacker:  (event: AttackEvent) => event.attacker,
     attackEventDefender:  (event: AttackEvent) => event.defender,
+    discardEventDiscardedCard:  (event: DiscardEvent) => event.card, 
+    discardEventPlayer:  (event: DiscardEvent) => event.player, 
 }
 
 export default EventToTargetMaps
@@ -22,4 +24,5 @@ import { EnterPlayEvent } from "../gamePhases/EnterPlayPhase"
 import { PlayEvent } from "../gamePhases/PlayPhase"
 import { HealingEvent } from "../gamePhases/HealSinglePhase"
 import { AttackEvent } from "../gamePhases/AttackPhase"
+import { DiscardEvent } from "../gamePhases/DiscardPhase"
 

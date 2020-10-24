@@ -9,10 +9,10 @@ const data: TriggerEffectData = {
     },
     type: 'Effect',
     subtype: 'Trigger',
-    activeZones: 'inPlay',
+    activeZones: ['legacy'],
     text: {
         templates: {
-            english: `After you play a technique, draw a card.`,
+            english: `Legacy: Before you play a creation, give it Fortune.`,
         },
         dynamicValues: [],
     },
@@ -21,26 +21,30 @@ const data: TriggerEffectData = {
     triggerObjs: [
         {
             actionType: 'triggerAction',
-            eventType: 'afterPlay',
+            eventType: 'beforePlay',
             actionSteps: [
                 {
                     actionFunctions: [
                         {
-                          functionType: 'autoAction',
-                          operation: 'draw',
+                            functionType: 'targetMapAction',
+                            targetMap: 'playEventPlayedCard',
+                            operation: 'addEffect',
+                            values: {
+                                effectID: 'Fortune',
+                            }
                         },
                     ],
                     requirements: [
                         {
-                            eventTargetRequirement: 'isSubtype',
+                            eventTargetRequirement: 'isType',
                             targetMap: 'playEventPlayedCard',
                             values: {
-                                subtype: 'Technique',
+                                type: 'Creation',
                             }
                         },
                         {
-                            eventTargetRequirement: 'isFriendly',
-                            targetMap: 'playEventPlayedCard',
+                          eventTargetRequirement: 'isFriendly',
+                          targetMap: 'playEventPlayer',
                         },
                     ]
                 },

@@ -130,7 +130,7 @@ abstract class GameObject {
     }
 
     charOwner(): Character {
-        return this.controller().leaderZone[0]
+        return this.controller().leader
     }
 
     effectOwner(): GameObject {
@@ -496,10 +496,7 @@ abstract class GameObject {
     }
 
     actionFunction(actionEvent: ActionEvent, step: ActionStep, obj: ActionFunction): void {
-        const values: ValuesObject = {}
-        for (let property in obj.values) {
-            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
-        }
+        const values = this.valuesObject(obj.values, actionEvent, step)
         if (obj.functionType === 'autoAction') return this.autoActionFunction(actionEvent, step, obj, values)
         if (obj.functionType === 'manualAction') return this.manualActionFunction(actionEvent as ActionActionEvent, step as ActionActionStep, obj, values)
         if (obj.functionType === 'targetMapAction') return this.targetMapActionFunction(actionEvent as TriggerActionEvent, step, obj, values)
@@ -550,36 +547,36 @@ abstract class GameObject {
     }
 
     targetRequirement(obj: TargetRequirement, target: GameObject, actionEvent?: ActionEvent, step?: ActionStep): boolean {
-        const values: any = {}
-        for (let property in obj.values) {
-            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
-        }
+        const values = this.valuesObject(obj.values, actionEvent, step)
         return TargetRequirements[obj.targetRequirement](this, target, values)
     }
 
     activeRequirement(obj: ActiveRequirementShortcut, target?, actionEvent?: ActionEvent, step?: ActionStep): boolean {
-        const values: any = {}
-        for (let property in obj.values) {
-            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
-        }
+        const values = this.valuesObject(obj.values, actionEvent, step)
         return ActiveRequirements[obj.activeRequirement](this, values)
     }
 
     eventTargetRequirement(obj: EventTargetRequirement, event: GameEvent, actionEvent?: ActionEvent, step?: ActionStep): boolean {
-        const values: any = {}
-        for (let property in obj.values) {
-            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
-        }
+        const values = this.valuesObject(obj.values, actionEvent, step)
         const target = (EventToTargetMaps[obj.targetMap] as EventToTargetMap)(event)
         return TargetRequirements[obj.eventTargetRequirement](this, target, values)
     }
 
     eventRequirement(obj: EventRequirement, event: GameEvent, actionEvent?: ActionEvent, step?: ActionStep): boolean {
-        const values: any = {}
-        for (let property in obj.values) {
-            values[property] = this.dynamicOrStoredValue(obj.values[property], actionEvent, step)
-        }
+        const values = this.valuesObject(obj.values, actionEvent, step)
         return EventRequirements[obj.eventRequirement](this, event)
+    }
+
+    valuesObject(valuesObj: ValuesObject, actionEvent?: ActionEvent, step?: ActionStep) {
+        const values: any = {}
+        for (let property in valuesObj) {
+            if (['eventAction'].includes(property)) {
+                values[property] = valuesObj[property]
+            } else {
+                values[property] = this.dynamicOrStoredValue(valuesObj[property], actionEvent, step)
+            }
+        }
+        return values
     }
 
 }

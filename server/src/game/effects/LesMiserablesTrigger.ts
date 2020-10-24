@@ -13,7 +13,7 @@ const data: TriggerEffectData = {
     activeTypes: 'Persistent',
     text: {
         templates: {
-            english: `After a friendly follower dies during your opponent's turn, gain Fervour 1.`,
+            english: `After a friendly follower dies during your opponent's turn, gain Fervour 2.`,
         },
     },
     repeatable: true,
@@ -46,7 +46,7 @@ const data: TriggerEffectData = {
                             operation: 'addStatEffect',
                             values: {
                                 statEffectID: 'Fervour',
-                                statValue: 1,
+                                statValue: 2,
                             },
                         },
                     ],

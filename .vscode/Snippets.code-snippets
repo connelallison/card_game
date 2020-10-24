@@ -456,6 +456,46 @@
 		],
 		"description": "Work Creation Snippet"
 	},
+	"Weapon Creation Snippet": {
+		"prefix": "-WeaponCreationSnippet",
+		"body": [
+			"import WeaponCreation, { WeaponCreationData } from \"../gameObjects/WeaponCreation\";",
+			"import Game from \"../gamePhases/Game\";",
+			"import GamePlayer from \"../gameObjects/GamePlayer\";",
+			"",
+			"const data: WeaponCreationData = {",
+			"    id: '${1:id}',",
+			"    name: {",
+			"        english: `${2:name}`,",
+			"    },",
+			"    type: 'Creation',",
+			"    subtype: 'Weapon',",
+			"    classes: ['${3|All,Arms,Art,Economy,Empire,Faith,Infamy,Learning,The People|}'],",
+			"    collectable: ${4|true,false|},",
+			"    cost: ${5:cost},",
+			"    attack: ${6:attack},",
+			"    charges: ${7:charges},",
+			"    staticText: {",
+			"        english: `${8:text}`,",
+			"    },",
+			"    text: {",
+			"        templates: {",
+			"            english: `${8:text}`,",
+			"        },",
+			"    },",
+			"    effects: [$0],",
+			"}",
+			"",
+			"class ${1:id} extends WeaponCreation {",
+			"    static readonly data: WeaponCreationData = data",
+			"    constructor(game: Game, owner: GamePlayer) {",
+			"        super(game, owner, data)",
+			"    }",
+			"}",
+			"export default ${1:id}"
+		],
+		"description": "Weapon Creation Snippet"
+	},
 	"Trigger Action Snippet": {
 		"prefix": "-TriggerActionSnippet",
 		"body": [
@@ -504,7 +544,7 @@
 		"prefix": "-ManualTargetSnippet",
 		"body": [
 			"{",
-			"  text: { templates: { english: '${1:text}' } },",
+			"  text: { templates: { english: `${1:text}` } },",
 			"  hostile: ${2|true,false|},",
 			"  targets: {$0},",
 			"},"

@@ -74,9 +74,9 @@ class ProposedDrawPhase extends EventPhase {
         const drawQueue = targets ?? player.deck
         for (let i = 0; i < event.number; i++) {
             if (i < drawQueue.length) {
+                const card = drawQueue[i]
                 if (player.hand.length < player.max.hand) {
                     // player draws normally
-                    const card = drawQueue[i]
                     card.moveZone('hand')
                     const event = new DrawEvent(this.game(), {
                         player,
@@ -88,7 +88,11 @@ class ProposedDrawPhase extends EventPhase {
                     this.afterDrawQueue.push(event)
                 } else {
                     // hand is full
-                    drawQueue[i].moveZone('legacy')
+                    // drawQueue[i].moveZone('legacy')
+                    this.startChild(new DiscardPhase(this, new DiscardEvent(this.game(), {
+                        player,
+                        card,
+                    })))
                     // this.fatigueDamage()
                 }
             } else {
@@ -124,4 +128,5 @@ import Game from "./Game";
 import { DamageEvent } from "./DamageSinglePhase";
 import Card from "../gameObjects/Card";
 import { TargetRequirement } from "../structs/Requirement";
-import { LocalisationString } from "../structs/Localisation";
+import { LocalisationString } from "../structs/Localisation";import DiscardPhase, { DiscardEvent } from "./DiscardPhase";
+

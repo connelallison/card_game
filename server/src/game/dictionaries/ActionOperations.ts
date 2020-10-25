@@ -219,129 +219,200 @@ const ActionOperations = {
         })
     },
 
-    buffAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    buffAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
         if (attack === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.AttackBuff(source.game, target, { attack, buffName })
+            const effect = new Effects.AttackBuff(source.game, target, { attack, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    buffHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    buffHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (health === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.HealthBuff(source.game, target, { health, buffName })
+            const effect = new Effects.HealthBuff(source.game, target, { health, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    buffStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    buffStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const stats = values.stats <= 0 ? 0 : split ? source.truncate(values.stats / targets.length) : source.truncate(values.stats)
         if (stats === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack: stats, health: stats, buffName })
+            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack: stats, health: stats, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    buffAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    buffAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
         const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (attack === 0 && health === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack, health, buffName })
+            const effect = new Effects.AttackAndHealthBuff(source.game, target, { attack, health, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    setAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    debuffAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
         if (attack === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.SetAttack(source.game, target, { attack, buffName })
+            const effect = new Effects.DebuffAttack(source.game, target, { attack, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    setHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    debuffHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (health === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.SetHealth(source.game, target, { health, buffName })
+            const effect = new Effects.DebuffHealth(source.game, target, { health, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    setStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    debuffStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const stats = values.stats <= 0 ? 0 : split ? source.truncate(values.stats / targets.length) : source.truncate(values.stats)
         if (stats === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.SetAttackAndHealth(source.game, target, { attack: stats, health: stats, buffName })
+            const effect = new Effects.DebuffAttackAndHealth(source.game, target, { attack: stats, health: stats, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    setAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    debuffAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Character[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
         const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
         if (attack === 0 && health === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.SetAttackAndHealth(source.game, target, { attack, health, buffName })
+            const effect = new Effects.DebuffAttackAndHealth(source.game, target, { attack, health, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
     },
 
-    reduceCost: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, split?: boolean, expires?: EffectExpiryIDString[], buffName?: LocalisedStringObject }) => {
+    setAttack: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
+        if (attack === 0) return
+        const effectName = values.effectName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetAttack(source.game, target, { attack, effectName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    setHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { health: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
+        if (health === 0) return
+        const effectName = values.effectName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetHealth(source.game, target, { health, effectName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    setStats: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { stats: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const stats = values.stats <= 0 ? 0 : split ? source.truncate(values.stats / targets.length) : source.truncate(values.stats)
+        if (stats === 0) return
+        const effectName = values.effectName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetAttackAndHealth(source.game, target, { attack: stats, health: stats, effectName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    setAttackAndHealth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { attack: number, health: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Character[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const attack = values.attack <= 0 ? 0 : split ? source.truncate(values.attack / targets.length) : source.truncate(values.attack)
+        const health = values.health <= 0 ? 0 : split ? source.truncate(values.health / targets.length) : source.truncate(values.health)
+        if (attack === 0 && health === 0) return
+        const effectName = values.effectName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.SetAttackAndHealth(source.game, target, { attack, health, effectName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    reduceCost: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
         const targets = targetObjs as Card[]
         if (targets.length === 0) return
         const split = values.split ? true : false
         const money = values.money <= 0 ? 0 : split ? source.truncate(values.money / targets.length) : values.money
         if (money === 0) return
-        const buffName = values.buffName ?? null
+        const effectName = values.effectName ?? null
         targets.forEach(target => {
-            const effect = new Effects.CostReduction(source.game, target, { money, buffName })
+            const effect = new Effects.CostReduction(source.game, target, { money, effectName })
+            if (values.expires) effect.addExpiries(values.expires)
+            target.addEffect(effect)
+        })
+    },
+
+    increaseCost: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, split?: boolean, expires?: EffectExpiryIDString[], effectName?: LocalisedStringObject }) => {
+        const targets = targetObjs as Card[]
+        if (targets.length === 0) return
+        const split = values.split ? true : false
+        const money = values.money <= 0 ? 0 : split ? source.truncate(values.money / targets.length) : values.money
+        if (money === 0) return
+        const effectName = values.effectName ?? null
+        targets.forEach(target => {
+            const effect = new Effects.CostIncrease(source.game, target, { money, effectName })
             if (values.expires) effect.addExpiries(values.expires)
             target.addEffect(effect)
         })
@@ -428,13 +499,23 @@ const ActionOperations = {
     spendMoney: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, forOpponent?: boolean }) => {
         const player = values.forOpponent ? source.opponent() : source.controller()
         const card = source.effectOwner() as Card
-        // if (!(source instanceof Card)) throw Error(`spending money on something other than a card: ${source.name.english}`)
         const spendMoneyEvent = new SpendMoneyEvent(source.game, {
             player,
             money: values.money,
             card,
         })
         source.game.startNewDeepestPhase('SpendMoneyPhase', spendMoneyEvent)
+    },
+
+    gainMoney: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { money: number, forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.opponent() : source.controller()
+        const card = source.effectOwner() as Card
+        const gainMoneyEvent = new GainMoneyEvent(source.game, {
+            player,
+            money: values.money,
+            card,
+        })
+        source.game.startNewDeepestPhase('GainMoneyPhase', gainMoneyEvent)
     },
 
     markDestroyed: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
@@ -552,6 +633,16 @@ const ActionOperations = {
         })
     },
 
+    modIncome: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { income: number, forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.opponent() : source.controller()
+        player.modIncome(values.income)
+    },
+
+    modGrowth: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { growth: number, forOpponent?: boolean }) => {
+        const player = values.forOpponent ? source.opponent() : source.controller()
+        player.modGrowth(values.growth)
+    },
+
     forceEndTurn: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
         source.game.currentSequence().forceEndTurn = true
     },
@@ -615,4 +706,5 @@ import TargetToNumberMaps from './TargetToNumberMaps'
 import TargetToNumberMap from '../functionTypes/TargetToNumberMap'
 import { EventAction } from '../structs/Action'
 import { DiscardEvent } from '../gamePhases/DiscardPhase'
+import { GainMoneyEvent } from '../gamePhases/GainMoneyPhase'
 

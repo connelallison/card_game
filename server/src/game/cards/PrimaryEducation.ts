@@ -36,7 +36,7 @@ const data: TechniqueCreationData = {
               operation: 'buffStats',
               values: {
                 stats: 2,
-                buffName: { english: 'Primary Education Buff' },
+                effectName: { english: 'Primary Education Buff' },
               },
             },
             {

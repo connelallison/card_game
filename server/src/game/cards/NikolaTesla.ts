@@ -23,6 +23,7 @@ const data: FamousFollowerData = {
             english: `Eureka: Reduce the Cost of a Tech follower in your hand by (2).`,
         },
     },
+    tooltips: ['tech'],
     actions: [{
         actionType: 'actionAction',
         id: 'NikolaTeslaEureka',
@@ -67,7 +68,7 @@ const data: FamousFollowerData = {
                 operation: 'reduceCost',
                 values: {
                     money: 2,
-                    buffName: { english: 'Nikola Tesla Discount' },
+                    effectName: { english: 'Nikola Tesla Discount' },
                 }
             }]
         }]

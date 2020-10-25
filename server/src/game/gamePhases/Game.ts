@@ -127,6 +127,7 @@ class Game extends GamePhase {
         legacy: player.legacyReport(),
         hand: player.handReport(),
         deck: player.deckReport(),
+        objectID: player.objectID,
       },
       opponent: {
         name: player.opponentPlayer.playerName,
@@ -139,6 +140,7 @@ class Game extends GamePhase {
         legacy: player.opponentPlayer.legacyReport(),
         hand: opponentHand,
         deck: opponentDeck,
+        objectID: player.opponentPlayer.objectID,
       },
     }
     return gameState

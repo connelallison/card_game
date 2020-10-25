@@ -141,6 +141,7 @@ abstract class GamePhase {
             startOfTurn: [],
             endOfTurn: [],
             spendMoney: [],
+            gainMoney: [],
             accrueDebt: [],
             discard: [],
             trigger: [],

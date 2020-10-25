@@ -12,9 +12,9 @@ const data: FamousFollowerData = {
     classes: ['All'],
     categories: ['Noble'],
     collectable: true,
-    cost: 6,
+    cost: 10,
     attack: 2,
-    health: 6,
+    health: 10,
     staticText: {
         english: `Rush, Pillage,\nCollateral, Bloodthirst`,
     },

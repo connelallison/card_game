@@ -34,7 +34,7 @@ const data: EventMomentData = {
                             functionType: 'autoAction',
                             operation: 'setStats',
                             values: {
-                                buffName: { english: 'Collectivisation Effect' },
+                                effectName: { english: 'Collectivisation Effect' },
                                 stats: {
                                     valueType: 'number',
                                     from: 'numbers',

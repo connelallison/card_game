@@ -45,7 +45,7 @@ const data: FamousFollowerData = {
         functionType: 'autoAction',
         operation: 'buffStats',
         values: {
-          buffName: { english: 'Vladimir Lenin Buff'},
+          effectName: { english: 'Vladimir Lenin Buff'},
           stats: {
             valueType: 'number',
             from: 'numbers',

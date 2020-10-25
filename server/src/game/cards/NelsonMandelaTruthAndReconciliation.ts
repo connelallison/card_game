@@ -13,11 +13,11 @@ const data: PassiveLeaderTechniqueData = {
     collectable: false,
     cost: 0,
     staticText: {
-        english: `Passive: After a friendly character doesn't use their attack, Nourish 1 Health to them.`,
+        english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
     },
     text: {
         templates: {
-            english: `Passive: After a friendly character doesn't use their attack, Nourish 1 Health to them.`,
+            english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
         },
     },
     tooltips: ['nourishHealing'],

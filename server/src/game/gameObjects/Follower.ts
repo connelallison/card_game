@@ -7,6 +7,15 @@ export interface FollowerData extends CharacterData {
   categories?: FollowerCategoryString[]
 }
 
+interface FollowerCategories {
+  Barbarian: boolean
+  Noble: boolean
+  Woman: boolean
+  Legend: boolean
+  Underclass: boolean
+  Tech: boolean
+}
+
 abstract class Follower extends Character {
   static readonly data: FollowerData
   readonly data: FollowerData
@@ -16,7 +25,7 @@ abstract class Follower extends Character {
   type: 'Follower'
   subtype: FollowerSubtypeString
   slot: BoardSlot
-  categories: FollowerCategoryString[]
+  categories: FollowerCategories
   validSlots: BoardSlot[]
   summonSickness: boolean
 
@@ -27,7 +36,7 @@ abstract class Follower extends Character {
     this.maxHealth = this.rawHealth
     this.inPlayZone = 'board'
     this.slot = null
-    this.categories = data.categories ?? []
+    this.initCategories(data.categories ?? [])
     this.validSlots = []
     this.summonSickness = false
 
@@ -78,8 +87,24 @@ abstract class Follower extends Character {
     return (this.slot && (this.slot.attack !== 0 || this.slot.health !== 0)) ? [this.slot.statsReport()] : []
   }
 
+  initCategories(categories: FollowerCategoryString[]) {
+    this.categories = {
+      Barbarian: false,
+      Legend: false,
+      Noble: false,
+      Tech: false,
+      Underclass: false,
+      Woman: false,
+    }
+    categories.forEach(category => this.categories[category] = true)
+  }
+
   categoriesReport(localisation: LocalisationString = 'english'): string[] {
-    return this.categories.map(category => CategoryIcons[category])
+    const categories = []
+    for (const category in this.categories) {
+      if (this.categories[category]) categories.push(CategoryIcons[category])
+    }
+    return categories
   }
 
   static categoriesReport(data: FollowerData, localisation: LocalisationString = 'english'): string[] {

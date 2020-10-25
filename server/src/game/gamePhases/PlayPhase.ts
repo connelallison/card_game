@@ -161,7 +161,7 @@ class PlayPhase extends EventPhase {
             const accrueDebtEvent = new AccrueDebtEvent(this.game(), {
                 player: event.player,
                 card: event.card,
-                money: event.card.cost
+                money: event.card.stats.debt
             })
             this.startChild(new Phases.AccrueDebtPhase(this, accrueDebtEvent))
         }
@@ -184,4 +184,5 @@ import { EventActionEvent } from "./EventActionPhase";
 import { SpendMoneyEvent as AccrueDebtEvent } from "./SpendMoneyPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 import { OptionActionEvent } from "./OptionActionPhase"; import { LocalisationString } from "../structs/Localisation";
+import EventToNumberMaps from "../dictionaries/EventToNumberMaps";
 

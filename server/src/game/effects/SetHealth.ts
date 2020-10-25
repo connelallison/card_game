@@ -24,13 +24,13 @@ const data: StaticEffectData = {
 
 class SetHealth extends StaticEffect {
     static readonly data: StaticEffectData = data
-    constructor(game: Game, owner: GameObject, values: { health: number, buffName?: LocalisedStringObject } = { health: 0 }) {
+    constructor(game: Game, owner: GameObject, values: { health: number, effectName?: LocalisedStringObject } = { health: 0 }) {
         const moddedData = JSON.parse(JSON.stringify(data))
         const healthDif = GameObject.round((values.health ?? 0) - (owner as Character).healthStatic)
         const sign = healthDif >= 0 ? '+' : ''
         moddedData.effectObjs[0].operation = healthDif >= 0 ? 'incrementHealth' : 'decrementHealth'
         moddedData.effectObjs[0].value = Math.abs(healthDif)
-        moddedData.name = values.buffName ?? moddedData.name
+        moddedData.name = values.effectName ?? moddedData.name
         for (const localisation in moddedData.text.templates) {
             moddedData.text.templates[localisation] = moddedData.text.templates[localisation].replace(`$0`, `${values.health ?? 0}`)
             moddedData.text.templates[localisation] = moddedData.text.templates[localisation].replace(`$1`, `${sign}${healthDif}`)

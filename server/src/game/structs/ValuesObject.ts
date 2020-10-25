@@ -29,9 +29,11 @@ interface ValuesObject {
     rent?: DynamicOrStoredNumber
     stat?: StatString
     fervour?: DynamicOrStoredNumber
+    income?: DynamicOrStoredNumber
+    growth?: DynamicOrStoredNumber
     param?: DynamicOrStoredString
     name?: DynamicOrStoredLocalisedString
-    buffName?: LocalisedStringObject
+    effectName?: LocalisedStringObject
     value?: DynamicOrStoredValue
     zone?: DynamicOrStoredZoneString
     // zones?: DynamicOrStoredZoneString[]

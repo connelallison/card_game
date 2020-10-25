@@ -13,14 +13,14 @@ const data: PassiveLeaderTechniqueData = {
     collectable: false,
     cost: 0,
     staticText: {
-        english: `After a friendly Woman dies, pay (1) and draw a Woman.`,
+        english: `After a friendly Woman dies, draw a Woman.`,
     },
     text: {
         templates: {
-            english: `After a friendly Woman dies, pay (1) and draw a Woman.`,
+            english: `After a friendly Woman dies, draw a Woman.`,
         },
     },
-    tooltips: [],
+    tooltips: ['woman'],
     effects: ['HenryVIIIMoreWivesYourGraceTrigger'],
 }
 

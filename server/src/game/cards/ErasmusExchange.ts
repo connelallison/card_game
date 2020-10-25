@@ -69,7 +69,7 @@ const data: TechniqueCreationData = {
                             functionType: 'manualAction',
                             operation: 'setAttackAndHealth',
                             values: {
-                                buffName: { english: 'Erasmus Exchange Effect' },
+                                effectName: { english: 'Erasmus Exchange Effect' },
                                 attack: {
                                     valueType: 'number',
                                     from: 'target',
@@ -97,7 +97,7 @@ const data: TechniqueCreationData = {
                             operation: 'setAttackAndHealth',
                             manualTarget: 1,
                             values: {
-                                buffName: { english: 'Erasmus Exchange Effect' },
+                                effectName: { english: 'Erasmus Exchange Effect' },
                                 attack: {
                                     valueType: 'number',
                                     from: 'stored',

@@ -37,7 +37,7 @@ const data: TriggerEffectData = {
                             operation: 'buffStats',
                             values: {
                                 stats: 1,
-                                buffName: { english: 'Kunstoffizier Buff' }
+                                effectName: { english: 'Kunstoffizier Buff' }
                             },
                         },
                     ],

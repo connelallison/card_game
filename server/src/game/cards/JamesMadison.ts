@@ -12,9 +12,9 @@ const data: FamousFollowerData = {
     classes: ['The People'],
     categories: ['Noble'],
     collectable: true,
-    cost: 4,
+    cost: 5,
     attack: 3,
-    health: 3,
+    health: 4,
     staticText: {
         english: `Event: Give your Citizens +1 Attack this game.`,
     },

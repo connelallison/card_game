@@ -34,6 +34,7 @@ class EndOfTurnPhase extends EventPhase {
         // event.generateLog()
         this.cacheEvent(event, 'endOfTurn')
         this.emit('endOfTurn', event)
+        this.emit('afterEndOfTurn', event)
         this.queueSteps()
         this.end()
     }

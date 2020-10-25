@@ -71,6 +71,13 @@ import GulagTrigger from '../effects/GulagTrigger'
 import Collateral from '../effects/Collateral'
 import Rot from '../effects/Rot'
 import KunstoffizierTrigger from '../effects/KunstoffizierTrigger'
+import DebuffAttack from '../effects/DebuffAttack'
+import DebuffHealth from '../effects/DebuffHealth'
+import DebuffAttackAndHealth from '../effects/DebuffAttackAndHealth'
+import CostIncrease from '../effects/CostIncrease'
+import SetCost from '../effects/SetCost'
+import GeorgeMarshallAura from '../effects/GeorgeMarshallAura'
+import AneurinBevanTrigger from '../effects/AneurinBevanTrigger'
 // insert import here
 
 export const StatStaticEffects = {
@@ -103,6 +110,11 @@ export const StaticEffects = {
   ArchimedesBuff,
   Collateral,
   Rot,
+  DebuffAttack,
+  DebuffHealth,
+  DebuffAttackAndHealth,
+  CostIncrease,
+  SetCost,
   // insert StaticEffect here
 }
 
@@ -122,6 +134,7 @@ export const AuraEffects = {
   StatueOfLibertyAura,
   HenryFordAura,
   RansomEOldsAura,
+  GeorgeMarshallAura,
   // insert AuraEffect here
 }
 
@@ -157,6 +170,7 @@ export const TriggerEffects = {
   WuZetianTrigger,
   GulagTrigger,
   KunstoffizierTrigger,
+  AneurinBevanTrigger,
   // insert TriggerEffect here
 }
 

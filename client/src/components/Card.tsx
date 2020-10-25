@@ -4,6 +4,7 @@ import AddedText from './AddedText'
 import TargetableEntity, { Animations, EntityProps, Selections } from './TargetableEntity'
 
 export interface CardProps extends EntityProps {
+    mine?: boolean
     object: any
     selections: Selections
     animations: Animations
@@ -33,7 +34,7 @@ abstract class Card extends TargetableEntity {
     }
 
     isPlayCard(): string {
-        return !!this.props.playCard ? 'playCard' : ''
+        return !this.props.playCard ? '' :  'playCard'
     }
 
     isCombat(): string {
@@ -160,7 +161,7 @@ abstract class Card extends TargetableEntity {
                     'Eureka', 'Income', 'Growth', 'Bloodthirst', 'Mob',
                     'Rush', 'Death', 'Legacy', 'Hand', 'Deck',
                     'Starter', 'Passive', 'Successor', 'Immune', 'Rot',
-                    'Nourish', 'Collateral']}
+                    'Nourish', 'Collateral', 'Debt']}
                 highlightTag='span'
                 textToHighlight={this.props.object.text}
             />

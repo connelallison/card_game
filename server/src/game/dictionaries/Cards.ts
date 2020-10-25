@@ -166,6 +166,15 @@ import FatMan from '../cards/FatMan'
 import Kunstoffizier from '../cards/Kunstoffizier'
 import EdwardTheBlackPrince from '../cards/EdwardTheBlackPrince'
 import BanzaiCharge from '../cards/BanzaiCharge'
+import FranklinRooseveltPublicWorks from '../cards/FranklinRooseveltPublicWorks'
+import FranklinRoosevelt from '../cards/FranklinRoosevelt'
+import NewDeal from '../cards/NewDeal'
+import MarketManipulation from '../cards/MarketManipulation'
+import GeorgeMarshall from '../cards/GeorgeMarshall'
+import CDOTrader from '../cards/CDOTrader'
+import IndustrialRevolution from '../cards/IndustrialRevolution'
+import AneurinBevan from '../cards/AneurinBevan'
+import DeficitSpending from '../cards/DeficitSpending'
 // insert import here
 
 export const NamelessFollowers = {
@@ -193,6 +202,7 @@ export const NamelessFollowers = {
   MuiTsai,
   Prisoner,
   Kunstoffizier,
+  CDOTrader,
   // insert NamelessFollower here
 }
 
@@ -237,6 +247,8 @@ export const FamousFollowers = {
   Theodora,
   WuZetian,
   EdwardTheBlackPrince,
+  GeorgeMarshall,
+  AneurinBevan,
   // insert FamousFollower here
 }
 
@@ -245,6 +257,7 @@ export const ActionMoments = {
   NapalmStrike,
   DivideAndConquer,
   StormingOfTheBastille,
+  NewDeal,
   // insert ActionMoment here
 }
 
@@ -256,6 +269,7 @@ export const EventMoments = {
   Collectivisation,
   BostonTeaParty,
   CubanMissileCrisis,
+  IndustrialRevolution,
   // insert EventMoment here
 }
 
@@ -289,6 +303,8 @@ export const TechniqueCreations = {
   PrimaryEducation,
   MonasticRetreat,
   BanzaiCharge,
+  MarketManipulation,
+  DeficitSpending,
   // insert TechniqueCreation here
 }
 
@@ -315,6 +331,7 @@ export const ActiveLeaderTechniques = {
   DavidHumeOrganiseThoughts,
   HippocratesMedicine,
   JosephStalinPurge,
+  FranklinRooseveltPublicWorks,
   // insert ActiveLeaderTechnique here
 }
 
@@ -332,6 +349,7 @@ export const StarterLeaders = {
   NelsonMandela,
   Hippocrates,
   JosephStalin,
+  FranklinRoosevelt,
   // insert StarterLeader here
 }
 

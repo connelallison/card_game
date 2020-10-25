@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
     attack: 3,
     health: 3,
     staticText: {
-        english: `Your techniques cost (1) less.`,
+        english: `Your (leader) techniques cost (1) less.`,
     },
     text: {
         templates: {
-            english: `Your techniques cost (1) less.`,
+            english: `Your (leader) techniques cost (1) less.`,
         },
     },
     tooltips: [],

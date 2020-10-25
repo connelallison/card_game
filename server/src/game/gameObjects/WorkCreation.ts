@@ -12,10 +12,10 @@ abstract class WorkCreation extends Creation {
     constructor(game: Game, owner: GamePlayer, data: WorkCreationData) {
         super(game, owner, data)
 
-        this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
+        this.game.event.on('afterStartOfTurn', (event) => this.afterStartOfTurn(event))
     }
 
-    startOfTurn(event: StartOfTurnEvent) {
+    afterStartOfTurn(event: StartOfTurnEvent) {
         if (this.inPlay() && this.controller().myTurn()) {
             this.loseCharge()
         }

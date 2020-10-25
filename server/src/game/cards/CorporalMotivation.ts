@@ -87,7 +87,7 @@ const data: TechniqueCreationData = {
         functionType: 'manualAction',
         operation: 'buffAttack',
         values: {
-          buffName: { english: 'Corporal Motivation Buff' },
+          effectName: { english: 'Corporal Motivation Buff' },
           attack: 3,
         },
       }]

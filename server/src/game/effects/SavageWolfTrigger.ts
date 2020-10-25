@@ -46,7 +46,7 @@ const data: TriggerEffectData = {
                 functionType: 'autoAction',
                 operation: 'buffAttackAndHealth',
                 values: {
-                    buffName: { english: 'Savage Wolf Buff' },
+                    effectName: { english: 'Savage Wolf Buff' },
                     attack: 2,
                     health: 1,
                 },

@@ -98,6 +98,7 @@ class GameContainer extends Component {
             debt: 0,
             rent: 0,
             fervour: 0,
+            fatigue: 0,
           },
           leader: {
             attack: null,
@@ -133,6 +134,7 @@ class GameContainer extends Component {
             debt: 0,
             rent: 0,
             fervour: 0,
+            fatigue: 0,
           },
           leader: {
             attack: null,
@@ -639,7 +641,7 @@ class GameContainer extends Component {
 
   announceMulligan() {
     this.socket.emit('mulliganRequest', this.state.mulliganChoices.map(choice => choice.objectID))
-    this.setState({mulligan: null, mulliganChoices: null})
+    this.setState({ mulligan: null, mulliganChoices: null })
   }
 
   flatMappedOption(option) {

@@ -1257,12 +1257,15 @@ button.jobDone {
 .followerCategories {
   background-color: transparent;
   flex-grow: 1;
+  overflow: visible;
+  white-space: nowrap;
 }
 
 .followerCategory {
   background-color: transparent;
   /* font-size: 1px; */
-  font-weight: 500;
+  color: rgb(34, 34, 34);
+  font-weight: 600;
 }
 
 /* .canBeSelected {

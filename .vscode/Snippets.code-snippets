@@ -516,6 +516,19 @@
 		],
 		"description": "Requirement Snippet"
 	},
+	"Option Snippet": {
+		"prefix": "-OptionSnippet",
+		"body": [
+			"{",
+			"  actionType: 'optionAction',",
+			"  id: `${1:id}`,",
+			"  name: { english: `${2:name}` },",
+			"  text: { templates: { english: `${3:text}` } },",
+			"  actions: [$0],",
+			"}"
+		],
+		"description": "Option Snippet"
+	},
 	"Action Snippet": {
 		"prefix": "-ActionSnippet",
 		"body": [

@@ -34,12 +34,12 @@ const data: AuraEffectData = {
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyCreations', 'friendlyHand'],
+        targetDomain: ['friendlyCreations', 'friendlyHand', 'friendlyLeaderTechnique'],
         requirements: [
             {
-                targetRequirement: 'isSubtype',
+                targetRequirement: 'isSubtypes',
                 values: {
-                    subtype: 'Technique',
+                    subtypes: ['Technique', 'Active'],
                 }
             },
         ],

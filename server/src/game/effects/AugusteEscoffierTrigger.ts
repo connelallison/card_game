@@ -35,7 +35,7 @@ const data: TriggerEffectData = {
                             operation: 'buffStats',
                             values: {
                                 stats: 2,
-                                buffName: { english: 'Auguste Escoffier Buff' },
+                                effectName: { english: 'Auguste Escoffier Buff' },
                             },
                         },
                     ],

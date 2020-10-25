@@ -42,7 +42,6 @@ class PreGameTurn extends Turn {
         const startOfGameSequence = new Sequence(this)
         const startOfTurnPhase = new Phases.StartOfGamePhase(startOfGameSequence)
         startOfGameSequence.queuedPhases.push(startOfTurnPhase)
-        console.log('starting startOfGameSequence')
         this.startChild(startOfGameSequence)
         this.parent.activeChild = null
         // @ts-ignore

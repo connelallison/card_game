@@ -35,7 +35,7 @@ const data: EventMomentData = {
                         operation: 'setHealth',
                         values: {
                             health: 1,
-                            buffName: { english: `French Revolution Effect` },
+                            effectName: { english: `French Revolution Effect` },
                         },
                       },
                       {

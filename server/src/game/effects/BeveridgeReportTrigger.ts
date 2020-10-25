@@ -9,7 +9,7 @@ const data: TriggerEffectData = {
     },
     type: 'Effect',
     subtype: 'Trigger',
-    text: { templates: { english: `At the end of your turn, give your followers +1 Health.` } },
+    text: { templates: { english: `At the end of your turn, Nourish 1 Health to your followers.` } },
     repeatable: true,
     wonderTrigger: false,
     activeZones: 'inPlay',
@@ -30,10 +30,10 @@ const data: TriggerEffectData = {
             }],
             actionFunctions: [{
                 functionType: 'autoAction',
-                operation: 'buffHealth',
+                operation: 'heal',
                 values: {
-                    buffName: { english: 'Beveridge Report Buff' },
-                    health: 1,
+                    healing: 1,
+                    nourish: true,
                 },
             }]
         }]

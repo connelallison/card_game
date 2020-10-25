@@ -5,7 +5,7 @@ class EndGame extends Component {
         return (
             <div className='game-status'>
                 <p className='lowerMargin'>Current opponent: {this.props.opponentName}</p>
-                <button onClick={this.props.endGame}>End Game</button>
+                <button onClick={this.props.endGame}>Concede</button>
             </div>
         )
     }

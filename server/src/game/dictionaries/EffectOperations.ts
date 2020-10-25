@@ -26,6 +26,8 @@ const EffectOperations = {
     incrementDebt: (data, value: number) => { data.stats.debt += value >= 0 ? value : 0 },
     incrementRent: (data, value: number) => { data.stats.rent += value >= 0 ? value : 0 },
     incrementFervour: (data, value: number) => { data.stats.fervour += value >= 0 ? value : 0 },
+    incrementIncome: (data, value: number) => { data.stats.income += value >= 0 ? value : 0 },
+    incrementGrowth: (data, value: number) => { data.stats.growth += value >= 0 ? value : 0 },
     incrementDamageReduction: (data, value: number) => { data.stats.damageReduction += value >= 0 ? value : 0 },
     setID: (data, value: string) => { data.id = value },
     setName: (data, value: LocalisedStringObject) => { data.name = value },

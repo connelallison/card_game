@@ -12,7 +12,7 @@ const data: LeaderData = {
     classes: ['Infamy'],
     collectable: true,
     starter: false,
-    cost: 4,
+    cost: 6,
     health: 5,
     leaderTechniqueID: 'HenryVIIIMoreWivesYourGrace',
     staticText: {

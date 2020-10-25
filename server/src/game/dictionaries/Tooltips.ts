@@ -102,7 +102,31 @@ const Tooltips = {
     immune: {
         name: { english: 'Immune' },
         text: { templates: { english: `This ignores damage (except Rot damage) and destroy effects.` } },
-    }
+    },
+    barbarian: {
+        name: { english: 'Barbarian: ⚔' },
+        text: { templates: { english: `A member of the Barbarian follower category.` } },
+    },
+    legend: {
+        name: { english: 'Legend: 🕮' },
+        text: { templates: { english: `A member of the Legend follower category.` } },
+    },
+    noble: {
+        name: { english: 'Noble: ⚜' },
+        text: { templates: { english: `A member of the Noble follower category.` } },
+    },
+    tech: {
+        name: { english: 'Tech: ⚙' },
+        text: { templates: { english: `A member of the Tech follower category.` } },
+    },
+    underclass: {
+        name: { english: 'Underclass: ⛓' },
+        text: { templates: { english: `A member of the Underclass follower category.` } },
+    },
+    woman: {
+        name: { english: 'Woman: ♀' },
+        text: { templates: { english: `A member of the Woman follower category.` } },
+    },
 }
 
 export default Tooltips

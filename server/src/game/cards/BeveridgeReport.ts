@@ -14,11 +14,11 @@ const data: WorkCreationData = {
     cost: 1,
     charges: 3,
     staticText: {
-        english: `Rent 1 \nAt the end of your turn, give your followers +1 Health.`,
+        english: `Rent 1 \nAt the end of your turn, Nourish 1 Health to your followers.`,
     },
     text: {
         templates: {
-            english: `Rent 1 \nAt the end of your turn, give your followers +1 Health.`,
+            english: `Rent 1 \nAt the end of your turn, Nourish 1 Health to your followers.`,
         },
     },
     stats: {

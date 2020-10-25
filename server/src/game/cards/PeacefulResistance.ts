@@ -14,11 +14,11 @@ const data: PermanentPassiveData = {
     ethos: true,
     cost: 4,
     staticText: {
-        english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
+        english: `Passive: After a friendly character doesn't use their attack, Nourish 1 Health to them.`,
     },
     text: {
         templates: {
-            english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
+            english: `Passive: After a friendly character doesn't use their attack, Nourish 1 Health to them.`,
         },
     },
     tooltips: ['nourishHealing'],

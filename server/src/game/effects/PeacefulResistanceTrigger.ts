@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Passive: If your followers don't attack, you Nourish Health to your Leader equal to their Attack.`,
+            english: `Passive: After a friendly character doesn't use their attack, Nourish 1 Health to them.`,
         },
     },
     repeatable: true,
@@ -23,46 +23,27 @@ const data: TriggerEffectData = {
             eventType: 'endOfTurn',
             actionSteps: [
                 {
-                    requirements: [
-                        {
-                            activeRequirement: 'isMyTurn',
-                        },
-                    ],
                     actionFunctions: [
                         {
                             functionType: 'autoAction',
                             operation: 'heal',
                             values: {
+                                healing: 1,
                                 nourish: true,
-                                healing: {
-                                    valueType: 'number',
-                                    from: 'numbers',
-                                    reducer: 'sum',
-                                    numbers: {
-                                        valueType: 'numbers',
-                                        from: 'targets',
-                                        numberMap: 'attack',
-                                        targets: {
-                                            valueType: 'targets',
-                                            from: 'targetDomain',
-                                            targetDomain: 'friendlyBoard',
-                                            requirements: [
-                                                {
-                                                    targetRequirement: 'hasAttack'
-                                                },
-                                            ]
-                                        }
-                                    }
-                                }
                             },
                         },
                     ],
                     autoTargets: [
                         {
                             targets: {
-                                valueType: 'target',
+                                valueType: 'targets',
                                 from: 'targetDomain',
-                                targetDomain: 'friendlyLeader',
+                                targetDomain: ['friendlyLeader', 'friendlyBoard'],
+                                requirements: [
+                                    {
+                                        targetRequirement: 'hasAttack',
+                                    },
+                                ]
                             }
                         },
                     ],

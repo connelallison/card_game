@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `After a friendly Woman dies, pay (1) and draw a Woman.`,
+            english: `After a friendly Woman dies, draw a Woman.`,
         },
     },
     repeatable: true,
@@ -44,13 +44,13 @@ const data: TriggerEffectData = {
                         },
                     ],
                     actionFunctions: [
-                        {
-                            functionType: 'autoAction',
-                            operation: 'spendMoney',
-                            values: {
-                                money: 1,
-                            },
-                        },
+                        // {
+                        //     functionType: 'autoAction',
+                        //     operation: 'spendMoney',
+                        //     values: {
+                        //         money: 1,
+                        //     },
+                        // },
                         {
                             functionType: 'autoAction',
                             operation: 'draw',

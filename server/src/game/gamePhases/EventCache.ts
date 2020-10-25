@@ -17,6 +17,7 @@ interface EventCache {
     startOfTurn: StartOfTurnEvent[]
     endOfTurn: EndOfTurnEvent[]
     spendMoney: SpendMoneyEvent[]
+    gainMoney: GainMoneyEvent[]
     accrueDebt: AccrueDebtEvent[]
     discard: DiscardEvent[]
     trigger: TriggerEvent[]
@@ -48,4 +49,5 @@ import { OptionActionEvent } from "./OptionActionPhase";
 import { AccrueDebtEvent } from "./AccrueDebtPhase";
 import { UpdateEvent } from "./AuraUpdatePhase";
 import { DiscardEvent } from "./DiscardPhase";
+import { GainMoneyEvent } from "./GainMoneyPhase";
 // import { EurekaActionEvent } from "./EurekaActionPhase";

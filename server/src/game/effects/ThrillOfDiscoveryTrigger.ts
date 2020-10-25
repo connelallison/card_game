@@ -28,7 +28,7 @@ const data: TriggerEffectData = {
                             operation: 'buffStats',
                             values: {
                                 stats: 0.5,
-                                buffName: { english: 'Thrill of Discovery Buff' },
+                                effectName: { english: 'Thrill of Discovery Buff' },
                             },
                             targetMap: 'playEventPlayedCard'
                         },

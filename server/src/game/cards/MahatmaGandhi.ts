@@ -42,7 +42,7 @@ const data: FamousFollowerData = {
                             operation: 'setAttack',
                             values: {
                                 attack: 1,
-                                buffName: { english: `Mahatma Gandhi Effect` }
+                                effectName: { english: `Mahatma Gandhi Effect` }
                             },
                         },
                     ],

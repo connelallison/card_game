@@ -30,7 +30,7 @@ const data: TriggerEffectData = {
                             operation: 'buffStats',
                             values: {
                                 stats: 1,
-                                buffName: { english: 'University of Oxford Buff' },
+                                effectName: { english: 'University of Oxford Buff' },
                             },
                         },
                     ],

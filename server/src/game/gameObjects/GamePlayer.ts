@@ -90,7 +90,7 @@ class GamePlayer extends GameObject {
     this.disconnected = false
 
     this.game.event.on('startOfTurn', (event) => this.startOfTurn(event))
-    this.game.event.on('endOfTurn', (event) => this.endOfTurn(event))
+    this.game.event.on('afterEndOfTurn', (event) => this.afterEndOfTurn(event))
     this.game.event.on('calculateGlobals', event => this.calculateGlobals())
   }
 
@@ -125,6 +125,7 @@ class GamePlayer extends GameObject {
       growth: this.stats.growth,
       rent: this.stats.rent,
       fervour: this.stats.fervour,
+      fatigue: this.fatigueCounter,
     }
   }
 
@@ -193,9 +194,9 @@ class GamePlayer extends GameObject {
     }
   }
 
-  endOfTurn(event): void {
+  afterEndOfTurn(event): void {
     if (this.myTurn()) {
-      this.increaseIncome(this.stats.growth)
+      this.modIncome(this.stats.growth)
       this.refillMoney()
       this.payDebt()
       this.payRent()
@@ -372,20 +373,34 @@ class GamePlayer extends GameObject {
   }
 
   refillMoney(): void {
-    this.rawMoney = this.stats.income
-    this.money = this.baseMoney()
+    const money = this.stats.income - this.rawMoney
+    const gainMoneyEvent = new GainMoneyEvent(this.game, {
+      player: this,
+      money,
+      card: this.charOwner(),
+    })
+    this.game.startNewDeepestPhase('GainMoneyPhase', gainMoneyEvent)
   }
 
-  increaseIncome(number): void {
-    this.rawIncome += number
-    this.stats.income += number
-  }
-
-  decreaseIncome(number): void {
-    if (this.rawIncome - number >= 0) {
-      this.rawIncome -= number
+  modIncome(number): void {
+    if (this.rawIncome + number >= 0) {
+      this.rawIncome += number
+      this.stats.income += number
     } else {
+      const diff = this.stats.income - this.rawIncome
       this.rawIncome = 0
+      this.stats.income = this.rawIncome + diff
+    }
+  }
+
+  modGrowth(number): void {
+    if (this.rawGrowth + number >= 0) {
+      this.rawGrowth += number
+      this.stats.growth += number
+    } else {
+      const diff = this.stats.growth - this.rawGrowth
+      this.rawGrowth = 0
+      this.stats.growth = this.rawGrowth + diff
     }
   }
 
@@ -438,4 +453,5 @@ import GameObjectData from '../structs/GameObjectData'
 import { PersistentCardTypeString } from '../stringTypes/ZoneTypeSubtypeString'
 import { SpendMoneyEvent } from '../gamePhases/SpendMoneyPhase'
 import WeaponCreation from './WeaponCreation'
+import { GainMoneyEvent } from '../gamePhases/GainMoneyPhase'
 

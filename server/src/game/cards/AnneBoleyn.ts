@@ -12,9 +12,9 @@ const data: FamousFollowerData = {
     classes: ['Infamy'],
     categories: ['Woman', 'Noble'],
     collectable: false,
-    cost: 2,
-    attack: 2,
-    health: 2,
+    cost: 5,
+    attack: 5,
+    health: 5,
     staticText: {
         english: `Death: Shuffle Jane Seymour into your deck.`,
     },

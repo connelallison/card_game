@@ -34,6 +34,7 @@ class StartOfTurnPhase extends EventPhase {
         // event.generateLog()
         this.cacheEvent(event, 'startOfTurn')
         this.emit('startOfTurn', event)
+        this.emit('afterStartOfTurn', event)
         this.queueSteps()
         this.end()
     }

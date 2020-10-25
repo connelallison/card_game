@@ -12,9 +12,9 @@ const data: FamousFollowerData = {
     classes: ['Infamy'],
     categories: ['Woman', 'Noble'],
     collectable: false,
-    cost: 4,
-    attack: 4,
-    health: 4,
+    cost: 3,
+    attack: 3,
+    health: 3,
     staticText: {
         english: `Death: Shuffle Catherine Howard into your deck.`,
     },

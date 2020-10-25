@@ -45,6 +45,7 @@ class UsePhase extends EventPhase {
         // event.generateLog()
         this.cacheEvent(event, 'use')
         if (!card.flags.repeatable) card.ready = false
+        this.optionPhase()
         this.actionPhase()
         this.eventActionPhase()
         this.accrueDebtPhase()
@@ -124,7 +125,7 @@ class UsePhase extends EventPhase {
             const accrueDebtEvent = new AccrueDebtEvent(this.game(), {
                 player: event.player,
                 card: event.card,
-                money: event.card.cost
+                money: event.card.stats.debt
             })
             this.startChild(new Phases.AccrueDebtPhase(this, accrueDebtEvent))
         }

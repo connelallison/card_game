@@ -12,9 +12,9 @@ const data: FamousFollowerData = {
     classes: ['Infamy'],
     categories: ['Woman', 'Noble'],
     collectable: false,
-    cost: 6,
-    attack: 6,
-    health: 6,
+    cost: 1,
+    attack: 1,
+    health: 1,
     staticText: {
         english: ``,
     },

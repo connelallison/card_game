@@ -8,6 +8,7 @@ const PlayerStatus = props =>
         <p>{`Debt: ${props.stats.debt}`}</p>
         <p>{`Rent: ${props.stats.rent}`}</p>
         <p>{`Fervour: ${props.stats.fervour}`}</p>
+        <p>{`Fatigue: ${props.stats.fatigue}`}</p>
     </div>
 
 export default PlayerStatus

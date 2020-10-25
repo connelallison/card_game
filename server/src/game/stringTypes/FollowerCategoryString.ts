@@ -1,22 +1,18 @@
-type FollowerCategoryString = 'Woman' | 'Underclass' | 'Minority' | 'Barbarian' | 'Noble' | 'Legend' | 'Tech'
+type FollowerCategoryString = 'Woman' | 'Underclass' | 'Barbarian' | 'Noble' | 'Legend' | 'Tech'
 
 export const CategoryIcons = {
-    Barbarian: 'B',
-    Legend: 'L',
-    Minority: 'M',
-    Noble: 'N',
-    Tech: 'T',
-    Underclass: 'U',
-    Woman: 'W',
-    // Woman: '♀',
-    // Noble: '⚜',
-    // Tech: '⚙',
-    // Tech: '🔧',
-    // Legend: '📜',
-    // Legend: '📖',
-    // Underclass: '⛓',
-    // Barbarian: '⚔',
-    // Minority: '?',
+    // Barbarian: 'B',
+    // Legend: 'L',
+    // Noble: 'N',
+    // Tech: 'T',
+    // Underclass: 'U',
+    // Woman: 'W',
+    Barbarian: '⚔',
+    Legend: '🕮',
+    Noble: '⚜',
+    Tech: '⚙',
+    Underclass: '⛓',
+    Woman: '♀',
 }
 
 export default FollowerCategoryString

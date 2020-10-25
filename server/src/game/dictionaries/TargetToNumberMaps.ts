@@ -7,6 +7,10 @@ const TargetToNumberMaps = {
     cost: (target: Card) => target.cost,
     fervour: (target: PersistentCard) => target.stats.fervour,
     charges: (target: Creation | NamelessFollower) => target.charges,
+    ownerIncome: (target: GameObject) => target.controller().stats.income,
+    ownerGrowth: (target: GameObject) => target.controller().stats.growth,
+    ownerFervour: (target: GameObject) => target.controller().stats.fervour,
+    ownerMoney: (target: GameObject) => target.controller().money,
 }
 
 export default TargetToNumberMaps

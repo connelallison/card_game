@@ -92,7 +92,7 @@ abstract class Leader extends Character {
     this.updateAttackTargets()
     this.attack = this.truncate(this.attack)
     this.health = this.truncate(this.health)
-    if (this.cost < 0) this.cost = 0
+    if (this.cost < this.controller().stats.minCardCost) this.cost = this.controller().stats.minCardCost
     this.cost = this.truncate(this.cost)
     this.healthStatic = this.truncate(this.healthStatic)
   }
@@ -104,7 +104,7 @@ abstract class Leader extends Character {
   }
 
   takeDamage(damage: number, rot?: boolean): number {
-    let reducedDamage = damage - this.stats.damageReduction >= 0 ? damage - this.stats.damageReduction : 0
+    let reducedDamage = damage - this.stats.damageReduction >= 0 ? this.round(damage - this.stats.damageReduction) : 0
     if (this.flags.immune && !rot) reducedDamage = 0
     if (reducedDamage > 0 && this.flags.fortune && !rot) {
       reducedDamage = 0
@@ -115,8 +115,8 @@ abstract class Leader extends Character {
     if (this.inPlay()) {
       actualDamage = this.owner.takeDamage(reducedDamage, rot)
     } else {
-      this.health -= actualDamage
-      this.rawHealth -= actualDamage
+      this.health = this.round(this.health - actualDamage)
+      this.rawHealth = this.round(this.rawHealth - actualDamage)
     }
     this.update()
     return actualDamage

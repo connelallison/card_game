@@ -62,6 +62,7 @@ class DamageSinglePhase extends EventPhase {
             const actualDamage = event.target.takeDamage(event.damage, !!event.rot)
             event.actualDamage = actualDamage
             this.cacheEvent(event, 'damage')
+            if (event.objectSource.effectOwner().flags.lethal && actualDamage > 0 && event.target instanceof Follower) event.target.pendingDestroy = true
             if (event.actualDamage > 0) this.emit('afterDamage', event)
             this.queueSteps()
         }

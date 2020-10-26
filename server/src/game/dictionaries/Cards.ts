@@ -175,6 +175,20 @@ import CDOTrader from '../cards/CDOTrader'
 import IndustrialRevolution from '../cards/IndustrialRevolution'
 import AneurinBevan from '../cards/AneurinBevan'
 import DeficitSpending from '../cards/DeficitSpending'
+import Tractor from '../cards/Tractor'
+import CharlesPonzi from '../cards/CharlesPonzi'
+import Unperson from '../cards/Unperson'
+import Vaporise from '../cards/Vaporise'
+import SamuelColt from '../cards/SamuelColt'
+import RichardNixon from '../cards/RichardNixon'
+import Coin from '../cards/Coin'
+import Galleon from '../cards/Galleon'
+import CosimoDeMediciBank from '../cards/CosimoDeMediciBank'
+import CosimoDeMedici from '../cards/CosimoDeMedici'
+import EconomiesOfScale from '../cards/EconomiesOfScale'
+import Supercontango from '../cards/Supercontango'
+import Investor from '../cards/Investor'
+import IsaacLeMaire from '../cards/IsaacLeMaire'
 // insert import here
 
 export const NamelessFollowers = {
@@ -203,6 +217,10 @@ export const NamelessFollowers = {
   Prisoner,
   Kunstoffizier,
   CDOTrader,
+  Tractor,
+  Unperson,
+  Galleon,
+  Investor,
   // insert NamelessFollower here
 }
 
@@ -249,6 +267,10 @@ export const FamousFollowers = {
   EdwardTheBlackPrince,
   GeorgeMarshall,
   AneurinBevan,
+  CharlesPonzi,
+  SamuelColt,
+  RichardNixon,
+  IsaacLeMaire,
   // insert FamousFollower here
 }
 
@@ -258,6 +280,7 @@ export const ActionMoments = {
   DivideAndConquer,
   StormingOfTheBastille,
   NewDeal,
+  Vaporise,
   // insert ActionMoment here
 }
 
@@ -270,6 +293,8 @@ export const EventMoments = {
   BostonTeaParty,
   CubanMissileCrisis,
   IndustrialRevolution,
+  Coin,
+  Supercontango,
   // insert EventMoment here
 }
 
@@ -322,6 +347,7 @@ export const EthosPassives = {
   HippocraticOath,
   GrandeArmee,
   Gulag,
+  EconomiesOfScale,
   // insert EthosPassive here 
 }
 
@@ -332,6 +358,7 @@ export const ActiveLeaderTechniques = {
   HippocratesMedicine,
   JosephStalinPurge,
   FranklinRooseveltPublicWorks,
+  CosimoDeMediciBank,
   // insert ActiveLeaderTechnique here
 }
 
@@ -350,6 +377,7 @@ export const StarterLeaders = {
   Hippocrates,
   JosephStalin,
   FranklinRoosevelt,
+  CosimoDeMedici,
   // insert StarterLeader here
 }
 

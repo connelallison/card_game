@@ -96,12 +96,16 @@ const Tooltips = {
         text: { templates: { english: `You can start the game with this leader in play.` } },
     },
     repeatable: {
-        name: { english: 'Repetable' },
+        name: { english: 'Repeatable' },
         text: { templates: { english: `You can use this technique more than once per turn.` } },
     },
     immune: {
         name: { english: 'Immune' },
         text: { templates: { english: `This ignores damage (except Rot damage) and destroy effects.` } },
+    },
+    lethal: {
+        name: { english: 'Lethal' },
+        text: { templates: { english: `If this damages a follower, destroy it.` } },
     },
     barbarian: {
         name: { english: 'Barbarian: ⚔' },

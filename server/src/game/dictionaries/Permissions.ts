@@ -51,7 +51,7 @@ const Permissions = {
             player === card.controller()
             && player.myTurn()
             && card.zone === 'hand'
-            && card.cost <= player.money
+            && (card.cost <= player.money || card.cost <= 0)
             && ((card instanceof Moment || card instanceof TechniqueCreation) ? card.active() : true)
             && ((card instanceof Follower ? card.validSlots.length > 0 : card instanceof PersistentCard ? Permissions.canSummon(player, card) : true))
         )
@@ -77,7 +77,7 @@ const Permissions = {
             && player.myTurn()
             && (card instanceof TechniqueCreation || card instanceof LeaderTechnique)
             && card.inPlay()
-            && card.cost <= player.money
+            && (card.cost <= player.money || card.cost <= 0)
             && card.active()
         )
     },

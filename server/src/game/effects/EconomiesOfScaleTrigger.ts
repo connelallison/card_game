@@ -3,16 +3,16 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEffectData = {
-    id: 'GulagTrigger',
+    id: 'EconomiesOfScaleTrigger',
     name: {
-        english: `Gulag Trigger`,
+        english: `Economies of Scale Trigger`,
     },
     type: 'Effect',
     subtype: 'Trigger',
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Passive: After you discard a card, summon a 0/2 Prisoner.`,
+            english: `After you play a card, cards in your hand cost (0.1) less this game.`,
         },
         dynamicValues: [],
     },
@@ -21,22 +21,30 @@ const data: TriggerEffectData = {
     triggerObjs: [
         {
             actionType: 'triggerAction',
-            eventType: 'afterDiscard',
+            eventType: 'afterPlay',
             actionSteps: [
                 {
                     requirements: [
                         {
                             eventTargetRequirement: 'isFriendly',
-                            targetMap: 'discardEventDiscardedCard'
+                            targetMap: 'playEventPlayer',
                         },
                     ],
                     actionFunctions: [
                         {
                             functionType: 'autoAction',
-                            operation: 'createAndSummonCard',
+                            operation: 'addEffect',
                             values: {
-                                cardID: 'Prisoner',
+                                effectID: 'EconomiesOfScaleAura'
                             },
+                        },
+                    ],
+                    autoTargets: [
+                        {
+                            targets: {
+                                valueType: 'target',
+                                from: 'self',
+                            }
                         },
                     ],
                 },
@@ -45,10 +53,10 @@ const data: TriggerEffectData = {
     ],
 }
 
-class GulagTrigger extends TriggerEffect {
+class EconomiesOfScaleTrigger extends TriggerEffect {
     static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default GulagTrigger
+export default EconomiesOfScaleTrigger

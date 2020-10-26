@@ -56,7 +56,7 @@ class UsePhase extends EventPhase {
 
     spendMoneyPhase(): void {
         const event = this.event
-        if (event.card.cost > 0) {
+        if (event.card.cost !== 0) {
             const spendMoneyEvent = new SpendMoneyEvent(this.game(), {
                 player: event.player,
                 card: event.card,
@@ -147,6 +147,7 @@ import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
 import PersistentCard from "../gameObjects/PersistentCard";
-import { OptionActionEvent } from "./OptionActionPhase";import { AccrueDebtEvent } from "./AccrueDebtPhase";
+import { OptionActionEvent } from "./OptionActionPhase";
+import { AccrueDebtEvent } from "./AccrueDebtPhase";
 import { LocalisationString } from "../structs/Localisation";
 

@@ -52,9 +52,9 @@ const data: ActionMomentData = {
           from: 'targetDomain',
           targetDomain: ['enemyBoard', 'friendlyBoard'],
           requirements: [{
-            targetRequirement: "minVal",
+            targetRequirement: "valEqualOrGreater",
             values: {
-              min: 4,
+              number: 4,
               param: 'attack'
             }
           }],

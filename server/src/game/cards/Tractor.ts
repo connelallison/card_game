@@ -3,40 +3,40 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-    id: 'M1Abrams',
+    id: 'Tractor',
     name: {
-        english: `M1 Abrams`,
+        english: `Tractor`,
     },
     type: 'Follower',
     subtype: 'Nameless',
-    classes: ['All'],
+    classes: ['Economy'],
     categories: ['Tech'],
     collectable: true,
-    cost: 5,
+    cost: 3,
     attack: 3,
-    health: 6,
+    health: 4,
     charges: 1,
     staticText: {
-        english: `Snipe, Rush`,
+        english: `At the start of your turn, draw a card.`,
     },
     text: {
         templates: {
-            english: `Snipe, Rush`,
+            english: `At the start of your turn, draw a card.`,
         },
     },
     tooltips: [],
     stats: {},
-    effects: ['Snipe', 'Rush'],
+    effects: ['TractorTrigger'],
     options: [],
     actions: [],
     events: [],
     deathEvents: [],
 }
 
-class M1Abrams extends NamelessFollower {
+class Tractor extends NamelessFollower {
     static readonly data: NamelessFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default M1Abrams
+export default Tractor

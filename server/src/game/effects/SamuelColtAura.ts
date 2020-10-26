@@ -3,54 +3,45 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEffectData = {
-    id: 'RansomEOldsAura',
+    id: 'SamuelColtAura',
     name: {
-        english: `Ransom E. Olds Aura`,
+        english: `Samuel Colt Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
     text: {
         templates: {
-            english: `Your techniques are Repeatable.`,
+            english: `All followers have Lethal.`,
         },
     },
     priority: 1,
     activeZones: 'inPlay',
     effectFunction: {
-        name: { english: `Ransom E. Olds Aura` },
+        name: { english: `Samuel Colt Aura` },
         text: {
             templates: {
-                english: `Repeatable.`,
+                english: `Lethal.`,
             },
         },
         stackable: false,
         functions: [
             {
-              operation: 'repeatable',
-              value: true,
+                operation: 'lethal',
+                value: true,
             },
         ],
     },
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyHand', 'friendlyCreations'],
-        requirements: [
-            {
-                targetRequirement: 'isSubtypes',
-                values: {
-                    subtypes: ['Technique'],
-                }
-            },
-        ]
+        targetDomain: ['friendlyBoard', 'enemyBoard'],
     },
-    expires: ['ExpiresEndOfMyTurn'],
 }
 
-class RansomEOldsAura extends AuraEffect {
+class SamuelColtAura extends AuraEffect {
     static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default RansomEOldsAura
+export default SamuelColtAura

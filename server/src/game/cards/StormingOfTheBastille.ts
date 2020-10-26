@@ -11,7 +11,7 @@ const data: ActionMomentData = {
     subtype: 'Action',
     classes: ['The People'],
     collectable: true,
-    cost: 4,
+    cost: 3,
     staticText: {
         english: `Mob\nAction: Deal 6 damage.`,
     },

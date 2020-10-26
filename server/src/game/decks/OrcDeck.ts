@@ -31,6 +31,8 @@ const OrcDeck: DeckObject = {
     'JohnFKennedy',
     'JohnTheBaptist',
     'JohnTheBaptist',
+    'Vaporise',
+    'Vaporise',
   ],
 }
 

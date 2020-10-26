@@ -319,7 +319,7 @@ abstract class Card extends GameObject {
     // this.updateActiveOptions()
     // this.updateActiveActions()
     // this.updateActiveEvents()
-    if (this.cost < 0) this.cost = 0
+    if (this.cost < this.controller().stats.minCardCost) this.cost = this.controller().stats.minCardCost
     this.cost = this.truncate(this.cost)
   }
 
@@ -432,6 +432,7 @@ abstract class Card extends GameObject {
     if (this.flags.repeatable || this.tooltips.includes('repeatable')) rawTooltips.push(Tooltips.repeatable)
     if (this.flags.collateral || this.tooltips.includes('collateral')) rawTooltips.push(Tooltips.collateral)
     if (this.flags.immune || this.tooltips.includes('immune')) rawTooltips.push(Tooltips.immune)
+    if (this.flags.lethal || this.tooltips.includes('lethal')) rawTooltips.push(Tooltips.lethal)
     if (this.flags.rot || this.tooltips.includes('rot')) rawTooltips.push(Tooltips.rot)
     if (this.flags.rot || this.tooltips.includes('rotDamage')) rawTooltips.push(Tooltips.rotDamage)
     if (this.tooltips.includes('nourishHealing')) rawTooltips.push(Tooltips.nourishHealing)
@@ -568,7 +569,7 @@ abstract class Card extends GameObject {
   }
 
   clone(): Card {
-    const clone = new Cards[this.data.id](this.game, this.owner)
+    const clone = this.game.createCard((this.data.id as CardIDString), this.owner)
     Object.assign(clone, this.cloneData(clone))
     this.addedText.forEach(addedText => this.cloneAddedText(clone, addedText))
 

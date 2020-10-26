@@ -5,8 +5,8 @@ const CannibalWives: DeckObject = {
     leader: 'JosephStalin',
     passive: 'Gulag',
     cards: [
-        'Atalanta',
-        'Atalanta',
+        // 'Atalanta',
+        // 'Atalanta',
         'HenryVIII',
         'HenryVIII',
         'NancyKerrigan',
@@ -35,6 +35,8 @@ const CannibalWives: DeckObject = {
         'SubprimeBorrower',
         'BanzaiCharge',
         'BanzaiCharge',
+        'Vaporise',
+        'Vaporise',
     ]
 }
 

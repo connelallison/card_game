@@ -1,6 +1,6 @@
-const UnwashedMasses: DeckObject = {
-    id: 'UnwashedMasses',
-    name: 'Unwashed Masses',
+const ImSpartacus: DeckObject = {
+    id: 'ImSpartacus',
+    name: `I'm Spartacus!`,
     class: 'The People',
     leader: 'NapoleonBonaparte',
     passive: 'GrandeArmee',
@@ -38,6 +38,6 @@ const UnwashedMasses: DeckObject = {
     ]
 }
 
-export default UnwashedMasses
+export default ImSpartacus
 
 import DeckObject from '../structs/DeckObject'

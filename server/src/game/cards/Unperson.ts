@@ -3,40 +3,40 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-    id: 'M1Abrams',
+    id: 'Unperson',
     name: {
-        english: `M1 Abrams`,
+        english: `Unperson`,
     },
     type: 'Follower',
     subtype: 'Nameless',
-    classes: ['All'],
-    categories: ['Tech'],
-    collectable: true,
-    cost: 5,
-    attack: 3,
-    health: 6,
+    classes: ['Infamy'],
+    categories: [],
+    collectable: false,
+    cost: 1,
+    attack: 1,
+    health: 1,
     charges: 1,
     staticText: {
-        english: `Snipe, Rush`,
+        english: `This follower does not exist.\nIt never did.`,
     },
     text: {
         templates: {
-            english: `Snipe, Rush`,
+            english: `This follower does not exist.\nIt never did.`,
         },
     },
     tooltips: [],
     stats: {},
-    effects: ['Snipe', 'Rush'],
+    effects: ['UnpersonEffect'],
     options: [],
     actions: [],
     events: [],
     deathEvents: [],
 }
 
-class M1Abrams extends NamelessFollower {
+class Unperson extends NamelessFollower {
     static readonly data: NamelessFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default M1Abrams
+export default Unperson

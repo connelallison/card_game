@@ -88,9 +88,10 @@ abstract class TargetableEntity extends Component {
             ? this.props.object[stat] > 0
             : this.props.object[stat] !== null
 
-        const negative = this.props.object[stat] < 0 ? -1 : 1
-        const integer = Math.floor(Math.abs(this.props.object[stat])) * negative
-        const decimal = Math.floor(Math.abs((this.props.object[stat] % 1)) * 10)
+        const sign = this.props.object[stat] < 0 ? '-' : ''
+        const integer = Math.floor(Math.abs(this.props.object[stat])) 
+        const decimal = Math.round(Math.abs((this.props.object[stat] % 1)) * 10)
+        // fix decimals
         const decimalSpan = decimal > 0 ? <span className='decimal'>.{decimal}</span> : null
         const spanClass = stat === 'health' && this.props.object.damaged
             ? 'damaged'
@@ -103,7 +104,7 @@ abstract class TargetableEntity extends Component {
                 : ''
         // const numberSpan = <span className={`statNumberSpan ${spanClass}`} >{integer}{decimalSpan}</span>
         return this.props.object.hasOwnProperty(stat) && hiddenCriterion
-            ? <p className={`${stat}-label stat-label ${spanClass}`}>{integer}{decimalSpan}{abbreviations[stat]}</p>
+            ? <p className={`${stat}-label stat-label ${spanClass}`}>{sign}{integer}{decimalSpan}{abbreviations[stat]}</p>
             : null
     }
 

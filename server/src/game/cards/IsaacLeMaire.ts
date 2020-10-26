@@ -3,45 +3,49 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: FamousFollowerData = {
-    id: 'RansomEOlds',
+    id: 'IsaacLeMaire',
     name: {
-        english: `Ransom E. Olds`,
+        english: `Isaac Le Maire`,
     },
     type: 'Follower',
     subtype: 'Famous',
-    classes: ['All'],
+    classes: ['Economy'],
     categories: [],
     collectable: true,
     cost: 3,
     attack: 4,
     health: 3,
     staticText: {
-        english: `Event: Your techniques are Repeatable this turn.`,
+        english: `Event: Draw a card. At the end of your turn, it will be shuffled into your deck.`,
     },
     text: {
         templates: {
-            english: `Event: Your techniques are Repeatable this turn.`,
+            english: `Event: Draw a card. At the end of your turn, it will be shuffled into your deck.`,
         },
     },
-    tooltips: ['repeatable'],
+    tooltips: [],
     stats: {},
     effects: [],
     options: [],
     actions: [],
     events: [
         {
-            id: 'RansomEOldsEvent',
-            name: { english: 'Ransom E. Olds Event' },
-            text: { templates: { english: `Event: Your techniques are Repeatable this turn.` } },
+            id: 'IsaacLeMaireEvent',
+            name: { english: 'Isaac Le Maire Event' },
+            text: { templates: { english: `Event: Draw a card. At the end of your turn, it will be shuffled into your deck.` } },
             actionType: 'eventAction',
             actionSteps: [
                 {
                     actionFunctions: [
                         {
                             functionType: 'autoAction',
+                            operation: 'draw',
+                        },
+                        {
+                            functionType: 'autoAction',
                             operation: 'addEffect',
                             values: {
-                                effectID: 'RansomEOldsAura',
+                                effectID: 'IsaacLeMaireTrigger',
                             },
                         },
                     ],
@@ -49,8 +53,8 @@ const data: FamousFollowerData = {
                         {
                             targets: {
                                 valueType: 'target',
-                                from: 'targetDomain',
-                                targetDomain: 'friendlyPlayer'
+                                from: 'stored',
+                                param: 'drawnCards',
                             }
                         },
                     ],
@@ -61,10 +65,10 @@ const data: FamousFollowerData = {
     deathEvents: [],
 }
 
-class RansomEOlds extends FamousFollower {
+class IsaacLeMaire extends FamousFollower {
     static readonly data: FamousFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default RansomEOlds
+export default IsaacLeMaire

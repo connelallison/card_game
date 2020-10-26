@@ -13,11 +13,11 @@ const data: PassiveLeaderTechniqueData = {
     cost: 0,
     collectable: false,
     staticText: {
-        english: `Passive: Your followers can attack.`,
+        english: `Passive: Your followers can attack (even if they can't).`,
     },
     text: {
         templates: {
-            english: `Passive: Your followers can attack.`,
+            english: `Passive: Your followers can attack (even if they can't).`,
         },
     },
     effects: ['SpartacusBrokenChainsAura']

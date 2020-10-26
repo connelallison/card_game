@@ -3,45 +3,48 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: FamousFollowerData = {
-    id: 'RansomEOlds',
+    id: 'CharlesPonzi',
     name: {
-        english: `Ransom E. Olds`,
+        english: `Charles Ponzi`,
     },
     type: 'Follower',
     subtype: 'Famous',
     classes: ['All'],
-    categories: [],
+    categories: ['Underclass'],
     collectable: true,
-    cost: 3,
-    attack: 4,
+    cost: 4,
+    attack: 3,
     health: 3,
     staticText: {
-        english: `Event: Your techniques are Repeatable this turn.`,
+        english: `Action: Draw a card. If you play it this turn, draw a more expensive one, with the same condition.`,
     },
     text: {
         templates: {
-            english: `Event: Your techniques are Repeatable this turn.`,
+            english: `Action: Draw a card. If you play it this turn, draw a more expensive one, with the same condition.`,
         },
     },
-    tooltips: ['repeatable'],
+    tooltips: [],
     stats: {},
     effects: [],
     options: [],
-    actions: [],
-    events: [
+    actions: [
         {
-            id: 'RansomEOldsEvent',
-            name: { english: 'Ransom E. Olds Event' },
-            text: { templates: { english: `Event: Your techniques are Repeatable this turn.` } },
-            actionType: 'eventAction',
+            id: 'CharlesPonziAction',
+            name: { english: 'Charles Ponzi Action' },
+            text: { templates: { english: `Action: Draw a card. If you play it this turn, draw a more expensive one, with the same condition.` } },
+            actionType: 'actionAction',
             actionSteps: [
                 {
                     actionFunctions: [
                         {
                             functionType: 'autoAction',
+                            operation: 'draw',
+                        },
+                        {
+                            functionType: 'autoAction',
                             operation: 'addEffect',
                             values: {
-                                effectID: 'RansomEOldsAura',
+                                effectID: 'CharlesPonziTrigger',
                             },
                         },
                     ],
@@ -49,8 +52,8 @@ const data: FamousFollowerData = {
                         {
                             targets: {
                                 valueType: 'target',
-                                from: 'targetDomain',
-                                targetDomain: 'friendlyPlayer'
+                                from: 'stored',
+                                param: 'drawnCards'
                             }
                         },
                     ],
@@ -58,13 +61,14 @@ const data: FamousFollowerData = {
             ],
         },
     ],
+    events: [],
     deathEvents: [],
 }
 
-class RansomEOlds extends FamousFollower {
+class CharlesPonzi extends FamousFollower {
     static readonly data: FamousFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default RansomEOlds
+export default CharlesPonzi

@@ -19,6 +19,7 @@ class DamageMultiplePhase extends EventPhase {
                 event.actualDamage = actualDamage
                 // event.generateLog()
                 this.cacheEvent(event, 'damage')
+                if (event.objectSource.effectOwner().flags.lethal && actualDamage > 0 && event.target instanceof Follower) event.target.pendingDestroy = true
             }
         }
         for (const event of events) {
@@ -32,3 +33,4 @@ class DamageMultiplePhase extends EventPhase {
 export default DamageMultiplePhase
 
 import { DamageEvent } from "./DamageSinglePhase";
+import Follower from "../gameObjects/Follower";

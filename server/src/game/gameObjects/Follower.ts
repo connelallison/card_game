@@ -52,7 +52,7 @@ abstract class Follower extends Character {
     this.updateValidSlots()
     this.attack = this.truncate(this.attack)
     this.health = this.truncate(this.health)
-    if (this.cost < 0) this.cost = 0
+    if (this.cost < this.controller().stats.minCardCost) this.cost = this.controller().stats.minCardCost
     this.cost = this.truncate(this.cost)
     this.healthStatic = this.truncate(this.healthStatic)
   }
@@ -112,16 +112,16 @@ abstract class Follower extends Character {
   }
 
   takeDamage(damage: number, rot?: boolean): number {
-    let reducedDamage = damage - this.stats.damageReduction >= 0 ? damage - this.stats.damageReduction : 0
+    let reducedDamage = damage - this.stats.damageReduction >= 0 ? this.round(damage - this.stats.damageReduction) : 0
     if (this.flags.immune && !rot) reducedDamage = 0
     if (reducedDamage > 0 && this.flags.fortune && !rot) {
       reducedDamage = 0
       this.effects = this.effects.filter(effect => !(effect instanceof Fortune))
       this.flags.fortune = false
     }
-    this.rawHealth -= reducedDamage
-    this.health -= reducedDamage
-    if (rot) this.maxHealth -= reducedDamage
+    this.rawHealth = this.round(this.rawHealth - reducedDamage)
+    this.health = this.round(this.health - reducedDamage)
+    if (rot) this.maxHealth = this.round(this.maxHealth - reducedDamage)
     this.update()
     return reducedDamage
   }
@@ -131,9 +131,9 @@ abstract class Follower extends Character {
       ? rawHealing
       : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
 
-    if (nourish) this.maxHealth += healing
-    this.rawHealth += healing
-    this.health += healing
+    if (nourish) this.maxHealth = this.round(this.maxHealth + healing)
+    this.rawHealth = this.round(this.rawHealth + healing)
+    this.health = this.round(this.health + healing)
     this.update()
     return healing
   }

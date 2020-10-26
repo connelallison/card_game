@@ -1,50 +1,49 @@
 import FamousFollower, { FamousFollowerData } from '../gameObjects/FamousFollower'
 import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
-import { freemem } from 'os';
 
 const data: FamousFollowerData = {
-    id: 'JRobertOppenheimer',
+    id: 'RichardNixon',
     name: {
-        english: `J. Robert Oppenheimer`,
+        english: `Richard Nixon`,
     },
     type: 'Follower',
     subtype: 'Famous',
-    classes: ['Learning'],
+    classes: ['Economy'],
     categories: [],
     collectable: true,
-    cost: 6,
-    attack: 2,
-    health: 2,
+    cost: 4,
+    attack: 3,
+    health: 3,
     staticText: {
-        english: `Event: Deal 6 Rot damage to all other followers.`,
+        english: `Event: Reduce the cost of both players' hands by (1).`,
     },
     text: {
         templates: {
-            english: `Event: Deal 6 Rot damage to all other followers.`,
+            english: `Event: Reduce the cost of both players' hands by (1).`,
         },
     },
-    tooltips: ['rotDamage'],
+    tooltips: [],
     stats: {},
     effects: [],
     options: [],
     actions: [],
     events: [
         {
-            id: 'JRobertOppenheimerEvent',
-            name: { english: 'J. Robert Oppenheimer Event' },
-            text: { templates: { english: `Event: Deal 6 Rot damage to all followers.` } },
+            id: 'RichardNixonEvent',
+            name: { english: 'Richard Nixon Event' },
+            text: { templates: { english: `Event: Reduce the cost of both players' hands by (1).` } },
             actionType: 'eventAction',
             actionSteps: [
                 {
                     actionFunctions: [
                         {
-                          functionType: 'autoAction',
-                          operation: 'damage',
-                          values: {
-                              damage: 6,
-                              rot: true,
-                          },
+                            functionType: 'autoAction',
+                            operation: 'reduceCost',
+                            values: {
+                                money: 1,
+                                effectName: { english: 'Nixon Shock' },
+                            },
                         },
                     ],
                     autoTargets: [
@@ -52,12 +51,7 @@ const data: FamousFollowerData = {
                             targets: {
                                 valueType: 'targets',
                                 from: 'targetDomain',
-                                targetDomain: ['enemyBoard', 'friendlyBoard'],
-                                requirements: [
-                                    {
-                                      targetRequirement: 'isNotSelf',
-                                    },
-                                ],
+                                targetDomain: ['friendlyHand', 'enemyHand'],
                             }
                         },
                     ],
@@ -68,10 +62,10 @@ const data: FamousFollowerData = {
     deathEvents: [],
 }
 
-class JRobertOppenheimer extends FamousFollower {
+class RichardNixon extends FamousFollower {
     static readonly data: FamousFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default JRobertOppenheimer
+export default RichardNixon

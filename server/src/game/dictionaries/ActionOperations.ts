@@ -143,27 +143,30 @@ const ActionOperations = {
         player.gainArmour(values.armour)
     },
 
-    draw: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values?: { number?: number, targetRequirements?: TargetRequirement[], forOpponent?: boolean }) => {
+    draw: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values?: { number?: number, targetRequirements?: TargetRequirement[], forOpponent?: boolean, param?: string }) => {
         const player = values.forOpponent ? source.opponent() : source.controller()
         const targets = values.targetRequirements?.reduce((queue, requirement) => queue.filter(card => source.targetRequirement(requirement, card)), player.deck)
-        const number = values.number ?? 1
+        const number = (typeof values?.number === 'number') ? Math.floor(values.number) : 1
+        const param = values.param ?? 'drawnCards'
         const proposedDrawEvent = new ProposedDrawEvent(source.game, {
             player,
             number,
             targets,
         })
         source.game.startNewDeepestPhase('ProposedDrawPhase', proposedDrawEvent)
+        event.stored[param] = proposedDrawEvent.events.map(event => event.card)
     },
 
-    discard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { forOpponent?: boolean }) => {
-        const player = values.forOpponent ? source.opponent() : source.controller()
+    discard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param?: string }) => {
+        const param = values.param ?? 'discardedCards'
         targetObjs.forEach((card: Card) => {
             const discardEvent = new DiscardEvent(source.game, {
-                player,
+                player: card.controller(),
                 card,
             })
             source.game.startNewDeepestPhase('DiscardPhase', discardEvent)
         })
+        event.stored[param] = [...targetObjs]
     },
 
     shuffleIntoDeck: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
@@ -176,7 +179,15 @@ const ActionOperations = {
 
     moveZone: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { zone: ZoneString }) => {
         const cards = targetObjs as Card[]
-        cards.forEach(card => card.moveZone(values.zone))
+        cards.forEach(card => {
+            if (
+                !card.controller().max[values.zone]
+                || card.controller()[values.zone].length < card.controller().max[values.zone]
+                || (values.zone === 'board' && card.controller().canSummon(card as Follower))
+            ) {
+                card.moveZone(values.zone)
+            }
+        })
     },
 
     addTargetedEffect: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { effectID: EffectIDString, target: GameObject[], expires?: EffectExpiryIDString[] }) => {
@@ -420,7 +431,7 @@ const ActionOperations = {
 
     createAndStoreCard: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { cardID: string, param?: string, number?: number, forOpponent?: boolean }) => {
         const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
-        const number = values.number ?? 1
+        const number = (typeof values?.number === 'number') ? Math.floor(values.number) : 1
         const param = values.param ?? 'createdCards'
         const cardID = values.cardID as CardIDString
         const cards: Card[] = []
@@ -433,7 +444,7 @@ const ActionOperations = {
     },
     createAndStoreCopy: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param?: string, number?: number, forOpponent?: boolean }) => {
         const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
-        const number = values.number ?? 1
+        const number = (typeof values?.number === 'number') ? Math.floor(values.number) : 1
         const param = values.param ?? 'copiedCards'
         const cards: Card[] = []
         targetObjs?.forEach(target => {
@@ -448,7 +459,7 @@ const ActionOperations = {
 
     createAndStoreClone: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param?: string, number?: number, forOpponent?: boolean }) => {
         const controller = values.forOpponent === undefined || !values.forOpponent ? source.controller() : source.opponent()
-        const number = values.number ?? 1
+        const number = (typeof values?.number === 'number') ? Math.floor(values.number) : 1
         const param = values.param ?? 'clonedCards'
         const cards: Card[] = []
         targetObjs?.forEach(target => {
@@ -518,6 +529,20 @@ const ActionOperations = {
         source.game.startNewDeepestPhase('GainMoneyPhase', gainMoneyEvent)
     },
 
+    spendAllMoneyAndStore: (source: GameObject, event: ActionEvent, targetObjs: GameObject[], values: { param?: string }) => {
+        const param = values.param ?? 'moneySpent'
+        const player = source.controller()
+        const card = source.effectOwner() as Card
+        const money = player.money
+        const spendMoneyEvent = new SpendMoneyEvent(source.game, {
+            player,
+            money,
+            card,
+        })
+        source.game.startNewDeepestPhase('SpendMoneyPhase', spendMoneyEvent)
+        event.stored[param] = money
+    },
+
     markDestroyed: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
         const targets = targetObjs as DestroyableCard[]
         targets.forEach(target => target.pendingDestroy = true)
@@ -570,6 +595,18 @@ const ActionOperations = {
     banish: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
         const targets = targetObjs as PersistentCard[]
         targets.forEach(target => target.moveZone('setAsideZone'))
+    },
+
+    vaporise: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
+        targetObjs.forEach((card: Card) => {
+            const copies = Object.values(source.game.gameObjects).filter(object => object.id === card.id) as Card[]
+            copies.forEach(card => {
+                card.moveZone('setAsideZone')
+                card.addEffect(new Effects.UnpersonEffect(source.game, card.owner))
+            })
+            // @ts-ignore
+            source.game.cards[card.id] = source.game.cards['Unperson']
+        })
     },
 
     resurrect: (source: GameObject, event: ActionEvent, targetObjs: GameObject[]) => {
@@ -707,4 +744,6 @@ import TargetToNumberMap from '../functionTypes/TargetToNumberMap'
 import { EventAction } from '../structs/Action'
 import { DiscardEvent } from '../gamePhases/DiscardPhase'
 import { GainMoneyEvent } from '../gamePhases/GainMoneyPhase'
+import { OptionActionEvent } from '../gamePhases/OptionActionPhase'
+import { ActionActionEvent } from '../gamePhases/ActionActionPhase'
 

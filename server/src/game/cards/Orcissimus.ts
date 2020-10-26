@@ -17,11 +17,11 @@ const data: FamousFollowerData = {
   attack: 4,
   health: 5,
   staticText: {
-    english: `Event: Summon a copy of the last friendly minion that died.`,
+    english: `Event: Summon a copy of the last friendly follower that died.`,
   },
   text: {
     templates: {
-      english: `Event: Summon a copy of the last friendly minion that died. $0`,
+      english: `Event: Summon a copy of the last friendly follower that died. $0`,
     },
     dynamicValues: [
       {
@@ -46,7 +46,7 @@ const data: FamousFollowerData = {
     },
     text: {
       templates: {
-        english: `Event: Summon a copy of the last friendly minion that died. $0`,
+        english: `Event: Summon a copy of the last friendly follower that died. $0`,
       },
       dynamicValues: [
         {

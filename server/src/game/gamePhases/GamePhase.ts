@@ -28,8 +28,13 @@ abstract class GamePhase {
         this.activeChild.start()
     }
 
+    static cards() {
+        return { ...Cards }
+    }
+
     createCard(cardID: CardIDString, owner: GamePlayer): Card {
-        return new Cards[cardID](this.game(), owner)
+        // return new Cards[cardID](this.game(), owner)
+        return this.game().createCard(cardID, owner)
     }
 
     createPersistentCard(cardID: PersistentCardIDString, owner: GamePlayer): PersistentCard {

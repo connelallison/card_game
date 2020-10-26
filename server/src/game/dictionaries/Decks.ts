@@ -5,10 +5,11 @@ import MassMobilisation from '../decks/MassMobilisation'
 import OrcDeck from '../decks/OrcDeck'
 import ThinkTank from '../decks/ThinkTank'
 import TulipMAD from '../decks/TulipMAD'
-import UnwashedMasses from '../decks/UnwashedMasses'
+import ImSpartacus from '../decks/ImSpartacus'
+import Supercontango from '../decks/Supercontango'
 
 const Decks = {
-  UnwashedMasses,
+  ImSpartacus,
   MassMobilisation,
   CivilDisobedience,
   // OrcDeck,
@@ -16,6 +17,7 @@ const Decks = {
   HarshMedicine,
   CannibalWives,
   TulipMAD,
+  Supercontango,
 }
 
 export default Decks

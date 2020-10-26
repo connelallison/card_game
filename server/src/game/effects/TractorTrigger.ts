@@ -3,16 +3,16 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEffectData = {
-    id: 'GulagTrigger',
+    id: 'TractorTrigger',
     name: {
-        english: `Gulag Trigger`,
+        english: `Tractor Trigger`,
     },
     type: 'Effect',
     subtype: 'Trigger',
     activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Passive: After you discard a card, summon a 0/2 Prisoner.`,
+            english: `At the start of your turn, draw a card.`,
         },
         dynamicValues: [],
     },
@@ -21,22 +21,18 @@ const data: TriggerEffectData = {
     triggerObjs: [
         {
             actionType: 'triggerAction',
-            eventType: 'afterDiscard',
+            eventType: 'startOfTurn',
             actionSteps: [
                 {
                     requirements: [
                         {
-                            eventTargetRequirement: 'isFriendly',
-                            targetMap: 'discardEventDiscardedCard'
+                            activeRequirement: 'isMyTurn'
                         },
                     ],
                     actionFunctions: [
                         {
                             functionType: 'autoAction',
-                            operation: 'createAndSummonCard',
-                            values: {
-                                cardID: 'Prisoner',
-                            },
+                            operation: 'draw',
                         },
                     ],
                 },
@@ -45,10 +41,10 @@ const data: TriggerEffectData = {
     ],
 }
 
-class GulagTrigger extends TriggerEffect {
+class TractorTrigger extends TriggerEffect {
     static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default GulagTrigger
+export default TractorTrigger

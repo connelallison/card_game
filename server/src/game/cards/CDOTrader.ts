@@ -14,7 +14,7 @@ const data: NamelessFollowerData = {
     collectable: true,
     cost: 3,
     attack: 2,
-    health: 3,
+    health: 4,
     charges: 2,
     staticText: {
         english: `Snipe\nPillage`,

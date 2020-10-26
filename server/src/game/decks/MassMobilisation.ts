@@ -5,8 +5,6 @@ const MassMobilisation: DeckObject = {
   leader: 'NapoleonBonaparte',
   passive: 'GrandeArmee',
   cards: [
-    'Lictor',
-    'Lictor',
     'TwelveTables',
     'TwelveTables',
     'VladimirLenin',
@@ -33,8 +31,12 @@ const MassMobilisation: DeckObject = {
     'SubprimeBorrower',
     'HelenOfTroy',
     'HelenOfTroy',
-    'M1Abrams',
-    'M1Abrams',
+    // 'M1Abrams',
+    // 'M1Abrams',
+    'SamuelColt',
+    'SamuelColt',
+    'BostonTeaParty',
+    'BostonTeaParty',
   ]
 }
 

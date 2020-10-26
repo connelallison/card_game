@@ -11,7 +11,7 @@ const data: AuraEffectData = {
     subtype: 'Aura',
     text: {
         templates: {
-            english: `Your followers can attack.`,
+            english: `Passive: Your followers can attack (even if they can't).`,
         },
     },
     priority: 2,

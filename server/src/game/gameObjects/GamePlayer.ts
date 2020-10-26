@@ -5,6 +5,7 @@ interface GamePlayerStats {
   fervour: number
   growth: number
   income: number
+  minCardCost: number
 }
 
 class GamePlayer extends GameObject {
@@ -229,6 +230,7 @@ class GamePlayer extends GameObject {
       income: this.rawIncome,
       rent: 0,
       fervour: 0,
+      minCardCost: 0,
     }
   }
 
@@ -338,12 +340,12 @@ class GamePlayer extends GameObject {
   takeDamage(damage: number, rot?: boolean): number {
     let remainingDamage = damage
     // if (!rot) {
-    remainingDamage = damage > this.armour ? damage - this.armour : 0
-    const remainingArmour = this.armour > damage ? this.armour - damage : 0
+    remainingDamage = damage > this.armour ? this.round(damage - this.armour) : 0
+    const remainingArmour = this.armour > damage ? this.round(this.armour - damage) : 0
     this.armour = remainingArmour
     // }
-    this.currentHealth -= remainingDamage
-    if (rot) this.maxHealth -= remainingDamage
+    this.currentHealth = this.round(this.currentHealth - remainingDamage)
+    if (rot) this.maxHealth = this.round(this.maxHealth - remainingDamage)
     // this.update()
     return remainingDamage
   }
@@ -353,8 +355,8 @@ class GamePlayer extends GameObject {
       ? rawHealing
       : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
 
-    if (nourish) this.maxHealth += healing
-    this.currentHealth += healing
+    if (nourish) this.maxHealth = this.round(this.maxHealth += healing)
+    this.currentHealth = this.round(this.currentHealth += healing)
     return healing
   }
 
@@ -363,13 +365,13 @@ class GamePlayer extends GameObject {
   }
 
   spendMoney(amount: number): void {
-    this.rawMoney -= amount
-    this.money -= amount
+    this.rawMoney = this.round(this.rawMoney - amount)
+    this.money = this.round(this.money - amount)
   }
 
   gainMoney(amount: number): void {
-    this.rawMoney += amount
-    this.money += amount
+    this.rawMoney = this.round(this.rawMoney + amount)
+    this.money = this.round(this.money + amount)
   }
 
   refillMoney(): void {

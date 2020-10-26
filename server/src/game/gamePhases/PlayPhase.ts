@@ -73,8 +73,8 @@ class PlayPhase extends EventPhase {
 
     spendMoneyPhase(): void {
         const event = this.event
-        if (event.card.cost > 0) {
-            const spendMoneyEvent = new AccrueDebtEvent(this.game(), {
+        if (event.card.cost !== 0) {
+            const spendMoneyEvent = new SpendMoneyEvent(this.game(), {
                 player: event.player,
                 card: event.card,
                 money: event.card.cost
@@ -181,8 +181,10 @@ import PersistentCard from "../gameObjects/PersistentCard";
 import { EnterPlayEvent } from "./EnterPlayPhase";
 import { ActionActionEvent } from "./ActionActionPhase";
 import { EventActionEvent } from "./EventActionPhase";
-import { SpendMoneyEvent as AccrueDebtEvent } from "./SpendMoneyPhase";
+import { SpendMoneyEvent } from "./SpendMoneyPhase";
 import DestroyableCard from "../gameObjects/DestroyableCard";
-import { OptionActionEvent } from "./OptionActionPhase"; import { LocalisationString } from "../structs/Localisation";
+import { OptionActionEvent } from "./OptionActionPhase"; 
+import { LocalisationString } from "../structs/Localisation";
 import EventToNumberMaps from "../dictionaries/EventToNumberMaps";
+import { AccrueDebtEvent } from "./AccrueDebtPhase";
 

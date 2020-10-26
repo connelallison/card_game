@@ -2,8 +2,8 @@ import GameEvent from "./GameEvent";
 import EventPhase from "./EventPhase";
 
 interface ProposedDrawEventObject {
-    player: GamePlayer,
-    number?: number,
+    player: GamePlayer
+    number?: number
     targets?: Card[]
 }
 
@@ -11,10 +11,12 @@ export class ProposedDrawEvent extends GameEvent {
     player: GamePlayer
     number?: number = 1
     targets?: Card[]
-    
+    events: DrawEvent[]
+
     constructor(game: Game, object: ProposedDrawEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
+        this.events = []
     }
 
     generateLog() {
@@ -38,9 +40,9 @@ interface DrawEventObject {
 export class DrawEvent extends GameEvent {
     player: GamePlayer
     card: Card
-    
+
     constructor(game: Game, object: DrawEventObject) {
-        super(game) 
+        super(game)
         Object.assign(this, object)
     }
 
@@ -84,6 +86,7 @@ class ProposedDrawPhase extends EventPhase {
                     })
                     // event.generateLog()
                     this.cacheEvent(event, 'draw')
+                    this.event.events.push(event)
                     this.emit('onDraw', event)
                     this.afterDrawQueue.push(event)
                 } else {
@@ -128,5 +131,5 @@ import Game from "./Game";
 import { DamageEvent } from "./DamageSinglePhase";
 import Card from "../gameObjects/Card";
 import { TargetRequirement } from "../structs/Requirement";
-import { LocalisationString } from "../structs/Localisation";import DiscardPhase, { DiscardEvent } from "./DiscardPhase";
+import { LocalisationString } from "../structs/Localisation"; import DiscardPhase, { DiscardEvent } from "./DiscardPhase";
 

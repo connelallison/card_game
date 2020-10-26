@@ -19,6 +19,7 @@ export class OptionActionEvent extends GameEvent {
 
     constructor(game: Game, object: OptionActionEventObject) {
         super(game)
+        this.stored = {}
         Object.assign(this, object)
     }
 

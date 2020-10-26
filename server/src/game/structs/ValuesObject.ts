@@ -17,8 +17,8 @@ interface ValuesObject {
     damage?: DynamicOrStoredNumber
     healing?: DynamicOrStoredNumber
     armour?: DynamicOrStoredNumber
-    min?: DynamicOrStoredNumber
-    max?: DynamicOrStoredNumber
+    // min?: DynamicOrStoredNumber
+    // max?: DynamicOrStoredNumber
     money?: DynamicOrStoredNumber
     attack?: DynamicOrStoredNumber
     health?: DynamicOrStoredNumber

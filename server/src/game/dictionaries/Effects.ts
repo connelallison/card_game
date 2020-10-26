@@ -78,6 +78,15 @@ import CostIncrease from '../effects/CostIncrease'
 import SetCost from '../effects/SetCost'
 import GeorgeMarshallAura from '../effects/GeorgeMarshallAura'
 import AneurinBevanTrigger from '../effects/AneurinBevanTrigger'
+import TractorTrigger from '../effects/TractorTrigger'
+import CharlesPonziTrigger from '../effects/CharlesPonziTrigger'
+import UnpersonEffect from '../effects/UnpersonEffect'
+import Lethal from '../effects/Lethal'
+import SamuelColtAura from '../effects/SamuelColtAura'
+import EconomiesOfScaleTrigger from '../effects/EconomiesOfScaleTrigger'
+import EconomiesOfScaleAura from '../effects/EconomiesOfScaleAura'
+import SupercontangoEffect from '../effects/SupercontangoEffect'
+import IsaacLeMaireTrigger from '../effects/IsaacLeMaireTrigger'
 // insert import here
 
 export const StatStaticEffects = {
@@ -115,6 +124,9 @@ export const StaticEffects = {
   DebuffAttackAndHealth,
   CostIncrease,
   SetCost,
+  UnpersonEffect,
+  Lethal,
+  SupercontangoEffect,
   // insert StaticEffect here
 }
 
@@ -135,6 +147,8 @@ export const AuraEffects = {
   HenryFordAura,
   RansomEOldsAura,
   GeorgeMarshallAura,
+  SamuelColtAura,
+  EconomiesOfScaleAura,
   // insert AuraEffect here
 }
 
@@ -171,6 +185,10 @@ export const TriggerEffects = {
   GulagTrigger,
   KunstoffizierTrigger,
   AneurinBevanTrigger,
+  TractorTrigger,
+  CharlesPonziTrigger,
+  EconomiesOfScaleTrigger,
+  IsaacLeMaireTrigger,
   // insert TriggerEffect here
 }
 

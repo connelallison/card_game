@@ -1,6 +1,9 @@
 const TargetRequirements = {
-    minVal: (source: GameObject, target: GameObject, values: { min: number, param: string }): boolean => (target[values.param] >= values.min),
-    maxVal: (source: GameObject, target: GameObject, values: { max: number, param: string }): boolean => (target[values.param] <= values.max),
+    valEqualOrGreater: (source: GameObject, target: GameObject, values: { number: number, param: string }): boolean => (target[values.param] >= values.number),
+    valGreater: (source: GameObject, target: GameObject, values: { number: number, param: string }): boolean => (target[values.param] > values.number),
+    valEqualOrLesser: (source: GameObject, target: GameObject, values: { number: number, param: string }): boolean => (target[values.param] <= values.number),
+    valLesser: (source: GameObject, target: GameObject, values: { number: number, param: string }): boolean => (target[values.param] < values.number),
+    valEqual: (source: GameObject, target: GameObject, values: { number: number, param: string }): boolean => (target[values.param] === values.number),
     isFriendly: (source: GameObject, target: GameObject): boolean => (source.controller() === target.controller()),
     isEnemy: (source: GameObject, target: GameObject): boolean => (source.controller() !== target.controller()),
     isSelf: (source: GameObject, target: GameObject): boolean => (source.charOwner() === target),

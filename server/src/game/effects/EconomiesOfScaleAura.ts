@@ -3,54 +3,45 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEffectData = {
-    id: 'RansomEOldsAura',
+    id: 'EconomiesOfScaleAura',
     name: {
-        english: `Ransom E. Olds Aura`,
+        english: `Economies of Scale Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
     text: {
         templates: {
-            english: `Your techniques are Repeatable.`,
+            english: `Cards in your hand cost (0.1) less.`,
         },
     },
     priority: 1,
     activeZones: 'inPlay',
     effectFunction: {
-        name: { english: `Ransom E. Olds Aura` },
+        name: { english: `Economies of Scale Aura` },
         text: {
             templates: {
-                english: `Repeatable.`,
+                english: `Cost reduced by (0.1).`,
             },
         },
-        stackable: false,
+        stackable: true,
         functions: [
             {
-              operation: 'repeatable',
-              value: true,
+              operation: 'decreaseCost',
+              value: 0.1,
             },
         ],
     },
     targets: {
         valueType: 'targets',
         from: 'targetDomain',
-        targetDomain: ['friendlyHand', 'friendlyCreations'],
-        requirements: [
-            {
-                targetRequirement: 'isSubtypes',
-                values: {
-                    subtypes: ['Technique'],
-                }
-            },
-        ]
+        targetDomain: 'friendlyHand',
     },
-    expires: ['ExpiresEndOfMyTurn'],
 }
 
-class RansomEOldsAura extends AuraEffect {
+class EconomiesOfScaleAura extends AuraEffect {
     static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default RansomEOldsAura
+export default EconomiesOfScaleAura

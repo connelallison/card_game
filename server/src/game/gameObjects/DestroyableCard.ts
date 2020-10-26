@@ -74,7 +74,7 @@ abstract class DestroyableCard extends PersistentCard {
     finishUpdate(): void {
         // this.updateActiveOptions()
         // this.updateActiveActions()
-        if (this.cost < 0) this.cost = 0
+        if (this.cost < this.controller().stats.minCardCost) this.cost = this.controller().stats.minCardCost
         this.cost = this.truncate(this.cost)
         this.updateActiveEvents()
         this.updateActiveDeathEvents()

@@ -3,40 +3,38 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: TriggerEffectData = {
-    id: 'GulagTrigger',
+    id: 'IsaacLeMaireTrigger',
     name: {
-        english: `Gulag Trigger`,
+        english: `Isaac Le Maire`,
     },
     type: 'Effect',
     subtype: 'Trigger',
-    activeZones: 'inPlay',
     text: {
         templates: {
-            english: `Passive: After you discard a card, summon a 0/2 Prisoner.`,
+            english: `At the end of your turn, shuffle this into your deck.`,
         },
         dynamicValues: [],
     },
-    repeatable: true,
+    repeatable: false,
     wonderTrigger: false,
     triggerObjs: [
         {
             actionType: 'triggerAction',
-            eventType: 'afterDiscard',
+            eventType: 'endOfTurn',
             actionSteps: [
                 {
-                    requirements: [
-                        {
-                            eventTargetRequirement: 'isFriendly',
-                            targetMap: 'discardEventDiscardedCard'
-                        },
-                    ],
                     actionFunctions: [
                         {
                             functionType: 'autoAction',
-                            operation: 'createAndSummonCard',
-                            values: {
-                                cardID: 'Prisoner',
-                            },
+                            operation: 'shuffleIntoDeck',
+                        },
+                    ],
+                    autoTargets: [
+                        {
+                            targets: {
+                                valueType: 'target',
+                                from: 'self',
+                            }
                         },
                     ],
                 },
@@ -45,10 +43,10 @@ const data: TriggerEffectData = {
     ],
 }
 
-class GulagTrigger extends TriggerEffect {
+class IsaacLeMaireTrigger extends TriggerEffect {
     static readonly data: TriggerEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default GulagTrigger
+export default IsaacLeMaireTrigger

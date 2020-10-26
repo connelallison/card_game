@@ -25,6 +25,7 @@ class Game extends GamePhase {
   // unreportedEvents: GameEvent[]
   unreportedEvents: any[]
   winner: string
+  cards: ReturnType<typeof GamePhase.cards>
 
   constructor(player1name: string, player2name: string, player1deck: DeckObject, player2deck: DeckObject, player1socketID: string, player2socketID: string = null) {
     super()
@@ -46,6 +47,7 @@ class Game extends GamePhase {
     this.queuedPhases = []
     this.unreportedEvents = []
     this.winner
+    this.cards = GamePhase.cards()
   }
 
   game(): Game {
@@ -386,6 +388,11 @@ class Game extends GamePhase {
     }
   }
 
+  createCard(cardID: CardIDString, owner: GamePlayer): Card {
+    return new this.cards[cardID](this.game(), owner)
+    // return this.game().createCard(cardID, owner)
+}
+
   cacheEvent(event: GameEvent, type: EventTypeString): void {
     (this.eventCache[type] as GameEvent[]).push(event)
     this.eventCache.all.push(event)
@@ -495,7 +502,7 @@ import { UseEvent } from './UsePhase'
 import { PlayEvent } from './PlayPhase'
 import TestBot from '../gameTests/TestBot'
 import Phases from '../dictionaries/Phases'
-import { PhaseString } from '../stringTypes/DictionaryKeyString'
+import { CardIDString, PhaseString } from '../stringTypes/DictionaryKeyString'
 import { OptionChoice, OptionChoiceRequest } from '../structs/Action'
 import { MoveRequest } from '../structs/ObjectReport'
 import { LocalisationString } from '../structs/Localisation'

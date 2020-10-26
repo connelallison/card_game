@@ -1,0 +1,70 @@
+import ActionMoment, { ActionMomentData } from '../gameObjects/ActionMoment'
+import Game from "../gamePhases/Game";
+import GamePlayer from "../gameObjects/GamePlayer";
+
+const data: ActionMomentData = {
+    id: 'Vaporise',
+    name: {
+        english: `Vaporise`,
+    },
+    type: 'Moment',
+    subtype: 'Action',
+    classes: ['Infamy'],
+    collectable: true,
+    cost: 5,
+    staticText: {
+        english: `Action: Remove a follower from existence.`,
+    },
+    text: {
+        templates: {
+            english: `Action: Remove a follower from existence.`,
+        },
+    },
+    tooltips: [],
+    actions: [
+        {
+            id: 'VaporiseAction',
+            name: { english: 'Vaporise' },
+            text: { templates: { english: `Action: Remove a follower from existence.` } },
+            actionType: 'actionAction',
+            actionSteps: [
+                {
+                    actionFunctions: [
+                        {
+                            functionType: 'manualAction',
+                            operation: 'vaporise',
+                        },
+                    ],
+                    manualTargets: [
+                        {
+                            text: { templates: { english: `Choose a follower to vaporise.` } },
+                            hostile: true,
+                            targets: {
+                                valueType: 'targets',
+                                from: 'targetDomain',
+                                targetDomain: ['enemyBoard', 'friendlyBoard'],
+                                // requirements: [
+                                //     {
+                                //         targetRequirement: 'isSubtype',
+                                //         values: {
+                                //             subtype: 'Famous'
+                                //         }
+                                //     },
+                                // ],
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    events: [],
+}
+
+class Vaporise extends ActionMoment {
+    static readonly data: ActionMomentData = data
+    constructor(game: Game, owner: GamePlayer) {
+        super(game, owner, data)
+    }
+}
+export default Vaporise

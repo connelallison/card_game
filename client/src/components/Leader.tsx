@@ -17,6 +17,7 @@ class Leader extends Card {
         {this.healingOverlay()}
         {this.deathOverlay()}
         {this.actionOverlay()}
+        {this.mulliganOverlay()}
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
         {/* <p className={`card-text`}>{this.props.object.text}</p> */}

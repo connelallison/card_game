@@ -187,7 +187,7 @@ import CosimoDeMediciBank from '../cards/CosimoDeMediciBank'
 import CosimoDeMedici from '../cards/CosimoDeMedici'
 import EconomiesOfScale from '../cards/EconomiesOfScale'
 import Supercontango from '../cards/Supercontango'
-import Investor from '../cards/Investor'
+import Banker from '../cards/Banker'
 import IsaacLeMaire from '../cards/IsaacLeMaire'
 // insert import here
 
@@ -220,7 +220,7 @@ export const NamelessFollowers = {
   Tractor,
   Unperson,
   Galleon,
-  Investor,
+  Banker,
   // insert NamelessFollower here
 }
 

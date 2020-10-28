@@ -13,15 +13,21 @@ import Game from './game/gamePhases/Game'
 import Decks from './game/dictionaries/Decks'
 import { performance } from 'perf_hooks'
 import PvPChallenge from './Challenge'
+import DeckObject from './game/structs/DeckObject'
+import { CardIDString } from './game/stringTypes/DictionaryKeyString'
 
-const before = performance.now()
+// const before = performance.now()
+for (const deckID in Decks) {
+  const deck: DeckObject = Decks[deckID]
+  deck.cards = deck.cards.map(card => Cards[card].provideReport()).sort((first, second) => GameObject.sortCards(first, second) ? 1 : -1).map(card => card.id as CardIDString)
+}
 const deckIDs = Object.keys(Decks)
 const CardsStatic = Object.fromEntries(Object.entries(Cards).map(([id, card]) => [id, card.provideReport()]))
 // console.log(Date.now())
 const decksHash = crypto.createHash('sha256').update(JSON.stringify(Decks)).digest('hex')
 const cardsHash = crypto.createHash('sha256').update(JSON.stringify(CardsStatic)).digest('hex')
 // console.log(Date.now())
-const after = performance.now()
+// const after = performance.now()
 // console.log(decksHash)
 // console.log(cardsHash)
 // console.log(after - before)
@@ -84,8 +90,10 @@ const startGame = (serverPlayer: ServerPlayer, opponent: { opponentID: string })
     serverPlayer.opponent = null
     if (!testBotGame) {
       // if ()
-      connectedPlayers[opponent.opponentID].status = 'lobby'
-      connectedPlayers[opponent.opponentID].opponent = null
+      if (connectedPlayers[opponent.opponentID] && connectedPlayers[opponent.opponentID]) {
+        connectedPlayers[opponent.opponentID].status = 'lobby'
+        connectedPlayers[opponent.opponentID].opponent = null
+      }
       io.emit('testBotAnnouncement', {
         message: `${serverPlayer.uniqueDisplayName()} vs ${connectedPlayers[opponent.opponentID].uniqueDisplayName()}: ${winner}.`
       })
@@ -148,7 +156,10 @@ io.on('connection', function (socket) {
   connectedSockets[socketID] = socket
   console.log(`${Object.values(connectedPlayers).length} connected`)
   socket.emit('updateDecks', Decks)
-  // io.emit('serverPlayersUpdate', Object.values(connectedPlayers).map(player => player.report()))
+  // const before = performance.now()
+  socket.emit('updateCards', CardsStatic)
+  // const after = performance.now()
+  // console.log(after - before)
   serverPlayersUpdate()
   socket.on('updateDisplayName', function (data) {
     // console.log('updateDisplayName request received')

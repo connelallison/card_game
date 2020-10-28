@@ -27,8 +27,10 @@ const MassMobilisation: DeckObject = {
     'SaintJust',
     'Cleon',
     'Cleon',
-    'SubprimeBorrower',
-    'SubprimeBorrower',
+    // 'SubprimeBorrower',
+    // 'SubprimeBorrower',
+    'TankMan',
+    'TankMan',
     'HelenOfTroy',
     'HelenOfTroy',
     // 'M1Abrams',
@@ -37,7 +39,12 @@ const MassMobilisation: DeckObject = {
     'SamuelColt',
     'BostonTeaParty',
     'BostonTeaParty',
-  ]
+  ],
+  description: `Overwhelm your opponent with numbers and revolutionary fervour using this Citizen-focused deck. `,
+  tips: `- Make frequent use of your leader technique. This deck is most effective when your followers outnumber your opponent's.
+         - The Statue of Liberty is very powerful. Produce lots of Citizens to make sure it's not destroyed.
+         - Collectivisation combines very well with aura buffs like the Statue of Liberty or the Second Amendment.
+         - Saint-Just and the French Revolution pair well.`
 }
 
 export default MassMobilisation

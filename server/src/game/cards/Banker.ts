@@ -3,39 +3,39 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-    id: 'Investor',
+    id: 'Banker',
     name: {
-        english: `Investor`,
+        english: `Banker`,
     },
     type: 'Follower',
     subtype: 'Nameless',
     classes: ['Economy'],
     categories: [],
     collectable: true,
-    cost: 1,
+    cost: 2,
     attack: 1,
     health: 1,
     charges: 2,
     staticText: {
-        english: `Option: Spend all your Money. For each Money spent, summon a clone of this; or gain +1/+1.`,
+        english: `Guard\nOption: Spend all your Money. For each Money spent, summon a clone of this; or gain +1/+1.`,
     },
     text: {
         templates: {
-            english: `Option: Spend all your Money. For each Money spent, summon a clone of this; or gain +1/+1.`,
+            english: `Guard\nOption: Spend all your Money. For each Money spent, summon a clone of this; or gain +1/+1.`,
         },
     },
     tooltips: [],
     stats: {},
-    effects: [],
+    effects: ['Guard'],
     options: [
         {
             actionType: 'optionAction',
-            id: `InvestorOption`,
-            name: { english: `Investor Option` },
+            id: `BankerOption`,
+            name: { english: `Banker Option` },
             text: { templates: { english: `Option: Spend all your Money. For each Money spent, summon a clone of this; or gain +1/+1.` } },
             actions: [
                 {
-                    id: 'InvestorRetail',
+                    id: 'BankerRetail',
                     name: { english: 'Retail' },
                     text: { templates: { english: `Action: Spend all your Money. For each Money spent, summon a clone of this.` } },
                     actionType: 'actionAction',
@@ -70,8 +70,8 @@ const data: NamelessFollowerData = {
                     ],
                 },
                 {
-                    id: 'InvestorInstitutional',
-                    name: { english: 'Institutional' },
+                    id: 'BankerInvestment',
+                    name: { english: 'Investment' },
                     text: { templates: { english: `Action: Spend all your Money. For each Money spent, gain +1/+1.` } },
                     actionType: 'actionAction',
                     actionSteps: [
@@ -90,7 +90,7 @@ const data: NamelessFollowerData = {
                                             from: 'stored',
                                             param: 'moneySpent',
                                         },
-                                        effectName: { english: 'Institutional Investor Buff' },
+                                        effectName: { english: 'Investment Banker Buff' },
                                     },
                                 },
                             ],
@@ -113,10 +113,10 @@ const data: NamelessFollowerData = {
     deathEvents: [],
 }
 
-class Investor extends NamelessFollower {
+class Banker extends NamelessFollower {
     static readonly data: NamelessFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default Investor
+export default Banker

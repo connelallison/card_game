@@ -60,7 +60,7 @@ abstract class WeaponCreation extends Creation {
     static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
         return {
             name: this.data.name[localisation],
-            id: this.data.id[localisation],
+            id: this.data.id,
             cost: this.data.cost,
             charges: this.data.charges,
             attack: this.data.attack,
@@ -68,6 +68,7 @@ abstract class WeaponCreation extends Creation {
             subtype: this.data.subtype,
             text: this.data.staticText[localisation],
             classes: this.data.classes,
+            relatedCard: Cards[this.data.id].relatedCardReport(),
         }
     }
 
@@ -120,4 +121,5 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "./GamePlayer";
 import { ObjectReport, StaticObjectReport } from "../structs/ObjectReport";
 import GameObjectData from "../structs/GameObjectData";
-import { LocalisationString, NameAndTextObject } from "../structs/Localisation";
+import { LocalisationString, NameAndTextObject } from "../structs/Localisation";import Cards from "../dictionaries/Cards";
+

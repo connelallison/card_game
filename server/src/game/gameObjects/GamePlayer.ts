@@ -171,7 +171,7 @@ class GamePlayer extends GameObject {
   }
 
   deckReport(localisation: LocalisationString = 'english'): ObjectReport[] {
-    return [...this.deck].sort((first, second) => this.sortCards(first, second, localisation) ? 1 : -1).map(card => card.provideReport())
+    return [...this.deck].map(card => card.provideReport(localisation)).sort((first, second) => this.sortCards(first, second) ? 1 : -1)
   }
 
   legacyReport(): ObjectReport[] {
@@ -221,7 +221,7 @@ class GamePlayer extends GameObject {
   // }
 
   baseMoney(): number {
-    return this.rawMoney - this.currentDebt
+    return this.round(this.rawMoney - this.currentDebt)
   }
 
   baseStats(): GamePlayerStats {
@@ -386,28 +386,28 @@ class GamePlayer extends GameObject {
 
   modIncome(number): void {
     if (this.rawIncome + number >= 0) {
-      this.rawIncome += number
-      this.stats.income += number
+      this.rawIncome = this.round(this.rawIncome + number)
+      this.stats.income = this.round(this.stats.income + number)
     } else {
-      const diff = this.stats.income - this.rawIncome
+      const diff = this.round(this.stats.income - this.rawIncome)
       this.rawIncome = 0
-      this.stats.income = this.rawIncome + diff
+      this.stats.income = this.round(this.rawIncome + diff)
     }
   }
 
   modGrowth(number): void {
     if (this.rawGrowth + number >= 0) {
-      this.rawGrowth += number
-      this.stats.growth += number
+      this.rawGrowth = this.round(this.rawGrowth + number)
+      this.stats.growth = this.round(this.stats.growth + number)
     } else {
-      const diff = this.stats.growth - this.rawGrowth
+      const diff = this.round(this.stats.growth - this.rawGrowth)
       this.rawGrowth = 0
-      this.stats.growth = this.rawGrowth + diff
+      this.stats.growth = this.round(this.rawGrowth + diff)
     }
   }
 
   accrueDebt(debt: number): void {
-    this.queuedDebt += debt
+    this.queuedDebt = this.round(this.queuedDebt + debt)
   }
 
   payDebt(): void {

@@ -12,6 +12,7 @@ export interface CardProps extends EntityProps {
     hover?: boolean
     relatedCard?: boolean
     playCard?: boolean
+    mulligan?: boolean
     zone?: boolean
 }
 
@@ -35,6 +36,10 @@ abstract class Card extends TargetableEntity {
 
     isPlayCard(): string {
         return !this.props.playCard ? '' : 'playCard'
+    }
+
+    isMulliganCard(): string {
+        return !!this.props.mulligan ? 'mulliganCard' : ''
     }
 
     isCombat(): string {
@@ -66,7 +71,7 @@ abstract class Card extends TargetableEntity {
             ? <div
                 key={damage.key}
                 className={`damage overlay ${damage.number === 0 ? 'noDamage' : ''}`}>
-                <p className={`${damage.rot ? 'rotText' : 'damageText'} healthChangeText`}>-{damage.number}</p>
+                <p className={`${damage.rot ? 'rotText' : 'damageText'} overlayText`}>-{damage.number}</p>
             </div>
             : null
     }
@@ -75,7 +80,7 @@ abstract class Card extends TargetableEntity {
         const healing = this.props.animations.healingCards[this.props.object.objectID]
         return !!healing && healing.number !== 0
             ? <div key={healing.key} className='healing overlay'>
-                <p className={`${healing.nourish ? 'nourishText' : 'healingText'} healthChangeText`}>+{healing.number}</p>
+                <p className={`${healing.nourish ? 'nourishText' : 'healingText'} overlayText`}>+{healing.number}</p>
             </div>
             : null
     }
@@ -89,6 +94,14 @@ abstract class Card extends TargetableEntity {
     actionOverlay(): JSX.Element | null {
         return !!this.props.animations.actionCards[this.props.object.objectID]
             ? <div key={this.props.animations.actionCards[this.props.object.objectID].key} className='action overlay'></div>
+            : null
+    }
+
+    mulliganOverlay(): JSX.Element | null {
+        return this.props.mulligan
+            ? <div className='mulligan overlay'>
+                <p className='mulliganText overlayText'>REPLACED</p>
+            </div>
             : null
     }
 
@@ -108,6 +121,7 @@ abstract class Card extends TargetableEntity {
                 ${this.isPlayCard()} 
                 ${this.isCombat()}
                 ${this.isDying()}
+                ${this.isMulliganCard()}
                 ${this.props.zone ? 'zone' : 'card'} 
                 ${this.props.object.type || ''}`
     }
@@ -139,11 +153,11 @@ abstract class Card extends TargetableEntity {
     }
 
     addedText() {
-        return (this.props.object && this.props.object.addedText && this.props.object.addedText.length > 0) ? <AddedText contents={this.props.object.addedText} /> : null
+        return (this.props.object && this.props.object.addedText && this.props.object.addedText.length > 0) ? <AddedText objectID={this.props.object.objectID} contents={this.props.object.addedText} /> : null
     }
 
     tooltips() {
-        return (this.props.object && this.props.object.tooltips && this.props.object.tooltips.length > 0) ? <AddedText tooltip contents={this.props.object.tooltips} /> : null
+        return (this.props.object && this.props.object.tooltips && this.props.object.tooltips.length > 0) ? <AddedText tooltip objectID={this.props.object.objectID} contents={this.props.object.tooltips} /> : null
     }
 
     relatedCard() {

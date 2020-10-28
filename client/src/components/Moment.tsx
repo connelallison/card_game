@@ -13,6 +13,7 @@ class Moment extends Card {
         <div className={`cardClassColour ${this.cardClass()}`}></div>
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.actionOverlay()}
+        {this.mulliganOverlay()}
         {this.handInfo()}
         {/* <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p> */}
         {this.boldedText()}

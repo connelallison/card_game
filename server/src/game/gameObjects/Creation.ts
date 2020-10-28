@@ -54,13 +54,14 @@ abstract class Creation extends DestroyableCard {
     static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
         return {
             name: this.data.name[localisation],
-            id: this.data.id[localisation],
+            id: this.data.id,
             cost: this.data.cost,
             charges: this.data.charges,
             type: this.data.type,
             subtype: this.data.subtype,
             text: this.data.staticText[localisation],
             classes: this.data.classes,
+            relatedCard: Cards[this.data.id].relatedCardReport(),
         }
     }
 
@@ -139,4 +140,5 @@ import GameObjectData from "../structs/GameObjectData";
 import { LocalisationString } from "../structs/Localisation";
 import { CreationSubtypeString, CreationZoneString } from "../stringTypes/ZoneTypeSubtypeString";
 import Fortune from "../effects/Fortune";
+import Cards from "../dictionaries/Cards";
 

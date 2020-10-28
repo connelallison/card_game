@@ -23,6 +23,10 @@ const Tooltips = {
         name: { english: 'Guard' },
         text: { templates: { english: `Friendly characters without Guard can't be attacked.` } },
     },
+    behindGuard: {
+        name: { english: 'Protected by Guard' },
+        text: { templates: { english: `A character with Guard is protecting this from being attacked.` } },
+    },
     pillage: {
         name: { english: 'Pillage' },
         text: { templates: { english: `Damage done by this also heals your leader.` } },
@@ -74,6 +78,10 @@ const Tooltips = {
     debt: {
         name: { english: 'Debt' },
         text: { templates: { english: `You pay this amount at the end of your turn, the first turn you play this.` } },
+    },
+    fatigue: {
+        name: { english: 'Fatigue' },
+        text: { templates: { english: `You take fatigue damage (increasing each time) if you draw a card that isn't there or spend money you don't have.` } },
     },
     collateral: {
         name: { english: 'Collateral' },

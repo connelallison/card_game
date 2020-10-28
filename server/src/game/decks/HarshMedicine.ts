@@ -17,8 +17,10 @@ const HarshMedicine: DeckObject = {
         // 'LibraryOfAlexandria',
         'Chemotherapy',
         'Chemotherapy',
-        'HelenOfTroy',
-        'HelenOfTroy',
+        // 'HelenOfTroy',
+        // 'HelenOfTroy',
+        'Konigstiger',
+        'Konigstiger',
         'AlfredNobel',
         'AlfredNobel',
         // 'ThomasBodley',
@@ -35,8 +37,10 @@ const HarshMedicine: DeckObject = {
         'Robespierre',
         // 'JohnFKennedy',
         // 'JohnFKennedy',
-        'RansomEOlds',
-        'RansomEOlds',
+        // 'RansomEOlds',
+        // 'RansomEOlds',
+        'Theodora',
+        'Theodora',
         'ErasmusExchange',
         'ErasmusExchange',
         'JRobertOppenheimer',
@@ -47,7 +51,13 @@ const HarshMedicine: DeckObject = {
         'MonasticRetreat',
         'Dolly',
         'Dolly',
-    ]
+    ],
+    description: `Defeat your enemy with the power of medicine in this healing-centric deck.`,
+    tips: `- Your cards that restore followers to full Health synergise powerfully with Hippocratic Oath - they'll increase the target's max Health by however much Health they were missing.
+           - Aim to get Alfred Nobel killed as early as possible, to take advantage of his Legacy effect.
+           - Give Dolly the Sheep a Primary Education (and then try returning her to your hand using Theodora or Monastic Retreat).
+           - Try using Isaac Newton's action on the University of Oxford while it has 3 charges.
+           - When using Chemotherapy offensively, make sure the enemy is either at full health or is low enough to be killed by the damage.`,
 }
 
 export default HarshMedicine

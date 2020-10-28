@@ -8,11 +8,11 @@ const GameStatus = (props) => {
 
   let gameStatus
   if (props.mulligan) {
-    gameStatus = <p className='lowerMargin'>Choose your opening hand: {turnTime}s remaining.</p>
+    gameStatus = <p className='lowerMargin'>Choose your opening hand: {turnTime}s remaining</p>
   } else if (props.winner) {
-    gameStatus = <p className='lowerMargin'>The game is over: {props.winner}.</p>
+    gameStatus = <p className='lowerMargin'>The game is over: {props.winner}</p>
   } else {
-    gameStatus = <p className='lowerMargin'>{activePlayer} turn: {turnTime}s remaining.</p>
+    gameStatus = <p className='lowerMargin'>{activePlayer} turn: {turnTime}s remaining</p>
   }
 
   const endTurn = props.mine && !props.winner ? <button className={props.jobDone ? 'jobDone' : ''} onClick={props.endTurn}>End Turn</button> : null

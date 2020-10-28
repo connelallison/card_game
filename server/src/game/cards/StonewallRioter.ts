@@ -10,7 +10,7 @@ const data: NamelessFollowerData = {
     type: 'Follower',
     subtype: 'Nameless',
     classes: ['All'],
-    categories: [],
+    categories: ['Underclass'],
     collectable: true,
     cost: 3,
     attack: 3,

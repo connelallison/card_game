@@ -23,6 +23,11 @@ const data: TriggerEffectData = {
             eventType: 'endOfTurn',
             actionSteps: [
                 {
+                    requirements: [
+                        {
+                            activeRequirement: 'isMyTurn',
+                        },
+                    ],
                     actionFunctions: [
                         {
                             functionType: 'autoAction',

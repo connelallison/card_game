@@ -58,7 +58,7 @@ abstract class NamelessFollower extends Follower {
     static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
         return {
             name: this.data.name[localisation],
-            id: this.data.id[localisation],
+            id: this.data.id,
             cost: this.data.cost,
             charges: this.data.charges,
             attack: this.data.attack,
@@ -68,6 +68,7 @@ abstract class NamelessFollower extends Follower {
             subtype: this.data.subtype,
             text: this.data.staticText[localisation],
             classes: this.data.classes,
+            relatedCard: Cards[this.data.id].relatedCardReport(),
         }
     }
 
@@ -155,4 +156,5 @@ import GamePlayer from "./GamePlayer";
 import { FollowerZoneString } from "../stringTypes/ZoneTypeSubtypeString";
 import BoardSlot from "./BoardSlot";
 import { ObjectReport, StaticObjectReport } from "../structs/ObjectReport"; import { LocalisationString } from "../structs/Localisation";
+import Cards from "../dictionaries/Cards";
 

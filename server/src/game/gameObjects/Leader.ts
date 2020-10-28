@@ -75,12 +75,25 @@ abstract class Leader extends Character {
       subtype: this.data.subtype,
       text: this.data.staticText[localisation],
       classes: this.data.classes,
+      relatedCard: Cards[this.data.id].relatedCardReport()
     }
   }
 
   relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
-    if (!this.inPlay()) return Cards[this.leaderTechniqueID].provideReport()
+    if (!this.inPlay()) return (
+      (this.successor && Cards[this.successor].provideReport(localisation))
+      || (this.relatedCard && Cards[this.relatedCard].provideReport(localisation))
+      || Cards[this.leaderTechniqueID].provideReport()
+    )
     else return null
+  }
+
+  static relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
+    return (
+      (this.data.successor && Cards[this.data.successor].provideReport(localisation))
+      || (this.data.relatedCard && Cards[this.data.relatedCard].provideReport(localisation))
+      || Cards[this.data.leaderTechniqueID].provideReport()
+    )
   }
 
   finishUpdate(): void {

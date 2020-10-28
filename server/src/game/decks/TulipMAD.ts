@@ -17,16 +17,18 @@ const TulipMAD: DeckObject = {
         'MarketManipulation',
         'NewDeal',
         'NewDeal',
-        'GeorgeMarshall',
-        'GeorgeMarshall',
+        // 'GeorgeMarshall',
+        // 'GeorgeMarshall',
         'CDOTrader',
         'CDOTrader',
+        'Tractor',
+        'Tractor',
         // 'EdwardTheBlackPrince',
         // 'EdwardTheBlackPrince',
         // 'IndustrialRevolution',
         // 'IndustrialRevolution',
-        'Investor',
-        'Investor',
+        'Banker',
+        'Banker',
         'AneurinBevan',
         'AneurinBevan',
         // 'SubprimeBorrower',
@@ -41,7 +43,11 @@ const TulipMAD: DeckObject = {
         'DeficitSpending',
         'Galleon',
         'Galleon',
-    ]
+    ],
+    description: `Lead America out of the Great Depression in this value-oriented deck. Overwhelm your opponent through efficent trades, or take advantage of your Ethos to survive a nuclear exchange.`,
+    tips: `- CDO Trader is a good target for your buffs.
+           - Henry Ford is very valuable - prioritise keeping him alive.
+           - Market Manipulation and the Beveridge Report synergise well with Retail Bankers.`,
 }
 
 export default TulipMAD

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import Card from './Card'
+import HoverCard from './HoverCard'
 
 class LeaderTechnique extends Card {
-    // hoverCard() {
-    //     return this.props.big ? null : <LeaderTechnique big hover={false} object={this.props.object} selections={this.props.selections} />
-    // }
+    hoverCard(object): JSX.Element | null {
+        return <HoverCard object={object} animations={this.props.animations} selections={this.props.selections}></HoverCard>
+    }
 
     render() {
         const costLabel = this.props.object.subtype === 'Active' ? <div className="multicolour-line">{this.statLabel('cost')}</div> : null

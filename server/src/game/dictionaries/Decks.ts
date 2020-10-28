@@ -9,15 +9,15 @@ import ImSpartacus from '../decks/ImSpartacus'
 import Supercontango from '../decks/Supercontango'
 
 const Decks = {
-  ImSpartacus,
-  MassMobilisation,
-  CivilDisobedience,
-  // OrcDeck,
-  ThinkTank,
-  HarshMedicine,
-  CannibalWives,
   TulipMAD,
   Supercontango,
+  CannibalWives,
+  // OrcDeck,
+  HarshMedicine,
+  ThinkTank,
+  MassMobilisation,
+  ImSpartacus,
+  CivilDisobedience,
 }
 
 export default Decks

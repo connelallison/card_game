@@ -4,7 +4,7 @@ const Permissions = {
             attacker.canAttack()
             && defender.inPlay()
             && defender.controller() === attacker.opponent()
-            && defender.notBehindGuard()
+            && !defender.behindGuard()
             && !(attacker.flags.mob && defender instanceof Leader && !defender.unprotected())
             && (
                 !(attacker instanceof Follower)

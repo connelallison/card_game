@@ -24,7 +24,7 @@ const data: FamousFollowerData = {
     categories: [],
     collectable: true,
     cost: 4,
-    attack: 4,
+    attack: 3,
     health: 2,
     staticText: {
         english: `Action: Deal 3 damage to a follower.\nLegacy: Before you play a creation, give it Fortune.`, // swap with patent statute

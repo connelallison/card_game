@@ -13,11 +13,11 @@ const data: ActionMomentData = {
     collectable: true,
     cost: 5,
     staticText: {
-        english: `Action: Remove a follower from existence.`,
+        english: `Action: Completely erase a follower from existence.`,
     },
     text: {
         templates: {
-            english: `Action: Remove a follower from existence.`,
+            english: `Action: Completely erase a follower from existence.`,
         },
     },
     tooltips: [],
@@ -25,7 +25,7 @@ const data: ActionMomentData = {
         {
             id: 'VaporiseAction',
             name: { english: 'Vaporise' },
-            text: { templates: { english: `Action: Remove a follower from existence.` } },
+            text: { templates: { english: `Action: Completely erase a follower from existence.` } },
             actionType: 'actionAction',
             actionSteps: [
                 {
@@ -43,14 +43,6 @@ const data: ActionMomentData = {
                                 valueType: 'targets',
                                 from: 'targetDomain',
                                 targetDomain: ['enemyBoard', 'friendlyBoard'],
-                                // requirements: [
-                                //     {
-                                //         targetRequirement: 'isSubtype',
-                                //         values: {
-                                //             subtype: 'Famous'
-                                //         }
-                                //     },
-                                // ],
                             },
                         },
                     ],

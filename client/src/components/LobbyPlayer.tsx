@@ -13,7 +13,8 @@ class LobbyPlayer extends Component {
         const status = this.props.player.status === 'game' ? 'In Game' : this.props.player.status === 'challenge' ? 'Challenge Pending' : 'In Lobby'
         const opponent = this.props.player.opponent ? <LobbyPlayerName playerName={this.props.player.opponent.name} nameNum={this.props.player.opponent.nameNum} /> : '(none)'
         const action = this.props.player.status === 'game'
-            ? <button className='lobbyPlayerButton' >Spectate</button>
+            // ? <button className='lobbyPlayerButton' >Spectate</button>
+            ? '(none)'
             : this.props.player.status === 'lobby'
                 ? <button className='lobbyPlayerButton' onClick={() => this.props.sendChallenge(this.props.player.socketID)} >Challenge</button>
                 : '(none)'

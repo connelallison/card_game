@@ -157,23 +157,23 @@ abstract class GameObject {
         return GameObject.round(number)
     }
 
-    static sortCards(first: Card, second: Card, localisation: LocalisationString = 'english', index?: number): boolean {
+    static sortCards(first: StaticObjectReport, second: StaticObjectReport, index?: number): boolean {
         if (first.id === second.id) return false
         if (typeof index !== 'number') {
-            if (first.cost === second.cost) return GameObject.sortCards(first, second, localisation, 0)
+            if (first.cost === second.cost) return GameObject.sortCards(first, second, 0)
             else return first.cost > second.cost
         } else {
             if (
-                first.name[localisation][index] === second.name[localisation][index]
-                && first.name[localisation][index + 1]
-                && second.name[localisation][index + 1]
-            ) return GameObject.sortCards(first, second, localisation, index + 1)
-            else return first.name[localisation][index] > second.name[localisation][index]
+                first.name[index] === second.name[index]
+                && first.name[index + 1]
+                && second.name[index + 1]
+            ) return GameObject.sortCards(first, second, index + 1)
+            else return first.name[index] > second.name[index]
         }
     }
 
-    sortCards(first: Card, second: Card, localisation: LocalisationString = 'english', index?: number): boolean {
-        return GameObject.sortCards(first, second, localisation, index)
+    sortCards(first: StaticObjectReport, second: StaticObjectReport, index?: number): boolean {
+        return GameObject.sortCards(first, second, index)
     }
 
     createCard(cardID: CardIDString, owner: GamePlayer): Card {
@@ -645,4 +645,5 @@ import { AuraEffectFunction } from "../structs/EffectFunctionObject"
 import EventToNumberMaps from "../dictionaries/EventToNumberMaps"
 import EventToNumberMap from "../functionTypes/EventToNumberMap"
 import e = require("express")
+import { StaticObjectReport } from "../structs/ObjectReport"
 

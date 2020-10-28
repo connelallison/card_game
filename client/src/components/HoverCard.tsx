@@ -1,4 +1,5 @@
 import React from 'react'
+import { dummyAnimations, dummySelections } from '../structs/Dummies'
 import Creation from './Creation'
 import Follower from './Follower'
 import Leader from './Leader'
@@ -30,19 +31,8 @@ export default HoverCard
 
 export const PlayCard = (props: { object: any }) => {
     if (!props.object) return null
-    const selections = {
-        selectionsEnabled: false,
-        selected: [],
-        gameObjects: {},
-        targetSelection: {
-            text: '',
-            hostile: false,
-            validTargets: [],
-            highlightedTargets: [],
-        },
-        handleSelection: () => { },
-    }
-    const animations = { combatCards: {}, damageCards: {}, healingCards: {}, deathCards: {}, actionCards: {} }
+    const selections = dummySelections
+    const animations = dummyAnimations
     if (props.object.type === 'unknown') {
         return <Unknown big playCard object={props.object} animations={animations} selections={selections} />
     } else if (props.object.type === 'Follower') {
@@ -60,21 +50,21 @@ export const PlayCard = (props: { object: any }) => {
     } else return null
 }
 
-export const BigCard = (props: { object: any, selections: any, animations: any }) => {
+export const BigCard = (props: { mulligan?: boolean, object: any, selections: any, animations: any }) => {
     if (!props.object) return null
     if (props.object.type === 'unknown') {
-        return <Unknown big object={props.object} animations={props.animations} selections={props.selections} />
+        return <Unknown big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
     } else if (props.object.type === 'Follower') {
-        return <Follower big object={props.object} animations={props.animations} selections={props.selections} />
+        return <Follower big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
     } else if (props.object.type === 'Moment') {
-        return <Moment big object={props.object} animations={props.animations} selections={props.selections} />
+        return <Moment big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
     } else if (props.object.type === 'Creation') {
-        return <Creation big object={props.object} animations={props.animations} selections={props.selections} />
+        return <Creation big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
     } else if (props.object.type === 'Passive') {
-        return <Passive big object={props.object} animations={props.animations} selections={props.selections} />
+        return <Passive big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
     } else if (props.object.type === 'Leader') {
-        return <Leader big object={props.object} animations={props.animations} selections={props.selections} />
+        return <Leader big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
     } else if (props.object.type === 'LeaderTechnique') {
-        return <LeaderTechnique big object={props.object} animations={props.animations} selections={props.selections} />
+        return <LeaderTechnique big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
     } else return null
 }

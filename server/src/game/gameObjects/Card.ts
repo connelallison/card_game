@@ -126,12 +126,13 @@ abstract class Card extends GameObject {
   static provideReport(localisation: LocalisationString = 'english'): StaticObjectReport {
     return {
       name: this.data.name[localisation],
-      id: this.data.id[localisation],
+      id: this.data.id,
       cost: this.data.cost,
       type: this.data.type,
       subtype: this.data.subtype,
       text: this.data.staticText[localisation],
       classes: this.data.classes,
+      relatedCard: Cards[this.data.id].relatedCardReport(),
     }
   }
 
@@ -422,6 +423,8 @@ abstract class Card extends GameObject {
     if (this['deathEvents']?.length > 0 || this.tooltips.includes('deathEvent')) rawTooltips.push(Tooltips.deathEvent)
     if (this.stats['fervour'] || this.tooltips.includes('fervour')) rawTooltips.push(Tooltips.fervour)
     if (this.flags.guard || this.tooltips.includes('guard')) rawTooltips.push(Tooltips.guard)
+    // if (this.id === 'Helot') console.log(this.flags.guard)
+    if (this['behindGuard']?.()) rawTooltips.push(Tooltips.behindGuard)
     if (this.flags.pillage || this.tooltips.includes('pillage')) rawTooltips.push(Tooltips.pillage)
     if (this.flags.rush || this.tooltips.includes('rush')) rawTooltips.push(Tooltips.rush)
     if (this.flags.mob || this.tooltips.includes('mob')) rawTooltips.push(Tooltips.mob)
@@ -454,6 +457,10 @@ abstract class Card extends GameObject {
 
   relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
     return (this.successor && Cards[this.successor].provideReport(localisation)) || (this.relatedCard && Cards[this.relatedCard].provideReport(localisation))
+  }
+
+  static relatedCardReport(localisation: LocalisationString = 'english'): StaticObjectReport {
+    return (this.data.successor && Cards[this.data.successor].provideReport(localisation) || (this.data.relatedCard && Cards[this.data.relatedCard].provideReport(localisation))) 
   }
 
   addEffect(effect: Effect): void {

@@ -18,6 +18,7 @@ class Creation extends Card {
         {this.fortuneOverlay()}
         {this.deathOverlay()}
         {this.actionOverlay()}
+        {this.mulliganOverlay()}
         <p className={`card-name ${this.nameLength()}`}>{this.props.object.name}</p>
         {this.handInfo()}
         {/* <p className={`card-text ${this.textLength()}`}>{this.props.object.text}</p> */}

@@ -34,6 +34,8 @@ const OrcDeck: DeckObject = {
     'Vaporise',
     'Vaporise',
   ],
+  description: '',
+  tips: '',
 }
 
 export default OrcDeck

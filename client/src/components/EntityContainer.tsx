@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { Animations, Selections } from './TargetableEntity'
 
 export interface EntityContainerProps {
-    mine: boolean
+    mine?: boolean
     contents: any[]
     selections: Selections
     animations: Animations

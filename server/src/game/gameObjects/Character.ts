@@ -106,8 +106,8 @@ abstract class Character extends DestroyableCard {
     return this.health <= 0 || this.pendingDestroy
   }
 
-  notBehindGuard() {
-    return this.flags.guard || this.controller().boardFollowers().every(follower => follower.flags.guard !== true)
+  behindGuard() {
+    return !this.flags.guard && this.controller().boardFollowers().some(follower => follower.flags.guard)
   }
 
   baseStats(): CharacterStats {

@@ -251,12 +251,12 @@ class GameContainer extends Component {
         opponentID
       })
     } else {
-      console.log('start game button disabled')
+      // console.log('start game button disabled')
     }
   }
 
   handleEndGame() {
-    console.log(this.state.inGame)
+    // console.log(this.state.inGame)
     if (this.state.inGame) this.socket.emit('endGame')
   }
 
@@ -737,14 +737,15 @@ class GameContainer extends Component {
         <ReactTooltip className='target-tooltip' offset={{ right: 10 }} arrowColor='transparent' place='right' >
           {selectionText}
         </ReactTooltip>
-        <div className='topBar'>
-          <DisplayName displayName={this.props.displayName} handleSubmit={this.props.updateName} />
-          <DeckSelection deckID={this.props.deckID} decks={this.props.decks} updateDeck={this.props.updateDeck} />
+        <div className='topBar gameBar'>
+          {/* <DisplayName displayName={this.props.displayName} handleSubmit={this.props.updateName} /> */}
+          {/* <DeckSelection deckID={this.props.deckID} decks={this.props.decks} updateDeck={this.props.updateDeck} /> */}
+          <p className='game-status'>Your deck: {this.props.decks && this.props.decks[this.props.deckID].name}</p>
           {
             this.state.inGame
-              ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name} />
-              // : <StartGame startGame={this.handleStartGame} opponents={this.props.serverPlayers} socketID={this.socket.id} />
-              : null
+            ? <EndGame endGame={this.handleEndGame} opponentName={this.state.gameState.opponent.name} />
+            // : <StartGame startGame={this.handleStartGame} opponents={this.props.serverPlayers} socketID={this.socket.id} />
+            : null
           }
           <GameStatus mulligan={!!this.state.mulligan} winner={this.state.gameState.winner} started={this.state.gameState.started} mine={this.state.myTurn} jobDone={jobDone} turnEnd={this.state.turnTimer} endTurn={this.handleEndTurn} />
         </div>

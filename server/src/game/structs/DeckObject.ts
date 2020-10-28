@@ -5,6 +5,8 @@ interface DeckObject {
     leader: StarterLeaderIDString
     passive: EthosPassiveIDString
     cards: CardIDString[]
+    description: string
+    tips: string
 }
 
 export default DeckObject

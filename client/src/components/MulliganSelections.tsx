@@ -11,7 +11,7 @@ class MulliganSelections extends EntityContainer {
 
     render() {
         const mulliganChoices = (this.props.contents).map(mulliganChoice =>
-            <BigCard key={mulliganChoice.objectID} object={mulliganChoice} animations={this.props.animations} selections={this.props.selections} />
+            <BigCard key={mulliganChoice.objectID} mulligan={this.props.selections.selected.includes(mulliganChoice)} object={mulliganChoice} animations={this.props.animations} selections={this.props.selections} />
         )
 
         return (

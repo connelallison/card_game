@@ -21,9 +21,9 @@ interface LobbyState {
 
 interface LobbyProps {
     offscreen?: boolean
+    decks: Decks
     displayName: string
     serverPlayers: LobbyPlayerData[]
-    decks: Decks
     deckID: string
     updateDeck: (deckID: string) => void
     updateName: (name: string) => void
@@ -170,16 +170,15 @@ class LobbyContainer extends Component {
                     notReadyChallenge={() => this.notReadyChallenge()}
                     cancelChallenge={() => this.cancelChallenge()}
                     updateDeck={this.props.updateDeck}
-
                 />
             : null
 
         return (
             <>
-                <div className='topBar'>
+                {/* <div className='topBar'>
                     <DisplayName displayName={this.props.displayName} handleSubmit={this.props.updateName} />
                     <DeckSelection deckID={this.props.deckID as string} decks={this.props.decks as Decks} updateDeck={this.props.updateDeck} />
-                </div>
+                </div> */}
                 <div id='lobbyContainer' className={this.props.offscreen ? 'offscreen' : ''}>
                     <LobbyPlayerList sendChallenge={opponentID => this.sendChallenge(opponentID)} players={this.props.serverPlayers} />
                     <LobbyChat socketID={this.socket.id} sendMessage={message => this.sendMessage(message)} messages={this.state.messages} />

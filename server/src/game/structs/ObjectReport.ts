@@ -7,9 +7,10 @@ export interface StaticObjectReport {
   charges?: number
   type: ObjectTypeString
   subtype: ObjectSubtypeString
-  classes?: PlayerClassString[]
+  classes: PlayerClassString[]
   text: string
   categories?: string[]
+  relatedCard: StaticObjectReport
 }
 
 export interface ObjectReport {

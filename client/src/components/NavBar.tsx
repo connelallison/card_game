@@ -1,0 +1,25 @@
+import React, { Component } from 'react'
+import DisplayName from './DisplayName'
+
+class NavBar extends Component {
+    props!: {
+        offscreen?: boolean
+        displayName: string
+        updateName: (name: string) => void
+        view: 'lobby' | 'decks' | 'howTo' | 'game'
+        updateView: (view: 'lobby' | 'decks' | 'howTo') => void
+    }
+
+    render() {
+        return (
+            <div className={`topBar navBar ${this.props.offscreen ? 'offscreen' : ''}`}>
+                <DisplayName displayName={this.props.displayName} handleSubmit={this.props.updateName} />
+                <p className={`game-status ${this.props.view === 'lobby' ? 'selected' : ''}`} onClick={() => this.props.updateView('lobby')} >Lobby</p>
+                <p className={`game-status ${this.props.view === 'decks' ? 'selected' : ''}`} onClick={() => this.props.updateView('decks')} >Decks</p>
+                <p className={`game-status ${this.props.view === 'howTo' ? 'selected' : ''}`} onClick={() => this.props.updateView('howTo')} >How to play</p>
+            </div>
+        )
+    }
+}
+
+export default NavBar

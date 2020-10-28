@@ -6,7 +6,7 @@ interface AddedTextObject {
 }
 
 class AddedText extends Component {
-    props!:  {tooltip?: boolean, contents: AddedTextObject[] }
+    props!:  {tooltip?: boolean, objectID: string, contents: AddedTextObject[] }
     constructor(props: { tooltip?: boolean, contents: AddedTextObject[] }) {
         super(props)
     }
@@ -18,8 +18,8 @@ class AddedText extends Component {
                 {this.props.contents.map((addedText, index) => (
                     // <div>
                     [
-                        <p key={`${addedText.name}:${index}`} className='addedTextName'>{addedText.name}</p>,
-                        <p key={`${addedText.text}:${index}`} className='addedTextText'>{addedText.text}</p>
+                        <p key={`${this.props.objectID}${addedText.name}:${index}`} className='addedTextName'>{addedText.name}</p>,
+                        <p key={`${this.props.objectID}${addedText.text}:${index}`} className='addedTextText'>{addedText.text}</p>
                     ]
                     // </div>
                 ))}

@@ -17,11 +17,11 @@ const data: NamelessFollowerData = {
     health: 0,
     charges: 1,
     staticText: {
-        english: `Death: Put this back into play.`,
+        english: `Death: Summon this.`,
     },
     text: {
         templates: {
-            english: `Death: Put this back into play.`,
+            english: `Death: Summon this.`,
         },
     },
     tooltips: [],
@@ -34,7 +34,7 @@ const data: NamelessFollowerData = {
         {
             id: 'TupacHologramDeathEvent',
             name: { english: 'Tupac Hologram Death Event' },
-            text: { templates: { english: `Death: Put this back into play.` } },
+            text: { templates: { english: `Death: Summon this.` } },
             actionType: 'deathAction',
             actionSteps: [
                 {

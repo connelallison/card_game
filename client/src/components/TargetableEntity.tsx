@@ -4,6 +4,7 @@ export interface EntityProps {
     object: any
     selections: Selections
     animations: Animations
+    forceHighlight?: 'isSelected' | 'nonHostileTarget' | 'hostileTarget' | 'highlightedTarget'
 }
 
 export interface Selections {
@@ -54,6 +55,7 @@ abstract class TargetableEntity extends Component {
     }
 
     outlineStatus(): string {
+        if (this.props.forceHighlight) return this.props.forceHighlight
         return (
             this.props.selections.selectionsEnabled
             && this.props.selections.selected

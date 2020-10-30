@@ -108,7 +108,7 @@ abstract class Follower extends Character {
   }
 
   static categoriesReport(data: FollowerData, localisation: LocalisationString = 'english'): string[] {
-    return data.categories?.map(category => CategoryIcons[category]) ?? []
+    return data.categories?.sort().map(category => CategoryIcons[category]) ?? []
   }
 
   takeDamage(damage: number, rot?: boolean): number {

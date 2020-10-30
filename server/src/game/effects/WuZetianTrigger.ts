@@ -12,7 +12,7 @@ const data: TriggerEffectData = {
     activeZones: ['legacy'],
     text: {
         templates: {
-            english: `:egacy: After you equip a leader, put this into play.`,
+            english: `Legacy: After you equip a leader, summon this.`,
         },
         dynamicValues: [],
     },

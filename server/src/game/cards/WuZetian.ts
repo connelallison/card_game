@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
     attack: 5,
     health: 4,
     staticText: {
-        english: `Legacy: After you equip a leader, put this into play.`,
+        english: `Legacy: After you equip a leader, summon this.`,
     },
     text: {
         templates: {
-            english: `Legacy: After you equip a leader, put this into play.`,
+            english: `Legacy: After you equip a leader, summon this.`,
         },
     },
     tooltips: [],

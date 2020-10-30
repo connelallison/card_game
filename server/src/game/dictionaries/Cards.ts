@@ -189,6 +189,7 @@ import EconomiesOfScale from '../cards/EconomiesOfScale'
 import Supercontango from '../cards/Supercontango'
 import Banker from '../cards/Banker'
 import IsaacLeMaire from '../cards/IsaacLeMaire'
+import ReneDescartes from '../cards/ReneDescartes'
 // insert import here
 
 export const NamelessFollowers = {
@@ -271,6 +272,7 @@ export const FamousFollowers = {
   SamuelColt,
   RichardNixon,
   IsaacLeMaire,
+  ReneDescartes,
   // insert FamousFollower here
 }
 

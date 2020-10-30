@@ -9,6 +9,7 @@ import socket from './socket'
 import Popup from './components/Popup'
 import DeckViewContainer from './containers/DeckViewContainer'
 import NavBar from './components/NavBar'
+import HowToContainer from './containers/HowToContainer'
 
 interface AppState {
   displayName: string
@@ -182,6 +183,10 @@ class App extends Component {
           updateDeck={deckID => this.handleUpdateDeck(deckID)}
           deckID={this.state.deckID as string}
           decks={this.state.decks as Decks}
+          cards={this.state.cards as Cards}
+        />
+        <HowToContainer
+          offscreen={this.state.view !== 'howTo'}
           cards={this.state.cards as Cards}
         />
       </>

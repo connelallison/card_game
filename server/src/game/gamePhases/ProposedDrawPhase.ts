@@ -112,7 +112,6 @@ class ProposedDrawPhase extends EventPhase {
 
     fatigueDamage(): void {
         const player = this.event.player
-        player.fatigueCounter++
         const damageEvent = new DamageEvent(this.game(), {
             objectSource: player.leaderZone[0],
             charSource: player.leaderZone[0],
@@ -120,6 +119,7 @@ class ProposedDrawPhase extends EventPhase {
             damage: player.fatigueCounter,
         })
         this.startChild(new Phases.DamageSinglePhase(this, damageEvent))
+        player.fatigueCounter++
     }
 }
 

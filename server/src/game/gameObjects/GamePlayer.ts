@@ -85,7 +85,7 @@ class GamePlayer extends GameObject {
     this.passiveZone = []
     this.setAsideZone = []
     this.legacy = []
-    this.fatigueCounter = 0
+    this.fatigueCounter = 1
     this.opponentPlayer
     this.bot
     this.disconnected = false

@@ -50,21 +50,21 @@ export const PlayCard = (props: { object: any }) => {
     } else return null
 }
 
-export const BigCard = (props: { mulligan?: boolean, object: any, selections: any, animations: any }) => {
+export const BigCard = (props: { mulligan?: boolean, object: any, selections: any, animations: any, forceHighlight?: 'isSelected' | 'nonHostileTarget' | 'hostileTarget' | 'highlightedTarget' }) => {
     if (!props.object) return null
     if (props.object.type === 'unknown') {
-        return <Unknown big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
+        return <Unknown big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} forceHighlight={props.forceHighlight} />
     } else if (props.object.type === 'Follower') {
-        return <Follower big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
+        return <Follower big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} forceHighlight={props.forceHighlight} />
     } else if (props.object.type === 'Moment') {
-        return <Moment big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
+        return <Moment big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} forceHighlight={props.forceHighlight} />
     } else if (props.object.type === 'Creation') {
-        return <Creation big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
+        return <Creation big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} forceHighlight={props.forceHighlight} />
     } else if (props.object.type === 'Passive') {
-        return <Passive big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
+        return <Passive big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} forceHighlight={props.forceHighlight} />
     } else if (props.object.type === 'Leader') {
-        return <Leader big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
+        return <Leader big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} forceHighlight={props.forceHighlight} />
     } else if (props.object.type === 'LeaderTechnique') {
-        return <LeaderTechnique big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} />
+        return <LeaderTechnique big mulligan={!!props.mulligan} object={props.object} animations={props.animations} selections={props.selections} forceHighlight={props.forceHighlight} />
     } else return null
 }

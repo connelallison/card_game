@@ -16,11 +16,11 @@ const data: FamousFollowerData = {
   attack: 2,
   health: 2,
   staticText: {
-    english: `Action: Choose a famous follower in your Legacy. At the start of your turn, resurrect it.`,
+    english: `Action: Choose a famous follower in your legacy. At the start of your turn, resurrect it.`,
   },
   text: {
     templates: {
-      english: `Action: Choose a famous follower in your Legacy. At the start of your turn, resurrect it.`,
+      english: `Action: Choose a famous follower in your legacy. At the start of your turn, resurrect it.`,
     },
   },
   actions: [{
@@ -31,7 +31,7 @@ const data: FamousFollowerData = {
     },
     text: {
       templates: {
-        english: 'Action: Choose a famous follower in your Legacy. At the start of your turn, resurrect it.'
+        english: 'Action: Choose a famous follower in your legacy. At the start of your turn, resurrect it.'
       }
     },
     actionSteps: [{

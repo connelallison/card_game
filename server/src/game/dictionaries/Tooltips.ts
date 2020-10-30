@@ -45,7 +45,7 @@ const Tooltips = {
     },
     fortune: {
         name: { english: 'Fortune' },
-        text: { templates: { english: `The first time this takes damage, ignore it.` } },
+        text: { templates: { english: `The first time this would take damage, ignore it.` } },
     },
     bloodthirst: {
         name: { english: 'Bloodthirst' },

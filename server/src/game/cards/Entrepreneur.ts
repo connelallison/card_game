@@ -3,18 +3,18 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-    id: 'TechEntrepreneur',
+    id: 'Entrepreneur',
     name: {
-        english: `Tech Entrepreneur`,
+        english: `Entrepreneur`,
     },
     type: 'Follower',
     subtype: 'Nameless',
     classes: ['Economy'],
-    categories: ['Tech'],
+    categories: [],
     collectable: false,
     cost: 2,
     attack: 4,
-    health: 4,
+    health: 5,
     charges: 1,
     staticText: {
         english: `Option: Pay 1 Money now; or Debt 2; or Rent 1.`,
@@ -28,13 +28,13 @@ const data: NamelessFollowerData = {
     options: [
         {
             actionType: 'optionAction',
-            id: 'TechEntrepreneurOption',
-            name: { english: 'Tech Entrepreneur Option' },
+            id: 'EntrepreneurOption',
+            name: { english: 'Entrepreneur Option' },
             text: { templates: { english: 'Option: Pay 1 Money now; or Debt 2; or Rent 1.' } },
             actions: [
                 {
                     actionType: 'actionAction',
-                    id: 'TechEntrepreneurBootstrap',
+                    id: 'EntrepreneurBootstrap',
                     name: { english: 'Bootstrap' },
                     text: { templates: { english: 'Action: Pay 1 Money now.' } },
                     actionSteps: [{
@@ -72,7 +72,7 @@ const data: NamelessFollowerData = {
                 },
                 {
                     actionType: 'actionAction',
-                    id: 'TechEntrepreneurLoan',
+                    id: 'EntrepreneurLoan',
                     name: { english: 'Loan' },
                     text: { templates: { english: 'Action: Gain Debt 2' } },
                     actionSteps: [{
@@ -99,7 +99,7 @@ const data: NamelessFollowerData = {
                 },
                 {
                     actionType: 'actionAction',
-                    id: 'TechEntrepreneurVentureCapital',
+                    id: 'EntrepreneurVentureCapital',
                     name: { english: 'Venture Capital' },
                     text: { templates: { english: 'Action: Gain Rent 1' } },
                     activeTypes: 'Persistent',
@@ -126,10 +126,10 @@ const data: NamelessFollowerData = {
     ]
 }
 
-class TechEntrepreneur extends NamelessFollower {
+class Entrepreneur extends NamelessFollower {
     static readonly data: NamelessFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default TechEntrepreneur
+export default Entrepreneur

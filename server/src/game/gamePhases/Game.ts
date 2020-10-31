@@ -291,6 +291,8 @@ class Game extends GamePhase {
   initPlayers() {
     this.player1 = new GamePlayer(this, this.player1name, this.player1socketID)
     this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
+    this.player2.rawIncome = 2
+    this.player2.rawMoney = 2
     this.player1.opponentPlayer = this.player2
     this.player2.opponentPlayer = this.player1
     this.player1.bot = !this.player1.socketID
@@ -410,6 +412,8 @@ class Game extends GamePhase {
     this.startChild(preGame)
     // this.startSequence('StartOfGamePhase')
     await this.activeChild.endPromise
+    const coin = this.createCard('Coin', this.player1)
+    coin.moveZone('hand')
     this.queuedPhases.push(new Turn(this, this.player1, 1))
     while (!this.ended && this.queuedPhases.length > 0) {
       this.startChild(this.queuedPhases.shift())

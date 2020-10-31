@@ -11,7 +11,7 @@ const data: TechniqueCreationData = {
     subtype: 'Technique',
     classes: ['Economy'],
     collectable: true,
-    cost: 1.5,
+    cost: 1,
     charges: 2,
     staticText: {
         english: `Repeatable\nOption: Give all followers +1/+1; or -1/-1.`,

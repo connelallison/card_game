@@ -76,7 +76,7 @@ import BodyDouble from '../cards/BodyDouble'
 import Archimedes from '../cards/Archimedes'
 import JohnFKennedy from '../cards/JohnFKennedy'
 import WallLabourer from '../cards/WallLabourer'
-import TechEntrepreneur from '../cards/TechEntrepreneur'
+import Entrepreneur from '../cards/Entrepreneur'
 import DivideAndConquer from '../cards/DivideAndConquer'
 import Orpheus from '../cards/Orpheus'
 import JohnTheBaptist from '../cards/JohnTheBaptist'
@@ -201,7 +201,7 @@ export const NamelessFollowers = {
   SuicideBomber,
   BodyDouble,
   WallLabourer,
-  TechEntrepreneur,
+  Entrepreneur,
   Slave,
   Konigstiger,
   M1Abrams,

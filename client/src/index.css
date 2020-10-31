@@ -1377,6 +1377,11 @@ button.jobDone {
   background-color: rgba(25, 10, 231, 0.5);
 }
 
+.stat-label {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .stat-label .decimal {
   font-size: 12px;
   font-weight: 600;

@@ -11,13 +11,13 @@ const data: ActiveLeaderTechniqueData = {
     subtype: 'Active',
     classes: ['Economy'],
     collectable: false,
-    cost: 2,
+    cost: 1,
     staticText: {
-        english: `Action: Give a follower +1/+2.`,
+        english: `Action: Give a follower +1/+1.`,
     },
     text: {
         templates: {
-            english: `Action: Give a follower +1/+2.`,
+            english: `Action: Give a follower +1/+1.`,
         },
     },
     tooltips: [],
@@ -26,7 +26,7 @@ const data: ActiveLeaderTechniqueData = {
         {
             id: 'FranklinRooseveltPublicWorksAction',
             name: { english: 'Public Works' },
-            text: { templates: { english: `Action: Give a follower +1/+2.` } },
+            text: { templates: { english: `Action: Give a follower +1/+1.` } },
             actionType: 'actionAction',
             actionSteps: [
                 {
@@ -36,7 +36,7 @@ const data: ActiveLeaderTechniqueData = {
                             operation: 'buffAttackAndHealth',
                             values: {
                                 attack: 1,
-                                health: 2,
+                                health: 1,
                                 effectName: { english: 'Public Works Buff' },
                             },
                         },

@@ -62,7 +62,7 @@ class GamePlayer extends GameObject {
     this.currentHealth = this.maxHealth
     this.armour = 0
     this.rawGrowth = 1
-    this.rawIncome = 2
+    this.rawIncome = 1
     this.rawMoney = this.rawIncome
     this.money = this.rawMoney
     this.stats = this.baseStats()

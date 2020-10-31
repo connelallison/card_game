@@ -38,9 +38,12 @@ function randomDeckID() {
 }
 
 const testGame = (player: ServerPlayer, testDeck) => {
-  player.deckID = player.deckID === 'random' ? randomDeckID() : player.deckID
+  player.deckID = (!player.deckID || player.deckID === 'random') ? randomDeckID() : player.deckID
   // const testBotDeckID = testDeck === 'random' ? randomDeckID() : testDeck
-  const testBotDeckID = testDeck ?? randomDeckID()
+  const testBotDeckID = (!testDeck || testDeck === 'random')  ? randomDeckID() : testDeck
+  // console.log(testBotDeckID)
+  // const testBotDeck = Decks[testBotDeckID]
+  // console.log(testBotDeck)
   const testGame = new Game(player.displayName, 'TestBot', Decks[player.deckID], Decks[testBotDeckID], player.socketID)
   testGame.init()
 }

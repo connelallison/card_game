@@ -42,8 +42,8 @@ class App extends Component {
       status: 'lobby',
       decks: null,
       cards: null,
-      deckID: localStorage.getItem('deckID') || 'random',
-      testBotDeckID: localStorage.getItem('testBotDeckID') || 'random',
+      deckID: localStorage.getItem('deckID'),
+      testBotDeckID: localStorage.getItem('testBotDeckID'),
       displayName: localStorage.getItem('displayName') || 'Anonymous',
       serverPlayers: [],
       online: false,
@@ -127,7 +127,7 @@ class App extends Component {
     this.socket.emit('updateDeckID', { deckID })
     localStorage.setItem('deckID', deckID)
     localStorage.setItem('testBotDeckID', testBotDeckID)
-    this.setState({ deckID, decks })
+    this.setState({ deckID, decks, testBotDeckID })
   }
 
   updateCards(cards: Cards) {

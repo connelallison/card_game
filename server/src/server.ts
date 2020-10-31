@@ -40,7 +40,7 @@ function randomDeckID() {
 const testGame = (player: ServerPlayer, testDeck) => {
   player.deckID = player.deckID === 'random' ? randomDeckID() : player.deckID
   // const testBotDeckID = testDeck === 'random' ? randomDeckID() : testDeck
-  const testBotDeckID = randomDeckID()
+  const testBotDeckID = testDeck ?? randomDeckID()
   const testGame = new Game(player.displayName, 'TestBot', Decks[player.deckID], Decks[testBotDeckID], player.socketID)
   testGame.init()
 }
@@ -58,7 +58,7 @@ const pvpGame = (player1: ServerPlayer, player2: ServerPlayer) => {
 
 const serverPlayersUpdate = () => io.emit('serverPlayersUpdate', Object.values(connectedPlayers).map(player => player.report()))
 
-const startGame = (serverPlayer: ServerPlayer, opponent: { opponentID: string }) => {
+const startGame = (serverPlayer: ServerPlayer, opponent: { opponentID: string }, testBotDeckID?: string) => {
   if (!deckIDs.includes(serverPlayer.deckID) && serverPlayer.deckID !== 'random') {
     console.log(`challenger player's deck "${serverPlayer.deckID}" does not exist.`)
     return
@@ -106,7 +106,7 @@ const startGame = (serverPlayer: ServerPlayer, opponent: { opponentID: string })
   })
   // setTimeout(testGame, 1000, serverPlayer.socketID);
   if (testBotGame) {
-    testGame(serverPlayer, null)
+    testGame(serverPlayer, testBotDeckID)
   } else {
     const opponentPlayer = connectedPlayers[opponent.opponentID]
     const opponentSocket = connectedSockets[opponent.opponentID]
@@ -180,8 +180,14 @@ io.on('connection', function (socket) {
   })
   socket.on('updateDeckID', data => {
     // console.log('updateDeckID request received')
-    if (deckIDs.includes(data.deckID) || data.deckID === 'random') serverPlayer.deckID = data.deckID
+    // if (deckIDs.includes(data.deckID) || data.deckID === 'random') serverPlayer.deckID = data.deckID
+    if (deckIDs.includes(data.deckID)) serverPlayer.deckID = data.deckID
   })
+
+  // socket.on('updateTestBotDeckID', data => {
+  //   if (deckIDs.includes(data.deckID)) serverPlayer.testBotDeckID = data.deckID
+  // })
+
   socket.on('requestTestGame', data => startGame(serverPlayer, data))
 
   socket.on('sendChatMessage', data => {
@@ -207,8 +213,27 @@ io.on('connection', function (socket) {
     serverEvent.emit(`playerMulliganRequest:${socketID}`, mulliganRequest)
   })
 
+  socket.on('testBotChallenge', () => {
+    if (serverPlayer.status !== 'lobby') return
+    serverPlayer.status = 'challenge'
+    serverPlayersUpdate()
+  })
+
+  socket.on('testBotCancel', () => {
+    if (serverPlayer.status !== 'challenge') return
+    serverPlayer.status = 'lobby'
+    serverPlayersUpdate()
+  })
+
+  socket.on('testBotReady', testBotDeckID => {
+    serverPlayer.status = 'game'
+    socket.emit('gameStarting')
+    serverPlayersUpdate()
+    startGame(serverPlayer, { opponentID: 'TestBot' }, testBotDeckID)
+  })
+
   socket.on('pvpChallenge', function (opponent: { opponentID: string }) {
-    console.log('challenge received')
+    // console.log('challenge received')
     if (serverPlayer.status !== 'lobby' || !opponent.opponentID) return
 
     // setTimeout(testGame, 1000, socketID);

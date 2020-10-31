@@ -57,6 +57,8 @@ class DeathPhase extends EventPhase {
                     if (card instanceof Follower) card.memory.deathSlot = card.slot
                     card.moveZone('legacy')
                     this.deathActionPhase(card, deathEvent)
+                } else {
+                    this.queueSteps()
                 }
             }
         })

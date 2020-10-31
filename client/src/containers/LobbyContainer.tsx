@@ -25,7 +25,9 @@ interface LobbyProps {
     displayName: string
     serverPlayers: LobbyPlayerData[]
     deckID: string
+    testBotDeckID: string
     updateDeck: (deckID: string) => void
+    updateTestBotDeck: (deckID: string) => void
     updateName: (name: string) => void
 }
 
@@ -102,12 +104,25 @@ class LobbyContainer extends Component {
     }
 
     sendChallenge(opponentID: string) {
-        // if (opponentID !== 'TestBot') {
-        //     this.socket.emit('pvpChallenge', { opponentID })
-        // } else {
-        //     this.socket.emit('testBotChallenge')
-        // }
-        this.socket.emit('pvpChallenge', { opponentID })
+        if (opponentID !== 'TestBot') {
+            this.socket.emit('pvpChallenge', { opponentID })
+        } else {
+            console.log('testBotChallenge')
+            this.socket.emit('testBotChallenge')
+            this.setState({
+                challenge: {
+                    opponent: {
+                        socketID: 'TestBot',
+                        name: 'TestBot',
+                        nameNum: '',
+                        status: 'challenge',
+                    },
+                    accepted: true,
+                    incoming: false,
+                }
+            })
+        }
+        // this.socket.emit('pvpChallenge', { opponentID })
     }
 
     acceptChallenge() {
@@ -115,11 +130,22 @@ class LobbyContainer extends Component {
     }
 
     cancelChallenge() {
-        this.socket.emit('cancelChallenge')
+        if (this.state.challenge && this.state.challenge.opponent.socketID === 'TestBot') {
+            console.log('testBotCancel')
+            this.socket.emit('testBotCancel')
+            this.challengeCancelled()
+        } else {
+            this.socket.emit('cancelChallenge')
+        }
     }
 
     readyChallenge() {
-        this.socket.emit('readyChallenge')
+        if (this.state.challenge && this.state.challenge.opponent.socketID === 'TestBot') {
+            console.log('testBotReady')
+            this.socket.emit('testBotReady', this.props.testBotDeckID)
+        } else {
+            this.socket.emit('readyChallenge')
+        }
     }
 
     notReadyChallenge() {
@@ -129,10 +155,6 @@ class LobbyContainer extends Component {
     incomingChallenge(challenge: IncomingChallenge) {
         // console.log(challenge)
         this.setState({ challenge })
-    }
-
-    sentChallenge(challenge: IncomingChallenge) {
-
     }
 
     challengeCancelled() {
@@ -165,26 +187,22 @@ class LobbyContainer extends Component {
                 : <ChallengePreparation
                     challenge={this.state.challenge}
                     deckID={this.props.deckID as string}
+                    testBotDeckID={this.props.testBotDeckID as string}
                     decks={this.props.decks as Decks}
                     readyChallenge={() => this.readyChallenge()}
                     notReadyChallenge={() => this.notReadyChallenge()}
                     cancelChallenge={() => this.cancelChallenge()}
                     updateDeck={this.props.updateDeck}
+                    updateTestBotDeck={this.props.updateTestBotDeck}
                 />
             : null
 
         return (
-            <>
-                {/* <div className='topBar'>
-                    <DisplayName displayName={this.props.displayName} handleSubmit={this.props.updateName} />
-                    <DeckSelection deckID={this.props.deckID as string} decks={this.props.decks as Decks} updateDeck={this.props.updateDeck} />
-                </div> */}
-                <div id='lobbyContainer' className={this.props.offscreen ? 'offscreen' : ''}>
-                    <LobbyPlayerList sendChallenge={opponentID => this.sendChallenge(opponentID)} players={this.props.serverPlayers} />
-                    <LobbyChat socketID={this.socket.id} sendMessage={message => this.sendMessage(message)} messages={this.state.messages} />
-                    {challenge}
-                </div>
-            </>
+            <div id='lobbyContainer' className={this.props.offscreen ? 'offscreen' : ''}>
+                <LobbyPlayerList sendChallenge={opponentID => this.sendChallenge(opponentID)} players={this.props.serverPlayers} />
+                <LobbyChat socketID={this.socket.id} sendMessage={message => this.sendMessage(message)} messages={this.state.messages} />
+                {challenge}
+            </div>
         )
     }
 }

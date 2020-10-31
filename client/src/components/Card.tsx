@@ -175,7 +175,7 @@ abstract class Card extends TargetableEntity {
                     'Eureka', 'Income', 'Growth', 'Bloodthirst', 'Mob',
                     'Rush', 'Death', 'Legacy', 'Hand', 'Deck',
                     'Starter', 'Passive', 'Successor', 'Immune', 'Rot',
-                    'Nourish', 'Collateral', 'Debt', 'Lethal']}
+                    'Nourish', 'Collateral', 'Debt', 'Lethal', 'Repeatable']}
                 highlightTag='span'
                 textToHighlight={this.props.object.text}
             />

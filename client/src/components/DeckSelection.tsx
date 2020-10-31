@@ -21,7 +21,7 @@ class DeckSelection extends Component {
     return (
       <form>
         <label>
-        {this.props.testBot ? 'Select a deck for TestBot' : 'Select a deck:'}
+        {this.props.testBot ? 'Select a deck for TestBot:' : 'Select a deck:'}
         <select id='select-deck' name='deck' value={defaultDeck} onChange={event => this.props.updateDeck(event.target.value)}>
             {deckOptions}
           </select>

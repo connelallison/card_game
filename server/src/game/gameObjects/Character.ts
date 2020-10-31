@@ -146,6 +146,7 @@ abstract class Character extends DestroyableCard {
   abstract takeDamage(damage: number, rot?: boolean): number
   abstract receiveHealing(healing: number, nourish?: boolean): number
   abstract missingHealth(): number
+  abstract maxHealth(): number
 }
 
 export default Character

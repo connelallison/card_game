@@ -91,10 +91,8 @@ abstract class TargetableEntity extends Component {
             : this.props.object[stat] !== null
 
         const sign = this.props.object[stat] < 0 ? '-' : ''
-        const integer = Math.floor(Math.abs(this.props.object[stat])) 
-        // const decimal = Math.round(Math.abs((this.props.object[stat] % 1)) * 10)
+        const integer = Math.floor(Math.abs(this.props.object[stat]))
         const decimal = Math.round((Math.abs(this.props.object[stat]) - integer) * 10)
-        // fix decimals
         const decimalSpan = decimal > 0 ? <span className='decimal'>.{decimal}</span> : null
         const spanClass = stat === 'health' && this.props.object.damaged
             ? 'damaged'
@@ -106,8 +104,27 @@ abstract class TargetableEntity extends Component {
                 ? 'buffed'
                 : ''
         // const numberSpan = <span className={`statNumberSpan ${spanClass}`} >{integer}{decimalSpan}</span>
+        let maxHealth: JSX.Element | null = null
+        if (stat === 'health' && (this.props.object.type === 'Leader' || this.props.object.type === 'Follower')) {
+            const currentHealthInteger = Math.floor(this.props.object.health)
+            const currentHealthDecimal = Math.round((Math.abs(this.props.object.health) - currentHealthInteger) * 10)
+            const currentHealthDecimalSpan = currentHealthDecimal > 0 ? <span className='decimal'>.{currentHealthDecimal}</span> : null
+            const maxHealthInteger = Math.floor(this.props.object.maxHealth)
+            const maxHealthDecimal = Math.round((Math.abs(this.props.object.maxHealth) - maxHealthInteger) * 10)
+            const maxHealthDecimalSpan = maxHealthDecimal > 0 ? <span className='decimal'>.{maxHealthDecimal}</span> : null
+            maxHealth = (
+                <p className={`health-label stat-label max-health-label`}>
+                    {currentHealthInteger}
+                    {currentHealthDecimalSpan}
+            /
+                    {maxHealthInteger}
+                    {maxHealthDecimalSpan}
+            H
+                </p>
+            )
+        }
         return this.props.object.hasOwnProperty(stat) && hiddenCriterion
-            ? <p className={`${stat}-label stat-label ${spanClass}`}>{sign}{integer}{decimalSpan}{abbreviations[stat]}</p>
+            ? <span className={`${stat}-label stat-label ${spanClass}`}>{sign}{integer}{decimalSpan}{abbreviations[stat]}{maxHealth}</span>
             : null
     }
 

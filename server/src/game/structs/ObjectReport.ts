@@ -20,6 +20,7 @@ export interface ObjectReport {
   cost: number
   attack?: number
   health?: number
+  maxHealth?: number
   charges?: number
   type: ObjectTypeString
   subtype: ObjectSubtypeString

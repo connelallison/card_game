@@ -17,6 +17,7 @@ interface AppState {
   decks: Decks | null
   cards: Cards | null
   deckID: string | null
+  testBotDeckID: string | null
   status: 'lobby' | 'challenge' | 'game'
   view: 'lobby' | 'decks' | 'howTo' | 'game'
   online: boolean
@@ -42,6 +43,7 @@ class App extends Component {
       decks: null,
       cards: null,
       deckID: localStorage.getItem('deckID') || 'random',
+      testBotDeckID: localStorage.getItem('testBotDeckID') || 'random',
       displayName: localStorage.getItem('displayName') || 'Anonymous',
       serverPlayers: [],
       online: false,
@@ -77,7 +79,7 @@ class App extends Component {
   }
 
   gameEnded(winner: string) {
-    setTimeout(() => this.setState({ popup: { header: 'Game ended', message: [winner] } }), 750)
+    setTimeout(() => this.setState({ popup: { header: 'Game ended', message: [`${winner}.`] } }), 750)
     this.setState({ gameEnded: true })
   }
 
@@ -88,7 +90,15 @@ class App extends Component {
     localStorage.setItem('deckID', deckID)
     this.setState({ deckID })
   }
-
+  
+  handleUpdateTestBotDeck(testBotDeckID: string) {
+    // this.socket.emit('updateDeckID', {
+    //   testBotDeckID,
+    // })
+    localStorage.setItem('testBotDeckID', testBotDeckID)
+    this.setState({ testBotDeckID })
+  }
+  
   handleUpdateDisplayName(displayName: string) {
     this.socket.emit('updateDisplayName', { displayName })
     localStorage.setItem('displayName', displayName)
@@ -112,9 +122,11 @@ class App extends Component {
   updateDecks(decks: Decks) {
     const deckIDs = Object.values(decks).map(deck => deck.id)
     const deckID = deckIDs.includes(localStorage.getItem('deckID') as string) ? localStorage.getItem('deckID') as string : deckIDs[0]
+    const testBotDeckID = deckIDs.includes(localStorage.getItem('testBotDeckID') as string) ? localStorage.getItem('testBotDeckID') as string : deckIDs[2]
 
     this.socket.emit('updateDeckID', { deckID })
     localStorage.setItem('deckID', deckID)
+    localStorage.setItem('testBotDeckID', testBotDeckID)
     this.setState({ deckID, decks })
   }
 
@@ -170,8 +182,10 @@ class App extends Component {
         <LobbyContainer
           offscreen={this.state.view !== 'lobby'}
           updateDeck={deckID => this.handleUpdateDeck(deckID)}
+          updateTestBotDeck={deckID => this.handleUpdateTestBotDeck(deckID)}
           updateName={name => this.handleUpdateDisplayName(name)}
           deckID={this.state.deckID as string}
+          testBotDeckID={this.state.testBotDeckID as string}
           decks={this.state.decks as Decks}
           displayName={this.state.displayName}
           serverPlayers={this.state.serverPlayers}

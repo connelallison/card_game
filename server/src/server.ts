@@ -37,6 +37,10 @@ function randomDeckID() {
   return deckIDs[roll]
 }
 
+function coinFlip(): boolean {
+  return !!Math.floor(Math.random() * 2)
+}
+
 const testGame = (player: ServerPlayer, testDeck) => {
   player.deckID = (!player.deckID || player.deckID === 'random') ? randomDeckID() : player.deckID
   // const testBotDeckID = testDeck === 'random' ? randomDeckID() : testDeck
@@ -55,7 +59,9 @@ const pvpGame = (player1: ServerPlayer, player2: ServerPlayer) => {
   player2.deckID = player2.deckID === 'random' ? randomDeckID() : player2.deckID
   // console.log(player1.deckID)
   // console.log(player2.deckID)
-  const pvpGame = new Game(player1.displayName, player2.displayName, Decks[player1.deckID], Decks[player2.deckID], player1.socketID, player2.socketID)
+  const pvpGame = coinFlip()
+   ? new Game(player1.displayName, player2.displayName, Decks[player1.deckID], Decks[player2.deckID], player1.socketID, player2.socketID)
+   : new Game(player2.displayName, player1.displayName, Decks[player2.deckID], Decks[player1.deckID], player2.socketID, player1.socketID)
   pvpGame.init()
 }
 

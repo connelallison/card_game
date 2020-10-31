@@ -12,7 +12,7 @@ const data: NamelessFollowerData = {
     classes: ['Economy'],
     categories: [],
     collectable: true,
-    cost: 2,
+    cost: 1,
     attack: 1,
     health: 1,
     charges: 2,

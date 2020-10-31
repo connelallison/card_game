@@ -25,6 +25,7 @@ abstract class FamousFollower extends Follower {
       cost: this.cost,
       attack: this.attack,
       health: this.health,
+      maxHealth: this.maxHealth(),
       type: this.type,
       subtype: this.subtype,
       classes: this.classes,
@@ -85,7 +86,7 @@ abstract class FamousFollower extends Follower {
       }
     } else {
       if (destination === 'legacy') {
-        const healthDiff = this.maxHealth - this.rawHealth
+        const healthDiff = this.rawMaxHealth - this.rawHealth
         this.rawHealth += healthDiff
         this.healthStatic += healthDiff
         this.health += healthDiff
@@ -108,7 +109,7 @@ abstract class FamousFollower extends Follower {
       attack: this.attack,
       rawHealth: this.rawHealth,
       health: this.health,
-      maxHealth: this.maxHealth,
+      rawMaxHealth: this.rawMaxHealth,
       // options: JSON.parse(JSON.stringify(this.options)),
       // actions: JSON.parse(JSON.stringify(this.actions)),
       // events: JSON.parse(JSON.stringify(this.events)),

@@ -40,6 +40,7 @@ abstract class Leader extends Character {
       cost: this.cost,
       attack: this.attack,
       health: this.health,
+      maxHealth: this.maxHealth(),
       type: this.type,
       subtype: this.subtype,
       classes: this.classes,
@@ -148,6 +149,10 @@ abstract class Leader extends Character {
 
   missingHealth(): number {
     return this.inPlay() ? this.owner.maxHealth - this.owner.currentHealth : 0
+  }
+
+  maxHealth(): number {
+    return this.health + this.missingHealth()
   }
 
   unprotected(): boolean {

@@ -28,6 +28,7 @@ abstract class NamelessFollower extends Follower {
             cost: this.cost,
             attack: this.attack,
             health: this.health,
+            maxHealth: this.maxHealth(),
             charges: this.charges,
             type: this.type,
             subtype: this.subtype,
@@ -113,7 +114,7 @@ abstract class NamelessFollower extends Follower {
             }
         } else {
             if (destination === 'legacy') {
-                const healthDiff = this.maxHealth - this.rawHealth
+                const healthDiff = this.rawMaxHealth - this.rawHealth
                 this.rawHealth += healthDiff
                 this.healthStatic += healthDiff
                 this.health += healthDiff
@@ -136,7 +137,7 @@ abstract class NamelessFollower extends Follower {
             attack: this.attack,
             rawHealth: this.rawHealth,
             health: this.health,
-            maxHealth: this.maxHealth,
+            rawMaxHealth: this.rawMaxHealth,
             charges: this.charges,
             // options: JSON.parse(JSON.stringify(this.options)),
             // actions: JSON.parse(JSON.stringify(this.actions)),

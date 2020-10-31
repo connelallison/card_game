@@ -13,6 +13,7 @@
 
 *{
   outline: none;
+  /* transform: scale(0.9, 0.9); */
 }
 
 input, select {
@@ -51,6 +52,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
   height: 100%;
+  /* transform: scale(0.8); */
+  /* zoom: 80%; */
+  /* transform-origin: 0 0; */
+
+}
+
+@media (max-height: 950px) { 
+  body {
+    zoom: 80%;
+  }
 }
 
 p {
@@ -854,6 +865,7 @@ td.lobbyPlayerAction {
   top: 0;
   background-color: transparent;
   z-index: 2;
+  pointer-events: none;
 }
 
 .overlay.fortune {
@@ -1080,30 +1092,30 @@ td.lobbyPlayerAction {
 /* .allClasses {
 } */
 
-.art {
-  /* box-shadow: 0 0 4px 4px rgba(206, 101, 238, 0.623) inset; */
-  background-color: rgba(199, 137, 218, 0.295);
-}
-
-.arms {
-  /* box-shadow: 0 0 4px 4px rgba(139, 69, 19, 0.514) inset; */
+/* box-shadow: 0 0 4px 4px rgba(139, 69, 19, 0.514) inset; */
+/* .arms {
   background-color: rgba(201, 132, 82, 0.37);
-}
+} */
+
+/* box-shadow: 0 0 4px 4px rgba(206, 101, 238, 0.623) inset; */
+/* .art {
+  background-color: rgba(199, 137, 218, 0.295);
+} */
 
 .economy {
   /* box-shadow: 0 0 4px 4px rgba(68, 128, 0, 0.377) inset; */
   background-color: rgba(159, 209, 102, 0.212);
 }
 
-.empire {
-  /* box-shadow: 0 0 4px 4px rgba(255, 196, 0, 0.418) inset; */
+/* box-shadow: 0 0 4px 4px rgba(255, 196, 0, 0.418) inset; */
+/* .empire {
   background-color: rgba(255, 208, 0, 0.233);
-}
+} */
 
-.faith {
-  /* box-shadow: 0 0 4px 4px rgba(90, 90, 90, 0.315) inset; */
+/* box-shadow: 0 0 4px 4px rgba(90, 90, 90, 0.315) inset; */
+/* .faith {
   background-color: rgba(255, 255, 255, 0.658);
-}
+} */
 
 .infamy {
   /* box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.315) inset; */
@@ -1225,6 +1237,16 @@ td.lobbyPlayerAction {
   visibility: visible;
   filter: drop-shadow(0 0 4px);
   /* z-index: 4; */
+}
+
+.player-status-stat:hover .addedText {
+  opacity: 1;
+  bottom: 104%;
+  transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.3, 0.8) 0.5s;
+  visibility: visible;
+  filter: drop-shadow(0 0 4px);
+  /* overflow: visible; */
+  width: fit-content;
 }
 
 .relatedCard {
@@ -1543,6 +1565,41 @@ button.jobDone {
 .health-label {
   /* color: red; */
   background-color: rgb(201, 81, 81);
+  position: relative;
+}
+
+.max-health-label {
+  overflow: hidden;
+  width: inherit;
+  opacity: 0;
+  transition: all 0s 0s;
+  position: absolute;
+  pointer-events: none;
+  /* display: none; */
+  /* border: 1px solid var(--border-colour); */
+  /* background-color: var(--card-background-colour); */
+  /* font-size: 12px; */
+  /* border-radius: 5px; */
+  /* padding-left: 8px; */
+  /* padding-bottom: 5px; */
+  /* transition-delay: 1s; */
+  visibility: hidden;
+  text-align: left;
+  bottom: 0;
+  left: 0;
+}
+
+.health-label:hover .max-health-label {
+  opacity: 1;
+  bottom: 110%;
+  transform: translate(-20%, 0);
+  /* right: 224%; */
+  transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.3, 0.8) 0.5s;
+  visibility: visible;
+  filter: drop-shadow(0 0 4px);
+  /* overflow: visible; */
+  width: fit-content;
+  z-index: 5;
 }
 
 .charges-label {
@@ -1637,6 +1694,10 @@ button.jobDone {
 .navBar p:hover {
   background-color: rgb(145, 142, 135);
 }
+
+/* .navBar form {
+  margin-left: auto;
+} */
 
 .gameBar {
   justify-content: space-evenly;

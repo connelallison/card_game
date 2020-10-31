@@ -13,8 +13,8 @@ class NameList extends EntityContainer {
     render() {
         if (this.props.contents.length > 0) {
             // const cards = this.props.contents.sort((first, second) => this.sortCards(first, second) ? 1 : -1)
-            const nameList = this.props.contents.map(object =>
-                <CardName object={object} key={object.objectID} animations={this.props.animations} selections={this.props.selections} />
+            const nameList = this.props.contents.map((object, index) =>
+                <CardName object={object} key={`${object.objectID}:${index}`} animations={this.props.animations} selections={this.props.selections} />
             )
             return (
                 <div className={`nameList ${this.props.deckView ? 'deckViewCards' : ''}`}>

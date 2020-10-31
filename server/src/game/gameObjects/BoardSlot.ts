@@ -37,8 +37,8 @@ class BoardSlot extends GameObject {
             zone: this.zone,
             ownerName: this.owner.playerName,
             playerID: this.owner.objectID,
-            addedText: this.addedTextReport(),
-            follower: this.follower ? this.follower.provideReport() : null
+            addedText: this.addedTextReport(localisation),
+            follower: this.follower?.provideReport(localisation) ?? null
         }
     }
 

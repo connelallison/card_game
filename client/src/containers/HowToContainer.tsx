@@ -278,44 +278,50 @@ class HowToContainer extends Component {
                 ),
                 'Actions and Effects': (
                     <>
-                    <p>This section explains the various terms that appear before an effect or action in a card's text.</p>
-                    <h3>Action:</h3>
-                    <p>An Action is something that happens when a card is played normally from your hand. If the card is put into play by any other means, it will not activate.</p>
-                    <h3>Option:</h3>
-                    <p>An Option is a choice between two or more different Actions. You will choose which one you wish to activate when you play the card. Like Actions, an Option will only activate when a card is player normally from your hand.</p>
-                    <h3>Eureka:</h3>
-                    <p>A Eureka is type of Action, which only activates if the card was played from the leftmost or rightmost position in your hand. If a card has a Eureka, it will be highlighted orange when the Eureka is active.</p>
-                    <h3>Event:</h3>
-                    <p>An Event is something that happens whenever a card enters play - not just when it is played from your hand. If you put it directly into play from your deck, or summon a copy of it, or resurrect it, the Event will still activate.</p>
-                    <h3>Death:</h3>
-                    <p>A Death Event is a type of Event which activates when the card is destroyed, rather than when it enters play.</p>
-                    <h3>[zone]:</h3>
-                    <p>If an effect is preceded by the name of a zone, it means that the effect is only active when the card is in that zone. For example, if a follower has an effect beginning with "Legacy: ", that effect will only be active after the follower has died and moved into your legacy.</p>
+                        <p>This section explains the various terms that appear before an effect or action in a card's text.</p>
+                        <h3>Action:</h3>
+                        <p>An Action is something that happens when a card is played normally from your hand. If the card is put into play by any other means, it will not activate.</p>
+                        <h3>Option:</h3>
+                        <p>An Option is a choice between two or more different Actions. You will choose which one you wish to activate when you play the card. Like Actions, an Option will only activate when a card is player normally from your hand.</p>
+                        <h3>Eureka:</h3>
+                        <p>A Eureka is type of Action, which only activates if the card was played from the leftmost or rightmost position in your hand. If a card has a Eureka, it will be highlighted orange when the Eureka is active.</p>
+                        <h3>Event:</h3>
+                        <p>An Event is something that happens whenever a card enters play - not just when it is played from your hand. If you put it directly into play from your deck, or summon a copy of it, or resurrect it, the Event will still activate.</p>
+                        <h3>Death:</h3>
+                        <p>A Death Event is a type of Event which activates when the card is destroyed, rather than when it enters play.</p>
+                        <h3>[zone]:</h3>
+                        <p>If an effect is preceded by the name of a zone, it means that the effect is only active when the card is in that zone. For example, if a follower has an effect beginning with "Legacy: ", that effect will only be active after the follower has died and moved into your legacy.</p>
                     </>
                 ),
                 'Miscellaneous': (
                     <>
-                    <p>This section covers other terms not included in previous sections.</p>
-                    <h3>Play</h3>
-                    <p>If you play a card, it means you selected it from your hand and paid its Money cost, in the normal manner. If a card enters play by any other means, it does not count as playing it.</p>
-                    <h3>Summon</h3>
-                    <p>Summoning a card is the reverse of playing it - it means the card entered play by some means other than being played from your hand.</p>
-                    <h3>Banish</h3>
-                    <p>If a card is banished, it is removed directly from play and effectively no longer exists in the game. It does not die (and so does not trigger Death Events), and it does not go into your legacy. A card with Immune is not protected from being banished.</p>
-                    <h3>Transform</h3>
-                    <p>If a card is transformed, it means the card is banished and another one is summoned in its place.</p>
-                    <h3>+X/+X</h3>
-                    <p>When something would increase both a follower's Attack and Health, this is written in shorthand. For example, if you gave a follower +2 Attack and +1 Health, you would give it +2/+1.</p>
-                    <h3>Clone</h3>
-                    <p>A clone is an exact replica of a card in its current state - including any damage taken or missing charges, as well as any added effects or actions.</p>
-                    <h3>Copy</h3>
-                    <p>A copy is a fresh copy of the same card.</p>
-                    <h3>Rot damage</h3>
-                    <p>Rot damage reduces the target's max Health by the same amount. For example, if a follower had 3/5 Health and took 2 Rot damage, it would now have 1/3 Health. Additionally, Rot damage ignores Fortune and Immune. Rot damage is a good way to deal with followers that resurrect themselves - if their max Health has been reduced to 0 or less, they will be banished when they enter play. </p>
-                    <h3>Nourish healing</h3>
-                    <p>Nourish healing increases the target's max Health by the same amount. For example, if a follower had 3/5 Health and received 2 Nourish healing, it would now have 5/7 Health.</p>
-                    <h3>Restore to full Health</h3>
-                    <p>If a card restores its target to full Health, it will do healing equal to the target's missing Health. If it is Nourish healing, it will increase the target's max Health by the same amount. For example, if you were to Nourish heal a card with 2/7 Health to full health, it would now have 7/12 Health.</p>
+                        <p>This section covers other terms not included in previous sections.</p>
+                        <h3>Play</h3>
+                        <p>If you play a card, it means you selected it from your hand and paid its Money cost, in the normal manner. If a card enters play by any other means, it does not count as playing it.</p>
+                        <h3>Summon</h3>
+                        <p>Summoning a card is the reverse of playing it - it means the card entered play by some means other than being played from your hand.</p>
+                        <h3>Banish</h3>
+                        <p>If a card is banished, it is removed directly from play and effectively no longer exists in the game. It does not die (and so does not trigger Death Events), and it does not go into your legacy. A card with Immune is not protected from being banished.</p>
+                        <h3>Transform</h3>
+                        <p>If a card is transformed, it means the card is banished and another one is summoned in its place.</p>
+                        <h3>+X/+X</h3>
+                        <p>When something would increase both a follower's Attack and Health, this is written in shorthand. For example, if you gave a follower +2 Attack and +1 Health, you would give it +2/+1.</p>
+                        <h3>Clone</h3>
+                        <p>A clone is an exact replica of a card in its current state - including any damage taken or missing charges, as well as any added effects or actions.</p>
+                        <h3>Copy</h3>
+                        <p>A copy is a fresh copy of the same card.</p>
+                        <h3>Adjacents</h3>
+                        <p>A follower's adjacents are the followers in the slots immediately to the left and right.</p>
+                        <h3>Opposite</h3>
+                        <p>A follower's opposite is the enemy follower in slot opposite it.</p>
+                        <h3>Neighbours</h3>
+                        <p>A follower's neighbours are its adjacents plus its opposite.</p>
+                        <h3>Rot damage</h3>
+                        <p>Rot damage reduces the target's max Health by the same amount. For example, if a follower had 3/5 Health and took 2 Rot damage, it would now have 1/3 Health. Additionally, Rot damage ignores Fortune and Immune. Rot damage is a good way to deal with followers that resurrect themselves - if their max Health has been reduced to 0 or less, they will be banished when they enter play. </p>
+                        <h3>Nourish healing</h3>
+                        <p>Nourish healing increases the target's max Health by the same amount. For example, if a follower had 3/5 Health and received 2 Nourish healing, it would now have 5/7 Health.</p>
+                        <h3>Restore to full Health</h3>
+                        <p>If a card restores its target to full Health, it will do healing equal to the target's missing Health. If it is Nourish healing, it will increase the target's max Health by the same amount. For example, if you were to Nourish heal a card with 2/7 Health to full health, it would now have 7/12 Health.</p>
                     </>
                 )
             }

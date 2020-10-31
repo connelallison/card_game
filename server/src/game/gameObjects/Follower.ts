@@ -19,7 +19,7 @@ interface FollowerCategories {
 abstract class Follower extends Character {
   static readonly data: FollowerData
   readonly data: FollowerData
-  maxHealth: number
+  rawMaxHealth: number
   zone: FollowerZoneString
   inPlayZone: 'board'
   type: 'Follower'
@@ -33,7 +33,7 @@ abstract class Follower extends Character {
     super(game, owner, data)
     this.rawAttack = data.attack
     this.attack = this.rawAttack
-    this.maxHealth = this.rawHealth
+    this.rawMaxHealth = this.rawHealth
     this.inPlayZone = 'board'
     this.slot = null
     this.initCategories(data.categories ?? [])
@@ -121,7 +121,7 @@ abstract class Follower extends Character {
     }
     this.rawHealth = this.round(this.rawHealth - reducedDamage)
     this.health = this.round(this.health - reducedDamage)
-    if (rot) this.maxHealth = this.round(this.maxHealth - reducedDamage)
+    if (rot) this.rawMaxHealth = this.round(this.rawMaxHealth - reducedDamage)
     this.update()
     return reducedDamage
   }
@@ -131,7 +131,7 @@ abstract class Follower extends Character {
       ? rawHealing
       : rawHealing <= this.missingHealth() ? rawHealing : this.missingHealth()
 
-    if (nourish) this.maxHealth = this.round(this.maxHealth + healing)
+    if (nourish) this.rawMaxHealth = this.round(this.rawMaxHealth + healing)
     this.rawHealth = this.round(this.rawHealth + healing)
     this.health = this.round(this.health + healing)
     this.update()
@@ -139,7 +139,11 @@ abstract class Follower extends Character {
   }
 
   missingHealth(): number {
-    return this.maxHealth - this.rawHealth
+    return this.rawMaxHealth - this.rawHealth
+  }
+
+  maxHealth(): number {
+    return this.health + this.missingHealth()
   }
 
   hasAttack(): boolean {

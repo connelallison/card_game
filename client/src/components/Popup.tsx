@@ -21,7 +21,7 @@ class Popup extends Component {
 
             <h3>How do I play?</h3>
             <p>If you've played this sort of game before, you may be able to jump right in and work it out. There are lots of tooltips, so if you're unsure what something means, just hover over the card and you should see an explanation on the left.</p>
-            <p>If not, or if you'd like to read up first, then take a look at the <strong>How to play</strong> section at the top right. When you're ready you can challenge TestBot, or another player, to a game.</p>
+            <p>If not, or if you'd like to read up first, then take a look at the <strong>How to play</strong> section at the top. When you're ready you can challenge TestBot, or another player, to a game.</p>
 
             <h3>Can I make my own deck?</h3>
             <p>Soon! For now, though, there are several pre-built decks that showcase some of the interesting cards and mechanics the game has to offer. You can find about more about them, including a full card list and some tips on how to pilot them, in the <strong>Decks</strong> section at the top.</p>

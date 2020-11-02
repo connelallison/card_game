@@ -1,20 +1,21 @@
-import FamousFollower, { FamousFollowerData } from '../gameObjects/FamousFollower'
+import NamelessFollower, { NamelessFollowerData } from '../gameObjects/NamelessFollower'
 import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
-const data: FamousFollowerData = {
-    id: 'NancyKerrigan',
+const data: NamelessFollowerData = {
+    id: 'InjuredSkater',
     name: {
-        english: `Nancy Kerrigan`,
+        english: `Injured Skater`,
     },
     type: 'Follower',
-    subtype: 'Famous',
+    subtype: 'Nameless',
     classes: ['All'],
     categories: ['Woman'],
     collectable: true,
     cost: 2,
     attack: 3,
     health: 7,
+    charges: 2,
     staticText: {
         english: `Event: This takes 5 damage.`,
     },
@@ -30,8 +31,8 @@ const data: FamousFollowerData = {
     actions: [],
     events: [
         {
-            id: 'NancyKerriganEvent',
-            name: { english: 'Nancy Kerrigan Event' },
+            id: 'InjuredSkaterEvent',
+            name: { english: 'Injured Skater Event' },
             text: { templates: { english: `Event: This takes 5 damage.` } },
             actionType: 'eventAction',
             actionSteps: [
@@ -60,10 +61,10 @@ const data: FamousFollowerData = {
     deathEvents: [],
 }
 
-class NancyKerrigan extends FamousFollower {
-    static readonly data: FamousFollowerData = data
+class InjuredSkater extends NamelessFollower {
+    static readonly data: NamelessFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default NancyKerrigan
+export default InjuredSkater

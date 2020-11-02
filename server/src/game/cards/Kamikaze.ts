@@ -3,32 +3,33 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-    id: 'SuicideBomber',
+    id: 'Kamikaze',
     name: {
-        english: `Suicide Bomber`,
+        english: `Kamikaze`,
     },
     type: 'Follower',
     subtype: 'Nameless',
     classes: ['All'],
     categories: [],
     collectable: true,
-    cost: 2,
+    cost: 3,
     attack: 3,
     health: 2,
     charges: 2,
     staticText: {
-        english: `Death: Deal 3 damage in this and neighbouring slots.`,
+        english: `Rush\nDeath: Deal 3 damage in this and neighbouring slots.`,
     },
     text: {
         templates: {
-            english: `Death: Deal 3 damage in this and neighbouring slots.`,
+            english: `Rush\nDeath: Deal 3 damage in this and neighbouring slots.`,
         },
     },
+    effects: ['Rush'],
     deathEvents: [{
         actionType: 'deathAction',
-        id: 'SuicideBomberDeath#Event',
+        id: 'KamikazeDeath#Event',
         name: {
-            english: 'Suicide Bomber Death Event'
+            english: 'Kamikaze Death Event'
         },
         text: {
             templates: {
@@ -63,10 +64,10 @@ const data: NamelessFollowerData = {
     }]
 }
 
-class SuicideBomber extends NamelessFollower {
+class Kamikaze extends NamelessFollower {
     static readonly data: NamelessFollowerData = data
     constructor(game: Game, owner: GamePlayer) {
         super(game, owner, data)
     }
 }
-export default SuicideBomber
+export default Kamikaze

@@ -16,11 +16,11 @@ const data: LeaderData = {
     leaderTechniqueID: 'SpartacusBrokenChains', 
     successor: 'SpartacusFollower',
     staticText: {
-        english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Slaves.`,
+        english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Roman Slaves.`,
     },
     text: {
         templates: {
-            english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Slaves.`,
+            english: `Successor: "Spartacus"\nEvent: Summon two 2/2 Roman Slaves.`,
         },
     },
     starter: false,
@@ -28,14 +28,14 @@ const data: LeaderData = {
         actionType: 'eventAction',
         id: 'SpartacusEvent',
         name: { english: 'Spartacus Event' },
-        text: { templates: { english: 'Summon two 2/2 Slaves.' } },
+        text: { templates: { english: 'Summon two 2/2 Roman Slaves.' } },
         actionSteps: [{
             actionFunctions: [
                 {
                     functionType: 'autoAction',
                     operation: 'createAndSummonCard',
                     values: {
-                        cardID: 'Slave',
+                        cardID: 'RomanSlave',
                         number: 2,
                     },
                 },

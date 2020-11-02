@@ -92,7 +92,7 @@ class Game extends GamePhase {
       serverEvent.emit(`mulliganReport:${this.player1.socketID}`, player1mulligan)
     }
     if (this.player2.socketID) {
-      const player2mulligan = this.player2.deck.slice(0, 6).map(card => card.provideReport())
+      const player2mulligan = this.player2.deck.slice(0, 5).map(card => card.provideReport())
       serverEvent.emit(`mulliganReport:${this.player2.socketID}`, player2mulligan)
     }
   }
@@ -275,6 +275,7 @@ class Game extends GamePhase {
     const playerNum = player === this.player1 ? 'player1' : 'player2'
     if (this.activeChild instanceof PreGameTurn && !this.activeChild[`${playerNum}ready`]) {
       const size = player === this.player1 ? 5 : 6
+      // const size = player === this.player1 ? 5 : 5
       const mulliganCards = player.deck.slice(0, size)
       const mulliganChoices = mulliganRequest.map(objectID => this.gameObjects[objectID]) as Card[]
       if (mulliganChoices.every(card => mulliganCards.includes(card))) {
@@ -291,8 +292,8 @@ class Game extends GamePhase {
   initPlayers() {
     this.player1 = new GamePlayer(this, this.player1name, this.player1socketID)
     this.player2 = new GamePlayer(this, this.player2name, this.player2socketID)
-    this.player2.rawIncome = 2
-    this.player2.rawMoney = 2
+    // this.player2.rawIncome = 2
+    // this.player2.rawMoney = 2
     this.player1.opponentPlayer = this.player2
     this.player2.opponentPlayer = this.player1
     this.player1.bot = !this.player1.socketID
@@ -412,7 +413,7 @@ class Game extends GamePhase {
     this.startChild(preGame)
     // this.startSequence('StartOfGamePhase')
     await this.activeChild.endPromise
-    const coin = this.createCard('Coin', this.player1)
+    const coin = this.createCard('Coin', this.player2)
     coin.moveZone('hand')
     this.queuedPhases.push(new Turn(this, this.player1, 1))
     while (!this.ended && this.queuedPhases.length > 0) {

@@ -21,6 +21,7 @@ const data: WorkCreationData = {
             english: `After a leader attacks, they take 60 Rot damage. Then, their opponent takes 60 Rot damage.`,
         },
     },
+    tooltips: ['rotDamage'],
     effects: ['MutuallyAssuredDestructionTrigger'],
 }
 

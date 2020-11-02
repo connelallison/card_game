@@ -3,21 +3,21 @@ import Game from "../gamePhases/Game";
 import GameObject from "../gameObjects/GameObject";
 
 const data: AuraEffectData = {
-    id: 'SlaveAura',
+    id: 'RomanSlaveAura',
     name: {
-        english: `Slave Aura`,
+        english: `Roman Slave Aura`,
     },
     type: 'Effect',
     subtype: 'Aura',
     text: {
         templates: {
-            english: `Slaves can't attack.`,
+            english: `Roman Slaves can't attack.`,
         },
     },
     priority: 1,
     activeZones: 'inPlay',
     effectFunction: {
-        name: { english: `Slave Aura` },
+        name: { english: `Roman Slave Aura` },
         text: {
             templates: {
                 english: `Can't attack.`,
@@ -36,16 +36,16 @@ const data: AuraEffectData = {
         requirements: [{
             targetRequirement: 'isSpecificCardClass',
             values: {
-                cardID: 'Slave'
+                cardID: 'RomanSlave'
             }
         }]
     }
 }
 
-class SlaveAura extends AuraEffect {
+class RomanSlaveAura extends AuraEffect {
     static readonly data: AuraEffectData = data
     constructor(game: Game, owner: GameObject) {
         super(game, owner, data)
     }
 }
-export default SlaveAura
+export default RomanSlaveAura

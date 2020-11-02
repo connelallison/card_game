@@ -20,7 +20,7 @@ import ExpiresEndOfMyTurn from '../effects/ExpiresEndOfMyTurn'
 import OrpheusTrigger from '../effects/OrpheusTrigger'
 import JohnTheBaptistAura from '../effects/JohnTheBaptistAura'
 import Mob from '../effects/Mob'
-import SlaveAura from '../effects/SlaveAura'
+import RomanSlaveAura from '../effects/RomanSlaveAura'
 import ImSpartacusAura from '../effects/ImSpartacusAura'
 import CostReduction from '../effects/CostReduction'
 import DamageReduction from '../effects/DamageReduction'
@@ -136,7 +136,7 @@ export const AuraEffects = {
   TulipManiaAura,
   SecondAmendmentAura,
   JohnTheBaptistAura,
-  SlaveAura,
+  RomanSlaveAura,
   ImSpartacusAura,
   SelmaMarcherAura,
   StonewallRioterAura,

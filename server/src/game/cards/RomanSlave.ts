@@ -3,9 +3,9 @@ import Game from "../gamePhases/Game";
 import GamePlayer from "../gameObjects/GamePlayer";
 
 const data: NamelessFollowerData = {
-  id: 'Slave',
+  id: 'RomanSlave',
   name: {
-    english: `Slave`,
+    english: `Roman Slave`,
   },
   type: 'Follower',
   subtype: 'Nameless',
@@ -17,20 +17,20 @@ const data: NamelessFollowerData = {
   health: 2,
   charges: 4,
   staticText: {
-    english: `Mob \nSlaves can't attack.`,
+    english: `Mob \nRoman Slave can't attack.`,
   },
   text: {
     templates: {
-      english: `Mob \nSlaves can't attack.`,
+      english: `Mob \nRoman Slave can't attack.`,
     },
   },
-  effects: ['Mob', 'SlaveAura'],
+  effects: ['Mob', 'RomanSlaveAura'],
 }
 
-class Slave extends NamelessFollower {
+class RomanSlave extends NamelessFollower {
   static readonly data: NamelessFollowerData = data
   constructor(game: Game, owner: GamePlayer) {
     super(game, owner, data)
   }
 }
-export default Slave
+export default RomanSlave

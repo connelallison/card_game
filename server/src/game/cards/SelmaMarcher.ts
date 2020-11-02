@@ -17,11 +17,11 @@ const data: NamelessFollowerData = {
     health: 6,
     charges: 2,
     staticText: {
-        english: `Passionate\nSelma Marchers can't attack.`,
+        english: `Passionate\nSelma Marcher can't attack.`,
     },
     text: {
         templates: {
-            english: `Passionate\nSelma Marchers can't attack.`,
+            english: `Passionate\nSelma Marcher can't attack.`,
         },
     },
     tooltips: [],

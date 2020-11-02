@@ -732,8 +732,8 @@ class GameContainer extends Component {
     const maxSlots = Math.max(this.state.gameState.my.board.length, this.state.gameState.opponent.board.length)
 
     return (
-      // <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''} data-tip='' onContextMenu={event => { event.preventDefault(); event.stopPropagation() }}>
-      <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''} data-tip=''>
+      <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''} data-tip='' onContextMenu={event => { event.preventDefault(); event.stopPropagation() }}>
+      {/* <div id='gameContainer' className={this.props.offscreen ? 'offscreen' : ''} data-tip=''> */}
         <ReactTooltip className='target-tooltip' offset={{ right: 10 }} arrowColor='transparent' place='right' >
           {selectionText}
         </ReactTooltip>

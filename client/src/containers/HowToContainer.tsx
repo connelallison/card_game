@@ -263,7 +263,9 @@ class HowToContainer extends Component {
                         <h3>Lethal</h3>
                         <p>If a card with Lethal deals any damage to a follower (not a leader), it destroys it.</p>
                         <h3>Rot</h3>
-                        <p>When a card with Rot deals damage, it does Rot damage.</p>
+                        <p>When a card with Rot deals damage, it does Rot damage. (see "Rot damage" in the Miscellaneous section for more)</p>
+                        {/* <h3>Rot damage</h3>
+                        <p>Rot damage reduces the target's max Health by the same amount. For example, if a follower had 3/5 Health and took 2 Rot damage, it would now have 1/3 Health. Additionally, Rot damage ignores Fortune and Immune. Rot damage is a good way to deal with followers that resurrect themselves - if their max Health has been reduced to 0 or less, they will be banished when they enter play. </p> */}
                         <h3>Income (X)</h3>
                         <p>Cards with Income add to your overall Income stat, which determines how much Money you regain at the end of your turn.</p>
                         <h3>Growth (X)</h3>

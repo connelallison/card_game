@@ -62,7 +62,7 @@ import Citizen from '../cards/Citizen'
 import CorporalMotivation from '../cards/CorporalMotivation'
 import Orcissimus from '../cards/Orcissimus'
 import NapoleonBonaparteLeveeEnMasse from '../cards/NapoleonBonaparteLeveeEnMasse'
-import OrkusTheOrkest from '../cards/OrkusTheOrkest'
+// import OrkusTheOrkest from '../cards/OrkusTheOrkest'
 import OrkusTheOrkestSmash from '../cards/OrkusTheOrkestSmash'
 import NapoleonBonaparte from '../cards/NapoleonBonaparte'
 import VladimirLenin from '../cards/VladimirLenin'
@@ -71,7 +71,7 @@ import SingleMindedFury from '../cards/SingleMindedFury'
 import SecondAmendment from '../cards/SecondAmendment'
 import BattleOfSuiyang from '../cards/BattleOfSuiyang'
 import NapalmStrike from '../cards/NapalmStrike'
-import SuicideBomber from '../cards/SuicideBomber'
+import Kamikaze from '../cards/Kamikaze'
 import BodyDouble from '../cards/BodyDouble'
 import Archimedes from '../cards/Archimedes'
 import JohnFKennedy from '../cards/JohnFKennedy'
@@ -80,7 +80,7 @@ import Entrepreneur from '../cards/Entrepreneur'
 import DivideAndConquer from '../cards/DivideAndConquer'
 import Orpheus from '../cards/Orpheus'
 import JohnTheBaptist from '../cards/JohnTheBaptist'
-import Slave from '../cards/Slave'
+import RomanSlave from '../cards/RomanSlave'
 import Spartacus from '../cards/Spartacus'
 import SpartacusBrokenChains from '../cards/SpartacusBrokenChains'
 import JohannesGutenberg from '../cards/JohannesGutenberg'
@@ -130,7 +130,7 @@ import HippocraticOath from '../cards/HippocraticOath'
 import HippocratesMedicine from '../cards/HippocratesMedicine'
 import Hippocrates from '../cards/Hippocrates'
 import Triage from '../cards/Triage'
-import NancyKerrigan from '../cards/NancyKerrigan'
+import InjuredSkater from '../cards/InjuredSkater'
 import HenryFord from '../cards/HenryFord'
 import Atalanta from '../cards/Atalanta'
 import RansomEOlds from '../cards/RansomEOlds'
@@ -193,16 +193,16 @@ import ReneDescartes from '../cards/ReneDescartes'
 // insert import here
 
 export const NamelessFollowers = {
-  Footman,
+  // Footman,
   Lictor,
-  SavageWolf,
-  JuniorOrc,
+  // SavageWolf,
+  // JuniorOrc,
   Citizen,
-  SuicideBomber,
+  Kamikaze,
   BodyDouble,
   WallLabourer,
   Entrepreneur,
-  Slave,
+  RomanSlave,
   Konigstiger,
   M1Abrams,
   UnarmedSoviet,
@@ -222,16 +222,17 @@ export const NamelessFollowers = {
   Unperson,
   Galleon,
   Banker,
+  InjuredSkater,
   // insert NamelessFollower here
 }
 
 export const FamousFollowers = {
-  Orcissimus,
+  // Orcissimus,
   VladimirLenin,
   Archimedes,
   JohnFKennedy,
-  Orpheus,
-  JohnTheBaptist,
+  // Orpheus,
+  // JohnTheBaptist,
   JohannesGutenberg,
   MelvilDewey,
   NikolaTesla,
@@ -249,7 +250,6 @@ export const FamousFollowers = {
   ThomasBodley,
   JamesMadison,
   TupacShakur,
-  NancyKerrigan,
   HenryFord,
   HelenOfTroy,
   Atalanta,
@@ -277,9 +277,9 @@ export const FamousFollowers = {
 }
 
 export const ActionMoments = {
-  Fireburst,
-  NapalmStrike,
-  DivideAndConquer,
+  // Fireburst,
+  // NapalmStrike,
+  // DivideAndConquer,
   StormingOfTheBastille,
   NewDeal,
   Vaporise,
@@ -287,7 +287,7 @@ export const ActionMoments = {
 }
 
 export const EventMoments = {
-  Consume,
+  // Consume,
   BattleOfSuiyang,
   FrenchRevolution,
   GeneralStrike1926,
@@ -309,7 +309,7 @@ export const WorkCreations = {
 }
 
 export const WeaponCreations = {
-  ClubOfLooting,
+  // ClubOfLooting,
   FatMan,
   // insert WeaponCreation here
 }
@@ -323,7 +323,7 @@ export const WonderCreations = {
 }
 
 export const TechniqueCreations = {
-  CorporalMotivation,
+  // CorporalMotivation,
   Chemotherapy,
   Triage,
   ErasmusExchange,
@@ -343,7 +343,7 @@ export const PermanentPassives = {
 
 export const EthosPassives = {
   TulipMania,
-  SingleMindedFury,
+  // SingleMindedFury,
   ThrillOfDiscovery,
   PeacefulResistance,
   HippocraticOath,
@@ -354,7 +354,7 @@ export const EthosPassives = {
 }
 
 export const ActiveLeaderTechniques = {
-  OrkusTheOrkestSmash,
+  // OrkusTheOrkestSmash,
   NapoleonBonaparteLeveeEnMasse,
   DavidHumeOrganiseThoughts,
   HippocratesMedicine,
@@ -372,7 +372,7 @@ export const PassiveLeaderTechniques = {
 }
 
 export const StarterLeaders = {
-  OrkusTheOrkest,
+  // OrkusTheOrkest,
   NapoleonBonaparte,
   DavidHume,
   NelsonMandela,

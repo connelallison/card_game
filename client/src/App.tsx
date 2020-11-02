@@ -121,8 +121,8 @@ class App extends Component {
 
   updateDecks(decks: Decks) {
     const deckIDs = Object.values(decks).map(deck => deck.id)
-    const deckID = deckIDs.includes(localStorage.getItem('deckID') as string) ? localStorage.getItem('deckID') as string : deckIDs[0]
-    const testBotDeckID = deckIDs.includes(localStorage.getItem('testBotDeckID') as string) ? localStorage.getItem('testBotDeckID') as string : deckIDs[2]
+    const deckID = deckIDs.includes(localStorage.getItem('deckID') as string) ? localStorage.getItem('deckID') as string : deckIDs[2]
+    const testBotDeckID = deckIDs.includes(localStorage.getItem('testBotDeckID') as string) ? localStorage.getItem('testBotDeckID') as string : deckIDs[0]
 
     this.socket.emit('updateDeckID', { deckID })
     localStorage.setItem('deckID', deckID)

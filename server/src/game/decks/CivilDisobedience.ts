@@ -11,8 +11,8 @@ const CivilDisobedience: DeckObject = {
         'StatueOfLiberty',
         'Spartacus',
         'Spartacus',
-        'Slave',
-        'Slave',
+        'RomanSlave',
+        'RomanSlave',
         'UnarmedSoviet',
         'UnarmedSoviet',
         'SelmaMarcher',
@@ -45,7 +45,7 @@ const CivilDisobedience: DeckObject = {
         'GeneralStrike1926',
     ],
     description: `Defeat your foes through non-violent protest in this life-gain deck. Play defensively and build your board and your leader's Health, until you're ready to flip the tables with Spartacus, or renounce pacifism entirely and nuke your opponent.`,
-    tips: `- If your opponent is using an aggressive deck, rely on Nelson Mandela's leader technique to keep you alive until you've worn them out.
+    tips: `- If your opponent is using an aggressive deck, rely on Nelson Mandela's leader technique to keep you alive until you've worn them out - you don't need to play Spartacus as soon as you draw him.
            - Saint-Just and the French Revolution pair well.
            - If you have secured control of the board with your pacifist followers, use Spartacus to go on the offensive.
            - If your leader's Health is high enough, you might instead trigger the Cuban Missile Crisis and win the game by suriving a nuclear exchange.`,

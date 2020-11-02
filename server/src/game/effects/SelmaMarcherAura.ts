@@ -11,7 +11,7 @@ const data: AuraEffectData = {
     subtype: 'Aura',
     text: {
         templates: {
-            english: `Selma Marchers can't attack.`,
+            english: `Selma Marcher can't attack.`,
         },
     },
     priority: 1,

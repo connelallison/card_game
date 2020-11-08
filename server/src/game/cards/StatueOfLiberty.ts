@@ -11,14 +11,14 @@ const data: WonderCreationData = {
     subtype: 'Wonder',
     classes: ['The People'],
     collectable: true,
-    cost: 2,
+    cost: 1,
     charges: 1,
     staticText: {
-        english: `Your followers have +1/+1. If you have no followers at the start of your turn, this loses a charge.`,
+        english: `Your followers have +0.5/+0.5. If you have no followers at the start of your turn, this loses a charge.`,
     },
     text: {
         templates: {
-            english: `Your followers have +1/+1. If you have no followers at the start of your turn, this loses a charge.`,
+            english: `Your followers have +0.5/+0.5. If you have no followers at the start of your turn, this loses a charge.`,
         },
     },
     effects: ['StatueOfLibertyAura', 'StatueOfLibertyTrigger'],

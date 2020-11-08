@@ -44,7 +44,7 @@ function coinFlip(): boolean {
 const testGame = (player: ServerPlayer, testDeck) => {
   player.deckID = (!player.deckID || player.deckID === 'random') ? randomDeckID() : player.deckID
   // const testBotDeckID = testDeck === 'random' ? randomDeckID() : testDeck
-  const testBotDeckID = (!testDeck || testDeck === 'random')  ? randomDeckID() : testDeck
+  const testBotDeckID = (!testDeck || testDeck === 'random') ? randomDeckID() : testDeck
   // console.log(testBotDeckID)
   // const testBotDeck = Decks[testBotDeckID]
   // console.log(testBotDeck)
@@ -60,8 +60,8 @@ const pvpGame = (player1: ServerPlayer, player2: ServerPlayer) => {
   // console.log(player1.deckID)
   // console.log(player2.deckID)
   const pvpGame = coinFlip()
-   ? new Game(player1.displayName, player2.displayName, Decks[player1.deckID], Decks[player2.deckID], player1.socketID, player2.socketID)
-   : new Game(player2.displayName, player1.displayName, Decks[player2.deckID], Decks[player1.deckID], player2.socketID, player1.socketID)
+    ? new Game(player1.displayName, player2.displayName, Decks[player1.deckID], Decks[player2.deckID], player1.socketID, player2.socketID)
+    : new Game(player2.displayName, player1.displayName, Decks[player2.deckID], Decks[player1.deckID], player2.socketID, player1.socketID)
   pvpGame.init()
 }
 
@@ -170,22 +170,27 @@ io.on('connection', function (socket) {
   // const after = performance.now()
   // console.log(after - before)
   serverPlayersUpdate()
+
+  socket.broadcast.emit('testBotAnnouncement', {
+    message: `${serverPlayer.uniqueDisplayName()} has joined the lobby.`
+  })
+
   socket.on('updateDisplayName', function (data) {
     // console.log('updateDisplayName request received')
     const oldName = serverPlayer.uniqueDisplayName()
     serverPlayer.displayName = data.displayName
     // console.log(serverPlayer.displayName)
     serverPlayersUpdate()
-    if (serverPlayer.nameReceived) {
-      socket.broadcast.emit('testBotAnnouncement', {
-        message: `${oldName} is now: ${serverPlayer.uniqueDisplayName()}`
-      })
-    } else {
-      socket.broadcast.emit('testBotAnnouncement', {
-        message: `${serverPlayer.uniqueDisplayName()} has joined the lobby.`
-      })
-      serverPlayer.nameReceived = true
-    }
+    // if (serverPlayer.nameReceived) {
+    socket.broadcast.emit('testBotAnnouncement', {
+      message: `${oldName} is now: ${serverPlayer.uniqueDisplayName()}`
+    })
+    // } else {
+    //   socket.broadcast.emit('testBotAnnouncement', {
+    //     message: `${serverPlayer.uniqueDisplayName()} has joined the lobby.`
+    //   })
+    //   serverPlayer.nameReceived = true
+    // }
   })
   socket.on('updateDeckID', data => {
     // console.log('updateDeckID request received')

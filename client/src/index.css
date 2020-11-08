@@ -36,6 +36,11 @@ html {
   height: 100%;
 }
 
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
 body {
   /* -webkit-user-select: none; 
   -moz-user-select: none;    
@@ -438,6 +443,10 @@ input {
   color: rgb(90, 90, 90);
 }
 
+.chatMessageTextSpan {
+  position: relative;
+}
+
 .chatMessageText {
   width: fit-content;
   font-size: 14px;
@@ -775,7 +784,11 @@ td.lobbyPlayerAction {
   font-size: 18px;
   display: flex;
   flex-direction: row;
-  justify-self: flex-end;
+  /* justify-self: flex-end; */
+}
+
+.navBar p.support {
+  margin-left: auto;
 }
 
 .playerStatusDiv {
@@ -1228,6 +1241,23 @@ td.lobbyPlayerAction {
   filter: drop-shadow(0 0 4px);
 }
 
+/* .chatMessage .chatMessageTextSpan:hover .addedText {
+  opacity: 1;
+  left: 104%;
+  transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.3, 0.8) 0.5s;
+  visibility: visible;
+  filter: drop-shadow(0 0 4px);
+}
+
+.chatMessage.mine .chatMessageTextSpan:hover .addedText.timestamp {
+  opacity: 1;
+  right: 104%;
+  transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.3, 0.8) 0.5s;
+  visibility: visible;
+  filter: drop-shadow(0 0 4px);
+  z-index: 5;
+} */
+
 .card:hover .addedText.tooltip {
   left: unset;
   right: 104%;
@@ -1672,7 +1702,7 @@ button.jobDone {
   padding-bottom: 1px;
 }
 
-.navBar {
+.navBar p:first-child {
   /* justify-content: center; */
   padding-left: 50px;
 }

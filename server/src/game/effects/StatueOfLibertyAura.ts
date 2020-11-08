@@ -11,7 +11,7 @@ const data: AuraEffectData = {
     subtype: 'Aura',
     text: {
         templates: {
-            english: `Your followers have +1/+1.`,
+            english: `Your followers have +0.5/+0.5.`,
         },
     },
     priority: 1,
@@ -20,18 +20,18 @@ const data: AuraEffectData = {
         name: { english: `Statue of Liberty Aura` },
         text: {
             templates: {
-                english: `+1/+1`,
+                english: `+0.5/+0.5`,
             },
         },
         stackable: true,
         functions: [
             {
                 operation: 'incrementAttack',
-                value: 1,
+                value: 0.5,
             },
             {
                 operation: 'incrementHealth',
-                value: 1,
+                value: 0.5,
             },
         ],
     },

@@ -51,7 +51,7 @@ class App extends Component {
       gameTransition: false,
       gameEnded: false,
       popup: {
-        header: 'Welcome to the History of Everything!',
+        header: 'Welcome to The History of Everything!',
         message: [],
       },
     }
@@ -144,7 +144,7 @@ class App extends Component {
   }
 
   dismissPopup() {
-    if (this.state.popup && this.state.popup.header === 'Welcome to the History of Everything!') document.documentElement.requestFullscreen()
+    if (this.state.popup && this.state.popup.header === 'Welcome to The History of Everything!') document.documentElement.requestFullscreen()
     if (this.state.popup && this.state.popup.header === 'Game ended') {
       setTimeout(() => this.setState({ view: 'lobby', gameEnded: false }), 750)
       this.gameTransitionTimeout()

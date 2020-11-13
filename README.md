@@ -1,22 +1,9 @@
-This is a very simple implementation of an online card game, roughly along the lines of Hearthstone. It was created as my final project at the end of CodeClan, a 16 week coding course. It is written in JavaScript and makes use of (most notably) React, Express, and Socket.io.
+# The History of Everything
 
-The game logic is located entirely on the server, which provides the client with only the information it needs to display the game state to the player and acknowledge only valid instructions. This version does not yet have a way implemented for the client to communicate the instructions to the server, however, so instead the client can request a test game from the server - the server will start a game between two very simple bots, and the user can watch the game in the client.
+***The History of Everything*** is an online card game in the style of *Hearthstone*. It is written in TypeScript, and uses React in the front end.
 
-To set up and view the game:
+The main focus of my work has been on the gameplay code (located in the server/src/game directory), which is broadly representative of its final state. By contrast, the client and the server.ts file are prototypes created to facilitate development of the rest of the game; if the project is someday fully realised, the front end will be replaced entirely with a client created using a conventional game engine, and the server code will be rewritten from scratch to be clean, performant, and scalable.
 
-1. Open 2 terminal tabs.
-2. In one tab, navigate to the server directory.
-3. Run "npm install" inside the server directory to install the server's packages.
-4. Run "npm start" inside the server directory.
-5. In the other tab, navigate to the client directory.
-6. Run "npm install" inside the client directory to install the client's packages.
-7. Run "npm start" inside the client directory.
-8. This should automatically open the game for you, but if it does not, use a web browser and go to "http://localhost:3000/".
-9. If you like, you may open multiple tabs at this address - each will be treated by the server as a separate client, and you can see a different game in each tab.
-10. If you would like to connect to the game from another device in your network, check the terminal tab where the client is running - it should provide the required address.
+If you have experience with *Hearthstone*, you may like to try the demo, which is hosted on AWS. It can be played here:
 
-
-if running the docker image:
- - navigate to server directory
- - "sudo docker build ." (// is this actually necessary?)
- - "sudo docker run -p 4000:4000 connelallison/card_game &"
+http://www.historyofeverything.co.uk/
